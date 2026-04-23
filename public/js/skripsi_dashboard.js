@@ -174,6 +174,7 @@ function renderCTA(cta) {
         // Status only phase
         $('#cta_status_only').show().find('.status-text').text(cta.label);
         $('#cta_label').text('Status Progres Saat Ini');
+    } else {
         const warna = cta.warna || 'warning';
         $('#cta_label').text('Lanjutkan Progres Anda');
         

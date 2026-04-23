@@ -152,5 +152,5 @@
         username: "{{ $session_nim }}"
     };
 </script>
-<script src="{{ url('js/skripsi_kaprodi.js') }}"></script>
+<script src="{{ url('js/skripsi_kaprodi.js') }}?v={{ time() }}"></script>
 @endsection
