@@ -178,6 +178,28 @@
             }
             
             var target = $(this).data('target');
+            var currentStep = $('.wizard-content.active').attr('id');
+            
+            // Validation for Step 2 before proceeding to Step 3
+            if (currentStep === 'step-2' && target === '#step-3') {
+                var judul = $('#judul-proposal').val().trim();
+                var dosenId = $('#dosen-pembimbing').val();
+
+                if (!judul) {
+                    e.preventDefault();
+                    showNotification('Judul proposal wajib diisi', 'danger');
+                    $('#judul-proposal').focus();
+                    return false;
+                }
+
+                if (!dosenId) {
+                    e.preventDefault();
+                    showNotification('Pilih dosen pembimbing terlebih dahulu', 'danger');
+                    $('#dosen-pembimbing').focus();
+                    return false;
+                }
+            }
+            
             $('.wizard-content').removeClass('active');
             $(target).addClass('active');
             
@@ -504,21 +526,26 @@
         }
         
         function showNotification(message, type) {
+            // Remove any existing alerts first
+            $('#proposal-form .alert').remove();
+
             var alertClass = 'alert-' + type;
-            var icon = type === 'success' ? 'check-circle' : 'exclamation-triangle';
-            var notification = '<div class="alert ' + alertClass + ' alert-dismissible fade show" role="alert">' +
+            var icon = type === 'success' ? 'check-circle' : (type === 'warning' ? 'exclamation-circle' : 'exclamation-triangle');
+            var notificationId = 'notif-' + Date.now();
+
+            var notification = '<div id="' + notificationId + '" class="alert ' + alertClass + ' alert-dismissible fade show mb-20" role="alert">' +
                 '<i class="fa fa-' + icon + ' mr-10"></i>' +
-                message +
+                '<strong>' + (type === 'danger' ? 'Peringatan! ' : '') + '</strong>' + message +
                 '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
                 '<span aria-hidden="true">&times;</span>' +
                 '</button>' +
                 '</div>';
-            
+
             $('#proposal-form').prepend(notification);
-            
+
             // Auto dismiss after 5 seconds
             setTimeout(function() {
-                $('.alert').alert('close');
+                $('#' + notificationId).alert('close');
             }, 5000);
         }
         
