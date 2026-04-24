@@ -37,6 +37,8 @@ class SkripsiMahasiswaController extends Controller
     {
         $data = $this->getCommonData();
         $data['title'] = 'Log Bimbingan Skripsi';
+        $data['nim'] = $data['session_nim'];
+        $data['api_url'] = config('setting.second_url');
         return view('Mahasiswa.skripsi.bimbingan', $data);
     }
 
