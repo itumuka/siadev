@@ -127,11 +127,15 @@ function renderTimeline(data) {
     const config = data.config || {};
     const skripsi = data.skripsi || null;
     const bimbingan = data.bimbingan || { total: 0 };
+    
+    // Check if sempro is disabled
+    const semproDisabled = config.ada_sempro == 0 || config.ada_sempro === '0' || config.ada_sempro === 'Tidak';
+    const semproLabel = semproDisabled ? 'Seminar Proposal (Tidak Diwajibkan)' : 'Seminar Proposal';
 
     const steps = [
         { label: 'Pengajuan Proposal', done: skripsi && skripsi.status !== 'draft' },
         { label: 'Ploting Pembimbing', done: !!skripsi?.id_dosen_pembimbing1 },
-        { label: 'Seminar Proposal', done: (config.ada_sempro == 0) || (data.sempro && data.sempro.status === 'lulus') },
+        { label: semproLabel, done: semproDisabled || (data.sempro && data.sempro.status === 'lulus'), skipped: semproDisabled },
         { label: 'Masa Bimbingan', done: bimbingan.total >= (config.min_bimbingan || 8) },
         { label: 'Sidang Akhir', done: data.ujian && data.ujian.status === 'lulus' }
     ];
@@ -142,9 +146,9 @@ function renderTimeline(data) {
 
     steps.forEach((step, index) => {
         const isActive = index === activeIndex;
-        const dotColor = step.done ? 'bg-success' : (isActive ? 'bg-primary' : 'bg-gray-300');
-        const textColor = (isActive || step.done) ? 'text-dark font-weight-bold' : 'text-muted';
-        const icon = step.done ? '<i class="fa fa-check"></i>' : (index + 1);
+        const dotColor = step.done ? 'bg-success' : (step.skipped ? 'bg-secondary' : (isActive ? 'bg-primary' : 'bg-gray-300'));
+        const textColor = (isActive || step.done) ? 'text-dark font-weight-bold' : (step.skipped ? 'text-muted font-italic' : 'text-muted');
+        const icon = step.done ? '<i class="fa fa-check"></i>' : (step.skipped ? '<i class="fa fa-minus"></i>' : (index + 1));
         
         const html = `
             <div class="d-flex align-items-center mb-15">

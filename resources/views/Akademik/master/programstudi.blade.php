@@ -38,7 +38,7 @@
                         <div class="box-header no-border">
                             <div class="row">
                                 <div class="col-sm-12 text-right">
-                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                                    <button type="button" class="waves-effect waves-light btn btn-rounded btn-primary btn-outline btn-sm" data-toggle="modal"
                                         data-target="#modal_add"><i class="ti-plus"></i> Tambah</button>
                                 </div>
                             </div>
@@ -103,11 +103,11 @@
                                 </div>
                             </div>
                             <div class="modal-footer float-right">
-                                <button type="button" class="btn btn-rounded btn-warning btn-outline mr-1"
+                                <button type="button" class="waves-effect waves-light btn btn-rounded btn-warning btn-outline mr-1"
                                     data-dismiss="modal">
                                     <i class="fa fa-times"></i> Close
                                 </button>
-                                <button type="submit" class="btn btn-rounded btn-primary btn-outline" id="btsubmit">
+                                <button type="submit" class="waves-effect waves-light btn btn-rounded btn-primary btn-outline" id="btsubmit">
                                     <i class="ti-save-alt"></i> Save
                                 </button>
                             </div>
@@ -192,11 +192,11 @@
                                 </div>
                             </div>
                             <div class="modal-footer float-right">
-                                <button type="button" class="btn btn-rounded btn-warning btn-outline mr-1"
+                                <button type="button" class="waves-effect waves-light btn btn-rounded btn-warning btn-outline mr-1"
                                     data-dismiss="modal">
                                     <i class="fa fa-times"></i> Close
                                 </button>
-                                <button type="submit" class="btn btn-rounded btn-primary btn-outline" id="btsubmit">
+                                <button type="submit" class="waves-effect waves-light btn btn-rounded btn-primary btn-outline" id="btsubmit">
                                     <i class="ti-save-alt"></i> Save
                                 </button>
                             </div>
@@ -205,6 +205,135 @@
                     <!-- /.modal-content -->
                 </div>
                 <!-- /.modal-dialog -->
+            </div>
+
+            {{-- modal detail konfigurasi TA --}}
+            <div class="modal fade" id="modal_detail_ta">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-gradient-primary">
+                            <h4 class="modal-title text-white"><i class="fa fa-cogs mr-10"></i> Detail Konfigurasi Tugas Akhir</h4>
+                            <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>
+                        </div>
+                        <div class="modal-body p-4">
+                            <!-- Prodi Info Card -->
+                            <div class="card border-0 shadow-sm mb-4">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="d-flex align-items-center justify-content-center bg-primary rounded-circle mr-3" style="width: 50px; height: 50px;">
+                                            <i class="fa fa-university text-white fa-lg"></i>
+                                        </div>
+                                        <div>
+                                            <h5 id="detail_nama_prodi" class="mb-1 font-weight-600 text-primary">-</h5>
+                                            <p id="detail_kode_prodi" class="text-muted mb-0 small">-</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h6 class="mb-3 font-weight-600 text-secondary"><i class="fa fa-graduation-cap mr-2"></i> Pengaturan Tugas Akhir</h6>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="card border-0 shadow-sm h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-start">
+                                                <div class="d-flex align-items-center justify-content-center bg-info bg-opacity-10 rounded-circle mr-3" style="width: 40px; height: 40px;">
+                                                    <i class="fa fa-book text-info"></i>
+                                                </div>
+                                                <div>
+                                                    <small class="text-muted d-block mb-1">Nama Tugas Akhir</small>
+                                                    <span id="detail_ta_nama" class="font-weight-600">-</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="card border-0 shadow-sm h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-start">
+                                                <div class="d-flex align-items-center justify-content-center bg-success bg-opacity-10 rounded-circle mr-3" style="width: 40px; height: 40px;">
+                                                    <i class="fa fa-graduation-cap text-success"></i>
+                                                </div>
+                                                <div>
+                                                    <small class="text-muted d-block mb-1">SKS Minimal</small>
+                                                    <span id="detail_ta_sks" class="font-weight-600">-</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="card border-0 shadow-sm h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-start">
+                                                <div class="d-flex align-items-center justify-content-center bg-warning bg-opacity-10 rounded-circle mr-3" style="width: 40px; height: 40px;">
+                                                    <i class="fa fa-chalkboard-teacher text-warning"></i>
+                                                </div>
+                                                <div>
+                                                    <small class="text-muted d-block mb-1">Wajib Seminar Proposal</small>
+                                                    <span id="detail_ta_sempro" class="font-weight-600">-</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="card border-0 shadow-sm h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-start">
+                                                <div class="d-flex align-items-center justify-content-center bg-danger bg-opacity-10 rounded-circle mr-3" style="width: 40px; height: 40px;">
+                                                    <i class="fa fa-comments text-danger"></i>
+                                                </div>
+                                                <div>
+                                                    <small class="text-muted d-block mb-1">Minimal Bimbingan</small>
+                                                    <span id="detail_ta_bimbingan" class="font-weight-600">-</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="card border-0 shadow-sm h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-start">
+                                                <div class="d-flex align-items-center justify-content-center bg-primary bg-opacity-10 rounded-circle mr-3" style="width: 40px; height: 40px;">
+                                                    <i class="fa fa-money-bill-wave text-primary"></i>
+                                                </div>
+                                                <div>
+                                                    <small class="text-muted d-block mb-1">Komponen Bayar TA</small>
+                                                    <span id="detail_ta_komponen" class="font-weight-600 small">-</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="card border-0 shadow-sm h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-start">
+                                                <div class="d-flex align-items-center justify-content-center bg-secondary bg-opacity-10 rounded-circle mr-3" style="width: 40px; height: 40px;">
+                                                    <i class="fa fa-file-invoice-dollar text-secondary"></i>
+                                                </div>
+                                                <div>
+                                                    <small class="text-muted d-block mb-1">Komponen Bayar Ujian</small>
+                                                    <span id="detail_ta_komponen_ujian" class="font-weight-600 small">-</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-light">
+                            <button type="button" class="waves-effect waves-light btn btn-rounded btn-secondary" data-dismiss="modal">
+                                <i class="fa fa-times mr-1"></i> Tutup
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
         <!-- /.content -->
@@ -379,12 +508,13 @@
                     {
                         data: null,
                         render: function(data, type, full, meta) {
+                            var btnDetail = '<a href="javascript:void(0)" class="waves-effect waves-light btn btn-xs btn-outline btn-primary mr-5" id="bt_detail_ta" data-toggle="tooltip" data-original-title="Detail Konfigurasi TA"><i class="fa fa-cogs"></i></a>';
                             if (full.trash == '1') {
-                                return '<a href="javascript:void(0)" class="text-info mr-10" id="bt_edit" data-toggle="tooltip" data-original-title="Edit"><i class="ti-marker-alt"></i></a> | <a href="javascript:void(0)" class="text-danger del" data-id="' +
+                                return btnDetail + '<a href="javascript:void(0)" class="waves-effect waves-light btn btn-xs btn-outline btn-info mr-5" id="bt_edit" data-toggle="tooltip" data-original-title="Edit"><i class="ti-marker-alt"></i></a><a href="javascript:void(0)" class="waves-effect waves-light btn btn-xs btn-outline btn-danger del" data-id="' +
                                     full.id_program_studi +
                                     '" data-original-title="Delete" data-toggle="tooltip"><i class="ti-trash"></i></a>';
                             } else {
-                                return '<a href="javascript:void(0)" class="text-info mr-10" id="bt_edit" data-toggle="tooltip"  data-original-title="Edit"><i class="ti-marker-alt"></i></a> | <a href="javascript:void(0)" class="text-danger del" data-id="' +
+                                return btnDetail + '<a href="javascript:void(0)" class="waves-effect waves-light btn btn-xs btn-outline btn-info mr-5" id="bt_edit" data-toggle="tooltip"  data-original-title="Edit"><i class="ti-marker-alt"></i></a><a href="javascript:void(0)" class="waves-effect waves-light btn btn-xs btn-outline btn-danger del" data-id="' +
                                     full.id_program_studi +
                                     '" data-original-title="Delete" data-toggle="tooltip"><i class="ti-trash"></i></a>';
 
@@ -449,6 +579,24 @@
                 $('#eta_min_bimbingan').val(data['ta_min_bimbingan']);
 
                 $("#" + data.trash).prop("checked", true)
+            });
+
+            // show detail TA config
+            table.on('click', '#bt_detail_ta', function() {
+                $tr = $(this).closest('tr');
+                var data = table.row($tr).data();
+                
+                // Populate modal with data
+                $('#detail_nama_prodi').text(data['nama_program_studi'] || '-');
+                $('#detail_kode_prodi').text(data['kode_program_studi'] || '-');
+                $('#detail_ta_nama').text(data['ta_nama_tugas_akhir'] || 'Skripsi');
+                $('#detail_ta_sks').text((data['ta_sks_minimal'] || '-') + ' SKS');
+                $('#detail_ta_sempro').text(data['ta_ada_sempro'] == '1' || data['ta_ada_sempro'] == 1 ? 'Ya (Wajib)' : 'Tidak (Langsung Bimbingan)');
+                $('#detail_ta_bimbingan').text((data['ta_minimal_bimbingan'] || '8') + ' kali');
+                $('#detail_ta_komponen').text(data['ta_komponen_bayar'] || '-');
+                $('#detail_ta_komponen_ujian').text(data['ta_komponen_bayar_ujian'] || '-');
+                
+                $('#modal_detail_ta').modal('show');
             });
 
             // edit

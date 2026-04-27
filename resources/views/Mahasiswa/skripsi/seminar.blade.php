@@ -74,14 +74,6 @@
                                 <input type="text" id="judul-proposal" name="judul" class="form-control" style="height: 50px;" placeholder="Masukkan judul penelitian Anda di sini..." required>
                                 <small class="text-muted">Judul akan digunakan untuk surat resmi universitas</small>
                             </div>
-                            <div class="form-group mb-20">
-                                <label class="font-weight-600">Usulan Dosen Pembimbing <span class="text-danger">*</span></label>
-                                <select id="dosen-pembimbing" name="dosen_pembimbing" class="form-control" style="height: 50px;" required>
-                                    <option value="">-- Pilih Usulan Dosen --</option>
-                                    <option disabled><i class="fa fa-spinner fa-spin"></i> Memuat data dosen...</option>
-                                </select>
-                                <small class="text-muted">Pilih dosen yang sesuai dengan topik penelitian Anda</small>
-                            </div>
                             <div class="d-flex justify-content-between mt-30">
                                 <button type="button" class="btn btn-outline-secondary prev-step px-30 py-10" data-target="#step-1"><i class="fa fa-arrow-left mr-10"></i> Kembali</button>
                                 <button type="button" id="save-proposal-btn" class="btn btn-primary next-step px-30 py-10" data-target="#step-3">Selanjutnya <i class="fa fa-arrow-right ml-10"></i></button>
@@ -135,11 +127,6 @@
                             </div>
                             <hr style="margin: 10px 0;">
                             <div class="row">
-                                <div class="col-md-4 font-weight-bold">Usulan Pembimbing:</div>
-                                <div class="col-md-8" id="reviewDosen">Memuat...</div>
-                            </div>
-                            <hr style="margin: 10px 0;">
-                            <div class="row">
                                 <div class="col-md-4 font-weight-bold">Dokumen:</div>
                                 <div class="col-md-8" id="reviewDokumen">Memuat...</div>
                             </div>
@@ -164,13 +151,6 @@
         loadVerificationData();
         
         // Load lecturer data when Step 2 becomes active
-        $('body').on('click', '.next-step', function() {
-            var target = $(this).data('target');
-            if(target === '#step-2') {
-                loadLecturerData();
-            }
-        });
-        
         $('.next-step').click(function(e) {
             if($(this).prop('disabled')) {
                 e.preventDefault();
@@ -183,19 +163,11 @@
             // Validation for Step 2 before proceeding to Step 3
             if (currentStep === 'step-2' && target === '#step-3') {
                 var judul = $('#judul-proposal').val().trim();
-                var dosenId = $('#dosen-pembimbing').val();
 
                 if (!judul) {
                     e.preventDefault();
                     showNotification('Judul proposal wajib diisi', 'danger');
                     $('#judul-proposal').focus();
-                    return false;
-                }
-
-                if (!dosenId) {
-                    e.preventDefault();
-                    showNotification('Pilih dosen pembimbing terlebih dahulu', 'danger');
-                    $('#dosen-pembimbing').focus();
                     return false;
                 }
             }
@@ -223,7 +195,61 @@
             else { $('#step-' + targetNum + '-indicator .wizard-step-circle').html(targetNum); }
         });
         
+        // Flag to track if sempro is enabled for this prodi
+        var semproEnabled = true;
+        
         function loadVerificationData() {
+            // First check if sempro is enabled for this prodi
+            $.ajax({
+                url: '{{ $api_url }}mahasiswa/skripsi/dashboard',
+                method: 'GET',
+                data: {
+                    nim: '{{ $nim }}'
+                },
+                headers: {
+                    'Authorization': 'Bearer {{ $api_token }}',
+                    'username': '{{ $nim }}'
+                },
+                success: function(dashboardResponse) {
+                    if(dashboardResponse.status === 'success' && dashboardResponse.data) {
+                        // Check if sempro is enabled (ta_ada_sempro = 1 or 'Ya')
+                        var adaSempro = dashboardResponse.data.config?.ada_sempro;
+                        if (adaSempro === 0 || adaSempro === '0' || adaSempro === 'Tidak') {
+                            semproEnabled = false;
+                            showSemproDisabledMessage();
+                            return;
+                        }
+                        
+                        // Continue to load verification data
+                        loadCekKelayakan();
+                    } else {
+                        showError('Gagal memuat konfigurasi program studi');
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Error loading dashboard data:', xhr);
+                    // Fallback: try to load cek kelayakan anyway
+                    loadCekKelayakan();
+                }
+            });
+        }
+        
+        function showSemproDisabledMessage() {
+            var container = $('#verification-container');
+            var html = '<div class="alert alert-info text-center p-30">';
+            html += '<i class="fa fa-info-circle fa-4x text-primary mb-15"></i>';
+            html += '<h4 class="mb-10">Seminar Proposal Tidak Diwajibkan</h4>';
+            html += '<p class="mb-20">Program Studi Anda tidak mewajibkan seminar proposal. Anda dapat langsung melanjutkan ke proses bimbingan dan ujian.</p>';
+            html += '<a href="{{ route("skripsi.dashboard") }}" class="btn btn-primary"><i class="fa fa-arrow-left mr-10"></i> Kembali ke Dashboard</a>';
+            html += '</div>';
+            container.html(html);
+            
+            // Hide the wizard and next button
+            $('.wizard-steps').hide();
+            $('#next-step-btn').hide();
+        }
+        
+        function loadCekKelayakan() {
             $.ajax({
                 url: '{{ $api_url }}mahasiswa/skripsi/cek-kelayakan',
                 method: 'GET',
@@ -426,41 +452,9 @@
             );
         }
         
-        function loadLecturerData() {
-            $.ajax({
-                url: '{{ $api_url }}akademik/select-dosen',
-                method: 'GET',
-                data: {
-                    search: ''
-                },
-                headers: {
-                    'Authorization': 'Bearer {{ $api_token }}',
-                    'username': '{{ $nim }}'
-                },
-                success: function(response) {
-                    var select = $('#dosen-pembimbing');
-                    select.html('<option value="">-- Pilih Usulan Dosen --</option>');
-                    
-                    if(response.data && response.data.length > 0) {
-                        response.data.forEach(function(dosen) {
-                            var option = '<option value="' + dosen.id + '">' + dosen.text + '</option>';
-                            select.append(option);
-                        });
-                    } else {
-                        select.append('<option disabled>Tidak ada data dosen tersedia</option>');
-                    }
-                },
-                error: function(xhr) {
-                    console.error('Error loading lecturer data:', xhr);
-                    $('#dosen-pembimbing').html('<option disabled>Gagal memuat data dosen</option>');
-                }
-            });
-        }
-        
         // Handle proposal form submission
         $('#save-proposal-btn').click(function() {
             var judul = $('#judul-proposal').val().trim();
-            var dosenId = $('#dosen-pembimbing').val();
             
             // Validation
             if(!judul) {
@@ -469,17 +463,11 @@
                 return;
             }
             
-            if(!dosenId) {
-                showNotification('Pilih dosen pembimbing terlebih dahulu', 'danger');
-                $('#dosen-pembimbing').focus();
-                return;
-            }
-            
             // Save proposal data
-            saveProposalData(judul, dosenId);
+            saveProposalData(judul);
         });
         
-        function saveProposalData(judul, dosenId) {
+        function saveProposalData(judul) {
             $.ajax({
                 url: '{{ $api_url }}mahasiswa/skripsi/simpan-proposal',
                 method: 'POST',
@@ -501,8 +489,7 @@
                         showNotification('Data proposal berhasil disimpan', 'success');
                         // Store data for review step
                         sessionStorage.setItem('proposalData', JSON.stringify({
-                            judul: judul,
-                            dosen_pembimbing: $('#dosen-pembimbing option:selected').text()
+                            judul: judul
                         }));
                         
                         // Continue to next step
@@ -691,7 +678,6 @@
             var fileData = JSON.parse(sessionStorage.getItem('uploadedFile') || '{}');
             
             $('#reviewJudul').text(proposalData.judul || 'Tidak tersedia');
-            $('#reviewDosen').text(proposalData.dosen_pembimbing || 'Tidak tersedia');
             
             if(fileData.name) {
                 $('#reviewDokumen').html('<span class=\"badge badge-success\"><i class=\"fa fa-check\"></i> ' + fileData.name + ' (' + fileData.size + ')</span>');
