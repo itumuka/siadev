@@ -123,6 +123,15 @@ $(document).ready(function() {
                     $('#progress_label').text('Progres (' + totalAcc + '/' + minBimbingan + ')');
                     $('#progress_percent').text(persen + '%');
                     $('#progress_bar_fill').css('width', persen + '%').attr('aria-valuenow', persen);
+
+                    // Cek apakah mahasiswa sudah punya skripsi dan pembimbing sudah di-ploting
+                    var skripsi = res.data.skripsi;
+                    if(!skripsi || !skripsi.id_dosen_pembimbing1) {
+                        // Disable tombol tambah bimbingan
+                        $('#modalTambahBimbingan').remove();
+                        $('.bg-primary .btn-warning').prop('disabled', true).addClass('disabled').html('<i class="fa fa-lock"></i> Belum Bisa Bimbingan');
+                        $('.bg-primary p').after('<div class="alert alert-warning mt-15"><i class="fa fa-exclamation-triangle"></i> Anda belum mengajukan proposal atau pembimbing belum di-ploting.</div>');
+                    }
                 }
             }
         });
