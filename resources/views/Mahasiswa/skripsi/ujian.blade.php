@@ -72,8 +72,8 @@
                         <h4 class="mb-20">Validasi Data Skripsi Anda</h4>
                         <div class="alert alert-info border-info">Pastikan judul yang tercetak di bawah ini adalah judul final yang telah disetujui Dosen Pembimbing untuk diujikan. Jika ada perubahan, silakan perbarui judul.</div>
                         <div class="form-group mb-20">
-                            <label class="font-weight-600">Judul Final Skripsi / Tugas Akhir</label>
-                            <input type="text" id="input_judul" class="form-control" style="height: 50px;">
+                            <label class="font-weight-600">Judul Final Skripsi / Tugas Akhir <span class="text-danger">*</span></label>
+                            <input type="text" id="input_judul" class="form-control" style="height: 50px;" placeholder="Masukkan judul final tugas akhir Anda..." required>
                         </div>
                         <div class="d-flex justify-content-between mt-30">
                             <button class="btn btn-outline-secondary prev-step px-30 py-10" data-target="#step-1"><i class="fa fa-arrow-left mr-10"></i> Kembali</button>
@@ -131,9 +131,22 @@
 
     $(document).ready(function() {
         // Navigation Logics
-        $('.next-step').click(function() {
+        $('.next-step').click(function(e) {
             var target = $(this).data('target');
             if($(this).attr('disabled')) return;
+
+            var currentStep = $('.wizard-content.active').attr('id');
+            
+            // Validation for Step 2 before proceeding to Step 3
+            if (currentStep === 'step-2' && target === '#step-3') {
+                var judul = $('#input_judul').val().trim();
+                if (!judul) {
+                    e.preventDefault();
+                    showToastr('error', 'Validasi Gagal', 'Judul final skripsi wajib diisi');
+                    $('#input_judul').focus();
+                    return;
+                }
+            }
 
             $('.wizard-content').removeClass('active');
             $(target).addClass('active');
@@ -245,6 +258,13 @@
 
         // Submit form placeholder (Endpoint pendaftaran ujian bisa diseragamkan dengan modul skripsi update)
         $('#btn-submit-final').click(function(){
+            var judul = $('#input_judul').val().trim();
+            if (!judul) {
+                showToastr('error', 'Validasi Gagal', 'Judul final skripsi wajib diisi');
+                $('#input_judul').focus();
+                return;
+            }
+            
             $(this).prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Menyimpan...');
             
             // Endpoint ini akan menggunakan mekanisme yang sama (update judal, fase)

@@ -72,6 +72,13 @@
                         </a>
                     </li>
                     
+                    <li class="{{ Route::is('dosen.skripsi.index') || Route::is('dosen.skripsi.detail_bimbingan') ? 'active' : '' }}">
+                        <a href="{{ route('dosen.skripsi.index') }}" title="Pembimbing Skripsi">
+                            <i class="fa fa-graduation-cap"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Pembimbing Skripsi</span>
+                        </a>
+                    </li>
+                    
                     <li class="treeview">
                         <a href="#">
                             <i class="fa fa-list-alt"><span class="path1"></span><span class="path2"></span></i>

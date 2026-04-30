@@ -24,6 +24,17 @@
 @section('content')
 <div class="container-full">
     <section class="content">
+        <!-- Notification for existing proposal submission -->
+        <div id="proposal-submitted-notif" class="alert alert-info mb-20" style="display: none;">
+            <div class="d-flex align-items-center">
+                <i class="fa fa-info-circle fa-2x mr-15"></i>
+                <div>
+                    <strong>Informasi!</strong><br>
+                    Anda sudah melakukan pengajuan proposal. Silakan tunggu persetujuan dari Kaprodi atau periksa status pendaftaran Anda di dashboard.
+                </div>
+            </div>
+        </div>
+
         <div class="box glassmorphism border-0">
             <div class="box-header no-border pb-0">
                 <h3 class="box-title mb-30" style="font-weight: 700; color: #2c3e50;">Pendaftaran Seminar Proposal</h3>
@@ -108,7 +119,7 @@
                         </div>
                         <div class="d-flex justify-content-between mt-30">
                             <button type="button" class="btn btn-outline-secondary prev-step px-30 py-10" data-target="#step-2"><i class="fa fa-arrow-left mr-10"></i> Kembali</button>
-                            <button type="button" id="upload-btn" class="btn btn-primary next-step px-30 py-10" data-target="#step-4" disabled>Selanjutnya <i class="fa fa-arrow-right ml-10"></i></button>
+                            <button type="button" id="upload-btn" class="btn btn-primary px-30 py-10" disabled>Unggah Naskah <i class="fa fa-upload ml-10"></i></button>
                         </div>
                     </div>
 
@@ -147,6 +158,9 @@
 @section('script-master')
 <script>
     $(document).ready(function() {
+        // Check if proposal already submitted
+        checkExistingProposal();
+
         // Load verification data on page load
         loadVerificationData();
         
@@ -204,11 +218,11 @@
                 url: '{{ $api_url }}mahasiswa/skripsi/dashboard',
                 method: 'GET',
                 data: {
-                    nim: '{{ $nim }}'
+                    nim: '{{ $session_nim }}'
                 },
                 headers: {
                     'Authorization': 'Bearer {{ $api_token }}',
-                    'username': '{{ $nim }}'
+                    'username': '{{ $session_nim }}'
                 },
                 success: function(dashboardResponse) {
                     if(dashboardResponse.status === 'success' && dashboardResponse.data) {
@@ -249,17 +263,50 @@
             $('#next-step-btn').hide();
         }
         
+        function checkExistingProposal() {
+            $.ajax({
+                url: '{{ $api_url }}mahasiswa/skripsi/dashboard',
+                method: 'GET',
+                data: {
+                    nim: '{{ $session_nim }}'
+                },
+                headers: {
+                    'Authorization': 'Bearer {{ $api_token }}',
+                    'username': '{{ $session_nim }}'
+                },
+                success: function(response) {
+                    if(response.status === 'success' && response.data && response.data.sempro) {
+                        // Show notification that proposal already submitted
+                        $('#proposal-submitted-notif').show();
+                        
+                        // Also update wizard to show completed status
+                        $('.wizard-step').addClass('completed');
+                        $('.wizard-step-circle').html('<i class="fa fa-check"></i>');
+                        
+                        // Disable all inputs in the wizard
+                        $('input, textarea, select, button.next-step, button#save-proposal-btn, button#upload-btn, button#submit-btn').prop('disabled', true);
+                        
+                        // Change submit button text
+                        $('#submit-btn').html('<i class="fa fa-check-circle mr-10"></i> Sudah Diajukan').removeClass('btn-success').addClass('btn-secondary');
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Error checking existing proposal:', xhr);
+                }
+            });
+        }
+        
         function loadCekKelayakan() {
             $.ajax({
                 url: '{{ $api_url }}mahasiswa/skripsi/cek-kelayakan',
                 method: 'GET',
                 data: {
-                    nim: '{{ $nim }}',
+                    nim: '{{ $session_nim }}',
                     fase: 'sempro'
                 },
                 headers: {
                     'Authorization': 'Bearer {{ $api_token }}',
-                    'username': '{{ $nim }}'
+                    'username': '{{ $session_nim }}'
                 },
                 success: function(response) {
                     if(response.status === 'success') {
@@ -472,7 +519,7 @@
                 url: '{{ $api_url }}mahasiswa/skripsi/simpan-proposal',
                 method: 'POST',
                 data: {
-                    nim: '{{ $nim }}',
+                    nim: '{{ $session_nim }}',
                     judul: judul,
                     judul_en: judul, // For now, use same title
                     topik: judul, // For now, use same title
@@ -482,7 +529,7 @@
                 },
                 headers: {
                     'Authorization': 'Bearer {{ $api_token }}',
-                    'username': '{{ $nim }}'
+                    'username': '{{ $session_nim }}'
                 },
                 success: function(response) {
                     if(response.success) {
@@ -605,7 +652,7 @@
         
         function uploadFile(file) {
             var formData = new FormData();
-            formData.append('nim', '{{ $nim }}');
+            formData.append('nim', '{{ $session_nim }}');
             formData.append('file_naskah', file);
             formData.append('fase', 'sempro');
             
@@ -620,7 +667,7 @@
                 contentType: false,
                 headers: {
                     'Authorization': 'Bearer {{ $api_token }}',
-                    'username': '{{ $nim }}'
+                    'username': '{{ $session_nim }}'
                 },
                 xhr: function() {
                     var xhr = new window.XMLHttpRequest();
@@ -646,15 +693,13 @@
                         }));
                         
                         setTimeout(function() {
-                            // Continue to next step
-                            var target = $('#upload-btn').data('target');
+                            // Continue to step 4 (Review)
                             $('.wizard-content').removeClass('active');
-                            $(target).addClass('active');
+                            $('#step-4').addClass('active');
                             
-                            var targetNum = target.replace('#step-', '');
-                            $('#step-' + (targetNum - 1) + '-indicator').removeClass('active').addClass('completed');
-                            $('#step-' + (targetNum - 1) + '-indicator .wizard-step-circle').html('<i class="fa fa-check"></i>');
-                            $('#step-' + targetNum + '-indicator').addClass('active');
+                            $('#step-3-indicator').removeClass('active').addClass('completed');
+                            $('#step-3-indicator .wizard-step-circle').html('<i class="fa fa-check"></i>');
+                            $('#step-4-indicator').addClass('active');
                             
                             // Load review data
                             loadReviewData();
@@ -680,9 +725,9 @@
             $('#reviewJudul').text(proposalData.judul || 'Tidak tersedia');
             
             if(fileData.name) {
-                $('#reviewDokumen').html('<span class=\"badge badge-success\"><i class=\"fa fa-check\"></i> ' + fileData.name + ' (' + fileData.size + ')</span>');
+                $('#reviewDokumen').html('<span class="badge badge-success d-inline-flex align-items-center flex-wrap" style="max-width: 100%;"><i class="fa fa-check mr-1"></i> <span style="word-break: break-all;">' + fileData.name + '</span> <span class="ml-1">(' + fileData.size + ')</span></span>');
             } else {
-                $('#reviewDokumen').html('<span class=\"badge badge-secondary\"><i class=\"fa fa-times\"></i> Belum diunggah</span>');
+                $('#reviewDokumen').html('<span class="badge badge-secondary"><i class="fa fa-times"></i> Belum diunggah</span>');
             }
         }
         

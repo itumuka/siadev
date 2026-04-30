@@ -86,6 +86,10 @@ Route::middleware(['ceklogin'])->group(function () {
         Route::get("/dosen/presensi-mhs", "Dosen@presensi_mhs")->name('dsnpresensi_mhs');
         Route::get("/dosen/ganti-password", "Dosen@ganti_password")->name('dsngantipassword');
         Route::post("/akademik/qrcodedowalacc", "Akademik@saveAllQrCodeACC")->name('qrcodedowalacc');
+
+         // Skripsi Dosen Pembimbing
+        Route::get("/dosen/skripsi/bimbingan", "SkripsiDosenController@index")->name('dosen.skripsi.index');
+        Route::get("/dosen/skripsi/bimbingan/{id_skripsi}", "SkripsiDosenController@bimbingan")->name('dosen.skripsi.detail_bimbingan');
     });
 
     Route::middleware(['cekpegawai'])->group(function () {
