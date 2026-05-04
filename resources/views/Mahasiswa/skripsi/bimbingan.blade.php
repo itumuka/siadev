@@ -70,11 +70,13 @@
                     </div>
                     <div class="form-group">
                         <label>Materi / Topik Konsultasi</label>
-                        <input type="text" class="form-control" name="topik" placeholder="Cth: Bab 3 - Perancangan Sistem" required>
+                        <input type="text" class="form-control" name="topik" placeholder="Cth: Bab 3 - Perancangan Sistem" maxlength="250" required>
+                        <small class="text-muted">Maksimal 250 karakter</small>
                     </div>
                     <div class="form-group">
                         <label>Uraian / Pesan ke Pembimbing</label>
-                        <textarea class="form-control" name="uraian" rows="4" placeholder="Jelaskan progres Anda..." required></textarea>
+                        <textarea class="form-control" name="uraian" rows="4" placeholder="Jelaskan progres Anda..." maxlength="500" required></textarea>
+                        <small class="text-muted">Maksimal 500 karakter</small>
                     </div>
                     <div class="form-group">
                         <label>Upload File (Opsional)</label>
@@ -207,6 +209,16 @@ $(document).ready(function() {
         e.preventDefault();
         var formData = new FormData(this);
         formData.append('nim', nim);
+
+        // Client-side validation for file size
+        var fileInput = $('input[name="file_lampiran"]')[0];
+        if (fileInput.files.length > 0) {
+            var file = fileInput.files[0];
+            if (file.size > 5 * 1024 * 1024) { // 5MB
+                showToastr('error', 'Gagal', 'Ukuran file lampiran maksimal 5MB.');
+                return false;
+            }
+        }
 
         var btn = $('#btnSimpanBimbingan');
         btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Menyimpan...');

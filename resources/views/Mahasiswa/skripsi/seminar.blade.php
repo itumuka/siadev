@@ -30,7 +30,7 @@
                 <i class="fa fa-info-circle fa-2x mr-15"></i>
                 <div>
                     <strong>Informasi!</strong><br>
-                    Anda sudah melakukan pengajuan proposal. Silakan tunggu persetujuan dari Kaprodi atau periksa status pendaftaran Anda di dashboard.
+                    Anda sudah melakukan pendaftaran seminar proposal. Silakan tunggu persetujuan dari Kaprodi atau periksa status pendaftaran Anda di dashboard.
                 </div>
             </div>
         </div>
@@ -100,7 +100,7 @@
                             <div class="drag-drop-zone mt-10" id="dropZone">
                                 <i class="fa fa-cloud-upload fa-4x text-primary mb-10" id="uploadIcon"></i>
                                 <h5 id="uploadText">Seret & Lepas file Anda di sini</h5>
-                                <p class="text-muted" id="uploadSubtext">Atau klik untuk mencari file</p>
+                                <p class="text-muted" id="uploadSubtext">Atau klik untuk mencari file (Max 10MB)</p>
                                 <input type="file" style="display:none;" id="fileInput" accept=".pdf">
                                 <button type="button" class="btn btn-sm btn-primary mt-10" onclick="$('#fileInput').click()">Pilih File</button>
                             </div>
@@ -276,18 +276,17 @@
                 },
                 success: function(response) {
                     if(response.status === 'success' && response.data && response.data.sempro) {
-                        // Show notification that proposal already submitted
-                        $('#proposal-submitted-notif').show();
-                        
-                        // Also update wizard to show completed status
-                        $('.wizard-step').addClass('completed');
-                        $('.wizard-step-circle').html('<i class="fa fa-check"></i>');
-                        
-                        // Disable all inputs in the wizard
-                        $('input, textarea, select, button.next-step, button#save-proposal-btn, button#upload-btn, button#submit-btn').prop('disabled', true);
-                        
-                        // Change submit button text
-                        $('#submit-btn').html('<i class="fa fa-check-circle mr-10"></i> Sudah Diajukan').removeClass('btn-success').addClass('btn-secondary');
+                        // Hanya tampilkan notifikasi jika statusnya BUKAN draft
+                        if (response.data.sempro.status !== 'draft') {
+                            // Show notification that proposal already submitted
+                            $('#proposal-submitted-notif').show();
+                            
+                            // Disable all inputs in the wizard
+                            $('input, textarea, select, button.next-step, button#save-proposal-btn, button#upload-btn, button#submit-btn').prop('disabled', true);
+                            
+                            // Change submit button text
+                            $('#submit-btn').html('<i class="fa fa-check-circle mr-10"></i> Sudah Diajukan').removeClass('btn-success').addClass('btn-secondary');
+                        }
                     }
                 },
                 error: function(xhr) {

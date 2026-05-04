@@ -16,6 +16,12 @@ $(document).ready(function () {
         e.preventDefault();
         uploadNaskah($(this));
     });
+
+    // Reset form and UI when modal is hidden
+    $('#modal-upload-naskah').on('hidden.bs.modal', function () {
+        $('#form_upload_naskah')[0].reset();
+        $('input[name="file_naskah"]').attr('required', true);
+    });
 });
 
 async function initDashboard() {
@@ -93,6 +99,23 @@ function renderDashboard(data) {
             `;
         }
         $('#btn_edit_container').html(buttons);
+
+        // 3.1 Render History Naskah
+        if (data.sempro && data.sempro.path_file_pdf) {
+            const path = data.sempro.path_file_pdf.replace('public/', 'storage/');
+            const fileName = path.split('/').pop();
+            const fullUrl = CONFIG.api_url.replace('/api', '') + '/' + path;
+
+            $('#label-naskah-terakhir').text(fileName);
+            $('#link-naskah-terakhir').attr('href', fullUrl.replace(/([^:]\/)\/+/g, "$1"));
+            $('#history-naskah').show();
+            // Jika sudah ada file, input tidak wajib (boleh hanya update data lain jika ada)
+            // Namun karena ini modal khusus upload, kita tetap biarkan agar mahasiswa tahu bisa upload ulang
+            $('input[name="file_naskah"]').removeAttr('required');
+        } else {
+            $('#history-naskah').hide();
+            $('input[name="file_naskah"]').attr('required', true);
+        }
 
         if (status === 'draft' || status === 'menunggu_pembimbing') {
             const form = $('#form_proposal_submit');
@@ -247,6 +270,17 @@ async function saveProposal(form) {
 
 async function uploadNaskah(form) {
     const btn = $('#btn_submit_naskah');
+    
+    // Client-side validation for file size (10MB)
+    const fileInput = form.find('input[name="file_naskah"]')[0];
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        if (file.size > 10 * 1024 * 1024) { // 10MB
+            swal("Gagal!", "Ukuran file naskah maksimal 10MB.", "error");
+            return false;
+        }
+    }
+
     btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Mengunggah...');
 
     const fase = form.attr('data-fase') || 'sempro';
