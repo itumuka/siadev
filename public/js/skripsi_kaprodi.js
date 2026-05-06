@@ -1,6 +1,22 @@
 $(document).ready(function () {
     let table;
 
+    function truncateText(text, maxLength = 200) {
+        if (text === null || text === undefined || text === '') return '-';
+        const value = String(text);
+        return value.length > maxLength ? value.substring(0, maxLength) + '...' : value;
+    }
+
+    function escapeAttr(text) {
+        if (text === null || text === undefined) return '';
+        return String(text)
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+    }
+
     // 1. Initialize Datatable
     function initDataTable() {
         table = $('#table_kaprodi_skripsi').DataTable({
@@ -13,7 +29,9 @@ $(document).ready(function () {
                     "username": CONFIG.username
                 },
                 data: {
-                    kode_prodi: CONFIG.kode_prodi
+                    kode_prodi: CONFIG.kode_prodi,
+                    tahun: CONFIG.tahun,
+                    semester: CONFIG.semester
                 },
                 dataSrc: ""
             },
@@ -24,7 +42,11 @@ $(document).ready(function () {
                 {
                     data: null,
                     render: function (data) {
-                        return `<strong>${data.topik || '-'}</strong><br><small>${data.judul || '-'}</small>`;
+                        const topik = data.topik || '-';
+                        const judul = data.judul || '-';
+                        const topikDisplay = truncateText(topik, 200);
+                        const judulDisplay = truncateText(judul, 200);
+                        return `<strong title="${escapeAttr(topik)}">${topikDisplay}</strong><br><small title="${escapeAttr(judul)}">${judulDisplay}</small>`;
                     }
                 },
                 {

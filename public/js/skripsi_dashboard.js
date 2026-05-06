@@ -158,7 +158,8 @@ function renderTimeline(data) {
     const steps = [
         { label: 'Pengajuan Proposal', done: skripsi && skripsi.status !== 'draft' },
         { label: 'Ploting Pembimbing', done: !!skripsi?.id_dosen_pembimbing1 },
-        { label: semproLabel, done: semproDisabled || (data.sempro && data.sempro.status === 'lulus'), skipped: semproDisabled },
+        // Consider sempro done when either disabled, explicitly 'lulus', or Kaprodi has approved/scheduled it
+        { label: semproLabel, done: semproDisabled || (data.sempro && (data.sempro.status === 'disetujui' || data.sempro.status === 'lulus' || data.sempro.tanggal_sempro)), skipped: semproDisabled },
         { label: 'Masa Bimbingan', done: bimbingan.total >= (config.min_bimbingan || 8) },
         { label: 'Sidang Akhir', done: data.ujian && data.ujian.status === 'lulus' }
     ];

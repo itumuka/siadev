@@ -4,7 +4,7 @@
     <div class="content-header">
         <div class="d-flex align-items-center">
             <div class="mr-auto">
-                <h3 class="page-title">Manajemen Tugas Akhir / Skripsi</h3>
+                <h3 class="page-title">Manajemen Tugas Akhir / Skripsi <sub class="text-danger">beta</sub></h3>
                 <div class="d-inline-block align-items-center">
                     <nav>
                         <ol class="breadcrumb">
@@ -149,7 +149,9 @@
         api_url: "{{ $api_url }}",
         kode_prodi: "{{ $session_kode_program_studi }}",
         token: "{{ $api_token }}",
-        username: "{{ $session_nim }}"
+        username: "{{ $session_nim }}",
+        tahun: "{{ $session_tahun }}",
+        semester: "{{ $session_semester }}"
     };
 </script>
 <script src="{{ url('js/skripsi_kaprodi.js') }}?v={{ time() }}"></script>

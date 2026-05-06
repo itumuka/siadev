@@ -114,6 +114,8 @@ Route::middleware(['ceklogin'])->group(function () {
         // Skripsi Dekanat
         Route::get("/dekanat/skripsi/validasi-sk", "Dekanat@skripsi_index_sk")->name('dknskripsi_index_sk');
         Route::get("/dekanat/skripsi/cetak-sk/{id}", "Dekanat@skripsi_print_sk")->name('dknskripsi_print_sk');
+        Route::get("/dekanat/skripsi/cetak-surat-tugas/{id}", "Dekanat@skripsi_print_surat_tugas")->name('dknskripsi_print_st');
+        Route::get("/dekanat/skripsi/print-sk/{id}", "Dekanat@skripsi_print_sk")->name('dknskripsi_print_sk_old');
 
 
         Route::get("/akademik/tahunajaran", "Akademik@tahunajaran")->name('aktahunajaran');

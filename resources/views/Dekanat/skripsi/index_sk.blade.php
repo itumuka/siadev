@@ -39,13 +39,24 @@
                                 </div>
                             </div>
                             <div class="box-body">
+                                <div class="row mb-10">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Filter Angkatan</label>
+                                            <select class="form-control" id="filter_angkatan">
+                                                <option value="">- Semua Angkatan -</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="table-responsive">
-                                    <table id="table_siap_sk" class="table table-hover">
+                                    <table id="table_siap_sk" class="table table-hover" width="100%">
                                         <thead>
                                             <tr>
-                                                <th width="5%"><input type="checkbox" id="check_all"></th>
+                                                <th width="5%" data-orderable="false">Pilih</th>
                                                 <th>NIM</th>
                                                 <th>Nama</th>
+                                                <th>Angkatan</th>
                                                 <th>Judul</th>
                                                 <th>Pembimbing 1</th>
                                                 <th>Pembimbing 2</th>
@@ -64,7 +75,7 @@
                             </div>
                             <div class="box-body">
                                 <div class="table-responsive">
-                                    <table id="table_riwayat_sk" class="table table-hover">
+                                    <table id="table_riwayat_sk" class="table table-hover" width="100%">
                                         <thead>
                                             <tr>
                                                 <th>No SK</th>
@@ -82,6 +93,7 @@
                 </div>
             </div>
         </div>
+        <iframe id="printff" name="printff" style="display: none;"></iframe>
     </section>
 
     <!-- Modal Issue SK -->
@@ -99,16 +111,20 @@
                             <input type="text" class="form-control" name="no_sk" required placeholder="Contoh: 112.3/KEP/III.3.AU.III.1/A2/IX/2025">
                         </div>
                         <div class="form-group">
+                            <label>Nomor Surat Tugas</label>
+                            <input type="text" class="form-control" name="no_surat_tugas" required placeholder="Contoh: 112.4/ST/III.3.AU.III.1/A2/IX/2025">
+                        </div>
+                        <div class="form-group">
                             <label>Tanggal SK</label>
-                            <input type="date" class="form-control" name="tgl_sk" required value="{{ date('Y-m-d') }}">
+                            <input type="date" class="form-control" name="tgl_sk" id="issue_tgl_sk" required>
                         </div>
                         <div class="form-group">
                             <label>Tahun Akademik</label>
-                            <input type="text" class="form-control" name="tahun_akademik" value="{{ $session_tahun }}" readonly>
+                            <input type="text" class="form-control" name="tahun_akademik" id="issue_tahun_akademik" readonly>
                         </div>
                         <div class="form-group">
                             <label>Semester</label>
-                            <input type="text" class="form-control" name="semester" value="{{ $session_semester == 1 ? 'Gasal' : 'Genap' }}" readonly>
+                            <input type="text" class="form-control" name="semester" id="issue_semester" readonly>
                         </div>
                         <div class="form-group">
                             <label>Perihal (Optional)</label>
@@ -117,7 +133,7 @@
                         <div id="selected_mhs_list" class="alert alert-info py-2" style="font-size: 0.9em;">
                             <strong>Akan diterapkan untuk:</strong> <span id="text_count_selected">0</span> mahasiswa tercentang.
                         </div>
-                        <input type="hidden" name="kode_prodi" value="{{ Session::get('kode_program_studi') }}">
+                        <input type="hidden" name="kode_prodi" id="issue_kode_prodi">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
@@ -127,8 +143,48 @@
             </div>
         </div>
     </div>
+    
+    <!-- Modal Edit SK -->
+    <div class="modal fade" id="modal-edit-sk" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form id="form_edit_sk">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Nomor SK & Surat Tugas</h5>
+                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="edit_sk_id" name="id">
+                        <div class="form-group">
+                            <label>Nomor SK</label>
+                            <input type="text" class="form-control" id="edit_no_sk" name="no_sk" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Nomor Surat Tugas</label>
+                            <input type="text" class="form-control" id="edit_no_surat_tugas" name="no_surat_tugas" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
-@section('js')
-    <script src="{{ asset('js/sk_dekanat.js') }}"></script>
+@section('script-advanced')
+    <script>
+        const CONFIG = {
+            app_url: "{{ url('/') }}",
+            api_url: "{{ config('setting.second_url') }}",
+            username: "{{ Session::get('username') }}",
+            token: "{{ Session::get('token') }}",
+            kode_prodi: "{{ Session::get('kode_program_studi') ?: Session::get('kode_fakultas') }}",
+            tahun: "{{ Session::get('session_tahun') }}",
+            semester: "{{ Session::get('session_semester') }}"
+        };
+    </script>
+    <script src="{{ asset('js/sk_dekanat.js') }}?v={{ time() }}"></script>
 @endsection

@@ -6,7 +6,7 @@
     <title>Cetak SK Pembimbing - {{ $id }}</title>
     <style>
         @page { size: A4; margin: 2cm; }
-        body { font-family: 'Times New Roman', Times, serif; font-size: 12pt; line-height: 1.5; color: #000; background: #fff; }
+        body { font-family: Arial, Helvetica, sans-serif; font-size: 11pt; line-height: 1.4; color: #000; background: #fff; }
         .page-break { page-break-after: always; }
         .header { text-align: center; margin-bottom: 20px; border-bottom: 3px solid #000; padding-bottom: 10px; }
         .header img { height: 80px; }
@@ -32,12 +32,7 @@
 <body>
     <!-- Halaman 1: Redaksi SK -->
     <div class="page-break">
-        <div class="header">
-            <img src="{{ url('images/logo_umuka.png') }}" alt="Logo UMUKA">
-            <h1>UNIVERSITAS MUHAMMADIYAH KARANGANYAR</h1>
-            <p>Jalan Raya Solo-Tawangmangu KM 12 Papahan Tasikmadu Karanganyar</p>
-            <p>website: www.umuka.ac.id, email: umuka@umuka.ac.id</p>
-        </div>
+        <div style="height: 100px;"></div> <!-- Spacer untuk Kop Kertas Fisik -->
 
         <div class="section-title">KEPUTUSAN DEKAN</div>
         <div id="sk_title" class="section-title" style="text-decoration: none; margin-top: 0;">
@@ -59,12 +54,12 @@
 
         <table class="content-table">
             <tr>
-                <td class="label">Menimbang</td>
+                <td class="label" style="width: 100px;">Menimbang</td>
                 <td class="separator">:</td>
                 <td>
                     <ol type="a" style="margin: 0; padding-left: 20px;">
                         <li>bahwa untuk memperlancar pelaksanaan pengurusan Seminar Proposal Skripsi bagi mahasiswa Program Studi <span class="nama_prodi">...</span>, dipandang perlu menetapkan dosen pembimbing Skripsi pada semester <span class="semester">...</span> tahun akademik <span class="tahun">...</span></li>
-                        <li>bahwa mereka yang nama dan jabatannya tersebut dalam lampiran Surat Keputusan ini dipandang mampu dan cakap serta memenuhi persyaratan untuk ditugasi sebagai dosen pembimbing Skripsi...</li>
+                        <li>bahwa mereka yang nama dan jabatannya tersebut dalam lampiran Surat Keputusan ini dipandang mampu dan cakap serta memenuhi persyaratan untuk ditugasi sebagai dosen pembimbing Skripsi;</li>
                         <li>bahwa guna pelaksanaan dimaksud perlu ditetapkan dengan Surat Keputusan Dekan.</li>
                     </ol>
                 </td>
@@ -76,8 +71,8 @@
                     <ol style="margin: 0; padding-left: 20px;">
                         <li>Undang-Undang No. 20 tahun 2003 tentang Sistem Pendidikan Nasional.</li>
                         <li>Undang-Undang Nomor 12 Tahun 2012 tentang Sistem Pendidikan Tinggi.</li>
+                        <li>Surat Keputusan Direktur Dewan Eksekutif Badan Akreditasi Nasional Perguruan Tinggi Nomor 372/SK/BAN-PT/Ak-PNB/PT/VII/2022.</li>
                         <li>Statuta Universitas Muhammadiyah Karanganyar.</li>
-                        <li>Dst... (Sesuai draf resmi)</li>
                     </ol>
                 </td>
             </tr>
@@ -120,7 +115,6 @@
             <div>Pada tanggal : <span id="tgl_sk">...</span></div>
             <div style="margin-top: 20px;" class="bold">DEKAN,</div>
             
-            <!-- TTE QR Code Container -->
             <div id="qrcode" class="qr-code"></div>
 
             <div class="bold" style="text-decoration: underline;"><span id="nama_dekan">...</span></div>
@@ -152,14 +146,12 @@
                     <th width="30%">Dosen Pembimbing</th>
                 </tr>
             </thead>
-            <tbody id="mhs_list">
-                <!-- Data will be populated by JS -->
-            </tbody>
+            <tbody id="mhs_list"></tbody>
         </table>
 
         <div class="signature-box" style="margin-top: 30px;">
             <div class="bold">DEKAN,</div>
-            <div style="height: 80px;"></div> <!-- Space for signature/QR -->
+            <div style="height: 60px;"></div>
             <div class="bold" style="text-decoration: underline;"><span class="nama_dekan">...</span></div>
             <div>NIP. <span class="nip_dekan">...</span></div>
         </div>
@@ -168,8 +160,11 @@
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{ asset('js/qrcode.js') }}"></script>
     <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const customNo = urlParams.get('no');
+
         const CONFIG = {
-            api_url: "{{ url('/apisiaumuka/api/') }}/",
+            api_url: "{{ config('setting.second_url') }}",
             token: "{{ Session::get('token') }}",
             username: "{{ Session::get('username') }}",
             sk_id: "{{ $id }}"
@@ -184,8 +179,7 @@
                     const sk = res.sk;
                     const mhs = res.mahasiswa;
 
-                    // Populate Headers
-                    $('#no_sk, .no_sk').text(sk.no_sk);
+                    $('#no_sk, .no_sk').text(customNo || sk.no_sk);
                     $('#tgl_sk, .tgl_sk').text(new Date(sk.tgl_sk).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }));
                     $('#nama_fakultas, #nama_fakultas_2, #nama_fakultas_3').text(sk.nama_fakultas);
                     $('.nama_prodi, #nama_prodi').text(sk.nama_program_studi);
@@ -194,7 +188,6 @@
                     $('#nama_dekan, .nama_dekan').text((sk.gd_dekan ? sk.gd_dekan + ' ' : '') + sk.nama_dekan + (sk.gb_dekan ? ', ' + sk.gb_dekan : ''));
                     $('#nip_dekan, .nip_dekan').text(sk.nip_dekan);
 
-                    // Populate Table
                     let html = '';
                     mhs.forEach((item, index) => {
                         html += `
@@ -212,15 +205,13 @@
                     });
                     $('#mhs_list').html(html);
 
-                    // Generate TTE QR Code
                     const validationUrl = "{{ url('/validasi/sk/') }}/" + sk.id;
                     new QRCode(document.getElementById("qrcode"), {
                         text: validationUrl,
-                        width: 100,
-                        height: 100
+                        width: 80,
+                        height: 80
                     });
 
-                    // Trigger Print
                     setTimeout(() => { window.print(); }, 1000);
                 }
             });
