@@ -97,7 +97,7 @@
                     <li class="{{ Route::is('dknskripsi_index_sk') ? 'active' : '' }}">
                         <a href="{{ route('dknskripsi_index_sk') }}"><i class="fa fa-file-text-o"><span
                                     class="path1"></span><span class="path2"></span></i>
-                            <span>Validasi SK Pembimbing</span>
+                            <span>Validasi SK Pembimbing <sup class="text-danger">(Beta)</sup></span>
                         </a>
                     </li>
                     <li class="{{ Route::is('dknlap_ipkmahasiswa') ? 'active' : '' }}">

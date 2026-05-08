@@ -88,7 +88,7 @@
                                         <tr>
                                             <td class="label">Prodi</td>
                                             <td class="sep">:</td>
-                                            <td>${sk.nama_program_studi}</td>
+                                            <td>${m.nama_program_studi || sk.nama_program_studi}</td>
                                         </tr>
                                         <tr>
                                             <td class="label">Judul</td>
@@ -153,7 +153,7 @@
                                             <tr>
                                                 <td class="label">Prodi</td>
                                                 <td class="sep">:</td>
-                                                <td>${sk.nama_program_studi}</td>
+                                                <td>${m.nama_program_studi || sk.nama_program_studi}</td>
                                             </tr>
                                             <tr>
                                                 <td class="label">Judul</td>

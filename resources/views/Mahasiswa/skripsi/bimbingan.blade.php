@@ -155,7 +155,7 @@ $(document).ready(function() {
                 if(res.status == 'success' && res.data.length > 0) {
                     var logsHtml = '';
                     res.data.forEach(function(item, index) {
-                        var no = res.data.length - index;
+                        var no = index + 1;
                         var date = new Date(item.tanggal).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'});
                         
                         var statusBadge = '';

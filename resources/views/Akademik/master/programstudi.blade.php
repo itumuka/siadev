@@ -576,7 +576,7 @@
                 $('#eta_sks_minimal').val(data['ta_sks_minimal']);
                 $('#eta_ada_sempro').val(data['ta_ada_sempro']);
                 $('#eta_komponen_bayar').val(data['ta_komponen_bayar']);
-                $('#eta_min_bimbingan').val(data['ta_min_bimbingan']);
+                $('#eta_min_bimbingan').val(data['ta_minimal_bimbingan'] ?? data['ta_min_bimbingan']);
 
                 $("#" + data.trash).prop("checked", true)
             });
@@ -592,7 +592,7 @@
                 $('#detail_ta_nama').text(data['ta_nama_tugas_akhir'] || 'Skripsi');
                 $('#detail_ta_sks').text((data['ta_sks_minimal'] || '-') + ' SKS');
                 $('#detail_ta_sempro').text(data['ta_ada_sempro'] == '1' || data['ta_ada_sempro'] == 1 ? 'Ya (Wajib)' : 'Tidak (Langsung Bimbingan)');
-                $('#detail_ta_bimbingan').text((data['ta_minimal_bimbingan'] || '8') + ' kali');
+                $('#detail_ta_bimbingan').text((data['ta_minimal_bimbingan'] || data['ta_min_bimbingan'] || '8') + ' kali');
                 $('#detail_ta_komponen').text(data['ta_komponen_bayar'] || '-');
                 $('#detail_ta_komponen_ujian').text(data['ta_komponen_bayar_ujian'] || '-');
                 

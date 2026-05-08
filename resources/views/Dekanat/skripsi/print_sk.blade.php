@@ -179,10 +179,26 @@
                     const sk = res.sk;
                     const mhs = res.mahasiswa;
 
+                    // determine header program: if all mahasiswa share the same program, use it;
+                    // otherwise indicate multiple programs
+                    const prodiList = Array.from(new Set(mhs.map(i => i.nama_program_studi).filter(Boolean)));
+                    let headerProdi = '';
+                    if (prodiList.length === 1) {
+                        headerProdi = prodiList[0].toUpperCase();
+                    } else if (prodiList.length === 2) {
+                        headerProdi = prodiList[0].toUpperCase() + ' dan ' + prodiList[1].toUpperCase();
+                    } else if (prodiList.length > 2) {
+                        const upper = prodiList.map(p => p.toUpperCase());
+                        const last = upper.pop();
+                        headerProdi = upper.join(', ') + ', dan ' + last;
+                    } else {
+                        headerProdi = (sk.nama_program_studi || '').toUpperCase();
+                    }
+
                     $('#no_sk, .no_sk').text(customNo || sk.no_sk);
                     $('#tgl_sk, .tgl_sk').text(new Date(sk.tgl_sk).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }));
                     $('#nama_fakultas, #nama_fakultas_2, #nama_fakultas_3').text(sk.nama_fakultas);
-                    $('.nama_prodi, #nama_prodi').text(sk.nama_program_studi);
+                    $('.nama_prodi, #nama_prodi').text(headerProdi || sk.nama_program_studi);
                     $('.semester, #semester').text(sk.semester);
                     $('.tahun, #tahun').text(sk.tahun_akademik);
                     $('#nama_dekan, .nama_dekan').text((sk.gd_dekan ? sk.gd_dekan + ' ' : '') + sk.nama_dekan + (sk.gb_dekan ? ', ' + sk.gb_dekan : ''));
