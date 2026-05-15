@@ -25,6 +25,11 @@
                 <div class="box">
                     <div class="box-header with-border bg-primary-light">
                         <h4 class="box-title text-dark">Daftar Pengajuan Skripsi Mahasiswa</h4>
+                        <div class="box-controls pull-right">
+                            <button class="btn btn-sm btn-info" onclick="openConfigModal()">
+                                <i class="fa fa-cog mr-5"></i> Konfigurasi Sempro
+                            </button>
+                        </div>
                         <p class="mb-0 text-muted">Kelola ploting dosen pembimbing dan penjadwalan ujian untuk mahasiswa di Program Studi Anda.</p>
                     </div>
                     <div class="box-body">
@@ -136,6 +141,46 @@
                 </div>
                 <div class="modal-footer text-right">
                     <button type="submit" class="btn btn-success">Simpan & Umumkan Jadwal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Konfigurasi Sempro -->
+<div class="modal fade" id="modal-config-sempro" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title text-white">Konfigurasi Seminar Proposal (Sempro)</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+            </div>
+            <form id="form_config_sempro">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Skema Pelaksanaan Sempro</label>
+                        <select class="form-control" name="ta_sempro_skema" id="config_skema" required>
+                            <option value="skripsi">Alur Skripsi (Independen)</option>
+                            <option value="matakuliah">Melalui Mata Kuliah (Terintegrasi)</option>
+                        </select>
+                        <small class="text-muted">Pilih 'Melalui Mata Kuliah' jika Sempro merupakan bagian dari mata kuliah tertentu.</small>
+                    </div>
+
+                    <div id="section_config_mk" style="display: none;">
+                        <hr>
+                        <div class="form-group">
+                            <label>Mapping Mata Kuliah Sempro</label>
+                            <select class="form-control select2-matakuliah" name="id_matakuliah[]" id="config_mk" style="width: 100%;" multiple>
+                            </select>
+                            <small class="text-info">Cari dan pilih mata kuliah yang jika lulus maka otomatis lulus Sempro.</small>
+                        </div>
+                        <div id="list_mapped_mk" class="mt-10">
+                            <!-- List mapped MK will appear here -->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-info btn-block">Simpan Konfigurasi</button>
                 </div>
             </form>
         </div>
