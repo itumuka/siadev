@@ -30,7 +30,7 @@
                 <i class="fa fa-info-circle fa-2x mr-15"></i>
                 <div>
                     <strong>Informasi!</strong><br>
-                    Anda sudah melakukan pengajuan proposal. Silakan tunggu persetujuan dari Kaprodi atau periksa status pendaftaran Anda di dashboard.
+                    Anda sudah melakukan pendaftaran seminar proposal. Silakan tunggu persetujuan dari Kaprodi atau periksa status pendaftaran Anda di dashboard.
                 </div>
             </div>
         </div>
@@ -100,7 +100,7 @@
                             <div class="drag-drop-zone mt-10" id="dropZone">
                                 <i class="fa fa-cloud-upload fa-4x text-primary mb-10" id="uploadIcon"></i>
                                 <h5 id="uploadText">Seret & Lepas file Anda di sini</h5>
-                                <p class="text-muted" id="uploadSubtext">Atau klik untuk mencari file</p>
+                                <p class="text-muted" id="uploadSubtext">Atau klik untuk mencari file (Max 10MB)</p>
                                 <input type="file" style="display:none;" id="fileInput" accept=".pdf">
                                 <button type="button" class="btn btn-sm btn-primary mt-10" onclick="$('#fileInput').click()">Pilih File</button>
                             </div>
@@ -114,6 +114,9 @@
                                 <div class="alert alert-success">
                                     <i class="fa fa-check-circle mr-10"></i>
                                     <span id="fileName"></span> (<span id="fileSize"></span>)
+                                    <button type="button" id="btn-clear-selected-file" class="btn btn-xs btn-outline-danger ml-10">
+                                        <i class="fa fa-trash"></i> Hapus Pilihan
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -158,6 +161,8 @@
 @section('script-master')
 <script>
     $(document).ready(function() {
+        var currentSkripsiStatus = null;
+
         // Check if proposal already submitted
         checkExistingProposal();
 
@@ -226,11 +231,18 @@
                 },
                 success: function(dashboardResponse) {
                     if(dashboardResponse.status === 'success' && dashboardResponse.data) {
+                        const config = dashboardResponse.data.config;
                         // Check if sempro is enabled (ta_ada_sempro = 1 or 'Ya')
-                        var adaSempro = dashboardResponse.data.config?.ada_sempro;
+                        var adaSempro = config?.ada_sempro;
                         if (adaSempro === 0 || adaSempro === '0' || adaSempro === 'Tidak') {
                             semproEnabled = false;
                             showSemproDisabledMessage();
+                            return;
+                        }
+
+                        // Check Skema
+                        if (config?.ta_sempro_skema === 'matakuliah') {
+                            showSemproMatakuliahMessage(dashboardResponse.data.sempro);
                             return;
                         }
                         
@@ -246,6 +258,29 @@
                     loadCekKelayakan();
                 }
             });
+        }
+        
+        function showSemproMatakuliahMessage(sempro) {
+            var container = $('#verification-container');
+            var isLulus = sempro && sempro.status === 'lulus';
+            var html = '<div class="alert alert-info text-center p-30">';
+            html += '<i class="fa fa-book fa-4x text-primary mb-15"></i>';
+            html += '<h4 class="mb-10">Seminar Proposal Terintegrasi Matakuliah</h4>';
+            
+            if (isLulus) {
+                html += '<p class="mb-20 text-success font-weight-bold"><i class="fa fa-check-circle"></i> Selamat! Anda telah dinyatakan Lulus Sempro berdasarkan rekam nilai Matakuliah Anda.</p>';
+                html += '<p class="text-muted">' + (sempro.keterangan || '') + '</p>';
+            } else {
+                html += '<p class="mb-20">Pada Program Studi Anda, Seminar Proposal dilakukan melalui pengambilan Mata Kuliah tertentu. Status kelulusan akan terupdate otomatis jika Anda telah lulus mata kuliah tersebut.</p>';
+                html += '<div class="alert alert-warning bg-warning-light border-0">Anda belum terdeteksi lulus mata kuliah syarat Sempro.</div>';
+            }
+            
+            html += '<a href="{{ route("skripsi.dashboard") }}" class="btn btn-primary mt-10"><i class="fa fa-arrow-left mr-10"></i> Kembali ke Dashboard</a>';
+            html += '</div>';
+            container.html(html);
+            
+            $('.wizard-steps').hide();
+            $('#next-step-btn').hide();
         }
         
         function showSemproDisabledMessage() {
@@ -275,19 +310,24 @@
                     'username': '{{ $session_nim }}'
                 },
                 success: function(response) {
-                    if(response.status === 'success' && response.data && response.data.sempro) {
-                        // Show notification that proposal already submitted
-                        $('#proposal-submitted-notif').show();
-                        
-                        // Also update wizard to show completed status
-                        $('.wizard-step').addClass('completed');
-                        $('.wizard-step-circle').html('<i class="fa fa-check"></i>');
-                        
-                        // Disable all inputs in the wizard
-                        $('input, textarea, select, button.next-step, button#save-proposal-btn, button#upload-btn, button#submit-btn').prop('disabled', true);
-                        
-                        // Change submit button text
-                        $('#submit-btn').html('<i class="fa fa-check-circle mr-10"></i> Sudah Diajukan').removeClass('btn-success').addClass('btn-secondary');
+                    if(response.status === 'success' && response.data) {
+                        currentSkripsiStatus = response.data.skripsi ? response.data.skripsi.status : null;
+
+                        if (!response.data.sempro) {
+                            return;
+                        }
+
+                        // Hanya tampilkan notifikasi jika statusnya BUKAN draft
+                        if (response.data.sempro.status !== 'draft') {
+                            // Show notification that proposal already submitted
+                            $('#proposal-submitted-notif').show();
+                            
+                            // Disable all inputs in the wizard
+                            $('input, textarea, select, button.next-step, button#save-proposal-btn, button#upload-btn, button#submit-btn').prop('disabled', true);
+                            
+                            // Change submit button text
+                            $('#submit-btn').html('<i class="fa fa-check-circle mr-10"></i> Sudah Diajukan').removeClass('btn-success').addClass('btn-secondary');
+                        }
                     }
                 },
                 error: function(xhr) {
@@ -515,6 +555,11 @@
         });
         
         function saveProposalData(judul) {
+            if(currentSkripsiStatus && ['draft', 'menunggu_pembimbing', 'aktif'].indexOf(currentSkripsiStatus) === -1) {
+                showNotification('Proposal sudah diproses, tidak dapat diubah.', 'danger');
+                return;
+            }
+
             $.ajax({
                 url: '{{ $api_url }}mahasiswa/skripsi/simpan-proposal',
                 method: 'POST',
@@ -554,7 +599,18 @@
                 },
                 error: function(xhr) {
                     console.error('Error saving proposal:', xhr);
-                    showNotification('Terjadi kesalahan saat menyimpan data proposal', 'danger');
+                    var msg = 'Terjadi kesalahan saat menyimpan data proposal';
+                    if (xhr.responseJSON && xhr.responseJSON.error) {
+                        if (typeof xhr.responseJSON.error === 'string') {
+                            msg = xhr.responseJSON.error;
+                        } else {
+                            var firstKey = Object.keys(xhr.responseJSON.error)[0];
+                            if (firstKey && xhr.responseJSON.error[firstKey] && xhr.responseJSON.error[firstKey][0]) {
+                                msg = xhr.responseJSON.error[firstKey][0];
+                            }
+                        }
+                    }
+                    showNotification(msg, 'danger');
                 }
             });
         }
@@ -616,7 +672,7 @@
         
         function handleFileSelect(file) {
             // Validate file type
-            if(file.type !== 'application/pdf') {
+            if(file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
                 showNotification('Hanya file PDF yang diperbolehkan', 'danger');
                 return;
             }
@@ -639,6 +695,21 @@
             $('#fileInfo').show();
             $('#dropZone').hide();
         }
+
+        function resetSelectedFileState() {
+            selectedFile = null;
+            $('#fileInput').val('');
+            $('#fileInfo').hide();
+            $('#dropZone').show();
+            $('#upload-btn').prop('disabled', true);
+            $('#uploadProgress').hide();
+            $('#progressBar').css('width', '0%');
+            $('#progressText').text('Mengunggah...');
+        }
+
+        $('#btn-clear-selected-file').click(function() {
+            resetSelectedFileState();
+        });
         
         // Upload button handler
         $('#upload-btn').click(function() {
@@ -651,6 +722,11 @@
         });
         
         function uploadFile(file) {
+            if(file.size > 10 * 1024 * 1024) {
+                showNotification('Ukuran file maksimal 10MB', 'danger');
+                return;
+            }
+
             var formData = new FormData();
             formData.append('nim', '{{ $session_nim }}');
             formData.append('file_naskah', file);
@@ -711,7 +787,18 @@
                 },
                 error: function(xhr) {
                     console.error('Upload error:', xhr);
-                    showNotification('Terjadi kesalahan saat mengunggah file', 'danger');
+                    var msg = 'Terjadi kesalahan saat mengunggah file';
+                    if (xhr.responseJSON && xhr.responseJSON.error) {
+                        if (typeof xhr.responseJSON.error === 'string') {
+                            msg = xhr.responseJSON.error;
+                        } else {
+                            var firstKey = Object.keys(xhr.responseJSON.error)[0];
+                            if (firstKey && xhr.responseJSON.error[firstKey] && xhr.responseJSON.error[firstKey][0]) {
+                                msg = xhr.responseJSON.error[firstKey][0];
+                            }
+                        }
+                    }
+                    showNotification(msg, 'danger');
                     $('#uploadProgress').hide();
                 }
             });
@@ -725,11 +812,60 @@
             $('#reviewJudul').text(proposalData.judul || 'Tidak tersedia');
             
             if(fileData.name) {
-                $('#reviewDokumen').html('<span class="badge badge-success d-inline-flex align-items-center flex-wrap" style="max-width: 100%;"><i class="fa fa-check mr-1"></i> <span style="word-break: break-all;">' + fileData.name + '</span> <span class="ml-1">(' + fileData.size + ')</span></span>');
+                $('#reviewDokumen').html(
+                    '<div>' +
+                    '<span class="badge badge-success d-inline-flex align-items-center flex-wrap" style="max-width: 100%;"><i class="fa fa-check mr-1"></i> <span style="word-break: break-all;">' + fileData.name + '</span> <span class="ml-1">(' + fileData.size + ')</span></span>' +
+                    '<button type="button" id="btn-remove-uploaded-file" class="btn btn-xs btn-danger ml-10"><i class="fa fa-trash mr-5"></i>Hapus File</button>' +
+                    '</div>'
+                );
             } else {
                 $('#reviewDokumen').html('<span class="badge badge-secondary"><i class="fa fa-times"></i> Belum diunggah</span>');
             }
         }
+
+        $(document).on('click', '#btn-remove-uploaded-file', function() {
+            var fileData = JSON.parse(sessionStorage.getItem('uploadedFile') || '{}');
+            if(!fileData.id_proposal) {
+                sessionStorage.removeItem('uploadedFile');
+                loadReviewData();
+                return;
+            }
+
+            $.ajax({
+                url: '{{ $api_url }}mahasiswa/skripsi/hapus-naskah',
+                method: 'POST',
+                data: {
+                    nim: '{{ $session_nim }}',
+                    fase: 'sempro'
+                },
+                headers: {
+                    'Authorization': 'Bearer {{ $api_token }}',
+                    'username': '{{ $session_nim }}'
+                },
+                success: function(response) {
+                    if(response.success) {
+                        sessionStorage.removeItem('uploadedFile');
+                        resetSelectedFileState();
+
+                        $('.wizard-content').removeClass('active');
+                        $('#step-3').addClass('active');
+
+                        $('#step-4-indicator').removeClass('active completed');
+                        $('#step-4-indicator .wizard-step-circle').html('4');
+                        $('#step-3-indicator').removeClass('completed').addClass('active');
+                        $('#step-3-indicator .wizard-step-circle').html('3');
+
+                        showNotification('File berhasil dihapus. Silakan unggah file baru.', 'success');
+                    } else {
+                        showNotification(response.error || 'Gagal menghapus file', 'danger');
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Delete upload error:', xhr);
+                    showNotification('Terjadi kesalahan saat menghapus file', 'danger');
+                }
+            });
+        });
         
         // Submit final registration
         $('#submit-btn').click(function() {
@@ -743,20 +879,48 @@
             
             // Show loading
             $(this).prop('disabled', true).html('<i class=\"fa fa-spinner fa-spin mr-10\"></i> Memproses...');
-            
-            // Simulate final submission (in real app, this would call an API)
-            setTimeout(function() {
-                showNotification('Pendaftaran seminar proposal berhasil diajukan! Menunggu persetujuan Kaprodi.', 'success');
-                
-                // Clear session storage
-                sessionStorage.removeItem('proposalData');
-                sessionStorage.removeItem('uploadedFile');
-                
-                // Redirect to dashboard after 3 seconds
-                setTimeout(function() {
-                    window.location.href = '{{ route("skripsi.dashboard") }}';
-                }, 3000);
-            }, 2000);
+
+            $.ajax({
+                url: '{{ $api_url }}mahasiswa/skripsi/ajukan-sempro',
+                method: 'POST',
+                data: {
+                    nim: '{{ $session_nim }}'
+                },
+                headers: {
+                    'Authorization': 'Bearer {{ $api_token }}',
+                    'username': '{{ $session_nim }}'
+                },
+                success: function(response) {
+                    if(response.success) {
+                        showNotification(response.success, 'success');
+
+                        sessionStorage.removeItem('proposalData');
+                        sessionStorage.removeItem('uploadedFile');
+
+                        setTimeout(function() {
+                            window.location.href = '{{ route("skripsi.dashboard") }}';
+                        }, 2000);
+                    } else {
+                        showNotification(response.error || 'Gagal mengajukan pendaftaran seminar proposal', 'danger');
+                        $('#submit-btn').prop('disabled', false).html('<i class="fa fa-paper-plane mr-10"></i> Ajukan Pendaftaran Sekarang');
+                    }
+                },
+                error: function(xhr) {
+                    var msg = 'Terjadi kesalahan saat mengajukan pendaftaran';
+                    if (xhr.responseJSON && xhr.responseJSON.error) {
+                        if (typeof xhr.responseJSON.error === 'string') {
+                            msg = xhr.responseJSON.error;
+                        } else {
+                            var firstKey = Object.keys(xhr.responseJSON.error)[0];
+                            if (firstKey && xhr.responseJSON.error[firstKey] && xhr.responseJSON.error[firstKey][0]) {
+                                msg = xhr.responseJSON.error[firstKey][0];
+                            }
+                        }
+                    }
+                    showNotification(msg, 'danger');
+                    $('#submit-btn').prop('disabled', false).html('<i class="fa fa-paper-plane mr-10"></i> Ajukan Pendaftaran Sekarang');
+                }
+            });
         });
     });
 </script>

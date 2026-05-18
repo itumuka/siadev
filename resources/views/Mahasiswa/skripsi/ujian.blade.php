@@ -195,11 +195,21 @@
                         let isOk = item.status == 'v' || item.status == 'i';
                         let liClass = isOk ? 'badge-success' : 'badge-danger';
                         let iClass = isOk ? 'fa-check' : 'fa-times';
-                        let label = item.syarat + (isOk ? '' : ' <small style="color:red">('+item.isi+')</small>');
+                        let label = item.syarat;
+                        
+                        // Detail info for failed requirements
+                        let detail = '';
+                        if (!isOk) {
+                            if (item.kode_syarat === 'LULUS_SEMPRO') {
+                                detail = ' <br><small class="text-danger">Anda wajib lulus Seminar Proposal terlebih dahulu.</small>';
+                            } else {
+                                detail = ' <small style="color:red">('+item.isi+')</small>';
+                            }
+                        }
                         
                         let liItem = `
                             <li class="list-group-item d-flex justify-content-between align-items-center mb-1">
-                                <span>${label}</span>
+                                <span>${label} ${detail}</span>
                                 <span class="badge ${liClass} badge-pill"><i class="fa ${iClass}"></i></span>
                             </li>
                         `;

@@ -37,7 +37,7 @@
                             </li>
                             <li class="{{ Route::is('kpskripsi_index') ? 'active' : '' }}">
                                 <a href="{{ route('kpskripsi_index') }}"><i class="fa fa-graduation-cap"><span
-                                             class="path1"></span><span class="path2"></span></i>Manajemen Skripsi</a>
+                                             class="path1"></span><span class="path2"></span></i>Manajemen Skripsi <sup class="text-danger">(Beta)</sup></a>
                             </li>
                         </ul>
                     </li>
@@ -75,7 +75,7 @@
                     <li class="{{ Route::is('dosen.skripsi.index') || Route::is('dosen.skripsi.detail_bimbingan') ? 'active' : '' }}">
                         <a href="{{ route('dosen.skripsi.index') }}" title="Pembimbing Skripsi">
                             <i class="fa fa-graduation-cap"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Pembimbing Skripsi</span>
+                            <span>Pembimbing Skripsi <sup class="text-danger">(Beta)</sup></span>
                         </a>
                     </li>
                     

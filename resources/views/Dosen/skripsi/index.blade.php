@@ -71,6 +71,22 @@
 @section('script-master')
     <script type="text/javascript">
         $(document).ready(function() {
+            function truncateText(text, maxLength = 200) {
+                if (text === null || text === undefined || text === '') return '-';
+                const value = String(text);
+                return value.length > maxLength ? value.substring(0, maxLength) + '...' : value;
+            }
+
+            function escapeAttr(text) {
+                if (text === null || text === undefined) return '';
+                return String(text)
+                    .replace(/&/g, '&amp;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+            }
+
             var token = "{{ $api_token }}";
             var userlogin = "{{ $session_username }}";
             var id_dosen = $('#id_dosen').val();
@@ -100,7 +116,9 @@
                     { 
                         data: null, 
                         render: function(data, type, row) {
-                            return row.judul ? '<strong>' + row.judul + '</strong>' : '<em class="text-muted">Belum ada judul</em>';
+                            if (!row.judul) return '<em class="text-muted">Belum ada judul</em>';
+                            const judulDisplay = truncateText(row.judul, 200);
+                            return '<strong title="' + escapeAttr(row.judul) + '">' + judulDisplay + '</strong>';
                         }
                     },
                     { 
