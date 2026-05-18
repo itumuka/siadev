@@ -17,7 +17,7 @@ yarn-error.log
 /.idea
 /.zed
 /.vscode
-public/qrcode
-public/qrcodeaccdowal
-public/qrcodedosen
-public/qrcodedosenmanajemen
+/public/qrcode
+/public/qrcodeaccdowal
+/public/qrcodedosen
+/public/qrcodedosenmanajemen

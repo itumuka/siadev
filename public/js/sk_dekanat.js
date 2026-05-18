@@ -62,7 +62,16 @@ $(document).ready(function() {
                     render: function() { return ''; } 
                 },
                 { data: 'nim' },
-                { data: 'nama_mhs' },
+                { 
+                    data: null, 
+                    render: function(data) {
+                        let badge = '';
+                        if (data.status_sk === 'perpanjangan') {
+                            badge = ' <span class="badge badge-warning badge-sm">Perpanjangan</span>';
+                        }
+                        return data.nama_mhs + badge;
+                    }
+                },
                 { data: 'tahun_angkatan' },
                 {
                     data: 'judul',
