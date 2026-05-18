@@ -133,6 +133,7 @@ Route::middleware(['ceklogin'])->group(function () {
         Route::get("/akademik/daftardosen-ba-ujian", "Akademik@daftardosen_ba_ujian")->name('akdaftardosen_ba_ujian');
         Route::get("/akademik/berita-acara-ujian/{a}", "Akademik@berita_acara_ujian")->name('akdberita_acara_ujian_dosen');
         Route::get("/akademik/rekap-berita-acara", "Akademik@rekap_berita_acara")->name('rekap_ba_dosen');
+        Route::get("/akademik/manajemen-ta/rekap-bimbingan", "Akademik@rekap_bimbingan")->name('akrekap_bimbingan');
         Route::get("/akademik/kegiatanakademik", "Akademik@kegiatanakademik")->name('akkegiatanakademik');
         Route::get("/akademik/fakultas", "Akademik@fakultas")->name('akfakultas');
         Route::get("/akademik/programstudi", "Akademik@programstudi")->name('akprogramstudi');
