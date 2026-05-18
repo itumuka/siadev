@@ -133,6 +133,20 @@
                     </li>
                     <li class="treeview">
                         <a href="#">
+                            <i class="fa fa-graduation-cap"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Manajemen Tugas Akhir <sup class="text-danger">(Beta)</sup></span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{ request()->is('akademik/manajemen-ta/rekap-bimbingan') ? 'active' : '' }}">
+                                <a href="{{ url('akademik/manajemen-ta/rekap-bimbingan') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Rekap Bimbingan <sup class="text-danger">(Beta)</sup></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
                             <i class="fa fa-address-card"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Data Mahasiswa</span>

@@ -50,6 +50,24 @@
         .lowercase {
             text-transform: lowercase;
         }
+
+        .sidebar-menu .menu-ta-beta > a,
+        .sidebar-menu .menu-ta-beta .treeview-menu > li > a {
+            white-space: normal;
+            line-height: 1.35;
+        }
+
+        .sidebar-menu .menu-beta-badge {
+            display: inline-block;
+            margin-left: 6px;
+            padding: 1px 6px;
+            font-size: 10px;
+            line-height: 1.3;
+            color: #fff;
+            background-color: #dc3545;
+            border-radius: 10px;
+            vertical-align: middle;
+        }
         /* thead th {
             background-color: #172B4C !important;
         } */
