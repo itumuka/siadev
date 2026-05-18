@@ -163,6 +163,10 @@
                             <label>Nomor Surat Tugas</label>
                             <input type="text" class="form-control" id="edit_no_surat_tugas" name="no_surat_tugas" required>
                         </div>
+                        <div class="form-group">
+                            <label>Tanggal SK</label>
+                            <input type="date" class="form-control" id="edit_tgl_sk" name="tgl_sk" required>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
