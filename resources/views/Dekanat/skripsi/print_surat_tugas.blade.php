@@ -51,7 +51,21 @@
                     mhsList.forEach((m) => {
                         html += `
                             <div class="page-break">
-                                <div style="height: 100px;"></div>
+                                <!-- Kop Surat Tugas Resmi -->
+                                <table style="width: 100%; border-collapse: collapse; border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 15px;">
+                                    <tr>
+                                        <td style="width: 12%; text-align: center; vertical-align: middle;">
+                                            <img src="{{ asset('imageup45/logoumuka.png') }}" style="width: 75px; height: auto;" alt="Logo UMUKA">
+                                        </td>
+                                        <td style="width: 88%; text-align: center; vertical-align: middle; padding-left: 10px; font-family: 'Times New Roman', Times, serif;">
+                                            <div style="font-size: 15pt; font-weight: bold; margin: 0; color: #000; text-transform: uppercase; letter-spacing: 0.5px;">UNIVERSITAS MUHAMMADIYAH KARANGANYAR</div>
+                                            <div style="font-size: 12pt; font-weight: bold; margin: 3px 0 1px 0; color: #000; text-transform: uppercase; letter-spacing: 0.5px;">FAKULTAS ${sk.nama_fakultas.toUpperCase()}</div>
+                                            <div style="font-size: 9.5pt; margin: 2px 0 1px 0; color: #000;">Jalan Raya Solo-Tawangmangu KM 12 Papahan Tasikmadu Karanganyar</div>
+                                            <div style="font-size: 9pt; margin: 1px 0; color: #000;">website: www.umuka.ac.id, email: umuka@umuka.ac.id</div>
+                                            <div style="font-size: 9pt; margin: 1px 0; color: #000;">Admin 08112801912  (57761)</div>
+                                        </td>
+                                    </tr>
+                                </table>
                                 
                                 <div class="section-title">SURAT TUGAS</div>
                                 <div class="nomor-sk">Nomor: ${customNo || sk.no_surat_tugas || sk.no_sk || '...'}</div>
@@ -116,7 +130,21 @@
                         if (m.nama_p2 && m.nama_p2 !== '-') {
                             html += `
                                 <div class="page-break">
-                                    <div style="height: 100px;"></div>
+                                    <!-- Kop Surat Tugas Resmi -->
+                                    <table style="width: 100%; border-collapse: collapse; border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 15px;">
+                                        <tr>
+                                            <td style="width: 12%; text-align: center; vertical-align: middle;">
+                                                <img src="{{ asset('imageup45/logoumuka.png') }}" style="width: 75px; height: auto;" alt="Logo UMUKA">
+                                            </td>
+                                            <td style="width: 88%; text-align: center; vertical-align: middle; padding-left: 10px; font-family: 'Times New Roman', Times, serif;">
+                                                <div style="font-size: 15pt; font-weight: bold; margin: 0; color: #000; text-transform: uppercase; letter-spacing: 0.5px;">UNIVERSITAS MUHAMMADIYAH KARANGANYAR</div>
+                                                <div style="font-size: 12pt; font-weight: bold; margin: 3px 0 1px 0; color: #000; text-transform: uppercase; letter-spacing: 0.5px;">FAKULTAS ${sk.nama_fakultas.toUpperCase()}</div>
+                                                <div style="font-size: 9.5pt; margin: 2px 0 1px 0; color: #000;">Jalan Raya Solo-Tawangmangu KM 12 Papahan Tasikmadu Karanganyar</div>
+                                                <div style="font-size: 9pt; margin: 1px 0; color: #000;">website: www.umuka.ac.id, email: umuka@umuka.ac.id</div>
+                                                <div style="font-size: 9pt; margin: 1px 0; color: #000;">Admin 08112801912  (57761)</div>
+                                            </td>
+                                        </tr>
+                                    </table>
                                     
                                     <div class="section-title">SURAT TUGAS</div>
                                     <div class="nomor-sk">Nomor: ${customNo || sk.no_surat_tugas || sk.no_sk || '...'}</div>
