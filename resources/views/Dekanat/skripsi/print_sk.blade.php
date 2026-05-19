@@ -160,10 +160,10 @@
             <thead>
                 <tr>
                     <th width="5%">No</th>
-                    <th width="15%">NIM</th>
-                    <th width="25%">Nama Mahasiswa</th>
-                    <th>Judul <span class="tipe_ta_val">Skripsi</span></th>
-                    <th width="30%">Dosen Pembimbing</th>
+                    <th width="30%">Nama Dosen Pembimbing</th>
+                    <th width="20%">Peran</th>
+                    <th width="20%">Nama Mahasiswa & NIM</th>
+                    <th>Judul Skripsi</th>
                 </tr>
             </thead>
             <tbody id="mhs_list"></tbody>
@@ -254,22 +254,55 @@
                     $('#nama_dekan, .nama_dekan').text((sk.gd_dekan ? sk.gd_dekan + ' ' : '') + sk.nama_dekan + (sk.gb_dekan ? ', ' + sk.gb_dekan : ''));
                     $('#nip_dekan, .nip_dekan').text(sk.nip_dekan);
 
-                    let html = '';
-                    mhs.forEach((item, index) => {
-                        html += `
-                            <tr>
-                                <td class="text-center">${index + 1}</td>
-                                <td>${item.nim}</td>
-                                <td>${item.nama_mhs}</td>
-                                <td style="font-size: 9pt;">${item.judul || '-'}</td>
-                                <td>
-                                    1. ${item.nama_p1}<br>
-                                    2. ${item.nama_p2 || '-'}
-                                </td>
-                            </tr>
-                        `;
+                    // 1. Kelompokkan data berdasarkan Nama Dosen
+                const dosenGroup = {};
+
+                mhs.forEach(item => {
+                    // Memproses Pembimbing 1
+                    if (item.nama_p1 && item.nama_p1 !== '-') {
+                        if (!dosenGroup[item.nama_p1]) dosenGroup[item.nama_p1] = [];
+                        dosenGroup[item.nama_p1].push({
+                            peran: 'Pembimbing Utama',
+                            mahasiswa: item
+                        });
+                    }
+                    
+                    // Memproses Pembimbing 2 (jika ada)
+                    if (item.nama_p2 && item.nama_p2 !== '-') {
+                        if (!dosenGroup[item.nama_p2]) dosenGroup[item.nama_p2] = [];
+                        dosenGroup[item.nama_p2].push({
+                            peran: 'Pembimbing Pendamping',
+                            mahasiswa: item
+                        });
+                    }
+                });
+
+                // 2. Render HTML dengan menggunakan rowspan
+                let html = '';
+                let noUrut = 1;
+
+                // Loop melalui object yang sudah dikelompokkan
+                for (const [namaDosen, bimbingan] of Object.entries(dosenGroup)) {
+                    const totalBimbingan = bimbingan.length;
+
+                    bimbingan.forEach((data, index) => {
+                        html += `<tr>`;
+                        
+                        // Kolom Nomor dan Nama Dosen hanya di-render di baris pertama tiap kelompok
+                        if (index === 0) {
+                            html += `<td class="text-center" rowspan="${totalBimbingan}">${noUrut++}</td>`;
+                            html += `<td rowspan="${totalBimbingan}" class="bold">${namaDosen}</td>`;
+                        }
+                        
+                        // Kolom Peran, Nama Mahasiswa, dan Judul di-render untuk setiap baris
+                        html += `<td class="text-center">${data.peran}</td>`;
+                        html += `<td>${data.mahasiswa.nama_mhs}<br><span style="font-size: 9pt;">NIM. ${data.mahasiswa.nim}</span></td>`;
+                        html += `<td style="font-size: 8pt; text-align: justify;">${data.mahasiswa.judul || '-'}</td>`;
+                        html += `</tr>`;
                     });
-                    $('#mhs_list').html(html);
+                }
+
+                $('#mhs_list').html(html);
 
                     const validationUrl = "{{ url('/validasi/sk/') }}/" + sk.id;
                     new QRCode(document.getElementById("qrcode"), {
