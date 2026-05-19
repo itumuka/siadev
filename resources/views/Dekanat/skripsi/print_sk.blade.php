@@ -6,23 +6,23 @@
     <title>Cetak SK Pembimbing - {{ $id }}</title>
     <style>
         @page { size: A4; margin: 2cm; }
-        body { font-family: Arial, Helvetica, sans-serif; font-size: 11pt; line-height: 1.4; color: #000; background: #fff; }
+        body { font-family: Arial, Helvetica, sans-serif; font-size: 11pt; line-height: 1.2; color: #000; background: #fff; }
         .page-break { page-break-after: always; }
-        .header { text-align: center; margin-bottom: 20px; border-bottom: 3px solid #000; padding-bottom: 10px; }
+        .header { text-align: center; margin-bottom: 10px; border-bottom: 3px solid #000; padding-bottom: 10px; }
         .header img { height: 80px; }
         .header h1 { font-size: 18pt; margin: 5px 0; }
         .header p { font-size: 10pt; margin: 0; }
         .section-title { text-align: center; font-weight: bold; text-decoration: underline; margin-top: 20px; text-transform: uppercase; }
         .nomor-sk { text-align: center; font-weight: bold; margin-bottom: 20px; }
         .content-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .content-table td { vertical-align: top; padding: 5px 0; }
+        .content-table td { vertical-align: top; padding: 2px 0; }
         .label { width: 120px; font-weight: bold; }
         .separator { width: 20px; text-align: center; }
-        .signature-box { float: right; width: 300px; text-align: left; margin-top: 50px; }
+        .signature-box { float: right; width: 300px; text-align: left; margin-top: 30px; }
         .qr-code { margin: 10px 0; }
         .attachment-header { font-weight: bold; margin-bottom: 10px; }
         .table-data { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        .table-data th, .table-data td { border: 1px solid #000; padding: 8px; font-size: 10pt; text-align: left; }
+        .table-data th, .table-data td { border: 1px solid #000; padding: 6px; font-size: 10pt; text-align: left; }
         .table-data th { background-color: #f2f2f2; text-align: center; }
         .text-center { text-align: center !important; }
         .bold { font-weight: bold; }
@@ -40,7 +40,7 @@
                 </td>
                 <td style="width: 85%; text-align: center; vertical-align: middle; padding-left: 10px;">
                     <div style="font-size: 16pt; font-weight: bold; font-family: 'Arial Black', sans-serif; margin: 0; color: #1e3d59; letter-spacing: 0.5px; text-transform: uppercase;">Universitas Muhammadiyah Karanganyar</div>
-                    <div style="font-size: 13pt; font-weight: bold; margin: 2px 0; color: #17b978; text-transform: uppercase;">Fakultas <span class="nama_fakultas_val">...</span></div>
+                    <div style="font-size: 13pt; font-weight: bold; margin: 2px 0; color: #000; text-transform: uppercase;">Fakultas <span class="nama_fakultas_val">...</span></div>
                     <div style="font-size: 8.5pt; font-style: italic; margin: 2px 0; color: #555;">"Cerdas Membangun Peradaban Utama"</div>
                     <div style="font-size: 8.5pt; margin: 2px 0; color: #333;">Jl. Raya Solo-Tawangmangu KM 12 Papahan Tasikmadu Karanganyar (57761)</div>
                     <div style="font-size: 8.5pt; margin: 2px 0; color: #333;">Website: www.umuka.ac.id | Email: umuka@umuka.ac.id | Admin: 08112801912</div>
@@ -49,22 +49,22 @@
         </table>
 
         <div class="section-title">KEPUTUSAN DEKAN</div>
-        <div id="sk_title" class="section-title" style="text-decoration: none; margin-top: 0;">
+        <div id="sk_title" class="section-title" style="text-decoration: none; margin-top: 0;text-transform: uppercase;">
             FAKULTAS <span id="nama_fakultas">...</span><br>
-            UNIVERSITAS MUHAMMADIYAH KARANGANYAR
+            UNIVERSITAS MUHAMMADIYAH KARANGANYAR 
         </div>
         <div class="nomor-sk">NOMOR: <span id="no_sk">...</span></div>
-
+        
         <div class="text-center bold">TENTANG</div>
-        <div class="text-center bold" style="margin-bottom: 30px;">
+        <div class="text-center bold" style="margin-bottom: 15px;">
             PENGANGKATAN DOSEN PEMBIMBING <span class="tipe_ta_upper_val">SKRIPSI</span><br>
-            MAHASISWA PROGRAM STUDI <span class="display_prodi_val">...</span><br>
+            MAHASISWA PROGRAM STUDI <span class="display_prodi_val" style="text-decoration: none;text-transform: uppercase;">...</span><br>
             SEMESTER <span id="semester">...</span> TAHUN AKADEMIK <span id="tahun">...</span><br>
-            FAKULTAS <span id="nama_fakultas_2">...</span><br>
+            FAKULTAS <span id="nama_fakultas_2" style="text-decoration: none;text-transform: uppercase;">...</span><br>
             UNIVERSITAS MUHAMMADIYAH KARANGANYAR
         </div>
 
-        <div class="text-center bold" style="margin-bottom: 20px;">DEKAN FAKULTAS <span id="nama_fakultas_3">...</span></div>
+        <div class="text-center bold" style="margin-bottom: 20px;">DEKAN FAKULTAS <span id="nama_fakultas_3" style="text-decoration: none;text-transform: uppercase;">...</span></div>
 
         <!-- Lafal Basmalah -->
         <div class="text-center italic bold" style="margin-bottom: 15px; font-size: 11pt; font-family: 'Times New Roman', serif;">
@@ -75,7 +75,7 @@
             <tr>
                 <td class="label" style="width: 100px;">Menimbang</td>
                 <td class="separator">:</td>
-                <td>
+                <td style="text-align: justify;">
                     <ol type="a" style="margin: 0; padding-left: 20px;">
                         <li>bahwa dalam rangka pelaksanaan penyusunan <span class="tipe_ta_val">...</span> mahasiswa Program Studi <span class="display_prodi_val">...</span>, perlu ditetapkan dosen pembimbing;</li>
                         <li>bahwa nama-nama dosen dan mahasiswa sebagaimana tercantum dalam lampiran surat keputusan ini dipandang memenuhi syarat untuk ditetapkan sebagai pembimbing dan peserta bimbingan <span class="tipe_ta_singkat_val">...</span>;</li>
@@ -86,7 +86,7 @@
             <tr>
                 <td class="label">Mengingat</td>
                 <td class="separator">:</td>
-                <td>
+                <td style="text-align: justify;">
                     <ol style="margin: 0; padding-left: 20px;">
                         <li>Undang-Undang Nomor 20 Tahun 2003 tentang Sistem Pendidikan Nasional (Lembaran Negara Republik Indonesia Tahun 2003 Nomor 78, Tambahan Lembaran Negara Republik Indonesia Nomor 4301);</li>
                         <li>Undang-Undang Nomor 12 Tahun 2012 tentang Pendidikan Tinggi (Lembaran Negara Republik Indonesia Tahun 2012 Nomor 158, Tambahan Lembaran Negara Republik Indonesia Nomor 533D);</li>
@@ -135,7 +135,7 @@
             <div>Pada tanggal : <span id="tgl_sk">...</span></div>
             <div style="margin-top: 20px;" class="bold">DEKAN,</div>
             
-            <div id="qrcode" class="qr-code"></div>
+            <div style="height: 80px;"></div> <!-- Spacer area kosong untuk tanda tangan basah -->
 
             <div class="bold" style="text-decoration: underline;"><span id="nama_dekan">...</span></div>
             <div>NIP. <span id="nip_dekan">...</span></div>
@@ -152,7 +152,7 @@
 
         <div class="text-center bold" style="margin: 20px 0;">
             DAFTAR NAMA MAHASISWA DAN DOSEN PEMBIMBING <span class="tipe_ta_upper_val">SKRIPSI</span><br>
-            PROGRAM STUDI <span class="display_prodi_val">...</span><br>
+            PROGRAM STUDI <span class="display_prodi_val" style="text-transform: uppercase;">...</span><br>
             SEMESTER <span class="semester">...</span> TAHUN AKADEMIK <span class="tahun">...</span>
         </div>
 
@@ -242,7 +242,7 @@
                     }
 
                     $('#no_sk, .no_sk').text(customNo || sk.no_sk);
-                    $('#tgl_sk, .tgl_sk').text(new Date(sk.tgl_sk).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }));
+                    $('#tgl_sk, .tgl_sk').text(new Date(sk.tgl_sk).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })); 
                     $('#nama_fakultas, #nama_fakultas_2, #nama_fakultas_3, .nama_fakultas_val').text(sk.nama_fakultas);
                     $('.nama_prodi, #nama_prodi').text(headerProdi);
                     $('.display_prodi_val').text(displayProdi);
@@ -304,12 +304,13 @@
 
                 $('#mhs_list').html(html);
 
-                    const validationUrl = "{{ url('/validasi/sk/') }}/" + sk.id;
-                    new QRCode(document.getElementById("qrcode"), {
-                        text: validationUrl,
-                        width: 80,
-                        height: 80
-                    });
+                    // QR Code dijeda sementara untuk kebutuhan tanda tangan basah
+                    // const validationUrl = "{{ url('/validasi/sk/') }}/" + sk.id;
+                    // new QRCode(document.getElementById("qrcode"), {
+                    //     text: validationUrl,
+                    //     width: 80,
+                    //     height: 80
+                    // });
 
                     setTimeout(() => { window.print(); }, 1000);
                 }
