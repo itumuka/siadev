@@ -6,7 +6,7 @@
     <title>Cetak SK Pembimbing - {{ $id }}</title>
     <style>
         @page { size: A4; margin: 2cm; }
-        body { font-family: 'Times New Roman', Times, serif; font-size: 12pt; line-height: 1.5; color: #000; background: #fff; }
+        body { font-family: Arial, Helvetica, sans-serif; font-size: 11pt; line-height: 1.4; color: #000; background: #fff; }
         .page-break { page-break-after: always; }
         .header { text-align: center; margin-bottom: 20px; border-bottom: 3px solid #000; padding-bottom: 10px; }
         .header img { height: 80px; }
@@ -32,12 +32,21 @@
 <body>
     <!-- Halaman 1: Redaksi SK -->
     <div class="page-break">
-        <div class="header">
-            <img src="{{ url('images/logo_umuka.png') }}" alt="Logo UMUKA">
-            <h1>UNIVERSITAS MUHAMMADIYAH KARANGANYAR</h1>
-            <p>Jalan Raya Solo-Tawangmangu KM 12 Papahan Tasikmadu Karanganyar</p>
-            <p>website: www.umuka.ac.id, email: umuka@umuka.ac.id</p>
-        </div>
+        <!-- Kop Surat Digital -->
+        <table style="width: 100%; border-collapse: collapse; border-bottom: 4px double #000; padding-bottom: 10px; margin-bottom: 20px;">
+            <tr>
+                <td style="width: 15%; text-align: center; vertical-align: middle;">
+                    <img src="{{ asset('imageup45/logoumuka.png') }}" style="width: 85px; height: auto;" alt="Logo UMUKA">
+                </td>
+                <td style="width: 85%; text-align: center; vertical-align: middle; padding-left: 10px;">
+                    <div style="font-size: 16pt; font-weight: bold; font-family: 'Arial Black', sans-serif; margin: 0; color: #1e3d59; letter-spacing: 0.5px; text-transform: uppercase;">Universitas Muhammadiyah Karanganyar</div>
+                    <div style="font-size: 13pt; font-weight: bold; margin: 2px 0; color: #17b978; text-transform: uppercase;">Fakultas <span class="nama_fakultas_val">...</span></div>
+                    <div style="font-size: 8.5pt; font-style: italic; margin: 2px 0; color: #555;">"Cerdas Membangun Peradaban Utama"</div>
+                    <div style="font-size: 8.5pt; margin: 2px 0; color: #333;">Jl. Raya Solo-Tawangmangu KM 12 Papahan Tasikmadu Karanganyar (57761)</div>
+                    <div style="font-size: 8.5pt; margin: 2px 0; color: #333;">Website: www.umuka.ac.id | Email: umuka@umuka.ac.id | Admin: 08112801912</div>
+                </td>
+            </tr>
+        </table>
 
         <div class="section-title">KEPUTUSAN DEKAN</div>
         <div id="sk_title" class="section-title" style="text-decoration: none; margin-top: 0;">
@@ -48,8 +57,8 @@
 
         <div class="text-center bold">TENTANG</div>
         <div class="text-center bold" style="margin-bottom: 30px;">
-            PENGANGKATAN DOSEN PEMBIMBING SKRIPSI<br>
-            MAHASISWA PROGRAM STUDI <span id="nama_prodi">...</span><br>
+            PENGANGKATAN DOSEN PEMBIMBING <span class="tipe_ta_upper_val">SKRIPSI</span><br>
+            MAHASISWA PROGRAM STUDI <span class="display_prodi_val">...</span><br>
             SEMESTER <span id="semester">...</span> TAHUN AKADEMIK <span id="tahun">...</span><br>
             FAKULTAS <span id="nama_fakultas_2">...</span><br>
             UNIVERSITAS MUHAMMADIYAH KARANGANYAR
@@ -57,15 +66,20 @@
 
         <div class="text-center bold" style="margin-bottom: 20px;">DEKAN FAKULTAS <span id="nama_fakultas_3">...</span></div>
 
+        <!-- Lafal Basmalah -->
+        <div class="text-center italic bold" style="margin-bottom: 15px; font-size: 11pt; font-family: 'Times New Roman', serif;">
+            Bismillahirrahmanirrahim
+        </div>
+
         <table class="content-table">
             <tr>
-                <td class="label">Menimbang</td>
+                <td class="label" style="width: 100px;">Menimbang</td>
                 <td class="separator">:</td>
                 <td>
                     <ol type="a" style="margin: 0; padding-left: 20px;">
-                        <li>bahwa untuk memperlancar pelaksanaan pengurusan Seminar Proposal Skripsi bagi mahasiswa Program Studi <span class="nama_prodi">...</span>, dipandang perlu menetapkan dosen pembimbing Skripsi pada semester <span class="semester">...</span> tahun akademik <span class="tahun">...</span></li>
-                        <li>bahwa mereka yang nama dan jabatannya tersebut dalam lampiran Surat Keputusan ini dipandang mampu dan cakap serta memenuhi persyaratan untuk ditugasi sebagai dosen pembimbing Skripsi...</li>
-                        <li>bahwa guna pelaksanaan dimaksud perlu ditetapkan dengan Surat Keputusan Dekan.</li>
+                        <li>bahwa dalam rangka pelaksanaan penyusunan <span class="tipe_ta_val">...</span> mahasiswa Program Studi <span class="display_prodi_val">...</span>, perlu ditetapkan dosen pembimbing;</li>
+                        <li>bahwa nama-nama dosen dan mahasiswa sebagaimana tercantum dalam lampiran surat keputusan ini dipandang memenuhi syarat untuk ditetapkan sebagai pembimbing dan peserta bimbingan <span class="tipe_ta_singkat_val">...</span>;</li>
+                        <li>bahwa untuk maksud tersebut perlu diterbitkan Surat Keputusan Dekan.</li>
                     </ol>
                 </td>
             </tr>
@@ -74,10 +88,11 @@
                 <td class="separator">:</td>
                 <td>
                     <ol style="margin: 0; padding-left: 20px;">
-                        <li>Undang-Undang No. 20 tahun 2003 tentang Sistem Pendidikan Nasional.</li>
-                        <li>Undang-Undang Nomor 12 Tahun 2012 tentang Sistem Pendidikan Tinggi.</li>
-                        <li>Statuta Universitas Muhammadiyah Karanganyar.</li>
-                        <li>Dst... (Sesuai draf resmi)</li>
+                        <li>Undang-Undang Nomor 20 Tahun 2003 tentang Sistem Pendidikan Nasional (Lembaran Negara Republik Indonesia Tahun 2003 Nomor 78, Tambahan Lembaran Negara Republik Indonesia Nomor 4301);</li>
+                        <li>Undang-Undang Nomor 12 Tahun 2012 tentang Pendidikan Tinggi (Lembaran Negara Republik Indonesia Tahun 2012 Nomor 158, Tambahan Lembaran Negara Republik Indonesia Nomor 533D);</li>
+                        <li>Keputusan Menteri Pendidikan, Kebudayaan, Riset, dan Teknologi Nomor 332/E/O/2022 tentang Izin Penggabungan Akademi Peternakan Karanganyar di Kabupaten Karanganyar, Akademi Sekretari dan Manajemen Santa Ana di Kabupaten Boyolali, dan Akademi Pariwisata Widya Nusantara di Kota Surakarta menjadi Universitas Muhammadiyah Karanganyar Tertanggal 19 Mei 2022;</li>
+                        <li>Pedoman Pimpinan Pusat Muhammadiyah Nomor 02/PED/I.O/B/2012 tentang Perguruan Tinggi Muhammadiyah;</li>
+                        <li>Keputusan Pimpinan Pusat Muhammadiyah Nomor 661/KEP/I.0/D/2022 Tentang Pengangkatan Rektor Universitas Muhammadiyah Karanganyar Masa Jabatan 2022-2026 tanggal 22 Juli 2022;</li>
                     </ol>
                 </td>
             </tr>
@@ -96,12 +111,12 @@
             <tr>
                 <td class="label">Pertama</td>
                 <td class="separator">:</td>
-                <td>Mengangkat dan Menetapkan dosen Pembimbing Skripsi di lingkungan Program Studi <span class="nama_prodi">...</span> sebagaimana tersebut dalam lampiran keputusan ini;</td>
+                <td>Mengangkat dan Menetapkan dosen Pembimbing <span class="tipe_ta_val">Skripsi</span> di lingkungan Program Studi <span class="display_prodi_val">...</span> sebagaimana tersebut dalam lampiran keputusan ini;</td>
             </tr>
             <tr>
                 <td class="label">Kedua</td>
                 <td class="separator">:</td>
-                <td>Dosen pembimbing bertugas membimbing kegiatan penyusunan Skripsi pada program studi <span class="nama_prodi">...</span>;</td>
+                <td>Dosen pembimbing bertugas membimbing kegiatan penyusunan <span class="tipe_ta_val">Skripsi</span> pada program studi <span class="display_prodi_val">...</span>;</td>
             </tr>
             <tr>
                 <td class="label">Ketiga</td>
@@ -120,7 +135,6 @@
             <div>Pada tanggal : <span id="tgl_sk">...</span></div>
             <div style="margin-top: 20px;" class="bold">DEKAN,</div>
             
-            <!-- TTE QR Code Container -->
             <div id="qrcode" class="qr-code"></div>
 
             <div class="bold" style="text-decoration: underline;"><span id="nama_dekan">...</span></div>
@@ -137,8 +151,8 @@
         </div>
 
         <div class="text-center bold" style="margin: 20px 0;">
-            DAFTAR NAMA MAHASISWA DAN DOSEN PEMBIMBING SKRIPSI<br>
-            PROGRAM STUDI <span class="nama_prodi">...</span><br>
+            DAFTAR NAMA MAHASISWA DAN DOSEN PEMBIMBING <span class="tipe_ta_upper_val">SKRIPSI</span><br>
+            PROGRAM STUDI <span class="display_prodi_val">...</span><br>
             SEMESTER <span class="semester">...</span> TAHUN AKADEMIK <span class="tahun">...</span>
         </div>
 
@@ -146,20 +160,18 @@
             <thead>
                 <tr>
                     <th width="5%">No</th>
-                    <th width="15%">NIM</th>
-                    <th width="25%">Nama Mahasiswa</th>
+                    <th width="30%">Nama Dosen Pembimbing</th>
+                    <th width="20%">Peran</th>
+                    <th width="20%">Nama Mahasiswa & NIM</th>
                     <th>Judul Skripsi</th>
-                    <th width="30%">Dosen Pembimbing</th>
                 </tr>
             </thead>
-            <tbody id="mhs_list">
-                <!-- Data will be populated by JS -->
-            </tbody>
+            <tbody id="mhs_list"></tbody>
         </table>
 
         <div class="signature-box" style="margin-top: 30px;">
             <div class="bold">DEKAN,</div>
-            <div style="height: 80px;"></div> <!-- Space for signature/QR -->
+            <div style="height: 60px;"></div>
             <div class="bold" style="text-decoration: underline;"><span class="nama_dekan">...</span></div>
             <div>NIP. <span class="nip_dekan">...</span></div>
         </div>
@@ -168,8 +180,11 @@
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="{{ asset('js/qrcode.js') }}"></script>
     <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const customNo = urlParams.get('no');
+
         const CONFIG = {
-            api_url: "{{ url('/apisiaumuka/api/') }}/",
+            api_url: "{{ config('setting.second_url') }}",
             token: "{{ Session::get('token') }}",
             username: "{{ Session::get('username') }}",
             sk_id: "{{ $id }}"
@@ -184,43 +199,118 @@
                     const sk = res.sk;
                     const mhs = res.mahasiswa;
 
-                    // Populate Headers
-                    $('#no_sk, .no_sk').text(sk.no_sk);
+                    // determine header program: if all mahasiswa share the same program, use it;
+                    // otherwise indicate multiple programs
+                    const prodiList = Array.from(new Set(mhs.map(i => i.nama_program_studi).filter(Boolean)));
+                    let headerProdi = '';
+                    if (prodiList.length === 1) {
+                        headerProdi = prodiList[0];
+                    } else if (prodiList.length === 2) {
+                        headerProdi = prodiList[0] + ' dan ' + prodiList[1];
+                    } else if (prodiList.length > 2) {
+                        const last = prodiList.pop();
+                        headerProdi = prodiList.join(', ') + ', dan ' + last;
+                    } else {
+                        headerProdi = sk.nama_program_studi || '';
+                    }
+
+                    // Determine jenjang (D3, S1, etc.)
+                    const jenjangMap = {
+                        '1': 'D3',
+                        '2': 'S1',
+                        '3': 'S2',
+                        '4': 'S3',
+                        '5': 'D4'
+                    };
+
+                    const jenjang = sk.kode_jenjang_pendidikan;
+                    let tipeTa = "Skripsi";
+                    let tipeTaSingkat = "Skripsi";
+
+                    // Determine if D3 or D4 (Laporan Tugas Akhir)
+                    const prodiNameForCheck = headerProdi.toUpperCase();
+                    if (jenjang == '1' || jenjang == '5' || prodiNameForCheck.includes('D3') || prodiNameForCheck.includes('DIII') || prodiNameForCheck.includes('D4') || prodiNameForCheck.includes('DIV')) {
+                        tipeTa = "Laporan Tugas Akhir (LTA)";
+                        tipeTaSingkat = "LTA";
+                    }
+
+                    // Format prodi name prefix if missing (e.g. S1 Informatika, D3 Kebidanan)
+                    let displayProdi = headerProdi;
+                    const prefix = jenjangMap[jenjang] || '';
+                    if (prefix && !displayProdi.toUpperCase().startsWith(prefix)) {
+                        displayProdi = prefix + ' ' + displayProdi;
+                    }
+
+                    $('#no_sk, .no_sk').text(customNo || sk.no_sk);
                     $('#tgl_sk, .tgl_sk').text(new Date(sk.tgl_sk).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }));
-                    $('#nama_fakultas, #nama_fakultas_2, #nama_fakultas_3').text(sk.nama_fakultas);
-                    $('.nama_prodi, #nama_prodi').text(sk.nama_program_studi);
+                    $('#nama_fakultas, #nama_fakultas_2, #nama_fakultas_3, .nama_fakultas_val').text(sk.nama_fakultas);
+                    $('.nama_prodi, #nama_prodi').text(headerProdi);
+                    $('.display_prodi_val').text(displayProdi);
+                    $('.tipe_ta_val').text(tipeTa);
+                    $('.tipe_ta_singkat_val').text(tipeTaSingkat);
+                    $('.tipe_ta_upper_val').text(tipeTa.toUpperCase());
                     $('.semester, #semester').text(sk.semester);
                     $('.tahun, #tahun').text(sk.tahun_akademik);
                     $('#nama_dekan, .nama_dekan').text((sk.gd_dekan ? sk.gd_dekan + ' ' : '') + sk.nama_dekan + (sk.gb_dekan ? ', ' + sk.gb_dekan : ''));
                     $('#nip_dekan, .nip_dekan').text(sk.nip_dekan);
 
-                    // Populate Table
-                    let html = '';
-                    mhs.forEach((item, index) => {
-                        html += `
-                            <tr>
-                                <td class="text-center">${index + 1}</td>
-                                <td>${item.nim}</td>
-                                <td>${item.nama_mhs}</td>
-                                <td style="font-size: 9pt;">${item.judul || '-'}</td>
-                                <td>
-                                    1. ${item.nama_p1}<br>
-                                    2. ${item.nama_p2 || '-'}
-                                </td>
-                            </tr>
-                        `;
-                    });
-                    $('#mhs_list').html(html);
+                    // 1. Kelompokkan data berdasarkan Nama Dosen
+                const dosenGroup = {};
 
-                    // Generate TTE QR Code
+                mhs.forEach(item => {
+                    // Memproses Pembimbing 1
+                    if (item.nama_p1 && item.nama_p1 !== '-') {
+                        if (!dosenGroup[item.nama_p1]) dosenGroup[item.nama_p1] = [];
+                        dosenGroup[item.nama_p1].push({
+                            peran: 'Pembimbing Utama',
+                            mahasiswa: item
+                        });
+                    }
+                    
+                    // Memproses Pembimbing 2 (jika ada)
+                    if (item.nama_p2 && item.nama_p2 !== '-') {
+                        if (!dosenGroup[item.nama_p2]) dosenGroup[item.nama_p2] = [];
+                        dosenGroup[item.nama_p2].push({
+                            peran: 'Pembimbing Pendamping',
+                            mahasiswa: item
+                        });
+                    }
+                });
+
+                // 2. Render HTML dengan menggunakan rowspan
+                let html = '';
+                let noUrut = 1;
+
+                // Loop melalui object yang sudah dikelompokkan
+                for (const [namaDosen, bimbingan] of Object.entries(dosenGroup)) {
+                    const totalBimbingan = bimbingan.length;
+
+                    bimbingan.forEach((data, index) => {
+                        html += `<tr>`;
+                        
+                        // Kolom Nomor dan Nama Dosen hanya di-render di baris pertama tiap kelompok
+                        if (index === 0) {
+                            html += `<td class="text-center" rowspan="${totalBimbingan}">${noUrut++}</td>`;
+                            html += `<td rowspan="${totalBimbingan}" class="bold">${namaDosen}</td>`;
+                        }
+                        
+                        // Kolom Peran, Nama Mahasiswa, dan Judul di-render untuk setiap baris
+                        html += `<td class="text-center">${data.peran}</td>`;
+                        html += `<td>${data.mahasiswa.nama_mhs}<br><span style="font-size: 9pt;">NIM. ${data.mahasiswa.nim}</span></td>`;
+                        html += `<td style="font-size: 8pt; text-align: justify;">${data.mahasiswa.judul || '-'}</td>`;
+                        html += `</tr>`;
+                    });
+                }
+
+                $('#mhs_list').html(html);
+
                     const validationUrl = "{{ url('/validasi/sk/') }}/" + sk.id;
                     new QRCode(document.getElementById("qrcode"), {
                         text: validationUrl,
-                        width: 100,
-                        height: 100
+                        width: 80,
+                        height: 80
                     });
 
-                    // Trigger Print
                     setTimeout(() => { window.print(); }, 1000);
                 }
             });

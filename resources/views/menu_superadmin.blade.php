@@ -143,6 +143,9 @@
                             <li class="{{ request()->is('akademik/manajemen-ta/rekap-bimbingan') ? 'active' : '' }}">
                                 <a href="{{ url('akademik/manajemen-ta/rekap-bimbingan') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Rekap Bimbingan <sup class="text-danger">(Beta)</sup></a>
                             </li>
+                            <li class="{{ request()->is('akademik/manajemen-ta/validasi-sempro') ? 'active' : '' }}">
+                                <a href="{{ url('akademik/manajemen-ta/validasi-sempro') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Validasi Sempro Prodi</a>
+                            </li>
                         </ul>
                     </li>
                     <li class="treeview">

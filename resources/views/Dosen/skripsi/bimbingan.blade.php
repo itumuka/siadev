@@ -222,9 +222,9 @@
                             $('#mhs_info_placeholder').hide();
                             $('#mhs_info_content').fadeIn();
 
-                            // Jika bimbingan ACC sudah >= batas minimum (misal 8), tampilkan tombol ACC Ujian
-                            // Untuk sekarang kita asumsikan jika ACC >= 8 muncul tombolnya
-                            if(mhs.total_bimbingan_acc >= 8) {
+                            // Gunakan nilai minimal bimbingan dari backend jika tersedia
+                            var minBimbingan = mhs.ta_minimal_bimbingan || 8;
+                            if(mhs.total_bimbingan_acc >= minBimbingan) {
                                 $('#btn_acc_ujian').show();
                             }
                         }
@@ -387,7 +387,8 @@
                                         var mhs = res.data.find(m => m.id_skripsi == id_skripsi);
                                         if(mhs) {
                                             // Refresh tombol ACC berdasarkan status baru
-                                            if(mhs.total_bimbingan_acc >= 8) {
+                                            var minBimbingan = mhs.ta_minimal_bimbingan || 8;
+                                            if(mhs.total_bimbingan_acc >= minBimbingan) {
                                                 $('#btn_acc_ujian').show();
                                             } else {
                                                 $('#btn_acc_ujian').hide();

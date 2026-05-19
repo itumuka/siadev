@@ -70,11 +70,13 @@
                     </div>
                     <div class="form-group">
                         <label>Materi / Topik Konsultasi</label>
-                        <input type="text" class="form-control" name="topik" placeholder="Cth: Bab 3 - Perancangan Sistem" required>
+                        <input type="text" class="form-control" name="topik" placeholder="Cth: Bab 3 - Perancangan Sistem" maxlength="250" required>
+                        <small class="text-muted">Maksimal 250 karakter</small>
                     </div>
                     <div class="form-group">
                         <label>Uraian / Pesan ke Pembimbing</label>
-                        <textarea class="form-control" name="uraian" rows="4" placeholder="Jelaskan progres Anda..." required></textarea>
+                        <textarea class="form-control" name="uraian" rows="4" placeholder="Jelaskan progres Anda..." maxlength="500" required></textarea>
+                        <small class="text-muted">Maksimal 500 karakter</small>
                     </div>
                     <div class="form-group">
                         <label>Upload File (Opsional)</label>
@@ -123,6 +125,15 @@ $(document).ready(function() {
                     $('#progress_label').text('Progres (' + totalAcc + '/' + minBimbingan + ')');
                     $('#progress_percent').text(persen + '%');
                     $('#progress_bar_fill').css('width', persen + '%').attr('aria-valuenow', persen);
+
+                    // Cek apakah mahasiswa sudah punya skripsi dan pembimbing sudah di-ploting
+                    var skripsi = res.data.skripsi;
+                    if(!skripsi || !skripsi.id_dosen_pembimbing1) {
+                        // Disable tombol tambah bimbingan
+                        $('#modalTambahBimbingan').remove();
+                        $('.bg-primary .btn-warning').prop('disabled', true).addClass('disabled').html('<i class="fa fa-lock"></i> Belum Bisa Bimbingan');
+                        $('.bg-primary p').after('<div class="alert alert-warning mt-15"><i class="fa fa-exclamation-triangle"></i> Anda belum mengajukan proposal atau pembimbing belum di-ploting.</div>');
+                    }
                 }
             }
         });
@@ -144,7 +155,7 @@ $(document).ready(function() {
                 if(res.status == 'success' && res.data.length > 0) {
                     var logsHtml = '';
                     res.data.forEach(function(item, index) {
-                        var no = res.data.length - index;
+                        var no = index + 1;
                         var date = new Date(item.tanggal).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'});
                         
                         var statusBadge = '';
@@ -198,6 +209,16 @@ $(document).ready(function() {
         e.preventDefault();
         var formData = new FormData(this);
         formData.append('nim', nim);
+
+        // Client-side validation for file size
+        var fileInput = $('input[name="file_lampiran"]')[0];
+        if (fileInput.files.length > 0) {
+            var file = fileInput.files[0];
+            if (file.size > 5 * 1024 * 1024) { // 5MB
+                showToastr('error', 'Gagal', 'Ukuran file lampiran maksimal 5MB.');
+                return false;
+            }
+        }
 
         var btn = $('#btnSimpanBimbingan');
         btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Menyimpan...');
