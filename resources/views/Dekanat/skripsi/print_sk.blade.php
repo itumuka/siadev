@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cetak SK Pembimbing - {{ $id }}</title>
     <style>
-        @page { size: A4; margin: 2cm; }
+        @page { size: A4; margin-left: 2cm; margin-right: 2cm; margin-top: 1cm; margin-bottom: 2cm; }
         body { font-family: Arial, Helvetica, sans-serif; font-size: 11pt; line-height: 1.2; color: #000; background: #fff; }
         .page-break { page-break-after: always; }
         .header { text-align: center; margin-bottom: 10px; border-bottom: 3px solid #000; padding-bottom: 10px; }
         .header img { height: 80px; }
         .header h1 { font-size: 18pt; margin: 5px 0; }
         .header p { font-size: 10pt; margin: 0; }
-        .section-title { text-align: center; font-weight: bold; text-decoration: underline; margin-top: 20px; text-transform: uppercase; }
+        .section-title { text-align: center; font-weight: bold; margin-top: 20px; text-transform: uppercase; }
         .nomor-sk { text-align: center; font-weight: bold; margin-bottom: 20px; }
         .content-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         .content-table td { vertical-align: top; padding: 2px 0; }
@@ -27,41 +27,46 @@
         .text-center { text-align: center !important; }
         .bold { font-weight: bold; }
         p.justify { text-align: justify; }
+        ol { margin: 0; padding-left: 20px; }
+        li { margin-bottom: 3px; }
     </style>
 </head>
 <body>
     <!-- Halaman 1: Redaksi SK -->
     <div class="page-break">
         <!-- Kop Surat Digital -->
-        <table style="width: 100%; border-collapse: collapse; border-bottom: 4px double #000; padding-bottom: 10px; margin-bottom: 20px;">
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 35px;">
             <tr>
-                <td style="width: 15%; text-align: center; vertical-align: middle;">
-                    <img src="{{ asset('imageup45/logoumuka.png') }}" style="width: 85px; height: auto;" alt="Logo UMUKA">
-                </td>
-                <td style="width: 85%; text-align: center; vertical-align: middle; padding-left: 10px;">
-                    <div style="font-size: 16pt; font-weight: bold; font-family: 'Arial Black', sans-serif; margin: 0; color: #1e3d59; letter-spacing: 0.5px; text-transform: uppercase;">Universitas Muhammadiyah Karanganyar</div>
-                    <div style="font-size: 13pt; font-weight: bold; margin: 2px 0; color: #000; text-transform: uppercase;">Fakultas <span class="nama_fakultas_val">...</span></div>
-                    <div style="font-size: 8.5pt; font-style: italic; margin: 2px 0; color: #555;">"Cerdas Membangun Peradaban Utama"</div>
-                    <div style="font-size: 8.5pt; margin: 2px 0; color: #333;">Jl. Raya Solo-Tawangmangu KM 12 Papahan Tasikmadu Karanganyar (57761)</div>
-                    <div style="font-size: 8.5pt; margin: 2px 0; color: #333;">Website: www.umuka.ac.id | Email: umuka@umuka.ac.id | Admin: 08112801912</div>
+                <td style="text-align: left; vertical-align: middle;">
+                    <table style="border-collapse: collapse;">
+                        <tr>
+                            <td style="vertical-align: middle; padding-right: 15px;">
+                                <img src="{{ asset('imageup45/logoumuka.png') }}" style="width: 85px; height: auto;" alt="Logo UMUKA">
+                            </td>
+                            <td style="vertical-align: middle; padding-top: 5px;">
+                                <div style="font-size: 38pt; font-weight: bold; font-family: Arial, sans-serif; line-height: 0.8; margin-bottom: 5px; color: #000; letter-spacing: -1px;">UMUKA</div>
+                                <div style="font-size: 11pt; font-weight: bold; font-family: Arial, sans-serif; color: #000; letter-spacing: 0.2px;">UNIVERSITAS MUHAMMADIYAH KARANGANYAR</div>
+                            </td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
         </table>
 
-        <div class="section-title">KEPUTUSAN DEKAN</div>
-        <div id="sk_title" class="section-title" style="text-decoration: none; margin-top: 0;text-transform: uppercase;">
-            FAKULTAS <span id="nama_fakultas">...</span><br>
-            UNIVERSITAS MUHAMMADIYAH KARANGANYAR 
+        <div class="text-center bold" style="line-height: 1.3; font-size: 11pt;">
+            <div>KEPUTUSAN DEKAN</div>
+            <div>FAKULTAS <span id="nama_fakultas" style="text-transform: uppercase;">...</span></div>
+            <div>UNIVERSITAS MUHAMMADIYAH KARANGANYAR</div>
+            <div style="margin-top: 2px; margin-bottom: 25px;">NOMOR: <span id="no_sk">...</span></div>
         </div>
-        <div class="nomor-sk">NOMOR: <span id="no_sk">...</span></div>
         
-        <div class="text-center bold">TENTANG</div>
-        <div class="text-center bold" style="margin-bottom: 15px;">
-            PENGANGKATAN DOSEN PEMBIMBING <span class="tipe_ta_upper_val">SKRIPSI</span><br>
-            MAHASISWA PROGRAM STUDI <span class="display_prodi_val" style="text-decoration: none;text-transform: uppercase;">...</span><br>
-            SEMESTER <span id="semester">...</span> TAHUN AKADEMIK <span id="tahun">...</span><br>
-            FAKULTAS <span id="nama_fakultas_2" style="text-decoration: none;text-transform: uppercase;">...</span><br>
-            UNIVERSITAS MUHAMMADIYAH KARANGANYAR
+        <div class="text-center" style="line-height: 1.3; font-size: 11pt; margin-bottom: 30px;">
+            <div style="margin-bottom: 15px;">TENTANG</div>
+            <div>PENGANGKATAN DOSEN PEMBIMBING <span class="tipe_ta_upper_val">SKRIPSI</span></div>
+            <div>MAHASISWA PROGRAM STUDI <span class="display_prodi_val" style="text-transform: uppercase;">...</span></div>
+            <div>SEMESTER <span id="semester">...</span> TAHUN AKADEMIK <span id="tahun">...</span></div>
+            <div>FAKULTAS <span id="nama_fakultas_2" style="text-transform: uppercase;">...</span></div>
+            <div>UNIVERSITAS MUHAMMADIYAH KARANGANYAR</div>
         </div>
 
         <div class="text-center bold" style="margin-bottom: 20px;">DEKAN FAKULTAS <span id="nama_fakultas_3" style="text-decoration: none;text-transform: uppercase;">...</span></div>
