@@ -88,7 +88,8 @@
                     </div>
                     <div class="box-body">
                         <h5 class="font-weight-600 mb-0" id="ta_judul">Belum ada judul yang diajukan.</h5>
-                        <p class="text-muted font-size-12 mb-20" id="ta_topik">Topik: -</p>
+                        <p class="text-muted font-size-12 mb-5" id="ta_topik">Topik: -</p>
+                        <p class="text-muted font-size-12 mb-20" id="ta_target_luaran">Target Luaran: -</p>
                         
                         <hr>
                         

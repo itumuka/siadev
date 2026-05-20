@@ -68,6 +68,19 @@ function renderDashboard(data) {
     if (data.skripsi) {
         $('#ta_judul').text(data.skripsi.judul).removeClass('text-muted');
         $('#ta_topik').text('Topik: ' + (data.skripsi.topik || '-'));
+        
+        const luaranLabels = {
+            'buku_skripsi': 'Buku Skripsi / Tugas Akhir',
+            'jurnal_sinta': 'Publikasi Jurnal SINTA',
+            'jurnal_internasional': 'Publikasi Jurnal Internasional',
+            'prosiding': 'Publikasi Prosiding Konferensi Ilmiah',
+            'paten': 'Paten / Paten Sederhana',
+            'hki': 'Hak Cipta / HKI Non-Paten',
+            'lainnya': 'Lainnya / Sesuai Kebijakan Prodi'
+        };
+        const targetLuaranLabel = luaranLabels[data.skripsi.target_luaran] || 'Buku Skripsi / Tugas Akhir';
+        $('#ta_target_luaran').text('Target Luaran: ' + targetLuaranLabel);
+
         $('#ta_pembimbing1').text(data.skripsi.nama_pembimbing1 || 'Menunggu Ploting...');
         $('#ta_pembimbing2').text(data.skripsi.nama_pembimbing2 || '-');
         
@@ -125,6 +138,7 @@ function renderDashboard(data) {
             form.find('[name="judul_en"]').val(data.skripsi.judul_en);
             form.find('[name="abstrak"]').val(data.skripsi.abstrak);
             form.find('[name="abstrak_en"]').val(data.skripsi.abstrak_en);
+            form.find('[name="target_luaran"]').val(data.skripsi.target_luaran || 'buku_skripsi');
         }
     } else {
         $('#ta_judul').text('Belum ada judul yang diajukan.').addClass('text-muted');

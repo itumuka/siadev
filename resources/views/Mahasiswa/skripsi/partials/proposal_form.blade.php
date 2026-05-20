@@ -62,6 +62,22 @@
                             </div>
                         </div>
                     </div>
+
+                    <hr>
+
+                    <div class="form-group">
+                        <label class="font-weight-700 text-primary"><i class="fa fa-graduation-cap mr-5"></i> Target Luaran Skripsi (Kurikulum OBE)</label>
+                        <select name="target_luaran" class="form-control" required>
+                            <option value="buku_skripsi">Buku Skripsi / Tugas Akhir</option>
+                            <option value="jurnal_sinta">Publikasi Jurnal SINTA</option>
+                            <option value="jurnal_internasional">Publikasi Jurnal Internasional</option>
+                            <option value="prosiding">Publikasi Prosiding Konferensi Ilmiah</option>
+                            <option value="paten">Paten / Paten Sederhana</option>
+                            <option value="hki">Hak Cipta / HKI Non-Paten</option>
+                            <option value="lainnya">Lainnya / Sesuai Kebijakan Prodi</option>
+                        </select>
+                        <small class="text-muted">Pilih target luaran utama sesuai dengan kurikulum OBE prodi Anda</small>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
