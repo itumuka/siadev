@@ -168,6 +168,10 @@
                                             class="path1"></span><span class="path2"></span></i>Password
                                     Mahasiswa</a>
                             </li>
+                            <li class="{{ request()->is('akademik/pkkmb') ? 'active' : '' }}">
+                                <a href="{{ url('akademik/pkkmb') }}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Status PKKMB</a>
+                            </li>
                             {{-- <li class="{{ request()->is('akademik/nilaimahasiswa') ? 'active' : '' }}">
                                 <a href="{{ url('akademik/nilaimahasiswa') }}"><i class="icon-Commit"><span
                                             class="path1"></span><span
