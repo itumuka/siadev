@@ -112,7 +112,7 @@
                         </div>
                         <div class="form-group">
                             <label>Nomor Surat Tugas</label>
-                            <input type="text" class="form-control" name="no_surat_tugas" required placeholder="Contoh: 112.4/ST/III.3.AU.III.1/A2/IX/2025">
+                            <input type="text" class="form-control" name="no_surat_tugas" required placeholder="Contoh: 112.4/ST/... (Nomor akan diurutkan otomatis per mahasiswa)">
                         </div>
                         <div class="form-group">
                             <label>Tanggal SK</label>
