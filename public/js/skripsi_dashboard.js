@@ -155,6 +155,13 @@ function renderDashboard(data) {
     // 5. Lifecycle
     renderTimeline(data);
     renderCTA(data.cta);
+
+    // 6. Portfolio CPL (OBE)
+    if (data.skripsi && data.skripsi.is_obe == 1) {
+        loadPortfolioCPL();
+    } else {
+        $('#box_portfolio_cpl').hide();
+    }
 }
 
 function renderTimeline(data) {
@@ -351,4 +358,58 @@ function showError(msg) {
             </div>
         </div>
     `).show();
+}
+
+async function loadPortfolioCPL() {
+    const container = $('#portfolio_cpl_container');
+    container.html('<div class="text-center py-20"><i class="fa fa-spinner fa-spin fa-2x text-primary"></i><p class="mt-10 small text-muted">Memuat portofolio CPL...</p></div>');
+    $('#box_portfolio_cpl').show();
+
+    try {
+        const response = await fetch(`${CONFIG.api_url}mahasiswa/skripsi/portofolio-cpl?nim=${CONFIG.nim}`, {
+            headers: {
+                'Authorization': `Bearer ${CONFIG.token}`,
+                'username': CONFIG.username,
+                'Accept': 'application/json'
+            }
+        });
+        const result = await response.json();
+
+        if (result.status === 'success' && result.data && result.data.cpl_portfolio) {
+            const portfolio = result.data.cpl_portfolio;
+            if (portfolio.length === 0) {
+                container.html('<div class="alert alert-info py-15 mb-0"><i class="fa fa-info-circle mr-5"></i> Penilaian luaran belum diinput/diverifikasi oleh Tim Verifikator. Portofolio CPL akan muncul setelah penilaian disimpan.</div>');
+                return;
+            }
+
+            let html = '<div class="row">';
+            portfolio.forEach(item => {
+                const pct = item.achievement;
+                let barColor = 'bg-primary';
+                if (pct >= 85) barColor = 'bg-success';
+                else if (pct >= 70) barColor = 'bg-info';
+                else if (pct >= 55) barColor = 'bg-warning';
+                else barColor = 'bg-danger';
+
+                html += `
+                    <div class="col-12 mb-15">
+                        <div class="d-flex justify-content-between align-items-center mb-5">
+                            <span class="font-weight-600 text-dark">${item.cpl}</span>
+                            <span class="badge badge-secondary font-weight-bold">${pct.toFixed(2)} %</span>
+                        </div>
+                        <div class="progress progress-sm mb-0">
+                            <div class="progress-bar ${barColor}" role="progressbar" style="width: ${pct}%"></div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.html(html);
+        } else {
+            container.html('<div class="text-danger small"><i class="fa fa-exclamation-triangle"></i> Gagal memuat portofolio CPL.</div>');
+        }
+    } catch (e) {
+        console.error(e);
+        container.html('<div class="text-danger small"><i class="fa fa-exclamation-triangle"></i> Terjadi masalah koneksi saat memuat portofolio CPL.</div>');
+    }
 }

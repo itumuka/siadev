@@ -457,8 +457,8 @@
                 success: function(luaranRes) {
                     // 2. Proceed to main pendaftaran ujian
                     $.ajax({
-                        url: "{{ config('setting.second_url') }}mahasiswa/skripsi/daftar-sempro", 
-                        method: "POST", // Nanti buat daftar_ujian di Controller
+                        url: "{{ config('setting.second_url') }}mahasiswa/skripsi/ajukan-ujian",
+                        method: "POST",
                         data: {
                             nim: nim,
                             judul: $('#input_judul').val()

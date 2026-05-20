@@ -78,6 +78,12 @@
                             <span>Pembimbing Skripsi <sup class="text-danger">(Beta)</sup></span>
                         </a>
                     </li>
+                    <li class="{{ Route::is('dosen.skripsi.ujian') ? 'active' : '' }}">
+                        <a href="{{ route('dosen.skripsi.ujian') }}" title="Ujian / Verifikasi Skripsi">
+                            <i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Ujian & Luaran Skripsi</span>
+                        </a>
+                    </li>
                     
                     <li class="treeview">
                         <a href="#">

@@ -40,4 +40,13 @@ class SkripsiDosenController extends Controller
         
         return view('Dosen.skripsi.bimbingan', $data);
     }
+
+    public function ujian()
+    {
+        $data = $this->getCommonData();
+        $data['title'] = 'Penilaian Ujian Skripsi & Verifikasi Luaran';
+        $data['child_breadcrumb'] = 'Ujian Skripsi';
+        
+        return view('Dosen.skripsi.ujian', $data);
+    }
 }
