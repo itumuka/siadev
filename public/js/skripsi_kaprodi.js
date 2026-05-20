@@ -1,6 +1,22 @@
 $(document).ready(function () {
     let table;
 
+    function truncateText(text, maxLength = 200) {
+        if (text === null || text === undefined || text === '') return '-';
+        const value = String(text);
+        return value.length > maxLength ? value.substring(0, maxLength) + '...' : value;
+    }
+
+    function escapeAttr(text) {
+        if (text === null || text === undefined) return '';
+        return String(text)
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+    }
+
     // 1. Initialize Datatable
     function initDataTable() {
         table = $('#table_kaprodi_skripsi').DataTable({
@@ -13,7 +29,9 @@ $(document).ready(function () {
                     "username": CONFIG.username
                 },
                 data: {
-                    kode_prodi: CONFIG.kode_prodi
+                    kode_prodi: CONFIG.kode_prodi,
+                    tahun: CONFIG.tahun,
+                    semester: CONFIG.semester
                 },
                 dataSrc: ""
             },
@@ -24,7 +42,11 @@ $(document).ready(function () {
                 {
                     data: null,
                     render: function (data) {
-                        return `<strong>${data.topik || '-'}</strong><br><small>${data.judul || '-'}</small>`;
+                        const topik = data.topik || '-';
+                        const judul = data.judul || '-';
+                        const topikDisplay = truncateText(topik, 200);
+                        const judulDisplay = truncateText(judul, 200);
+                        return `<strong title="${escapeAttr(topik)}">${topikDisplay}</strong><br><small title="${escapeAttr(judul)}">${judulDisplay}</small>`;
                     }
                 },
                 {
@@ -184,4 +206,101 @@ $(document).ready(function () {
     // Run
     initDataTable();
     initSelect2();
+
+    // 5. Sempro Configuration Logic
+    window.openConfigModal = function () {
+        const modal = $('#modal-config-sempro');
+        
+        // Load Current Config
+        $.ajax({
+            url: CONFIG.api_url + "kaprodi/skripsi/config-sempro/" + CONFIG.kode_prodi,
+            type: "GET",
+            headers: {
+                "Authorization": "Bearer " + CONFIG.token,
+                "username": CONFIG.username
+            },
+            success: function (res) {
+                $('#config_skema').val(res.prodi.ta_sempro_skema || 'skripsi').trigger('change');
+                
+                // Reset select2 and add current mapped MK
+                $('#config_mk').empty();
+                if (res.mapped_matakuliah) {
+                    res.mapped_matakuliah.forEach(mk => {
+                        const option = new Option(mk.kode_matakuliah + ' - ' + mk.nama_matakuliah, mk.id_matakuliah, true, true);
+                        $('#config_mk').append(option);
+                    });
+                    $('#config_mk').trigger('change');
+                }
+                
+                modal.modal('show');
+            },
+            error: function () {
+                swal("Gagal!", "Gagal memuat konfigurasi.", "error");
+            }
+        });
+    };
+
+    $('#config_skema').on('change', function() {
+        if ($(this).val() === 'matakuliah') {
+            $('#section_config_mk').slideDown();
+        } else {
+            $('#section_config_mk').slideUp();
+        }
+    });
+
+    // Initialize Select2 for Matakuliah
+    $('#config_mk').select2({
+        dropdownParent: $('#modal-config-sempro'),
+        placeholder: "Cari & Tambah Matakuliah...",
+        allowClear: true,
+        ajax: {
+            url: CONFIG.api_url + "kaprodi/skripsi/search-matakuliah",
+            type: "GET",
+            headers: {
+                "Authorization": "Bearer " + CONFIG.token,
+                "username": CONFIG.username
+            },
+            data: function (params) {
+                return { 
+                    search: params.term || '',
+                    kode_prodi: CONFIG.kode_prodi
+                };
+            },
+            processResults: function (res) {
+                return {
+                    results: res.map(mk => ({
+                        id: mk.id_matakuliah,
+                        text: mk.kode_matakuliah + ' - ' + mk.nama_matakuliah
+                    }))
+                };
+            }
+        }
+    });
+
+    $('#form_config_sempro').on('submit', function (e) {
+        e.preventDefault();
+        const data = {
+            kode_prodi: CONFIG.kode_prodi,
+            ta_sempro_skema: $('#config_skema').val(),
+            id_matakuliah: $('#config_mk').val()
+        };
+
+        $.ajax({
+            url: CONFIG.api_url + "kaprodi/skripsi/update-config-sempro",
+            type: "POST",
+            headers: {
+                "Authorization": "Bearer " + CONFIG.token,
+                "username": CONFIG.username,
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify(data),
+            success: function (res) {
+                swal("Berhasil!", res.success, "success");
+                $('#modal-config-sempro').modal('hide');
+            },
+            error: function (err) {
+                swal("Gagal!", "Terjadi kesalahan saat menyimpan konfigurasi.", "error");
+            }
+        });
+    });
 });

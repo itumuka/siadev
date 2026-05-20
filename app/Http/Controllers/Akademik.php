@@ -104,6 +104,24 @@ class Akademik extends Controller
         ));
     }
 
+    public function validasi_sempro()
+    {
+        $session_username = Session::has('username') ? Session::get('username') : '';
+        $api_token = Session::has('token') ? Session::get('token') : '';
+        $api_url = config('setting.second_url');
+
+        $title = "Validasi Sempro Prodi";
+        $parent_breadcrumb = "Manajemen Tugas Akhir";
+        $child_breadcrumb = "Validasi Sempro Prodi";
+
+        $session_tahun = Session::has('session_tahun') ? Session::get('session_tahun') : '';
+        $session_semester = Session::has('session_semester') ? Session::get('session_semester') : '';
+
+        return view('Akademik/manajemen_ta/validasi_sempro', compact(
+            'title', 'parent_breadcrumb', 'child_breadcrumb', 'session_username', 'api_token', 'api_url', 'session_tahun', 'session_semester'
+        ));
+    }
+
     public function daftardosen()
     {
         if (Session::has('session_tahun')) {

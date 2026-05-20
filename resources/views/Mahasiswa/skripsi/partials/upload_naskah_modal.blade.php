@@ -18,6 +18,15 @@
                     <div class="alert alert-warning bg-warning-light border-warning mt-15">
                         <i class="fa fa-exclamation-triangle mr-5"></i> Pastikan naskah yang diunggah sudah sesuai dengan format yang ditentukan (BAB 1-3 untuk Sempro, atau Lengkap untuk Ujian Akhir).
                     </div>
+
+                    <div id="history-naskah" class="mt-20" style="display: none;">
+                        <label class="font-weight-700">Naskah Terakhir:</label>
+                        <div class="p-10 border rounded bg-light d-flex justify-content-between align-items-center">
+                            <span id="label-naskah-terakhir" class="text-truncate mr-10" style="max-width: 250px;">-</span>
+                            <a href="#" id="link-naskah-terakhir" target="_blank" class="btn btn-xs btn-info"><i class="fa fa-download"></i> Lihat</a>
+                        </div>
+                        <small class="text-muted mt-5 d-block text-italic">* Unggah file baru untuk memperbarui naskah.</small>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>

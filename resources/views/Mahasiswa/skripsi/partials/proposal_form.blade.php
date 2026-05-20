@@ -17,14 +17,15 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-700">Topik Utama (Bahasa Indonesia)</label>
-                                <input type="text" name="topik" class="form-control" placeholder="Contoh: Kecerdasan Buatan" required>
-                                <small class="text-muted">Kategori penelitian Anda</small>
+                                <input type="text" name="topik" class="form-control" placeholder="Contoh: Kecerdasan Buatan" maxlength="50" required>
+                                <small class="text-muted">Kategori penelitian Anda (Max 50 karakter)</small>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-700">Topic (English)</label>
-                                <input type="text" name="topik_en" class="form-control" placeholder="Example: Artificial Intelligence" required>
+                                <input type="text" name="topik_en" class="form-control" placeholder="Example: Artificial Intelligence" maxlength="50" required>
+                                <small class="text-muted">Research category (Max 50 characters)</small>
                             </div>
                         </div>
                     </div>
@@ -33,12 +34,14 @@
 
                     <div class="form-group">
                         <label class="font-weight-700">Judul Lengkap (Bahasa Indonesia)</label>
-                        <textarea name="judul" class="form-control" rows="3" placeholder="Masukan judul lengkap penelitian Anda..." required></textarea>
+                        <textarea name="judul" class="form-control" rows="3" placeholder="Masukan judul lengkap penelitian Anda..." maxlength="100" required></textarea>
+                        <small class="text-muted">Maksimal 100 karakter</small>
                     </div>
 
                     <div class="form-group">
                         <label class="font-weight-700">Full Title (English)</label>
-                        <textarea name="judul_en" class="form-control" rows="3" placeholder="Enter your full research title in English..." required></textarea>
+                        <textarea name="judul_en" class="form-control" rows="3" placeholder="Enter your full research title in English..." maxlength="100" required></textarea>
+                        <small class="text-muted">Maximum 100 characters</small>
                     </div>
 
                     <hr>
@@ -47,13 +50,15 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-700">Abstrak / Gambaran Singkat</label>
-                                <textarea name="abstrak" class="form-control" rows="5" placeholder="Tuliskan latar belakang singkat dan tujuan penelitian..." required></textarea>
+                                <textarea name="abstrak" class="form-control" rows="5" placeholder="Tuliskan latar belakang singkat dan tujuan penelitian..." maxlength="2000" required></textarea>
+                                <small class="text-muted">Maksimal 2000 karakter</small>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-700">Abstract (English)</label>
-                                <textarea name="abstrak_en" class="form-control" rows="5" placeholder="Write a brief background and research objectives in English..." required></textarea>
+                                <textarea name="abstrak_en" class="form-control" rows="5" placeholder="Write a brief background and research objectives in English..." maxlength="2000" required></textarea>
+                                <small class="text-muted">Maximum 2000 characters</small>
                             </div>
                         </div>
                     </div>

@@ -32,7 +32,7 @@ class Kaprodi extends Controller
         return view('Kaprodi/lihat_penilaian/index', compact('title', 'parent_breadcrumb', 'child_breadcrumb', 'session_tahun', 'session_semester', 'session_kode_program_studi', 'session_tipe', 'session_kode_dosen','session_kaprodi'));
     }
 
-    public function skripsi_index()
+     public function skripsi_index()
     {
         $session_kode_program_studi = (Session::has('kode_program_studi')) ? Session::get('kode_program_studi') : '';
         $session_nim = Session::has('username') ? Session::get('username') : '';
@@ -43,9 +43,13 @@ class Kaprodi extends Controller
         $parent_breadcrumb = "Kaprodi";
         $child_breadcrumb = "Skripsi";
 
+        $session_tahun = Session::has('session_tahun') ? Session::get('session_tahun') : '';
+        $session_semester = Session::has('session_semester') ? Session::get('session_semester') : '';
+
         return view('Kaprodi/skripsi/index', compact(
             'title', 'parent_breadcrumb', 'child_breadcrumb',
-            'session_kode_program_studi', 'session_nim', 'api_token', 'api_url'
+            'session_kode_program_studi', 'session_nim', 'api_token', 'api_url',
+            'session_tahun', 'session_semester'
         ));
     }
 }

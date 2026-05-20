@@ -240,4 +240,10 @@ class Dekanat extends Controller
         $title = "Cetak SK Pembimbing";
         return view('Dekanat/skripsi/print_sk', compact('title', 'id'));
     }
+
+    public function skripsi_print_surat_tugas($id)
+    {
+        $title = "Cetak Surat Tugas Pembimbing";
+        return view('Dekanat/skripsi/print_surat_tugas', compact('title', 'id'));
+    }
 }
