@@ -73,6 +73,19 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- Portofolio CPL Box (OBE) -->
+                <div id="box_portfolio_cpl" class="box" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: none;">
+                    <div class="box-header with-border">
+                        <h4 class="box-title"><i class="fa fa-graduation-cap text-success"></i> Portofolio Pencapaian CPL (Jalur OBE)</h4>
+                    </div>
+                    <div class="box-body">
+                        <p class="text-muted small">Portofolio Capaian Pembelajaran Lulusan (CPL) yang direlasikan dengan Capaian Pembelajaran Mata Kuliah (CPMK) Luaran Skripsi Anda.</p>
+                        <div id="portfolio_cpl_container" class="mt-20">
+                            <!-- Injected dynamically by JS -->
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Right: Details & Status -->
@@ -88,7 +101,8 @@
                     </div>
                     <div class="box-body">
                         <h5 class="font-weight-600 mb-0" id="ta_judul">Belum ada judul yang diajukan.</h5>
-                        <p class="text-muted font-size-12 mb-20" id="ta_topik">Topik: -</p>
+                        <p class="text-muted font-size-12 mb-5" id="ta_topik">Topik: -</p>
+                        <p class="text-muted font-size-12 mb-20" id="ta_target_luaran">Target Luaran: -</p>
                         
                         <hr>
                         
