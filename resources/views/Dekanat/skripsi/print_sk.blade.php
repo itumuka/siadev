@@ -64,7 +64,7 @@
             <div style="margin-bottom: 15px;">TENTANG</div>
             <div>PENGANGKATAN DOSEN PEMBIMBING <span class="tipe_ta_upper_val">SKRIPSI</span></div>
             <div>MAHASISWA PROGRAM STUDI <span class="display_prodi_val" style="text-transform: uppercase;">...</span></div>
-            <div>SEMESTER <span id="semester">...</span> TAHUN AKADEMIK <span id="tahun">...</span></div>
+            <div>SEMESTER <span id="semester" style="text-transform: uppercase;">...</span> TAHUN AKADEMIK <span id="tahun">...</span></div>
             <div>FAKULTAS <span id="nama_fakultas_2" style="text-transform: uppercase;">...</span></div>
             <div>UNIVERSITAS MUHAMMADIYAH KARANGANYAR</div>
         </div>
@@ -116,12 +116,12 @@
             <tr>
                 <td class="label">Pertama</td>
                 <td class="separator">:</td>
-                <td>Mengangkat dan Menetapkan dosen Pembimbing <span class="tipe_ta_val">Skripsi</span> di lingkungan Program Studi <span class="display_prodi_val">...</span> sebagaimana tersebut dalam lampiran keputusan ini;</td>
+                <td>Mengangkat dan Menetapkan dosen Pembimbing <span class="tipe_ta_val">...</span> di lingkungan Program Studi <span class="display_prodi_val">...</span> sebagaimana tersebut dalam lampiran keputusan ini;</td>
             </tr>
             <tr>
                 <td class="label">Kedua</td>
                 <td class="separator">:</td>
-                <td>Dosen pembimbing bertugas membimbing kegiatan penyusunan <span class="tipe_ta_val">Skripsi</span> pada program studi <span class="display_prodi_val">...</span>;</td>
+                <td>Dosen pembimbing bertugas membimbing kegiatan penyusunan <span class="tipe_ta_val">...</span> pada program studi <span class="display_prodi_val">...</span>;</td>
             </tr>
             <tr>
                 <td class="label">Ketiga</td>
@@ -156,7 +156,7 @@
         </div>
 
         <div class="text-center bold" style="margin: 20px 0;">
-            DAFTAR NAMA MAHASISWA DAN DOSEN PEMBIMBING <span class="tipe_ta_upper_val">SKRIPSI</span><br>
+            DAFTAR NAMA MAHASISWA DAN DOSEN PEMBIMBING <span class="tipe_ta_upper_val">...</span><br>
             PROGRAM STUDI <span class="display_prodi_val" style="text-transform: uppercase;">...</span><br>
             SEMESTER <span class="semester">...</span> TAHUN AKADEMIK <span class="tahun">...</span>
         </div>
