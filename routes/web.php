@@ -147,6 +147,7 @@ Route::middleware(['ceklogin'])->group(function () {
         Route::post("/akademik/qrcodedosen", "Akademik@saveAllQrCode")->name('qrcodedosen');
         Route::post("/akademik/qrcodedosenmanajemen", "Akademik@saveAllQrCodeManajemen")->name('qrcodedosenmanajemen');
         Route::get("/akademik/mahasiswa", "Akademik@mahasiswa")->name('akmahasiswa');
+        Route::get("/akademik/pkkmb", "Akademik@pkkmb")->name('akpkkmb');
         Route::get("/akademik/passwordmahasiswa", "Akademik@passwordmahasiswa")->name('akpasswordmahasiswa');
         Route::get("/akademik/nilaimahasiswa", "Akademik@nilaimahasiswa")->name('aknilaimahasiswa');
         Route::get("/akademik/registrasi", "Akademik@registrasi")->name('akregistrasi');

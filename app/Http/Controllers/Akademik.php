@@ -265,6 +265,11 @@ class Akademik extends Controller
         $title = "Akademik SIAKAD UMUKA";
         return view('Akademik/mahasiswa/daftarmahasiswa', compact('title'));
     }
+    public function pkkmb()
+    {
+        $title = "Akademik SIAKAD UMUKA";
+        return view('Akademik/mahasiswa/pkkmb', compact('title'));
+    }
     public function passwordmahasiswa()
     {
 
