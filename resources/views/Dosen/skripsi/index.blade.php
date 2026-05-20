@@ -5,6 +5,10 @@
         th, td {
             white-space: nowrap;
         }
+        .text-wrap {
+            white-space: normal !important;
+            min-width: 180px;
+        }
     </style>
 @endsection
 
@@ -111,13 +115,17 @@
                 },
                 columns: [
                     { data: 'nim' },
-                    { data: 'nama_mahasiswa' },
+                    { 
+                        data: 'nama_mahasiswa',
+                        className: 'text-wrap'
+                    },
                     { data: 'nama_program_studi' },
                     { 
                         data: null, 
+                        className: 'text-wrap',
                         render: function(data, type, row) {
                             if (!row.judul) return '<em class="text-muted">Belum ada judul</em>';
-                            const judulDisplay = truncateText(row.judul, 200);
+                            const judulDisplay = truncateText(row.judul, 100);
                             return '<strong title="' + escapeAttr(row.judul) + '">' + judulDisplay + '</strong>';
                         }
                     },
