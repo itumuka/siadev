@@ -85,6 +85,14 @@ $(document).ready(function () {
                                 <button class="btn btn-sm btn-success btn-plot-sempro" data-nim="${data.nim}" title="Jadwal Sempro">
                                     <i class="fa fa-calendar"></i>
                                 </button>
+                                <button class="btn btn-sm btn-warning text-white btn-plot-ujian" 
+                                    data-id="${data.id_skripsi}" 
+                                    data-nim="${data.nim}" 
+                                    data-nama="${data.nama_mhs}" 
+                                    data-is-obe="${data.is_obe || 0}"
+                                    title="Jadwal Ujian Akhir">
+                                    <i class="fa fa-graduation-cap"></i>
+                                </button>
                             </div>
                         `;
                     }
@@ -195,6 +203,83 @@ $(document).ready(function () {
             success: function (res) {
                 swal("Berhasil!", res.success, "success");
                 $('#modal-plot-sempro').modal('hide');
+                table.ajax.reload();
+            },
+            error: function (err) {
+                swal("Gagal!", "Pastikan semua data terisi dengan sesuai.", "error");
+            }
+        });
+    });
+
+    // 4b. Event Handlers - Plot Ujian / Sidang Akhir
+    $(document).on('click', '.btn-plot-ujian', function () {
+        const d = $(this).data();
+        const isObe = parseInt(d.isObe) === 1;
+
+        $('#ujian_id_skripsi').val(d.id);
+        
+        // Reset inputs
+        $('#form_plot_ujian')[0].reset();
+        $('#ujian_penguji1').val(null).trigger('change');
+        $('#ujian_penguji2').val(null).trigger('change');
+        $('#ujian_penguji3').val(null).trigger('change');
+
+        // Dynamic labels based on OBE
+        if (isObe) {
+            $('#modal-plot-ujian-title').text('Jadwal Verifikasi Luaran & Tim Verifikator (OBE)');
+            $('#label_penguji1').text('Tim Verifikator 1');
+            $('#label_penguji2').text('Tim Verifikator 2');
+            $('#label_penguji3').text('Tim Verifikator 3 (Optional)');
+        } else {
+            $('#modal-plot-ujian-title').text('Jadwal Ujian Sidang Akhir & Dosen Penguji');
+            $('#label_penguji1').text('Dosen Penguji 1');
+            $('#label_penguji2').text('Dosen Penguji 2');
+            $('#label_penguji3').text('Dosen Penguji 3 (Optional)');
+        }
+
+        // Fetch current schedule
+        $.ajax({
+            url: CONFIG.api_url + "kaprodi/skripsi/get-jadwal-ujian/" + d.id,
+            type: "GET",
+            headers: {
+                "Authorization": "Bearer " + CONFIG.token,
+                "username": CONFIG.username
+            },
+            success: function (res) {
+                if (res.status === 'success' && res.data) {
+                    const u = res.data;
+                    $('#form_plot_ujian input[name="tgl_ujian"]').val(u.tanggal_ujian);
+                    $('#form_plot_ujian input[name="jam_ujian"]').val(u.jam_mulai ? u.jam_mulai.substring(0,5) : '');
+                    $('#form_plot_ujian input[name="ruang_ujian"]').val(u.ruang);
+
+                    if (u.id_penguji1) setSelect2Value('#ujian_penguji1', u.id_penguji1, u.nama_penguji1);
+                    if (u.id_penguji2) setSelect2Value('#ujian_penguji2', u.id_penguji2, u.nama_penguji2);
+                    if (u.id_penguji3) setSelect2Value('#ujian_penguji3', u.id_penguji3, u.nama_penguji3);
+                }
+                $('#modal-plot-ujian').modal('show');
+            },
+            error: function () {
+                // Show modal anyway, just with empty fields
+                $('#modal-plot-ujian').modal('show');
+            }
+        });
+    });
+
+    $('#form_plot_ujian').on('submit', function (e) {
+        e.preventDefault();
+        const formData = $(this).serialize();
+
+        $.ajax({
+            url: CONFIG.api_url + "kaprodi/skripsi/plot-jadwal-ujian",
+            type: "POST",
+            headers: {
+                "Authorization": "Bearer " + CONFIG.token,
+                "username": CONFIG.username
+            },
+            data: formData,
+            success: function (res) {
+                swal("Berhasil!", res.success, "success");
+                $('#modal-plot-ujian').modal('hide');
                 table.ajax.reload();
             },
             error: function (err) {
