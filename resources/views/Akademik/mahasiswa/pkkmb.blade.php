@@ -460,19 +460,10 @@
                 });
             });
 
-            // Download Template Button Click (Generate dynamically in browser)
+            // Download Template Button Click (Excel download from backend)
             $('#btn_download_template').on('click', function() {
-                var csvContent = "data:text/csv;charset=utf-8,NIM,Status Lulus (1=Lulus | 0=Belum),Tahun Pelaksanaan,Nomor Sertifikat,Keterangan\r\n";
-                csvContent += "2021010001,1,2021,PKKMB/2021/0001,Contoh baris data 1\r\n";
-                csvContent += "2021010002,0,2021,,Contoh baris data 2\r\n";
-                
-                var encodedUri = encodeURI(csvContent);
-                var link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
-                link.setAttribute("download", "template_import_pkkmb.csv");
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                var url = "{{ config('setting.second_url') }}akademik/pkkmb/template";
+                window.open(url, "_blank");
             });
         });
 

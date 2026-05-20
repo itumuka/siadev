@@ -74,6 +74,12 @@
                         <div class="form-group mb-20">
                             <label class="font-weight-600">Judul Final Skripsi / Tugas Akhir <span class="text-danger">*</span></label>
                             <input type="text" id="input_judul" class="form-control" style="height: 50px;" placeholder="Masukkan judul final tugas akhir Anda..." required>
+                            <div id="rekomendasi_judul_wrapper" style="display:none; margin-top: 10px; padding: 10px; background-color: #f8f9fa; border-radius: 8px; border: 1px dashed #6f42c1;">
+                                <small class="text-muted"><i class="fa fa-info-circle text-primary mr-1"></i> Rekomendasi (berdasarkan judul proposal):</small>
+                                <div class="mt-1">
+                                    <a href="javascript:void(0)" id="btn_use_rekomendasi" class="text-primary font-weight-bold" style="text-decoration: underline;"></a>
+                                </div>
+                            </div>
                         </div>
                         <div class="d-flex justify-content-between mt-30">
                             <button class="btn btn-outline-secondary prev-step px-30 py-10" data-target="#step-1"><i class="fa fa-arrow-left mr-10"></i> Kembali</button>
@@ -184,6 +190,11 @@
                 $('#syarat-container').show();
                 
                 if(res.status == 'success') {
+                    if (res.data.judul_proposal) {
+                        $('#input_judul').val(res.data.judul_proposal);
+                        $('#btn_use_rekomendasi').text(res.data.judul_proposal);
+                        $('#rekomendasi_judul_wrapper').show();
+                    }
                     let html = '<div class="row">';
                     let htmlLeft = '<div class="col-md-6"><ul class="list-group">';
                     let htmlRight = '<div class="col-md-6"><ul class="list-group">';
@@ -298,6 +309,11 @@
                     $('#btn-submit-final').prop('disabled', false).html('Konfirmasi Pendaftaran Ujian');
                 }
             });
+        });
+
+        // Use proposal title recommendation click handler
+        $('#btn_use_rekomendasi').on('click', function() {
+            $('#input_judul').val($(this).text());
         });
     });
 
