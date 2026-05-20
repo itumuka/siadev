@@ -76,7 +76,7 @@
                     <li class="treeview {{ request()->is('mahasiswa/skripsi*') ? 'active' : '' }}">
                         <a href="#">
                             <i class="fa fa-graduation-cap"><span class="path1"></span><span
-                                    class="path2"></span></i><span>Tugas Akhir <sup class="text-danger">(beta)</sup></span>
+                                    class="path2"></span></i><span>Tugas Akhir</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>
