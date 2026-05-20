@@ -62,7 +62,16 @@ $(document).ready(function() {
                     render: function() { return ''; } 
                 },
                 { data: 'nim' },
-                { data: 'nama_mhs' },
+                { 
+                    data: null, 
+                    render: function(data) {
+                        let badge = '';
+                        if (data.status_sk === 'perpanjangan') {
+                            badge = ' <span class="badge badge-warning badge-sm">Perpanjangan</span>';
+                        }
+                        return data.nama_mhs + badge;
+                    }
+                },
                 { data: 'tahun_angkatan' },
                 {
                     data: 'judul',
@@ -112,7 +121,7 @@ $(document).ready(function() {
                             <a href="javascript:void(0)" class="btn btn-sm btn-primary" onclick="openPrintModal('${id}', 'st')" title="Cetak Surat Tugas">
                                 <i class="fa fa-print"></i> Surat Tugas
                             </a>
-                            <a href="javascript:void(0)" class="btn btn-sm btn-warning" onclick="openEditSkModal('${id}', '${row.no_sk}', '${row.no_surat_tugas || ''}')" title="Edit Nomor SK">
+                            <a href="javascript:void(0)" class="btn btn-sm btn-warning" onclick="openEditSkModal('${id}', '${row.no_sk}', '${row.no_surat_tugas || ''}', '${row.tgl_sk}')" title="Edit Nomor SK">
                                 <i class="fa fa-pencil"></i> Edit
                             </a>
                         `;
@@ -134,10 +143,11 @@ $(document).ready(function() {
         $("#printff").attr("src", url);
     }; 
     
-    window.openEditSkModal = function(id, no_sk, no_surat_tugas) {
+    window.openEditSkModal = function(id, no_sk, no_surat_tugas, tgl_sk) {
         $('#edit_sk_id').val(id);
         $('#edit_no_sk').val(no_sk);
         $('#edit_no_surat_tugas').val(no_surat_tugas);
+        $('#edit_tgl_sk').val(tgl_sk);
         $('#modal-edit-sk').modal('show');
     };
 
