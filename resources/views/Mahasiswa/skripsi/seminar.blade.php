@@ -269,14 +269,14 @@
             
             if (isLulus) {
                 if (!hasSkripsi) {
-                    html += '<p class="mb-20 text-warning font-weight-bold"><i class="fa fa-exclamation-triangle"></i> Anda terdeteksi telah lulus mata kuliah Seminar Proposal, tetapi belum mengajukan judul Tugas Akhir.</p>';
-                    html += '<p class="text-muted">Silakan mengajukan judul proposal Tugas Akhir/Skripsi terlebih dahulu di halaman Dashboard sebelum memulai proses bimbingan.</p>';
+                    html += '<p class="mb-20 font-weight-bold" style="color: #cc6600;"><i class="fa fa-exclamation-triangle"></i> Anda terdeteksi telah lulus mata kuliah Seminar Proposal, tetapi belum mengajukan judul Tugas Akhir.</p>';
+                    html += '<p style="color: #cc6600;">Silakan mengajukan judul proposal Tugas Akhir/Skripsi terlebih dahulu di halaman Dashboard sebelum memulai proses bimbingan.</p>';
                 } else {
-                    html += '<p class="mb-20 text-success font-weight-bold"><i class="fa fa-check-circle"></i> Selamat! Anda telah dinyatakan Lulus Sempro berdasarkan rekam nilai Matakuliah Anda.</p>';
-                    html += '<p class="text-muted">' + (sempro.keterangan || '') + '</p>';
+                    html += '<p class="mb-20 font-weight-bold" style="color: #ffff00;"><i class="fa fa-check-circle"></i> Selamat! Anda telah dinyatakan Lulus Sempro berdasarkan rekam nilai Matakuliah Anda.</p>';
+                    html += '<p class="mb-20" style="color: #ffff00;">' + (sempro.keterangan || '') + '</p>';
                 }
             } else {
-                html += '<p class="mb-20">Pada Program Studi Anda, Seminar Proposal dilakukan melalui pengambilan Mata Kuliah tertentu. Status kelulusan akan terupdate otomatis jika Anda telah lulus mata kuliah tersebut.</p>';
+                html += '<p class="mb-20" style="color: #cc6600;">Pada Program Studi Anda, Seminar Proposal dilakukan melalui pengambilan Mata Kuliah tertentu. Status kelulusan akan terupdate otomatis jika Anda telah lulus mata kuliah tersebut.</p>';
                 html += '<div class="alert alert-warning bg-warning-light border-0">Anda belum terdeteksi lulus mata kuliah syarat Sempro.</div>';
             }
             
