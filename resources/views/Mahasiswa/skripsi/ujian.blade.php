@@ -81,6 +81,54 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Realisasi Luaran OBE -->
+                        <div class="box box-bordered border-primary mt-20" style="border-radius: 8px; overflow: hidden; border: 1px solid #ddd;">
+                            <div class="box-header with-border bg-primary-light" style="padding: 10px 15px; background-color: #f0f2ff;">
+                                <h5 class="box-title font-weight-600 text-primary mb-0"><i class="fa fa-graduation-cap mr-10"></i> Laporan Realisasi Luaran (OBE)</h5>
+                            </div>
+                            <div class="box-body bg-white" style="padding: 15px;">
+                                <div class="form-group mb-15">
+                                    <label class="font-weight-600">Jenis Realisasi Luaran <span class="text-danger">*</span></label>
+                                    <select id="select_jenis_luaran" class="form-control" style="height: 45px;">
+                                        <option value="buku_skripsi">Buku Skripsi / Tugas Akhir</option>
+                                        <option value="jurnal_sinta">Publikasi Jurnal SINTA</option>
+                                        <option value="jurnal_internasional">Publikasi Jurnal Internasional</option>
+                                        <option value="prosiding">Publikasi Prosiding Konferensi Ilmiah</option>
+                                        <option value="paten">Paten / Paten Sederhana</option>
+                                        <option value="hki">Hak Cipta / HKI Non-Paten</option>
+                                        <option value="lainnya">Lainnya / Sesuai Kebijakan Prodi</option>
+                                    </select>
+                                    <small class="text-muted">Pilih jenis luaran yang telah direalisasikan atau akan dicapai.</small>
+                                </div>
+                                
+                                <!-- Dynamic Fields Container -->
+                                <div id="luaran_dynamic_fields" style="display: none;">
+                                    <div class="form-group mb-15">
+                                        <label class="font-weight-600">Judul Luaran / Artikel <span class="text-danger">*</span></label>
+                                        <input type="text" id="input_judul_luaran" class="form-control" style="height: 45px;" placeholder="Contoh: Rancang Bangun Sistem Informasi Berbasis OBE...">
+                                    </div>
+                                    <div class="form-group mb-15">
+                                        <label class="font-weight-600">Nama Jurnal / Media / Publisher <span class="text-danger">*</span></label>
+                                        <input type="text" id="input_nama_media" class="form-control" style="height: 45px;" placeholder="Contoh: Jurnal Teknologi Informasi SINTA 3 / IEEE Conference">
+                                    </div>
+                                    <div class="form-group mb-15">
+                                        <label class="font-weight-600">Link URL Publikasi / HKI (Jika Ada)</label>
+                                        <input type="text" id="input_url_link" class="form-control" style="height: 45px;" placeholder="Contoh: https://ojs.university.ac.id/index.php/jti/article/view/12345">
+                                    </div>
+                                    <div class="form-group mb-15">
+                                        <label class="font-weight-600">Berkas Bukti Luaran (PDF / Gambar, Max 5MB) <span class="text-danger">*</span></label>
+                                        <input type="file" id="input_file_bukti" class="form-control" style="height: 45px;" accept=".pdf,.jpg,.jpeg,.png">
+                                        <small class="text-muted">Upload Sertifikat HKI, LoA Jurnal, Bukti Submit, atau dokumen pendukung lainnya.</small>
+                                        <div id="existing_file_bukti_container" class="mt-5" style="display: none;">
+                                            <span class="text-success"><i class="fa fa-check-circle"></i> Berkas bukti sudah terunggah:</span> 
+                                            <a id="link_existing_file_bukti" href="#" target="_blank" class="text-primary font-weight-bold" style="text-decoration: underline;">Unduh Berkas</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="d-flex justify-content-between mt-30">
                             <button class="btn btn-outline-secondary prev-step px-30 py-10" data-target="#step-1"><i class="fa fa-arrow-left mr-10"></i> Kembali</button>
                             <button class="btn btn-primary next-step px-30 py-10" data-target="#step-3" style="background-color: #6f42c1; border-color: #6f42c1;">Selanjutnya <i class="fa fa-arrow-right ml-10"></i></button>
@@ -111,9 +159,25 @@
                         </div>
 
                         <div class="bg-light p-20 rounded mb-30" style="border: 1px solid #e9ecef;">
-                            <div class="row">
+                            <div class="row mb-10">
                                 <div class="col-md-4 font-weight-bold">Judul Akhir Ujian:</div>
                                 <div class="col-md-8" id="review_judul"></div>
+                            </div>
+                            <div class="row mb-10">
+                                <div class="col-md-4 font-weight-bold">Jenis Luaran OBE:</div>
+                                <div class="col-md-8" id="review_jenis_luaran">-</div>
+                            </div>
+                            <div class="row mb-10 luaran-review-item" style="display: none;">
+                                <div class="col-md-4 font-weight-bold">Judul Artikel Luaran:</div>
+                                <div class="col-md-8" id="review_judul_luaran">-</div>
+                            </div>
+                            <div class="row mb-10 luaran-review-item" style="display: none;">
+                                <div class="col-md-4 font-weight-bold">Media / Penerbit:</div>
+                                <div class="col-md-8" id="review_nama_media">-</div>
+                            </div>
+                            <div class="row luaran-review-item" style="display: none;">
+                                <div class="col-md-4 font-weight-bold">URL Link Publikasi:</div>
+                                <div class="col-md-8" id="review_url_link">-</div>
                             </div>
                         </div>
                         
@@ -136,6 +200,26 @@
     var userlogin = "{{ $session_nim }}";
 
     $(document).ready(function() {
+        // Luaran Type Change listener
+        $('#select_jenis_luaran').on('change', function() {
+            var val = $(this).val();
+            if (val === 'buku_skripsi') {
+                $('#luaran_dynamic_fields').slideUp();
+                $('#input_judul_luaran').removeAttr('required');
+                $('#input_nama_media').removeAttr('required');
+                $('#input_file_bukti').removeAttr('required');
+            } else {
+                $('#luaran_dynamic_fields').slideDown();
+                $('#input_judul_luaran').attr('required', true);
+                $('#input_nama_media').attr('required', true);
+                if (!$('#link_existing_file_bukti').attr('href') || $('#link_existing_file_bukti').attr('href') === '#') {
+                    $('#input_file_bukti').attr('required', true);
+                } else {
+                    $('#input_file_bukti').removeAttr('required');
+                }
+            }
+        });
+
         // Navigation Logics
         $('.next-step').click(function(e) {
             var target = $(this).data('target');
@@ -151,6 +235,33 @@
                     showToastr('error', 'Validasi Gagal', 'Judul final skripsi wajib diisi');
                     $('#input_judul').focus();
                     return;
+                }
+                
+                var jenisLuaran = $('#select_jenis_luaran').val();
+                if (jenisLuaran !== 'buku_skripsi') {
+                    var judulLuaran = $('#input_judul_luaran').val().trim();
+                    var namaMedia = $('#input_nama_media').val().trim();
+                    var hasFile = $('#link_existing_file_bukti').attr('href') && $('#link_existing_file_bukti').attr('href') !== '#';
+                    var fileSelected = $('#input_file_bukti')[0].files.length > 0;
+                    
+                    if (!judulLuaran) {
+                        e.preventDefault();
+                        showToastr('error', 'Validasi Gagal', 'Judul Artikel Luaran wajib diisi');
+                        $('#input_judul_luaran').focus();
+                        return;
+                    }
+                    if (!namaMedia) {
+                        e.preventDefault();
+                        showToastr('error', 'Validasi Gagal', 'Nama Jurnal/Media/Publisher wajib diisi');
+                        $('#input_nama_media').focus();
+                        return;
+                    }
+                    if (!hasFile && !fileSelected) {
+                        e.preventDefault();
+                        showToastr('error', 'Validasi Gagal', 'Berkas Bukti Luaran (PDF/Gambar) wajib diunggah');
+                        $('#input_file_bukti').focus();
+                        return;
+                    }
                 }
             }
 
@@ -277,6 +388,39 @@
             }
         });
 
+        // Load API Luaran OBE
+        $.ajax({
+            url: "{{ config('setting.second_url') }}mahasiswa/skripsi/get-luaran",
+            type: "GET",
+            data: { nim: nim },
+            headers: {
+                "Authorization": 'Bearer ' + token,
+                "username": userlogin
+            },
+            success: function(res) {
+                if (res.status == 'success' && res.data) {
+                    const target = res.data.target_luaran || 'buku_skripsi';
+                    const luaran = res.data.luaran;
+                    
+                    if (luaran) {
+                        $('#select_jenis_luaran').val(luaran.jenis_luaran).trigger('change');
+                        $('#input_judul_luaran').val(luaran.judul_luaran);
+                        $('#input_nama_media').val(luaran.nama_media);
+                        $('#input_url_link').val(luaran.url_link);
+                        if (luaran.file_bukti) {
+                            const baseUrl = "{{ config('setting.second_url') }}".replace('/api/', '');
+                            $('#link_existing_file_bukti').attr('href', baseUrl + '/storage/' + luaran.file_bukti);
+                            $('#existing_file_bukti_container').show();
+                            $('#input_file_bukti').removeAttr('required');
+                        }
+                    } else {
+                        // Default realisasi selection to the target luaran set in proposal!
+                        $('#select_jenis_luaran').val(target).trigger('change');
+                    }
+                }
+            }
+        });
+
         // Submit form placeholder (Endpoint pendaftaran ujian bisa diseragamkan dengan modul skripsi update)
         $('#btn-submit-final').click(function(){
             var judul = $('#input_judul').val().trim();
@@ -286,27 +430,60 @@
                 return;
             }
             
-            $(this).prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Menyimpan...');
+            var btn = $(this);
+            btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Menyimpan...');
             
-            // Endpoint ini akan menggunakan mekanisme yang sama (update judal, fase)
+            // 1. Simpan/Upload Luaran OBE First
+            var luaranFormData = new FormData();
+            luaranFormData.append('nim', nim);
+            luaranFormData.append('jenis_luaran', $('#select_jenis_luaran').val());
+            luaranFormData.append('judul_luaran', $('#input_judul_luaran').val() || '');
+            luaranFormData.append('nama_media', $('#input_nama_media').val() || '');
+            luaranFormData.append('url_link', $('#input_url_link').val() || '');
+            if ($('#input_file_bukti')[0].files.length > 0) {
+                luaranFormData.append('file_bukti', $('#input_file_bukti')[0].files[0]);
+            }
+            
             $.ajax({
-                url: "{{ config('setting.second_url') }}mahasiswa/skripsi/daftar-sempro", 
-                method: "POST", // Nanti buat daftar_ujian di Controller
-                data: {
-                    nim: nim,
-                    judul: $('#input_judul').val()
-                },
+                url: "{{ config('setting.second_url') }}mahasiswa/skripsi/simpan-luaran",
+                method: "POST",
+                data: luaranFormData,
+                processData: false,
+                contentType: false,
                 headers: {
                     "Authorization": 'Bearer ' + token,
                     "username": userlogin
                 },
-                success: function(data) {
-                    showToastr('success', 'Berhasil', 'Pendaftaran Ujian Terkirim.');
-                    window.location.href = "{{ route('skripsi.dashboard') }}";
+                success: function(luaranRes) {
+                    // 2. Proceed to main pendaftaran ujian
+                    $.ajax({
+                        url: "{{ config('setting.second_url') }}mahasiswa/skripsi/ajukan-ujian",
+                        method: "POST",
+                        data: {
+                            nim: nim,
+                            judul: $('#input_judul').val()
+                        },
+                        headers: {
+                            "Authorization": 'Bearer ' + token,
+                            "username": userlogin
+                        },
+                        success: function(data) {
+                            showToastr('success', 'Berhasil', 'Pendaftaran Ujian Terkirim.');
+                            window.location.href = "{{ route('skripsi.dashboard') }}";
+                        },
+                        error: function(err) {
+                            showToastr('error', 'Gagal', 'Gagal memproses pendaftaran ujian.');
+                            btn.prop('disabled', false).html('Konfirmasi Pendaftaran Ujian');
+                        }
+                    });
                 },
                 error: function(err) {
-                    showToastr('error', 'Gagal', 'Terjadi Kesalahan Jaringan');
-                    $('#btn-submit-final').prop('disabled', false).html('Konfirmasi Pendaftaran Ujian');
+                    var errorMsg = 'Gagal menyimpan realisasi luaran.';
+                    if (err.responseJSON && err.responseJSON.error) {
+                        errorMsg += ' ' + (Array.isArray(err.responseJSON.error) ? err.responseJSON.error.join(', ') : err.responseJSON.error);
+                    }
+                    showToastr('error', 'Gagal', errorMsg);
+                    btn.prop('disabled', false).html('Konfirmasi Pendaftaran Ujian');
                 }
             });
         });
@@ -319,6 +496,21 @@
 
     function prepareReview() {
         $('#review_judul').html($('#input_judul').val() || '-');
+        
+        var selectEl = $('#select_jenis_luaran option:selected');
+        var jenisText = selectEl.text();
+        var jenisVal = selectEl.val();
+        
+        $('#review_jenis_luaran').html(jenisText);
+        
+        if (jenisVal !== 'buku_skripsi') {
+            $('#review_judul_luaran').html($('#input_judul_luaran').val() || '-');
+            $('#review_nama_media').html($('#input_nama_media').val() || '-');
+            $('#review_url_link').html($('#input_url_link').val() || '-');
+            $('.luaran-review-item').show();
+        } else {
+            $('.luaran-review-item').hide();
+        }
     }
 
     function uploadDoc(id_syarat, tipe) {

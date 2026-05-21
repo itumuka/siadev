@@ -47,8 +47,36 @@
                     const sk = res.sk;
                     const mhsList = res.mahasiswa;
 
+                    // Sinkronisasi logika tipe TA (Skripsi/LTA) seperti di print_sk
+                    const jenjangMap = { '1': 'D3', '2': 'S1', '3': 'S2', '4': 'S3', '5': 'D4' };
+                    const jenjang = sk.kode_jenjang_pendidikan;
+                    
+                    // Deteksi default prodi untuk penentuan tipe TA
+                    const prodiList = Array.from(new Set(mhsList.map(i => i.nama_program_studi).filter(Boolean)));
+                    let headerProdi = prodiList.length > 0 ? prodiList[0] : (sk.nama_program_studi || '');
+                    
+                    let tipeTa = "Skripsi";
+                    const prodiNameForCheck = headerProdi.toUpperCase();
+                    if (jenjang == '1' || jenjang == '5' || 
+                        prodiNameForCheck.includes('D3') || prodiNameForCheck.includes('DIII') || 
+                        prodiNameForCheck.includes('D4') || prodiNameForCheck.includes('DIV')) {
+                        tipeTa = "Laporan Tugas Akhir (LTA)";
+                    }
+
+                    // Format nomor surat: Prioritaskan ST, jika tidak ada baru fallback ke SK dengan warning atau placeholder
+                    let displayNoST = customNo || sk.no_surat_tugas;
+                    if (!displayNoST) {
+                        // Jika terpaksa menggunakan no_sk, pastikan admin tahu ini fallback
+                        displayNoST = sk.no_sk ? sk.no_sk : '...';
+                    }
+
                     let html = '';
                     mhsList.forEach((m) => {
+                        // Prioritaskan nomor individu dari DB (m.no_st_ind).
+                        // Gunakan customNo (dari URL) hanya jika data DB kosong, 
+                        // terakhir baru fallback ke nomor batch.
+                        const studentNoST = m.no_st_ind || customNo || displayNoST;
+                        
                         html += `
                             <div class="page-break">
                                 <!-- Kop Surat Tugas Resmi -->
@@ -68,7 +96,7 @@
                                 </table>
                                 
                                 <div class="section-title">SURAT TUGAS</div>
-                                <div class="nomor-sk">Nomor: ${customNo || sk.no_surat_tugas || sk.no_sk || '...'}</div>
+                                <div class="nomor-sk">Nomor: ${studentNoST}</div>
 
                                 <div class="content-area">
                                     <p>Assalaamu’alaikum Warahmatullaahi Wabarakaatuh.</p>
@@ -87,7 +115,7 @@
                                         </tr>
                                     </table>
 
-                                    <p class="mt-20">Membimbing Skripsi untuk mahasiswa:</p>
+                                    <p class="mt-20">Membimbing ${tipeTa} untuk mahasiswa:</p>
                                     <table class="data-table">
                                         <tr>
                                             <td class="label">Nama</td>
@@ -111,7 +139,7 @@
                                         </tr>
                                     </table>
 
-                                    <p class="mt-20">Masa berlaku pada Semester ${sk.semester == 1 ? 'Ganjil' : 'Genap'} Tahun Akademik ${sk.tahun_akademik}.</p>
+                                    <p class="mt-20">Masa berlaku pada Semester ${sk.semester == 1 ? 'Gasal' : 'Genap'} Tahun Akademik ${sk.tahun_akademik}.</p>
                                     <p>Demikian surat tugas ini dibuat untuk dilaksanakan dengan penuh tanggungjawab dan kepada yang berkepentingan harap diperhatikan.</p>
                                     <p>Wassalaamu’alaikum Warahmatullaahi Wabarakaatuh.</p>
                                 </div>
@@ -147,7 +175,7 @@
                                     </table>
                                     
                                     <div class="section-title">SURAT TUGAS</div>
-                                    <div class="nomor-sk">Nomor: ${customNo || sk.no_surat_tugas || sk.no_sk || '...'}</div>
+                                    <div class="nomor-sk">Nomor: ${studentNoST}</div>
 
                                     <div class="content-area">
                                         <p>Assalaamu’alaikum Warahmatullaahi Wabarakaatuh.</p>
@@ -166,7 +194,7 @@
                                             </tr>
                                         </table>
 
-                                        <p class="mt-20">Membimbing Skripsi untuk mahasiswa:</p>
+                                        <p class="mt-20">Membimbing ${tipeTa} untuk mahasiswa:</p>
                                         <table class="data-table">
                                             <tr>
                                                 <td class="label">Nama</td>
@@ -190,7 +218,7 @@
                                             </tr>
                                         </table>
 
-                                        <p class="mt-20">Masa berlaku pada Semester ${sk.semester == 1 ? 'Ganjil' : 'Genap'} Tahun Akademik ${sk.tahun_akademik}.</p>
+                                        <p class="mt-20">Masa berlaku pada Semester ${sk.semester == 1 ? 'Gasal' : 'Genap'} Tahun Akademik ${sk.tahun_akademik}.</p>
                                         <p>Demikian surat tugas ini dibuat untuk dilaksanakan dengan penuh tanggungjawab dan kepada yang berkepentingan harap diperhatikan.</p>
                                         <p>Wassalaamu’alaikum Warahmatullaahi Wabarakaatuh.</p>
                                     </div>

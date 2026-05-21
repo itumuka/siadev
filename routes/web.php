@@ -90,6 +90,7 @@ Route::middleware(['ceklogin'])->group(function () {
          // Skripsi Dosen Pembimbing
         Route::get("/dosen/skripsi/bimbingan", "SkripsiDosenController@index")->name('dosen.skripsi.index');
         Route::get("/dosen/skripsi/bimbingan/{id_skripsi}", "SkripsiDosenController@bimbingan")->name('dosen.skripsi.detail_bimbingan');
+        Route::get("/dosen/skripsi/ujian", "SkripsiDosenController@ujian")->name('dosen.skripsi.ujian');
     });
 
     Route::middleware(['cekpegawai'])->group(function () {

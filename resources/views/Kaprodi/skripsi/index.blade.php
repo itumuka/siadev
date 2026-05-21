@@ -147,6 +147,67 @@
     </div>
 </div>
 
+<!-- Modal Penjadwalan Ujian / Sidang Akhir -->
+<div class="modal fade" id="modal-plot-ujian" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title text-white" id="modal-plot-ujian-title">Jadwal Ujian Sidang Akhir</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+            </div>
+            <form id="form_plot_ujian">
+                <div class="modal-body">
+                    <input type="hidden" name="id_skripsi" id="ujian_id_skripsi">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Tanggal Ujian / Verifikasi Luaran</label>
+                                <input type="date" name="tgl_ujian" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Jam</label>
+                                <input type="time" name="jam_ujian" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Ruang</label>
+                                <input type="text" name="ruang_ujian" class="form-control" placeholder="Ex: R.301">
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label id="label_penguji1">Dosen Penguji 1</label>
+                                <select class="form-control select2-dosen" name="id_penguji1" id="ujian_penguji1" style="width: 100%;" required></select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label id="label_penguji2">Dosen Penguji 2</label>
+                                <select class="form-control select2-dosen" name="id_penguji2" id="ujian_penguji2" style="width: 100%;" required></select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label id="label_penguji3">Dosen Penguji 3 (Optional)</label>
+                                <select class="form-control select2-dosen" name="id_penguji3" id="ujian_penguji3" style="width: 100%;"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer text-right">
+                    <button type="submit" class="btn btn-warning text-white">Simpan & Umumkan Jadwal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <!-- Modal Konfigurasi Sempro -->
 <div class="modal fade" id="modal-config-sempro" tabindex="-1">
     <div class="modal-dialog">
