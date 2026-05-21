@@ -79,8 +79,10 @@
                                     class="path2"></span></i><span>Tugas Akhir</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>
-                            </span>
+                            </span> 
+                            <sup><span style="color: red !important;">(Beta)</span></sup>
                         </a>
+
                         <ul class="treeview-menu">
                             <li class="{{ Route::is('skripsi.dashboard') ? 'active' : '' }}">
                                 <a href="{{ route('skripsi.dashboard') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Dashboard</a>
