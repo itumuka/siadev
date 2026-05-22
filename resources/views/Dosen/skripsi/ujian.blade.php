@@ -270,7 +270,7 @@
                         }
                     },
                     { 
-                        data: 'nilai_akhir',
+                        data: 'nilai_angka',
                         className: 'text-center',
                         render: function(data, type, row) {
                             if (data === null || data === undefined || data === '') {
