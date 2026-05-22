@@ -197,6 +197,8 @@
             var token = "{{ $api_token }}";
             var userlogin = "{{ $session_username }}";
             var id_dosen = $('#id_dosen').val();
+            var gradeRules = {};
+            var currentStudentKodePenilaian = 1;
 
             // Format Helper
             function getRoleLabel(role, isObe) {
@@ -214,15 +216,14 @@
             }
 
             // Grade Mapping Helper
-            function calculateGradeLetter(score) {
-                if (score >= 85) return 'A';
-                if (score >= 80) return 'A-';
-                if (score >= 75) return 'B+';
-                if (score >= 70) return 'B';
-                if (score >= 65) return 'B-';
-                if (score >= 60) return 'C+';
-                if (score >= 55) return 'C';
-                if (score >= 45) return 'D';
+            function calculateGradeLetter(score, kodePenilaian) {
+                var kode = kodePenilaian || 1;
+                var rules = gradeRules[kode] || gradeRules[1] || [];
+                for (var i = 0; i < rules.length; i++) {
+                    if (score >= rules[i].min) {
+                        return rules[i].grade;
+                    }
+                }
                 return 'E';
             }
 
@@ -240,6 +241,9 @@
                     },
                     data: { id_dosen: id_dosen },
                     dataSrc: function(json) {
+                        if (json.grade_rules) {
+                            gradeRules = json.grade_rules;
+                        }
                         return json.data || [];
                     }
                 },
@@ -276,7 +280,7 @@
                             if (data === null || data === undefined || data === '') {
                                 return '<span class="text-danger font-weight-bold"><i class="fa fa-warning"></i> Belum Dinilai</span>';
                             }
-                            let letter = calculateGradeLetter(parseFloat(data));
+                            let letter = calculateGradeLetter(parseFloat(data), row.kode_penilaian);
                             return '<span class="badge badge-success px-2 py-1 font-weight-bold" style="font-size:0.95rem;">' + parseFloat(data).toFixed(2) + ' (' + letter + ')</span>';
                         }
                     },
@@ -302,6 +306,7 @@
             $('#tb_mahasiswa_diuji').on('click', '.btn-grade', function() {
                 var student = JSON.parse(decodeURIComponent(escape(atob($(this).data('row')))));
                 var isObe = student.is_obe == 1;
+                currentStudentKodePenilaian = student.kode_penilaian || 1;
                 
                 // Populate student header
                 $('#n_id_skripsi').val(student.id_skripsi);
@@ -464,7 +469,7 @@
                 
                 // Live Grade Letter
                 if (totalBobotUsed > 0 && !hasEmpty) {
-                    var gradeLetter = calculateGradeLetter(total);
+                    var gradeLetter = calculateGradeLetter(total, currentStudentKodePenilaian);
                     $('#lbl_grade_letter').text(gradeLetter);
                 } else {
                     $('#lbl_grade_letter').text('-');
