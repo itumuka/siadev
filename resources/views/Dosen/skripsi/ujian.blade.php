@@ -166,13 +166,15 @@
                                             <div class="grade-highlight" id="lbl_grade_letter">-</div>
                                         </div>
 
-                                        <div class="alert alert-secondary text-left small mb-0 border-0">
-                                            <h6 class="font-weight-bold mb-1 text-dark">Informasi Penilaian:</h6>
-                                            <ul class="pl-3 mb-0 text-muted">
-                                                <li>Nilai harus diisi dalam rentang <strong>0 - 100</strong>.</li>
-                                                <li>Nilai Akhir adalah rata-rata tertimbang bobot CPMK.</li>
-                                                <li>Nilai Huruf di atas dihitung berdasarkan standar konversi akademik universitas.</li>
-                                            </ul>
+                                        <div class="card bg-white border-warning text-left small mb-0 shadow-none">
+                                            <div class="card-body p-3">
+                                                <h6 class="font-weight-bold mb-2 text-warning"><i class="fa fa-info-circle"></i> Informasi Penilaian:</h6>
+                                                <ul class="pl-3 mb-0 text-dark" style="line-height: 1.5; white-space: normal;">
+                                                    <li class="mb-1">Nilai harus diisi dalam rentang <strong>0 - 100</strong>.</li>
+                                                    <li class="mb-1">Nilai Akhir adalah rata-rata tertimbang bobot CPMK.</li>
+                                                    <li>Nilai Huruf di atas dihitung berdasarkan standar konversi akademik universitas.</li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
