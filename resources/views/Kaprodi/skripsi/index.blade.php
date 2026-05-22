@@ -26,6 +26,9 @@
                     <div class="box-header with-border bg-primary-light">
                         <h4 class="box-title text-dark">Daftar Pengajuan Skripsi Mahasiswa</h4>
                         <div class="box-controls pull-right">
+                            <a href="{{ route('kpskripsi_syarat') }}" class="btn btn-sm btn-dark mr-5">
+                                <i class="fa fa-list mr-5"></i> Syarat Sempro & Ujian
+                            </a>
                             <button class="btn btn-sm btn-info" onclick="openConfigModal()">
                                 <i class="fa fa-cog mr-5"></i> Konfigurasi Sempro
                             </button>
