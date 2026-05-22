@@ -52,6 +52,7 @@ Route::middleware(['ceklogin'])->group(function () {
     Route::get("/kaprodi/lihat-penilaian", "Kaprodi@lihat_penilaian")->name('kplihat_penilaian');
     Route::get("/kaprodi/skripsi/manajemen", "Kaprodi@skripsi_index")->name('kpskripsi_index');
     Route::get("/kaprodi/skripsi/syarat", "Kaprodi@skripsi_syarat")->name('kpskripsi_syarat');
+    Route::get("/kaprodi/skripsi/cpmk", "Kaprodi@skripsi_cpmk")->name('kpskripsi_cpmk');
     
     Route::get("/dosen/input-nilai-khs", "Dosen@input_nilai_khs")->name('input_nilai_khs_dosen');
     Route::get("/dosen/form-input-nilai-uts", "Dosen@form_input_nilai_uts")->name('form_input_nilai_uts_dosen');

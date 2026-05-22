@@ -39,6 +39,10 @@
                                 <a href="{{ route('kpskripsi_index') }}"><i class="fa fa-graduation-cap"><span
                                              class="path1"></span><span class="path2"></span></i>Manajemen Skripsi <sup class="text-danger">(Beta)</sup></a>
                             </li>
+                            <li class="{{ Route::is('kpskripsi_cpmk') ? 'active' : '' }}">
+                                <a href="{{ route('kpskripsi_cpmk') }}"><i class="fa fa-sliders"><span
+                                             class="path1"></span><span class="path2"></span></i>Konfigurasi Rubrik CPMK</a>
+                            </li>
                         </ul>
                     </li>
                     @endif

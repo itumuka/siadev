@@ -29,6 +29,9 @@
                             <a href="{{ route('kpskripsi_syarat') }}" class="btn btn-sm btn-dark mr-5">
                                 <i class="fa fa-list mr-5"></i> Syarat Sempro & Ujian
                             </a>
+                            <a href="{{ route('kpskripsi_cpmk') }}" class="btn btn-sm btn-warning mr-5">
+                                <i class="fa fa-sliders mr-5"></i> Konfigurasi Rubrik CPMK
+                            </a>
                             <button class="btn btn-sm btn-info" onclick="openConfigModal()">
                                 <i class="fa fa-cog mr-5"></i> Konfigurasi Sempro
                             </button>
