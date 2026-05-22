@@ -128,6 +128,7 @@
                                     </div>
                                     <div class="card-body">
                                         <input type="hidden" name="id_skripsi" id="n_id_skripsi">
+                                        <input type="hidden" name="id_skripsi_ujian" id="n_id_skripsi_ujian">
                                         <input type="hidden" name="id_dosen" value="{{ $session_id_dosen }}">
                                         
                                         <div id="rubrik_inputs_container">
@@ -302,6 +303,7 @@
                 
                 // Populate student header
                 $('#n_id_skripsi').val(student.id_skripsi);
+                $('#n_id_skripsi_ujian').val(student.id_skripsi_ujian);
                 $('#n_mhs_nama').text(student.nama_mahasiswa);
                 $('#n_mhs_nim').text(student.nim);
                 $('#n_mhs_judul').text(student.judul || 'Belum ada judul/luaran');
@@ -338,7 +340,7 @@
                         "Authorization": 'Bearer ' + token,
                         "username": userlogin
                     },
-                    data: { id_skripsi: student.id_skripsi },
+                    data: { kode_prodi: student.kode_prodi },
                     success: function(rubricRes) {
                         if (rubricRes.status === 'success') {
                             currentRubrics = rubricRes.data;
@@ -351,7 +353,7 @@
                                     "Authorization": 'Bearer ' + token,
                                     "username": userlogin
                                 },
-                                data: { id_skripsi: student.id_skripsi, id_dosen: id_dosen },
+                                data: { id_skripsi_ujian: student.id_skripsi_ujian, id_dosen: id_dosen },
                                 success: function(nilaiRes) {
                                     var gradesMap = {};
                                     var existingCatatan = '';
@@ -471,11 +473,11 @@
             $('#form_nilai_ujian').on('submit', function(e) {
                 e.preventDefault();
                 var btn = $('#btn_submit_nilai');
-                var id_skripsi = $('#n_id_skripsi').val();
+                var id_skripsi_ujian = $('#n_id_skripsi_ujian').val();
                 var catatan = $('#n_catatan').val();
                 
-                // Collect grades
-                var nilai = [];
+                // Collect grades as key-value object
+                var nilai = {};
                 var allFilled = true;
                 $('.rubric-score-input').each(function() {
                     var id_cpmk = $(this).data('id');
@@ -484,10 +486,7 @@
                         allFilled = false;
                         return false;
                     }
-                    nilai.push({
-                        id_cpmk: id_cpmk,
-                        nilai: parseFloat(val)
-                    });
+                    nilai[id_cpmk] = parseFloat(val);
                 });
 
                 if (!allFilled) {
@@ -503,7 +502,7 @@
                         "username": userlogin
                     },
                     data: {
-                        id_skripsi: id_skripsi,
+                        id_skripsi_ujian: id_skripsi_ujian,
                         id_dosen: id_dosen,
                         catatan: catatan,
                         nilai: nilai
