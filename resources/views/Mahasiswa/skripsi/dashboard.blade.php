@@ -137,6 +137,10 @@
                     </div>
                 </div>
 
+                <!-- Exam Schedule Card -->
+                <div id="exam_schedule_container" class="box" style="display: none; border-radius: 12px; border-left: 4px solid #0052cc; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                </div>
+
                 <!-- Main CTA Action (Intuitive Design) -->
                 <div id="main_cta_container" class="text-center p-20 bg-white box shadow-sm" style="border: 2px dashed #0052cc; border-radius: 12px;">
                     <!-- Default State / Loading -->

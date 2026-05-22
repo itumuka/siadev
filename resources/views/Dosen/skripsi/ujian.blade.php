@@ -128,6 +128,7 @@
                                     </div>
                                     <div class="card-body">
                                         <input type="hidden" name="id_skripsi" id="n_id_skripsi">
+                                        <input type="hidden" name="id_skripsi_ujian" id="n_id_skripsi_ujian">
                                         <input type="hidden" name="id_dosen" value="{{ $session_id_dosen }}">
                                         
                                         <div id="rubrik_inputs_container">
@@ -165,13 +166,15 @@
                                             <div class="grade-highlight" id="lbl_grade_letter">-</div>
                                         </div>
 
-                                        <div class="alert alert-secondary text-left small mb-0 border-0">
-                                            <h6 class="font-weight-bold mb-1 text-dark">Informasi Penilaian:</h6>
-                                            <ul class="pl-3 mb-0 text-muted">
-                                                <li>Nilai harus diisi dalam rentang <strong>0 - 100</strong>.</li>
-                                                <li>Nilai Akhir adalah rata-rata tertimbang bobot CPMK.</li>
-                                                <li>Nilai Huruf di atas dihitung berdasarkan standar konversi akademik universitas.</li>
-                                            </ul>
+                                        <div class="card bg-white border-warning text-left small mb-0 shadow-none">
+                                            <div class="card-body p-3">
+                                                <h6 class="font-weight-bold mb-2 text-warning"><i class="fa fa-info-circle"></i> Informasi Penilaian:</h6>
+                                                <ul class="pl-3 mb-0 text-dark" style="line-height: 1.5; white-space: normal;">
+                                                    <li class="mb-1">Nilai harus diisi dalam rentang <strong>0 - 100</strong>.</li>
+                                                    <li class="mb-1">Nilai Akhir adalah rata-rata tertimbang bobot CPMK.</li>
+                                                    <li>Nilai Huruf di atas dihitung berdasarkan standar konversi akademik universitas.</li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -194,6 +197,8 @@
             var token = "{{ $api_token }}";
             var userlogin = "{{ $session_username }}";
             var id_dosen = $('#id_dosen').val();
+            var gradeRules = {};
+            var currentStudentKodePenilaian = 1;
 
             // Format Helper
             function getRoleLabel(role, isObe) {
@@ -211,15 +216,14 @@
             }
 
             // Grade Mapping Helper
-            function calculateGradeLetter(score) {
-                if (score >= 85) return 'A';
-                if (score >= 80) return 'A-';
-                if (score >= 75) return 'B+';
-                if (score >= 70) return 'B';
-                if (score >= 65) return 'B-';
-                if (score >= 60) return 'C+';
-                if (score >= 55) return 'C';
-                if (score >= 45) return 'D';
+            function calculateGradeLetter(score, kodePenilaian) {
+                var kode = kodePenilaian || 1;
+                var rules = gradeRules[kode] || gradeRules[1] || [];
+                for (var i = 0; i < rules.length; i++) {
+                    if (score >= rules[i].min) {
+                        return rules[i].grade;
+                    }
+                }
                 return 'E';
             }
 
@@ -237,6 +241,9 @@
                     },
                     data: { id_dosen: id_dosen },
                     dataSrc: function(json) {
+                        if (json.grade_rules) {
+                            gradeRules = json.grade_rules;
+                        }
                         return json.data || [];
                     }
                 },
@@ -267,13 +274,13 @@
                         }
                     },
                     { 
-                        data: 'nilai_akhir',
+                        data: 'nilai_angka',
                         className: 'text-center',
                         render: function(data, type, row) {
                             if (data === null || data === undefined || data === '') {
                                 return '<span class="text-danger font-weight-bold"><i class="fa fa-warning"></i> Belum Dinilai</span>';
                             }
-                            let letter = calculateGradeLetter(parseFloat(data));
+                            let letter = calculateGradeLetter(parseFloat(data), row.kode_penilaian);
                             return '<span class="badge badge-success px-2 py-1 font-weight-bold" style="font-size:0.95rem;">' + parseFloat(data).toFixed(2) + ' (' + letter + ')</span>';
                         }
                     },
@@ -299,9 +306,11 @@
             $('#tb_mahasiswa_diuji').on('click', '.btn-grade', function() {
                 var student = JSON.parse(decodeURIComponent(escape(atob($(this).data('row')))));
                 var isObe = student.is_obe == 1;
+                currentStudentKodePenilaian = student.kode_penilaian || 1;
                 
                 // Populate student header
                 $('#n_id_skripsi').val(student.id_skripsi);
+                $('#n_id_skripsi_ujian').val(student.id_skripsi_ujian);
                 $('#n_mhs_nama').text(student.nama_mahasiswa);
                 $('#n_mhs_nim').text(student.nim);
                 $('#n_mhs_judul').text(student.judul || 'Belum ada judul/luaran');
@@ -338,7 +347,7 @@
                         "Authorization": 'Bearer ' + token,
                         "username": userlogin
                     },
-                    data: { id_skripsi: student.id_skripsi },
+                    data: { kode_prodi: student.kode_prodi },
                     success: function(rubricRes) {
                         if (rubricRes.status === 'success') {
                             currentRubrics = rubricRes.data;
@@ -351,7 +360,7 @@
                                     "Authorization": 'Bearer ' + token,
                                     "username": userlogin
                                 },
-                                data: { id_skripsi: student.id_skripsi, id_dosen: id_dosen },
+                                data: { id_skripsi_ujian: student.id_skripsi_ujian, id_dosen: id_dosen },
                                 success: function(nilaiRes) {
                                     var gradesMap = {};
                                     var existingCatatan = '';
@@ -460,7 +469,7 @@
                 
                 // Live Grade Letter
                 if (totalBobotUsed > 0 && !hasEmpty) {
-                    var gradeLetter = calculateGradeLetter(total);
+                    var gradeLetter = calculateGradeLetter(total, currentStudentKodePenilaian);
                     $('#lbl_grade_letter').text(gradeLetter);
                 } else {
                     $('#lbl_grade_letter').text('-');
@@ -471,11 +480,11 @@
             $('#form_nilai_ujian').on('submit', function(e) {
                 e.preventDefault();
                 var btn = $('#btn_submit_nilai');
-                var id_skripsi = $('#n_id_skripsi').val();
+                var id_skripsi_ujian = $('#n_id_skripsi_ujian').val();
                 var catatan = $('#n_catatan').val();
                 
-                // Collect grades
-                var nilai = [];
+                // Collect grades as key-value object
+                var nilai = {};
                 var allFilled = true;
                 $('.rubric-score-input').each(function() {
                     var id_cpmk = $(this).data('id');
@@ -484,10 +493,7 @@
                         allFilled = false;
                         return false;
                     }
-                    nilai.push({
-                        id_cpmk: id_cpmk,
-                        nilai: parseFloat(val)
-                    });
+                    nilai[id_cpmk] = parseFloat(val);
                 });
 
                 if (!allFilled) {
@@ -503,7 +509,7 @@
                         "username": userlogin
                     },
                     data: {
-                        id_skripsi: id_skripsi,
+                        id_skripsi_ujian: id_skripsi_ujian,
                         id_dosen: id_dosen,
                         catatan: catatan,
                         nilai: nilai

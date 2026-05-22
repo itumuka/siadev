@@ -52,4 +52,67 @@ class Kaprodi extends Controller
             'session_tahun', 'session_semester'
         ));
     }
+
+    public function skripsi_syarat()
+    {
+        $session_kode_program_studi = (Session::has('kode_program_studi')) ? Session::get('kode_program_studi') : '';
+        $session_nim = Session::has('username') ? Session::get('username') : '';
+        $api_token = Session::has('token') ? Session::get('token') : '';
+        $api_url = config('setting.second_url');
+
+        $title = "Konfigurasi Syarat Skripsi";
+        $parent_breadcrumb = "Kaprodi";
+        $child_breadcrumb = "Syarat Skripsi";
+
+        $session_tahun = Session::has('session_tahun') ? Session::get('session_tahun') : '';
+        $session_semester = Session::has('session_semester') ? Session::get('session_semester') : '';
+
+        return view('Kaprodi/skripsi/syarat', compact(
+            'title', 'parent_breadcrumb', 'child_breadcrumb',
+            'session_kode_program_studi', 'session_nim', 'api_token', 'api_url',
+            'session_tahun', 'session_semester'
+        ));
+    }
+
+    public function skripsi_cpmk()
+    {
+        $session_kode_program_studi = (Session::has('kode_program_studi')) ? Session::get('kode_program_studi') : '';
+        $session_nim = Session::has('username') ? Session::get('username') : '';
+        $api_token = Session::has('token') ? Session::get('token') : '';
+        $api_url = config('setting.second_url');
+
+        $title = "Konfigurasi Rubrik CPMK";
+        $parent_breadcrumb = "Kaprodi";
+        $child_breadcrumb = "CPMK";
+
+        $session_tahun = Session::has('session_tahun') ? Session::get('session_tahun') : '';
+        $session_semester = Session::has('session_semester') ? Session::get('session_semester') : '';
+
+        return view('Kaprodi/skripsi/cpmk', compact(
+            'title', 'parent_breadcrumb', 'child_breadcrumb',
+            'session_kode_program_studi', 'session_nim', 'api_token', 'api_url',
+            'session_tahun', 'session_semester'
+        ));
+    }
+
+    public function skripsi_penetapan()
+    {
+        $session_kode_program_studi = (Session::has('kode_program_studi')) ? Session::get('kode_program_studi') : '';
+        $session_nim = Session::has('username') ? Session::get('username') : '';
+        $api_token = Session::has('token') ? Session::get('token') : '';
+        $api_url = config('setting.second_url');
+
+        $title = "Penetapan Nilai Tugas Akhir";
+        $parent_breadcrumb = "Kaprodi";
+        $child_breadcrumb = "Penetapan Nilai";
+
+        $session_tahun = Session::has('session_tahun') ? Session::get('session_tahun') : '';
+        $session_semester = Session::has('session_semester') ? Session::get('session_semester') : '';
+
+        return view('Kaprodi/skripsi/penetapan', compact(
+            'title', 'parent_breadcrumb', 'child_breadcrumb',
+            'session_kode_program_studi', 'session_nim', 'api_token', 'api_url',
+            'session_tahun', 'session_semester'
+        ));
+    }
 }

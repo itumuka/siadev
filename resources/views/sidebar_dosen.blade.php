@@ -39,6 +39,14 @@
                                 <a href="{{ route('kpskripsi_index') }}"><i class="fa fa-graduation-cap"><span
                                              class="path1"></span><span class="path2"></span></i>Manajemen Skripsi <sup class="text-danger">(Beta)</sup></a>
                             </li>
+                            <li class="{{ Route::is('kpskripsi_cpmk') ? 'active' : '' }}">
+                                <a href="{{ route('kpskripsi_cpmk') }}"><i class="fa fa-sliders"><span
+                                             class="path1"></span><span class="path2"></span></i>Konfigurasi Rubrik CPMK</a>
+                            </li>
+                            <li class="{{ Route::is('kpskripsi_penetapan') ? 'active' : '' }}">
+                                <a href="{{ route('kpskripsi_penetapan') }}"><i class="fa fa-gavel"><span
+                                             class="path1"></span><span class="path2"></span></i>Penetapan Nilai (BA)</a>
+                            </li>
                         </ul>
                     </li>
                     @endif
@@ -82,6 +90,12 @@
                         <a href="{{ route('dosen.skripsi.ujian') }}" title="Ujian / Verifikasi Skripsi">
                             <i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i>
                             <span>Ujian & Luaran Skripsi</span>
+                        </a>
+                    </li>
+                    <li class="{{ Route::is('dosen.skripsi.penetapan') ? 'active' : '' }}">
+                        <a href="{{ route('dosen.skripsi.penetapan') }}" title="Persetujuan Berita Acara (TTD)">
+                            <i class="fa fa-gavel"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Penetapan Nilai (BA)</span>
                         </a>
                     </li>
                     
