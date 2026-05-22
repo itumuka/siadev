@@ -482,6 +482,7 @@
 
                             // Signature List
                             let sigHtml = '';
+                            const isObe = activeUjianData.is_obe == 1;
                             const examiners = [
                                 { key: 'penguji1', id: u.id_penguji1, nama: u.nama_penguji1 || 'Penguji 1', roleLabel: getRoleLabel('penguji1', isObe), ttd: ba ? ba.setuju_penguji1 : null },
                                 { key: 'penguji2', id: u.id_penguji2, nama: u.nama_penguji2 || 'Penguji 2', roleLabel: getRoleLabel('penguji2', isObe), ttd: ba ? ba.setuju_penguji2 : null },
