@@ -268,13 +268,14 @@
 
             /* Welcome Banner Premium Styles */
             .welcome-banner {
-                background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-                color: #ffffff;
+                background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+                color: #1e293b;
                 border-radius: 20px;
                 padding: 30px;
                 position: relative;
                 overflow: hidden;
-                box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+                box-shadow: 0 10px 25px rgba(59, 130, 246, 0.05);
+                border: 1px solid rgba(59, 130, 246, 0.1);
                 margin-bottom: 24px;
             }
 
@@ -285,20 +286,20 @@
                 right: -20%;
                 width: 350px;
                 height: 350px;
-                background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, rgba(99, 102, 241, 0) 70%);
+                background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0) 70%);
                 border-radius: 50%;
                 pointer-events: none;
             }
 
             .welcome-banner h2 {
-                color: #cbd5e1;
+                color: #2563eb;
                 font-size: 1.1rem;
                 font-weight: 500;
                 margin: 0 0 6px 0;
             }
 
             .welcome-banner h1 {
-                color: #ffffff;
+                color: #0f172a;
                 font-weight: 700;
                 margin: 0 0 15px 0;
                 letter-spacing: -0.5px;
@@ -314,29 +315,30 @@
             .meta-pill {
                 display: inline-flex;
                 align-items: center;
-                background: rgba(255, 255, 255, 0.06);
-                border: 1px solid rgba(255, 255, 255, 0.08);
+                background: #ffffff;
+                border: 1px solid rgba(59, 130, 246, 0.15);
                 padding: 6px 14px;
                 border-radius: 12px;
-                color: #cbd5e1;
+                color: #475569;
                 font-size: 0.88rem;
                 transition: all 0.2s ease;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.02);
             }
 
             .meta-pill i {
                 margin-right: 8px;
-                color: #38bdf8;
+                color: #2563eb;
             }
 
             .meta-pill strong {
-                color: #ffffff;
+                color: #0f172a;
                 margin-left: 4px;
             }
 
             .meta-pill:hover {
-                background: rgba(255, 255, 255, 0.1);
-                border-color: rgba(255, 255, 255, 0.15);
-                color: #ffffff;
+                background: #f8fafc;
+                border-color: rgba(59, 130, 246, 0.3);
+                color: #0f172a;
             }
 
             .role-badge {
@@ -353,15 +355,15 @@
             }
 
             .badge-wali {
-                background-color: rgba(16, 185, 129, 0.15);
-                color: #34d399;
-                border: 1px solid rgba(16, 185, 129, 0.25);
+                background-color: #d1fae5;
+                color: #065f46;
+                border: 1px solid #a7f3d0;
             }
 
             .badge-kaprodi {
-                background-color: rgba(139, 92, 246, 0.15);
-                color: #a78bfa;
-                border: 1px solid rgba(139, 92, 246, 0.25);
+                background-color: #ede9fe;
+                color: #5b21b6;
+                border: 1px solid #ddd6fe;
             }
         </style>
 @endsection
@@ -382,7 +384,7 @@
                     <div class="welcome-banner">
                         <div class="row align-items-center">
                             <div class="col-12 col-xl-10">
-                                <span style="color: #818cf8; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Portal Akademik Dosen</span>
+                                <span style="color: #2563eb; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Portal Akademik Dosen</span>
                                 <h2 class="mt-10">Selamat Datang Kembali,</h2>
                                 <h1 class="font-size-28">{{ $session_nama }}</h1>
                                 
