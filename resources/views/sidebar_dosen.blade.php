@@ -80,23 +80,34 @@
                         </a>
                     </li>
                     
-                    <li class="{{ Route::is('dosen.skripsi.index') || Route::is('dosen.skripsi.detail_bimbingan') ? 'active' : '' }}">
-                        <a href="{{ route('dosen.skripsi.index') }}" title="Pembimbing Skripsi">
+                    <li class="treeview {{ Route::is('dosen.skripsi.index') || Route::is('dosen.skripsi.detail_bimbingan') || Route::is('dosen.skripsi.ujian') || Route::is('dosen.skripsi.penetapan') ? 'active' : '' }}">
+                        <a href="#">
                             <i class="fa fa-graduation-cap"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Pembimbing Skripsi <sup class="text-danger">(Beta)</sup></span>
+                            <span>Skripsi</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
                         </a>
-                    </li>
-                    <li class="{{ Route::is('dosen.skripsi.ujian') ? 'active' : '' }}">
-                        <a href="{{ route('dosen.skripsi.ujian') }}" title="Ujian / Verifikasi Skripsi">
-                            <i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Ujian & Luaran Skripsi</span>
-                        </a>
-                    </li>
-                    <li class="{{ Route::is('dosen.skripsi.penetapan') ? 'active' : '' }}">
-                        <a href="{{ route('dosen.skripsi.penetapan') }}" title="Persetujuan Berita Acara (TTD)">
-                            <i class="fa fa-gavel"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Penetapan Nilai (BA)</span>
-                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{ Route::is('dosen.skripsi.index') || Route::is('dosen.skripsi.detail_bimbingan') ? 'active' : '' }}">
+                                <a href="{{ route('dosen.skripsi.index') }}" title="Pembimbing Skripsi">
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    <span>Pembimbing Skripsi <sup class="text-danger">(Beta)</sup></span>
+                                </a>
+                            </li>
+                            <li class="{{ Route::is('dosen.skripsi.ujian') ? 'active' : '' }}">
+                                <a href="{{ route('dosen.skripsi.ujian') }}" title="Ujian / Verifikasi Skripsi">
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    <span>Ujian & Luaran Skripsi</span>
+                                </a>
+                            </li>
+                            <li class="{{ Route::is('dosen.skripsi.penetapan') ? 'active' : '' }}">
+                                <a href="{{ route('dosen.skripsi.penetapan') }}" title="Persetujuan Berita Acara (TTD)">
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    <span>Penetapan Nilai (BA)</span>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     
                     <li class="treeview">
