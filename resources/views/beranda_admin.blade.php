@@ -368,7 +368,7 @@
                                 </div>
                                 <div class="card-stat-info">
                                     <h5>Mahasiswa Aktif</h5>
-                                    <h3>1.284</h3>
+                                    <h3 id="stat-mahasiswa">-</h3>
                                 </div>
                             </div>
                         </div>
@@ -379,7 +379,7 @@
                                 </div>
                                 <div class="card-stat-info">
                                     <h5>Dosen Aktif</h5>
-                                    <h3>86</h3>
+                                    <h3 id="stat-dosen">-</h3>
                                 </div>
                             </div>
                         </div>
@@ -390,18 +390,18 @@
                                 </div>
                                 <div class="card-stat-info">
                                     <h5>Program Studi</h5>
-                                    <h3>12</h3>
+                                    <h3 id="stat-prodi">-</h3>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-6 col-12">
                             <div class="card-stat">
                                 <div class="card-stat-icon icon-camaba">
-                                    <i class="fa fa-user-plus"></i>
+                                    <i class="fa fa-book"></i>
                                 </div>
                                 <div class="card-stat-info">
-                                    <h5>Pendaftar Camaba</h5>
-                                    <h3>342</h3>
+                                    <h5>Mata Kuliah</h5>
+                                    <h3 id="stat-matakuliah">-</h3>
                                 </div>
                             </div>
                         </div>
@@ -540,7 +540,7 @@
                     height: 250
                 },
                 labels: ['Aktif Registrasi', 'Belum Registrasi'],
-                series: [1130, 154],
+                series: [0, 0],
                 colors: ['#10b981', '#f59e0b'],
                 legend: {
                     position: 'bottom',
@@ -581,14 +581,14 @@
             var sebaranOptions = {
                 chart: {
                     type: 'bar',
-                    height: 250,
+                    height: 380,
                     toolbar: { show: false }
                 },
                 plotOptions: {
                     bar: {
                         horizontal: true,
                         borderRadius: 4,
-                        barHeight: '60%'
+                        barHeight: '70%'
                     }
                 },
                 colors: ['#6366f1'],
@@ -603,10 +603,10 @@
                 },
                 series: [{
                     name: 'Mahasiswa',
-                    data: [340, 280, 210, 190, 140, 124]
+                    data: []
                 }],
                 xaxis: {
-                    categories: ['TI', 'SI', 'Hukum', 'PGSD', 'Pendidikan', 'Manajemen'],
+                    categories: [],
                     labels: {
                         style: { colors: '#64748b' }
                     }
@@ -622,6 +622,54 @@
             };
             var sebaranChart = new ApexCharts(document.querySelector("#sebaran-chart"), sebaranOptions);
             sebaranChart.render();
+
+            // Load dynamic dashboard stats
+            function load_dashboard_stats() {
+                $.ajax({
+                    type: 'GET',
+                    headers: {
+                        "Authorization": 'Bearer ' + token,
+                        "username": userlogin
+                    },
+                    data: {
+                        tahun: session_tahun,
+                        semester: session_semester
+                    },
+                    url: "{{ config('setting.second_url') }}akademik/dashboard-stats",
+                    success: function(response) {
+                        // Update Summary Cards
+                        $('#stat-mahasiswa').text(response.total_mahasiswa.toLocaleString('id-ID'));
+                        $('#stat-dosen').text(response.total_dosen.toLocaleString('id-ID'));
+                        $('#stat-prodi').text(response.total_prodi.toLocaleString('id-ID'));
+                        $('#stat-matakuliah').text(response.total_matakuliah.toLocaleString('id-ID'));
+
+                        // Update Herregistrasi Donut Chart
+                        regChart.updateSeries([response.aktif_registrasi, response.belum_registrasi]);
+
+                        // Update Sebaran Mhs per Prodi Bar Chart
+                        var categories = [];
+                        var seriesData = [];
+                        response.sebaran_mahasiswa.forEach(function(item) {
+                            categories.push(item.nama_program_studi);
+                            seriesData.push(item.total);
+                        });
+
+                        sebaranChart.updateOptions({
+                            xaxis: {
+                                categories: categories
+                            }
+                        });
+                        sebaranChart.updateSeries([{
+                            name: 'Mahasiswa',
+                            data: seriesData
+                        }]);
+                    },
+                    error: function(err) {
+                        console.error("Gagal memuat data statistik dashboard: ", err);
+                    }
+                });
+            }
+            load_dashboard_stats();
 
             function home_kalenderakademik() {
                 $.ajax({
