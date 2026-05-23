@@ -3,11 +3,33 @@
     <section class="sidebar position-relative">
         <div class="multinav">
             <div class="multinav-scroll" style="height: 100%;">
+                @php
+                    $nama = Session::get('nama') ?? 'Dosen';
+                    $words = explode(' ', $nama);
+                    $initials = '';
+                    if (count($words) >= 2) {
+                        $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
+                    } else {
+                        $initials = strtoupper(substr($nama, 0, 2));
+                    }
+                @endphp
+                <div class="sidebar-user-panel">
+                    <div class="sidebar-user-avatar">{{ $initials }}</div>
+                    <div class="sidebar-user-info">
+                        <h4 class="sidebar-user-name" title="{{ Session::get('nama') }}">{{ Session::get('nama') }}</h4>
+                        <span class="sidebar-user-email" title="{{ Session::get('username') }}">{{ strtolower(Session::get('username')) }}</span>
+                        <span class="sidebar-user-role">
+                            @if (Session::get('kaprodi') == 1)
+                                Kaprodi
+                            @else
+                                Dosen
+                            @endif
+                        </span>
+                    </div>
+                </div>
+
                 <!-- sidebar menu-->
                 <ul class="sidebar-menu" data-widget="tree">
-                    <li class="header"><h7>{{ Session::get('nama') }}<br>
-                    <span class="lowercase">({{ Session::get('username') }})</span></h7>
-                    </li>
 
                     <li class="header">Daftar Menu</li>
                     <li class="{{ Route::is('home') ? 'active' : '' }}">
