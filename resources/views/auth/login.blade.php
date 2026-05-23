@@ -430,7 +430,7 @@
                 <!-- Input Username -->
                 <div class="custom-input-group">
                     <i class="fa fa-user input-icon"></i>
-                    <input type="text" class="form-control" name="username" id="username" placeholder="Username / NIM / NIDN" autocomplete="username">
+                    <input type="text" class="form-control" name="username" id="username" placeholder="Email / NIM" autocomplete="username">
                 </div>
 
                 <!-- Input Password -->
