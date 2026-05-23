@@ -304,7 +304,7 @@
                     </li>
                 </ul>
             </div>
-            &copy; 2023 <a href="#">Universitas Muhammadiyah Karanganyar</a>. All Rights Reserved.
+            &copy; 2026 <a href="#">Universitas Muhammadiyah Karanganyar</a>. All Rights Reserved.
         </footer>
 
         <!-- Control Sidebar -->
