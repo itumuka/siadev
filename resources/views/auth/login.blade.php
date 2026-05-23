@@ -446,7 +446,7 @@
                 </button>
 
                 <div class="login-footer">
-                    <p>UMUKA &copy; 2026 | <a href="http://sia.umuka.ac.id" target="_blank">Portal Utama</a></p>
+                    <p>UMUKA &copy; 2026 | <a href="http://sia.umuka.ac.id" target="_blank">Bagian Sistem Informasi</a></p>
                 </div>
             </div>
         </div>

@@ -39,8 +39,24 @@ class Akademik extends Controller
         }
 
         $title = "Akademik SIAKAD UMUKA";
-        // return view('beranda', compact('title'));
-        return view('beranda', compact('title', 'session_tahun', 'session_semester', 'session_nama_tahunakademik', 'session_nama'));
+        $data = compact('title', 'session_tahun', 'session_semester', 'session_nama_tahunakademik', 'session_nama');
+
+        $tipe = Session::get('tipe');
+        $jabatan = Session::get('jabatan');
+
+        if ($tipe === 'Mahasiswa') {
+            return view('beranda_mahasiswa', $data);
+        } elseif ($tipe === 'Dosen') {
+            return view('beranda_dosen', $data);
+        } elseif ($tipe === 'Pegawai') {
+            if ($jabatan === 'Dekanat') {
+                return view('beranda_dekanat', $data);
+            } elseif (in_array($jabatan, ['Super Admin', 'Akademik'])) {
+                return view('beranda_admin', $data);
+            }
+        }
+
+        return view('beranda', $data);
     }
 
     public function make_session(Request $request)

@@ -1,0 +1,329 @@
+@extends('layout')
+@section('css')
+    <style>
+        table.dataTable th,
+        table.dataTable td {
+            padding: 3px 6px;
+            font-size: 0.8em;
+        }
+    </style>
+@endsection
+@section('content')
+    <div class="container-full">
+        <!-- Main content -->
+        <section class="content">
+            <div class="row" id="here">
+                <div class="col-xl-8 col-12">
+                    <input class="form-control" type="hidden" value="{{ $session_tahun }}" name="session_tahun"
+                        id="session_tahun">
+                    <input class="form-control" type="hidden" value="{{ $session_semester }}" name="session_semester"
+                        id="session_semester">
+                    <div class="box bg-primary-light">
+                        <div class="box-body d-flex px-0">
+                            <div class="flex-grow-1 p-30 flex-grow-1 bg-img dask-bg bg-none-md"
+                                style="background-position: right bottom; background-size: auto 100%; background-image: url(../images/svg-icon/color-svg/custom-1.svg)">
+                                <form id="form_tahunakademik" method="GET">
+                                    <div class="row">
+                                        <div class="col-12 col-xl-6">
+                                            <h2>Selamat Datang,</h2>
+
+                                            <p class="text-dark my-10 font-size-16"><strong
+                                                    class="text-warning">{{ $session_nama }}</strong>
+                                            </p>
+                                        </div>
+                                        <div class="col-12 col-xl-6"></div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box bg-transparent no-shadow mb-0">
+                        <div class="box-header no-border">
+                            <h4 class="box-title">Kalender Akademik</h4>
+                            <div class="box-controls pull-right d-md-flex d-none">
+                                <a href="#" id="nama_tahun_akademik">{{ $session_nama_tahunakademik }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box">
+                        <div class="box-body py-0" id="calendar">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-12">
+
+                    <h4 class="box-title">Keterangan</h4>
+                    <div class="box">
+                        <div class="box-body bg-warning-light">
+                            <div class="box no-shadow mb-0">
+                                <div class="box-body px-0 py-0 pt-0" id="tabel_kalenderakademik">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+@endsection
+@section('script-master')
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            var token = "{{ Session::get('token') }}";
+            var userlogin = "{{ Session::get('username') }}";
+            var tipe = "{{ Session::get('tipe') }}";
+            var session_tahun = $('#session_tahun').val();
+            var session_semester = $('#session_semester').val();
+
+            function home_kalenderakademik() {
+                $.ajax({
+                    type: 'GET',
+                    headers: {
+                        "Authorization": 'Bearer ' + token,
+                        "username": userlogin
+                    },
+                    data: {
+                        tahun: session_tahun,
+                        semester: session_semester
+                    },
+                    url: "{{ config('setting.second_url') }}akademik/home-kalenderakademik",
+                    success: function(result) {
+                        var jml = result.length;
+                        var s = '';
+                        for (i = 0; i < jml; i++) {
+                            s = s +
+                                '<div class="table-responsive"><table class="table table-sm no-border mb-0"><tbody><tr><td><div class="h-20 w-20 l-h-20 rounded text-center" style="background-color:' +
+                                result[i].background +
+                                '"><p class="mb-0 font-size-15 font-weight-200"></p></div></td><td class="float-left font-size-15 font-weight-500">' +
+                                result[i].nama_kegiatan +
+                                '<br><p class="text-warning">(' +
+                                result[i].tanggal_mulailook + ' s/d ' + result[i]
+                                .tanggal_akhirlook +
+                                ')</p></td></tr></tbody></table></div>';
+                        }
+                        $('#tabel_kalenderakademik').html(s);
+                    }
+                })
+            }
+            home_kalenderakademik();
+
+            var clg = [];
+            $.ajax({
+                type: 'GET',
+                headers: {
+                    "Authorization": 'Bearer ' + token,
+                    "username": userlogin
+                },
+                data: {
+                    tahun: session_tahun,
+                    semester: session_semester
+                },
+                url: "{{ config('setting.second_url') }}akademik/home-kalenderakademikbase",
+                success: function(result) {
+                    var s = '';
+                    var jml = result.length;
+
+                    for (i = 0; i < jml; i++) {
+                        clg.push({
+                            title: result[i].nama_kegiatan,
+                            start: result[i].tanggal_mulai,
+                            end: result[i].tanggal_akhir,
+                            backgroundColor: result[i].background
+                        });
+                    }
+                    var CalendarApp = function() {
+                        this.$body = $("body")
+                        this.$calendar = $('#calendar'),
+                            this.$event = ('#external-events div.external-event'),
+                            this.$categoryForm = $('#add-new-events form'),
+                            this.$extEvents = $('#external-events'),
+                            this.$modal = $('#my-event'),
+                            this.$saveCategoryBtn = $('.save-category'),
+                            this.$calendarObj = null
+                    };
+
+                    /* on drop */
+                    CalendarApp.prototype.onDrop = function(eventObj, date) {
+                            var $this = this;
+                            var originalEventObject = eventObj.data('eventObject');
+                            var $categoryClass = eventObj.attr('data-class');
+                            var copiedEventObject = $.extend({}, originalEventObject);
+                            copiedEventObject.start = date;
+                            if ($categoryClass)
+                                copiedEventObject['className'] = [$categoryClass];
+                            $this.$calendar.fullCalendar('renderEvent', copiedEventObject, true);
+                            if ($('#drop-remove').is(':checked')) {
+                                eventObj.remove();
+                            }
+                        },
+                        /* on click on event */
+                        CalendarApp.prototype.onEventClick = function(calEvent, jsEvent, view) {
+                            var $this = this;
+                            var form = $("<form></form>");
+                            form.append("<label>Change event name</label>");
+                            form.append(
+                                "<div class='input-group'><input class='form-control' type=text value='" +
+                                calEvent
+                                .title +
+                                "' /><span class='input-group-btn'><button type='submit' class='btn btn-success waves-effect waves-light'><i class='fa fa-check'></i> Save</button></span></div>"
+                            );
+                            $this.$modal.modal({
+                                backdrop: 'static'
+                            });
+                            $this.$modal.find('.delete-event').show().end().find('.save-event').hide()
+                                .end().find(
+                                    '.modal-body')
+                                .empty().prepend(form).end().find('.delete-event').unbind('click')
+                                .click(function() {
+                                    $this.$calendarObj.fullCalendar('removeEvents', function(ev) {
+                                        return (ev._id == calEvent._id);
+                                    });
+                                    $this.$modal.modal('hide');
+                                });
+                            $this.$modal.find('form').on('submit', function() {
+                                calEvent.title = form.find("input[type=text]").val();
+                                $this.$calendarObj.fullCalendar('updateEvent', calEvent);
+                                $this.$modal.modal('hide');
+                                return false;
+                            });
+                        },
+                        /* on select */
+                        CalendarApp.prototype.onSelect = function(start, end, allDay) {
+                            var $this = this;
+                            $this.$modal.modal({
+                                backdrop: 'static'
+                            });
+                            var form = $("<form></form>");
+                            form.append("<div class='row'></div>");
+                            form.find(".row")
+                                .append(
+                                    "<div class='col-md-6'><div class='form-group'><label class='control-label'>Event Name</label><input class='form-control' placeholder='Insert Event Name' type='text' name='title'/></div></div>"
+                                )
+                                .append(
+                                    "<div class='col-md-6'><div class='form-group'><label class='control-label'>Category</label><select class='form-control' name='category'></select></div></div>"
+                                )
+                                .find("select[name='category']")
+                                .append("<option value='bg-danger'>Danger</option>")
+                                .append("<option value='bg-success'>Success</option>")
+                                .append("<option value='bg-purple'>Purple</option>")
+                                .append("<option value='bg-primary'>Primary</option>")
+                                .append("<option value='bg-pink'>Pink</option>")
+                                .append("<option value='bg-info'>Info</option>")
+                                .append("<option value='bg-warning'>Warning</option></div></div>");
+                            $this.$modal.find('.delete-event').hide().end().find('.save-event').show()
+                                .end().find(
+                                    '.modal-body')
+                                .empty().prepend(form).end().find('.save-event').unbind('click').click(
+                                    function() {
+                                        form.submit();
+                                    });
+                            $this.$modal.find('form').on('submit', function() {
+                                var title = form.find("input[name='title']").val();
+                                var beginning = form.find("input[name='beginning']").val();
+                                var ending = form.find("input[name='ending']").val();
+                                var categoryClass = form.find(
+                                    "select[name='category'] option:checked").val();
+                                if (title !== null && title.length != 0) {
+                                    $this.$calendarObj.fullCalendar('renderEvent', {
+                                        title: title,
+                                        start: start,
+                                        end: end,
+                                        allDay: false,
+                                        className: categoryClass
+                                    }, true);
+                                    $this.$modal.modal('hide');
+                                } else {
+                                    alert('You have to give a title to your event');
+                                }
+                                return false;
+
+                            });
+                            $this.$calendarObj.fullCalendar('unselect');
+                        },
+                        CalendarApp.prototype.enableDrag = function() {
+                            $(this.$event).each(function() {
+                                var eventObject = {
+                                    title: $.trim($(this)
+                                        .text()
+                                    )
+                                };
+                                $(this).data('eventObject', eventObject);
+                                $(this).draggable({
+                                    zIndex: 999999,
+                                    revert: true,
+                                    revertDuration: 0
+                                });
+                            });
+                        }
+                    CalendarApp.prototype.init = function() {
+                            this.enableDrag();
+                            var date = new Date();
+                            var d = date.getDate();
+                            var m = date.getMonth();
+                            var y = date.getFullYear();
+                            var form = '';
+                            var today = new Date($.now());
+
+                            var defaultEvents = clg;
+
+                            var $this = this;
+                            $this.$calendarObj = $this.$calendar.fullCalendar({
+                                slotDuration: '00:15:00',
+                                minTime: '08:00:00',
+                                maxTime: '19:00:00',
+                                defaultView: 'month',
+                                handleWindowResize: true,
+
+                                header: {
+                                    left: 'prev,next today',
+                                    center: 'title',
+                                    right: 'month,agendaWeek,agendaDay'
+                                },
+                                events: defaultEvents,
+                                editable: true,
+                                droppable: true,
+                                eventLimit: true,
+                                selectable: true,
+                                drop: function(date) {
+                                    $this.onDrop($(this), date);
+                                },
+                                select: function(start, end, allDay) {
+                                    $this.onSelect(start, end, allDay);
+                                },
+                                eventClick: function(calEvent, jsEvent, view) {
+                                    $this.onEventClick(calEvent, jsEvent, view);
+                                }
+
+                            });
+
+                            this.$saveCategoryBtn.on('click', function() {
+                                var categoryName = $this.$categoryForm.find(
+                                    "input[name='category-name']").val();
+                                var categoryColor = $this.$categoryForm.find(
+                                    "select[name='category-color']").val();
+                                if (categoryName !== null && categoryName.length != 0) {
+                                    $this.$extEvents.append(
+                                        '<div class="m-15 external-event bg-' +
+                                        categoryColor +
+                                        '" data-class="bg-' + categoryColor +
+                                        '" style="position: relative;"><i class="fa fa-hand-o-right"></i>' +
+                                        categoryName + '</div>')
+                                    $this.enableDrag();
+                                }
+
+                            });
+                        },
+
+                        $.CalendarApp = new CalendarApp, $.CalendarApp.Constructor = CalendarApp
+                    $.CalendarApp.init()
+                }
+            })
+        });
+    </script>
+@stop
