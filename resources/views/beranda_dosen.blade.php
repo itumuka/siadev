@@ -7,6 +7,167 @@
             font-size: 0.8em;
         }
 
+        /* Card Styles */
+        .card-stat {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .card-stat:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+        }
+        
+        .card-stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .icon-kelas {
+            background-color: rgba(139, 92, 246, 0.1);
+            color: #7c3aed;
+        }
+        
+        .icon-pa {
+            background-color: rgba(14, 165, 233, 0.1);
+            color: #0284c7;
+        }
+        
+        .icon-skripsi {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #059669;
+        }
+        
+        .icon-ujian {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: #d97706;
+        }
+        
+        .card-stat-info {
+            flex-grow: 1;
+        }
+        
+        .card-stat-info h5 {
+            font-size: 0.88rem;
+            color: #64748b;
+            font-weight: 500;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .card-stat-info h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        /* Chart & Schedule Cards */
+        .card-chart {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .card-chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .card-chart-header h4 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0;
+        }
+        
+        .card-chart-header p {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin: 0;
+        }
+
+        /* Schedule list styles */
+        .schedule-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .schedule-item {
+            padding: 14px 16px;
+            border-radius: 12px;
+            background-color: #f8fafc;
+            border-left: 4px solid #7c3aed;
+            margin-bottom: 12px;
+            transition: transform 0.2s ease;
+        }
+
+        .schedule-item:hover {
+            transform: translateX(4px);
+            background-color: #f1f5f9;
+        }
+
+        .schedule-item-title {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 4px;
+            font-size: 0.95rem;
+        }
+
+        .schedule-item-meta {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .schedule-item-meta span {
+            margin-right: 12px;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .schedule-item-meta i {
+            margin-right: 4px;
+        }
+        
+        /* Shimmer loading */
+        .shimmer {
+            background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+            background-size: 200% 100%;
+            animation: loading-shimmer 1.5s infinite;
+        }
+        
+        @keyframes loading-shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
         /* Custom Calendar Styling */
         #calendar {
             border: none !important;
@@ -111,84 +272,202 @@
         <!-- Main content -->
         <section class="content">
             <div class="row" id="here">
-                <div class="col-xl-8 col-12">
-                    <input class="form-control" type="hidden" value="{{ $session_tahun }}" name="session_tahun"
-                        id="session_tahun">
-                    <input class="form-control" type="hidden" value="{{ $session_semester }}" name="session_semester"
-                        id="session_semester">
-                    <div class="box bg-primary-light">
+                <div class="col-12">
+                    <input class="form-control" type="hidden" value="{{ $session_tahun }}" name="session_tahun" id="session_tahun">
+                    <input class="form-control" type="hidden" value="{{ $session_semester }}" name="session_semester" id="session_semester">
+                    
+                    <input class="form-control" type="hidden" value="{{ Session::get('kode_program_studi') }}" name="kode_prodi" id="kode_prodi">
+                    <input class="form-control" type="hidden" value="{{ Session::get('tipe') }}" name="tipe" id="tipe">
+                    <input class="form-control" type="hidden" value="{{ Session::get('id_dosen') }}" name="kode_dosen" id="kode_dosen">
+
+                    <!-- Welcome Box -->
+                    <div class="box bg-primary-light mb-24">
                         <div class="box-body d-flex px-0">
-                            <div class="flex-grow-1 p-30 flex-grow-1 bg-img dask-bg bg-none-md"
+                            <div class="flex-grow-1 p-30 bg-img dask-bg bg-none-md"
                                 style="background-position: right bottom; background-size: auto 100%; background-image: url(../images/svg-icon/color-svg/custom-1.svg)">
-                                <form id="form_tahunakademik" method="GET">
-                                    <div class="row">
-                                        <div class="col-12 col-xl-6">
-                                            <h2>Selamat Datang,</h2>
-
-                                            <p class="text-dark my-10 font-size-16"><strong
-                                                    class="text-warning">{{ $session_nama }}</strong>
-                                            </p>
-                                        </div>
-                                        <div class="col-12 col-xl-6"></div>
+                                <div class="row">
+                                    <div class="col-12 col-xl-8">
+                                        <h2 class="font-weight-600">Selamat Datang di Portal Dosen Wali & Pembimbing</h2>
+                                        <p class="text-dark my-10 font-size-18"><strong
+                                                class="text-warning">{{ $session_nama }}</strong> (NIDN/Kode: {{ Session::get('username') }})
+                                        </p>
                                     </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="box bg-transparent no-shadow mb-0">
-                        <div class="box-header no-border">
-                            <h4 class="box-title">Kalender Akademik</h4>
-                            <div class="box-controls pull-right d-md-flex d-none">
-                                <a href="#" id="nama_tahun_akademik">{{ $session_nama_tahunakademik }}
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="box">
-                        <div class="box-body py-0" id="calendar">
-
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-12">
-
-                    <h4 class="box-title">Keterangan</h4>
-                    <div class="box">
-                        <div class="box-body bg-warning-light">
-                            <div class="box no-shadow mb-0">
-                                <div class="box-body px-0 py-0 pt-0" id="tabel_kalenderakademik">
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            
-            <!-- Modal Detail Event Kalender -->
-            <div class="modal fade" id="modal-detail-event" tabindex="-1" role="dialog" aria-labelledby="modalDetailEventLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 15px 35px rgba(0,0,0,0.2);">
-                        <div class="modal-header" style="border-bottom: 1px solid #f1f5f9; padding: 20px;">
-                            <h5 class="modal-title font-weight-600" id="modalDetailEventLabel" style="color: #1e293b;"><i class="fa fa-info-circle text-primary mr-2"></i> Detail Kegiatan</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body" style="padding: 24px;">
-                            <div class="d-flex align-items-start">
-                                <div id="event-badge-color" style="width: 16px; height: 16px; border-radius: 50%; margin-right: 15px; margin-top: 5px; flex-shrink: 0; background-color: #0284c7;"></div>
-                                <div>
-                                    <h4 class="font-weight-600 mb-5" id="event-detail-title" style="color: #1e293b; line-height: 1.4; font-size: 1.15rem;">-</h4>
-                                    <p class="text-muted mb-0 font-size-14" id="event-detail-time">-</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer" style="border-top: none; padding: 20px;">
-                            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" style="border-radius: 10px; padding: 8px 16px;">Tutup</button>
+                    </div>
+
+                    <!-- Summary Cards Row -->
+                    <div class="row mb-10">
+                        <!-- Kelas Card -->
+                        <div class="col-xl-3 col-md-6 col-12">
+                            <div class="card-stat">
+                                <div class="card-stat-icon icon-kelas">
+                                    <i class="fa fa-university"></i>
+                                </div>
+                                <div class="card-stat-info">
+                                    <h5>Kelas Diampu</h5>
+                                    <h3 id="stat-kelas"><span class="shimmer" style="display:inline-block; width:60px; height:24px; border-radius:4px;"></span></h3>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- PA Card -->
+                        <div class="col-xl-3 col-md-6 col-12">
+                            <div class="card-stat">
+                                <div class="card-stat-icon icon-pa">
+                                    <i class="fa fa-users"></i>
+                                </div>
+                                <div class="card-stat-info">
+                                    <h5>Bimbingan PA</h5>
+                                    <h3 id="stat-pa"><span class="shimmer" style="display:inline-block; width:60px; height:24px; border-radius:4px;"></span></h3>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Skripsi Card -->
+                        <div class="col-xl-3 col-md-6 col-12">
+                            <div class="card-stat">
+                                <div class="card-stat-icon icon-skripsi">
+                                    <i class="fa fa-book"></i>
+                                </div>
+                                <div class="card-stat-info">
+                                    <h5>Bimbingan Skripsi</h5>
+                                    <h3 id="stat-skripsi"><span class="shimmer" style="display:inline-block; width:60px; height:24px; border-radius:4px;"></span></h3>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Ujian Card -->
+                        <div class="col-xl-3 col-md-6 col-12">
+                            <div class="card-stat">
+                                <div class="card-stat-icon icon-ujian">
+                                    <i class="fa fa-graduation-cap"></i>
+                                </div>
+                                <div class="card-stat-info">
+                                    <h5>Siap Ujian Skripsi</h5>
+                                    <h3 id="stat-siap-ujian"><span class="shimmer" style="display:inline-block; width:60px; height:24px; border-radius:4px;"></span></h3>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Today's Schedule & Charts Row -->
+                    <div class="row">
+                        <!-- Today's Teaching Schedule -->
+                        <div class="col-xl-4 col-12">
+                            <div class="card-chart">
+                                <div class="card-chart-header">
+                                    <div>
+                                        <h4>Jadwal Mengajar Hari Ini</h4>
+                                        <p class="text-muted" id="today-name-display">Hari ini</p>
+                                    </div>
+                                </div>
+                                <div id="schedule-container" style="min-height: 280px; max-height: 280px; overflow-y: auto;">
+                                    <div class="d-flex align-items-center justify-content-center" style="height: 200px;">
+                                        <div class="text-center text-muted">
+                                            <div class="spinner-border text-primary" role="status"></div>
+                                            <p class="mt-2">Memuat jadwal mengajar...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- KRS Status Distribution Donut Chart -->
+                        <div class="col-xl-4 col-12">
+                            <div class="card-chart">
+                                <div class="card-chart-header">
+                                    <div>
+                                        <h4>Persetujuan KRS Bimbingan</h4>
+                                        <p class="text-muted">Status KRS mahasiswa bimbingan akademik (PA)</p>
+                                    </div>
+                                </div>
+                                <div id="krs-chart" style="min-height: 280px;">
+                                    <div class="d-flex align-items-center justify-content-center" style="height: 200px;">
+                                        <div class="text-center text-muted">
+                                            <div class="spinner-border text-primary" role="status"></div>
+                                            <p class="mt-2">Memuat grafik KRS...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Skripsi Phase Donut Chart -->
+                        <div class="col-xl-4 col-12">
+                            <div class="card-chart">
+                                <div class="card-chart-header">
+                                    <div>
+                                        <h4>Fase Mahasiswa Skripsi</h4>
+                                        <p class="text-muted">Distribusi kemajuan bimbingan tugas akhir</p>
+                                    </div>
+                                </div>
+                                <div id="skripsi-chart" style="min-height: 280px;">
+                                    <div class="d-flex align-items-center justify-content-center" style="height: 200px;">
+                                        <div class="text-center text-muted">
+                                            <div class="spinner-border text-primary" role="status"></div>
+                                            <p class="mt-2">Memuat grafik fase skripsi...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Original Calendar Section -->
+                    <div class="row mt-10">
+                        <div class="col-xl-8 col-12">
+                            <div class="box bg-transparent no-shadow mb-0">
+                                <div class="box-header no-border px-0">
+                                    <h4 class="box-title">Kalender Akademik</h4>
+                                    <div class="box-controls pull-right d-md-flex d-none">
+                                        <a href="#" id="nama_tahun_akademik">{{ $session_nama_tahunakademik }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box">
+                                <div class="box-body py-0" id="calendar"></div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-12">
+                            <h4 class="box-title">Keterangan Kalender</h4>
+                            <div class="box">
+                                <div class="box-body bg-warning-light">
+                                    <div class="box no-shadow mb-0 bg-transparent">
+                                        <div class="box-body px-0 py-0 pt-0" id="tabel_kalenderakademik"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal Detail Event Kalender -->
+                    <div class="modal fade" id="modal-detail-event" tabindex="-1" role="dialog" aria-labelledby="modalDetailEventLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content" style="border-radius: 20px; border: none; box-shadow: 0 15px 35px rgba(0,0,0,0.2);">
+                                <div class="modal-header" style="border-bottom: 1px solid #f1f5f9; padding: 20px;">
+                                    <h5 class="modal-title font-weight-600" id="modalDetailEventLabel" style="color: #1e293b;"><i class="fa fa-info-circle text-primary mr-2"></i> Detail Kegiatan</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" style="padding: 24px;">
+                                    <div class="d-flex align-items-start">
+                                        <div id="event-badge-color" style="width: 16px; height: 16px; border-radius: 50%; margin-right: 15px; margin-top: 5px; flex-shrink: 0; background-color: #0284c7;"></div>
+                                        <div>
+                                            <h4 class="font-weight-600 mb-5" id="event-detail-title" style="color: #1e293b; line-height: 1.4; font-size: 1.15rem;">-</h4>
+                                            <p class="text-muted mb-0 font-size-14" id="event-detail-time">-</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer" style="border-top: none; padding: 20px;">
+                                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" style="border-radius: 10px; padding: 8px 16px;">Tutup</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
@@ -196,15 +475,299 @@
     </div>
 @endsection
 @section('script-master')
-    <script type="text/javascript">
-        $(document).ready(function() {
+    <!-- Load ApexCharts CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
+    <script type="text/javascript">
+        // Global functions for ApexCharts
+        function drawKrsChart(accCount, pendingCount) {
+            var options = {
+                chart: {
+                    type: 'donut',
+                    height: 280
+                },
+                labels: ['Disetujui (ACC)', 'Belum Disetujui'],
+                series: [accCount, pendingCount],
+                colors: ['#10b981', '#f59e0b'],
+                legend: {
+                    position: 'bottom',
+                    fontSize: '11px',
+                    labels: {
+                        colors: '#64748b'
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    formatter: function (val) {
+                        return val.toFixed(0) + "%"
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: '65%',
+                            labels: {
+                                show: true,
+                                total: {
+                                    show: true,
+                                    label: 'Total Mhs',
+                                    color: '#64748b',
+                                    formatter: function (w) {
+                                        return w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            $('#krs-chart').empty();
+            var chart = new ApexCharts(document.querySelector("#krs-chart"), options);
+            chart.render();
+        }
+
+        function drawSkripsiChart(proposalCount, bimbinganCount, readyCount) {
+            var options = {
+                chart: {
+                    type: 'donut',
+                    height: 280
+                },
+                labels: ['Proposal', 'Bimbingan', 'Siap Ujian'],
+                series: [proposalCount, bimbinganCount, readyCount],
+                colors: ['#f59e0b', '#0ea5e9', '#10b981'],
+                legend: {
+                    position: 'bottom',
+                    fontSize: '11px',
+                    labels: {
+                        colors: '#64748b'
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    formatter: function (val) {
+                        return val.toFixed(0) + "%"
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: '65%',
+                            labels: {
+                                show: true,
+                                total: {
+                                    show: true,
+                                    label: 'Total Mhs',
+                                    color: '#64748b',
+                                    formatter: function (w) {
+                                        return w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            $('#skripsi-chart').empty();
+            var chart = new ApexCharts(document.querySelector("#skripsi-chart"), options);
+            chart.render();
+        }
+
+        $(document).ready(function() {
             var token = "{{ Session::get('token') }}";
             var userlogin = "{{ Session::get('username') }}";
-            var tipe = "{{ Session::get('tipe') }}";
-            var session_tahun = $('#session_tahun').val();
-            var session_semester = $('#session_semester').val();
+            
+            var kode_prodi = $('#kode_prodi').val();
+            var tahun = $('#session_tahun').val();
+            var semester = $('#session_semester').val();
+            var tipe = $('#tipe').val() || "{{ Session::get('tipe') }}";
+            var kode_dosen = $('#kode_dosen').val() || "{{ Session::get('id_dosen') }}";
 
+            // Determine today's day in Indonesian for filtering
+            var daysIndonesian = {
+                'Sunday': 'Minggu',
+                'Monday': 'Senin',
+                'Tuesday': 'Selasa',
+                'Wednesday': 'Rabu',
+                'Thursday': 'Kamis',
+                'Friday': 'Jumat',
+                'Saturday': 'Sabtu'
+            };
+            var todayEnglish = moment().format('dddd');
+            var todayIndo = daysIndonesian[todayEnglish] || '';
+            $('#today-name-display').text(todayIndo + ', ' + moment().format('DD MMMM YYYY'));
+
+            // 1. Fetch Taught Classes & Filter Today's Schedule
+            $.ajax({
+                type: "GET",
+                url: "{{ config('setting.second_url') }}akademik/makulpenawaran",
+                headers: {
+                    "Authorization": 'Bearer ' + token,
+                    "username": userlogin
+                },
+                data: {
+                    tahun: tahun,
+                    semester: semester,
+                    kode_prodi: kode_prodi,
+                    tipe: tipe,
+                    kode_dosen: kode_dosen
+                },
+                success: function(classList) {
+                    var totalClasses = classList ? classList.length : 0;
+                    $('#stat-kelas').text(totalClasses);
+
+                    var scheduleHtml = '';
+                    var todayClasses = [];
+
+                    if (classList && totalClasses > 0) {
+                        classList.forEach(function(row) {
+                            if (row.hari && row.hari.trim().toLowerCase() === todayIndo.toLowerCase()) {
+                                todayClasses.push(row);
+                            }
+                        });
+                    }
+
+                    if (todayClasses.length > 0) {
+                        scheduleHtml += '<ul class="schedule-list">';
+                        todayClasses.forEach(function(row) {
+                            scheduleHtml += `
+                                <li class="schedule-item">
+                                    <div class="schedule-item-title">${row.nama_matakuliah} (Kelas ${row.nama_kelas})</div>
+                                    <div class="schedule-item-meta">
+                                        <span><i class="fa fa-clock-o"></i> ${row.waktu || '-'}</span>
+                                        <span><i class="fa fa-map-marker"></i> Ruang ${row.kode_ruang || '-'}</span>
+                                        <span><i class="fa fa-users"></i> ${row.jumlah_peserta || 0} Mhs</span>
+                                    </div>
+                                </li>
+                            `;
+                        });
+                        scheduleHtml += '</ul>';
+                    } else {
+                        scheduleHtml += `
+                            <div class="d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <div class="text-center text-muted">
+                                    <i class="fa fa-calendar-o fa-2x mb-10 text-primary"></i>
+                                    <p class="mb-0">Tidak ada jadwal mengajar hari ini.</p>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    $('#schedule-container').html(scheduleHtml);
+                },
+                error: function() {
+                    $('#stat-kelas').text('0');
+                    $('#schedule-container').html(`
+                        <div class="d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <p class="text-danger">Gagal memuat jadwal.</p>
+                        </div>
+                    `);
+                }
+            });
+
+            // 2. Fetch Advisees (PA) and build KRS chart
+            $.ajax({
+                type: "GET",
+                url: "{{ config('setting.second_url') }}akademik/daftarmhs-pa",
+                headers: {
+                    "Authorization": 'Bearer ' + token,
+                    "username": userlogin
+                },
+                data: {
+                    tahun: tahun,
+                    semester: semester,
+                    kode_prodi: kode_prodi,
+                    tipe: tipe,
+                    kode_dosen: kode_dosen
+                },
+                success: function(mhsList) {
+                    var totalPa = mhsList ? mhsList.length : 0;
+                    $('#stat-pa').text(totalPa);
+
+                    var accCount = 0;
+                    var pendingCount = 0;
+
+                    if (mhsList && totalPa > 0) {
+                        mhsList.forEach(function(row) {
+                            if (row.status_krs === 'KRS') {
+                                accCount++;
+                            } else {
+                                pendingCount++;
+                            }
+                        });
+                        drawKrsChart(accCount, pendingCount);
+                    } else {
+                        $('#krs-chart').html(`
+                            <div class="d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <p class="text-muted">Tidak ada data bimbingan.</p>
+                            </div>
+                        `);
+                    }
+                },
+                error: function() {
+                    $('#stat-pa').text('0');
+                    $('#krs-chart').html(`
+                        <div class="d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <p class="text-danger">Gagal memuat data PA.</p>
+                        </div>
+                    `);
+                }
+            });
+
+            // 3. Fetch Thesis Advisees & build Skripsi chart
+            $.ajax({
+                type: "GET",
+                url: "{{ config('setting.second_url') }}dosen/skripsi/dashboard",
+                headers: {
+                    "Authorization": 'Bearer ' + token,
+                    "username": userlogin
+                },
+                data: {
+                    id_dosen: kode_dosen
+                },
+                success: function(response) {
+                    var skripsiList = response.data || [];
+                    var totalSkripsi = skripsiList.length;
+                    $('#stat-skripsi').text(totalSkripsi);
+
+                    var proposalCount = 0;
+                    var bimbinganCount = 0;
+                    var readyCount = 0;
+
+                    if (totalSkripsi > 0) {
+                        skripsiList.forEach(function(row) {
+                            if (row.fase_aktif === 'proposal') {
+                                proposalCount++;
+                            } else if (row.fase_aktif === 'bimbingan') {
+                                bimbinganCount++;
+                            } else if (row.fase_aktif === 'ujian') {
+                                readyCount++;
+                            }
+                        });
+                        
+                        $('#stat-siap-ujian').text(readyCount);
+                        drawSkripsiChart(proposalCount, bimbinganCount, readyCount);
+                    } else {
+                        $('#stat-siap-ujian').text('0');
+                        $('#skripsi-chart').html(`
+                            <div class="d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <p class="text-muted">Tidak ada data bimbingan skripsi.</p>
+                            </div>
+                        `);
+                    }
+                },
+                error: function() {
+                    $('#stat-skripsi').text('0');
+                    $('#stat-siap-ujian').text('0');
+                    $('#skripsi-chart').html(`
+                        <div class="d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <p class="text-danger">Gagal memuat data skripsi.</p>
+                        </div>
+                    `);
+                }
+            });
+
+            // 4. Academic Calendar Loader
             function home_kalenderakademik() {
                 $.ajax({
                     type: 'GET',
@@ -213,12 +776,12 @@
                         "username": userlogin
                     },
                     data: {
-                        tahun: session_tahun,
-                        semester: session_semester
+                        tahun: tahun,
+                        semester: semester
                     },
                     url: "{{ config('setting.second_url') }}akademik/home-kalenderakademik",
                     success: function(result) {
-                        var jml = result.length;
+                        var jml = result ? result.length : 0;
                         var s = '';
                         for (i = 0; i < jml; i++) {
                             s = s +
@@ -233,10 +796,11 @@
                         }
                         $('#tabel_kalenderakademik').html(s);
                     }
-                })
+                });
             }
             home_kalenderakademik();
 
+            // 5. Calendar events loader
             var clg = [];
             $.ajax({
                 type: 'GET',
@@ -245,14 +809,12 @@
                     "username": userlogin
                 },
                 data: {
-                    tahun: session_tahun,
-                    semester: session_semester
+                    tahun: tahun,
+                    semester: semester
                 },
                 url: "{{ config('setting.second_url') }}akademik/home-kalenderakademikbase",
                 success: function(result) {
-                    var s = '';
-                    var jml = result.length;
-
+                    var jml = result ? result.length : 0;
                     for (i = 0; i < jml; i++) {
                         clg.push({
                             title: result[i].nama_kegiatan,
@@ -261,6 +823,7 @@
                             backgroundColor: result[i].background
                         });
                     }
+                    
                     var CalendarApp = function() {
                         this.$calendar = $('#calendar');
                         this.$calendarObj = null;
@@ -315,7 +878,7 @@
                     $.CalendarApp = new CalendarApp, $.CalendarApp.Constructor = CalendarApp;
                     $.CalendarApp.init();
                 }
-            })
+            });
         });
     </script>
 @stop
