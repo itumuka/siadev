@@ -145,6 +145,17 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
+
+        /* Collapsed Sidebar User Panel Styles */
+        .sidebar-collapse .sidebar-user-panel {
+            padding: 12px 0;
+            justify-content: center;
+            gap: 0;
+        }
+
+        .sidebar-collapse .sidebar-user-info {
+            display: none !important;
+        }
     </style>
 
     @yield('css')
