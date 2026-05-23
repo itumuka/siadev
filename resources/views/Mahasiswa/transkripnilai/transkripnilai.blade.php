@@ -118,7 +118,7 @@
             var link = ""
             $("#printff")
 
-                .attr("src", "{{ url('mahasiswa/cetak/cetaktranskipnilai-mhs') }}/`" + nim + "`")
+                .attr("src", "{{ url('mahasiswa/cetak/cetaktranskipnilai-mhs') }}/" + nim)
                 .appendTo("body");
         }
 
