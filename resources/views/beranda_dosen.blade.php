@@ -256,16 +256,114 @@
             color: #1e293b !important;
         }
 
-        @media (max-width: 767px) {
-            .fc-header-toolbar {
-                flex-direction: column !important;
-                gap: 10px !important;
+            @media (max-width: 767px) {
+                .fc-header-toolbar {
+                    flex-direction: column !important;
+                    gap: 10px !important;
+                }
+                .fc-center h2 {
+                    font-size: 1.1rem !important;
+                }
             }
-            .fc-center h2 {
-                font-size: 1.1rem !important;
+
+            /* Welcome Banner Premium Styles */
+            .welcome-banner {
+                background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+                color: #ffffff;
+                border-radius: 20px;
+                padding: 30px;
+                position: relative;
+                overflow: hidden;
+                box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+                margin-bottom: 24px;
             }
-        }
-    </style>
+
+            .welcome-banner::before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                right: -20%;
+                width: 350px;
+                height: 350px;
+                background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, rgba(99, 102, 241, 0) 70%);
+                border-radius: 50%;
+                pointer-events: none;
+            }
+
+            .welcome-banner h2 {
+                color: #cbd5e1;
+                font-size: 1.1rem;
+                font-weight: 500;
+                margin: 0 0 6px 0;
+            }
+
+            .welcome-banner h1 {
+                color: #ffffff;
+                font-weight: 700;
+                margin: 0 0 15px 0;
+                letter-spacing: -0.5px;
+            }
+
+            .welcome-profile-meta {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 12px;
+                margin-top: 15px;
+            }
+
+            .meta-pill {
+                display: inline-flex;
+                align-items: center;
+                background: rgba(255, 255, 255, 0.06);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                padding: 6px 14px;
+                border-radius: 12px;
+                color: #cbd5e1;
+                font-size: 0.88rem;
+                transition: all 0.2s ease;
+            }
+
+            .meta-pill i {
+                margin-right: 8px;
+                color: #38bdf8;
+            }
+
+            .meta-pill strong {
+                color: #ffffff;
+                margin-left: 4px;
+            }
+
+            .meta-pill:hover {
+                background: rgba(255, 255, 255, 0.1);
+                border-color: rgba(255, 255, 255, 0.15);
+                color: #ffffff;
+            }
+
+            .role-badge {
+                display: inline-flex;
+                align-items: center;
+                padding: 5px 12px;
+                border-radius: 10px;
+                font-size: 0.75rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                margin-right: 8px;
+                margin-bottom: 8px;
+            }
+
+            .badge-wali {
+                background-color: rgba(16, 185, 129, 0.15);
+                color: #34d399;
+                border: 1px solid rgba(16, 185, 129, 0.25);
+            }
+
+            .badge-kaprodi {
+                background-color: rgba(139, 92, 246, 0.15);
+                color: #a78bfa;
+                border: 1px solid rgba(139, 92, 246, 0.25);
+            }
+        </style>
 @endsection
 @section('content')
     <div class="container-full">
@@ -281,16 +379,34 @@
                     <input class="form-control" type="hidden" value="{{ Session::get('id_dosen') }}" name="kode_dosen" id="kode_dosen">
 
                     <!-- Welcome Box -->
-                    <div class="box bg-primary-light mb-24">
-                        <div class="box-body d-flex px-0">
-                            <div class="flex-grow-1 p-30 bg-img dask-bg bg-none-md"
-                                style="background-position: right bottom; background-size: auto 100%; background-image: url(../images/svg-icon/color-svg/custom-1.svg)">
-                                <div class="row">
-                                    <div class="col-12 col-xl-8">
-                                        <h2 class="font-weight-600">Selamat Datang di Portal Dosen Wali & Pembimbing</h2>
-                                        <p class="text-dark my-10 font-size-18"><strong
-                                                class="text-warning">{{ $session_nama }}</strong> (NIDN/Kode: {{ Session::get('username') }})
-                                        </p>
+                    <div class="welcome-banner">
+                        <div class="row align-items-center">
+                            <div class="col-12 col-xl-10">
+                                <span style="color: #818cf8; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Portal Akademik Dosen</span>
+                                <h2 class="mt-10">Selamat Datang Kembali,</h2>
+                                <h1 class="font-size-28">{{ $session_nama }}</h1>
+                                
+                                <div class="mb-5">
+                                    @if (Session::get('dosen_wali') == 1)
+                                        <span class="role-badge badge-wali"><i class="fa fa-check-circle mr-5"></i> Dosen Wali</span>
+                                    @endif
+                                    @if (Session::get('kaprodi') == 1)
+                                        <span class="role-badge badge-kaprodi"><i class="fa fa-star mr-5"></i> Ketua Program Studi</span>
+                                    @endif
+                                </div>
+
+                                <div class="welcome-profile-meta">
+                                    <div class="meta-pill" title="Nomor Induk Dosen Nasional">
+                                        <i class="fa fa-id-card"></i>
+                                        NIDN: <strong>{{ Session::get('nidn') ?? '-' }}</strong>
+                                    </div>
+                                    <div class="meta-pill" title="Email / Username Login">
+                                        <i class="fa fa-envelope"></i>
+                                        <span>{{ Session::get('username') }}</span>
+                                    </div>
+                                    <div class="meta-pill" title="Tahun Akademik Aktif">
+                                        <i class="fa fa-calendar-check-o"></i>
+                                        TA: <strong>{{ $session_nama_tahunakademik }} ({{ $session_semester == 1 ? 'Ganjil' : 'Genap' }})</strong>
                                     </div>
                                 </div>
                             </div>
