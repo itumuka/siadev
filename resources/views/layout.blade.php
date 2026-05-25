@@ -82,8 +82,8 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-            background-color: rgba(0, 0, 0, 0.015);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background-color: rgba(255, 255, 255, 0.03);
             transition: all 0.3s ease;
         }
 
@@ -113,7 +113,7 @@
         .sidebar-user-name {
             font-size: 0.88rem;
             font-weight: 600;
-            color: #1e293b;
+            color: #f8fafc;
             margin: 0;
             white-space: nowrap;
             text-overflow: ellipsis;
@@ -123,7 +123,7 @@
 
         .sidebar-user-email {
             font-size: 0.72rem;
-            color: #64748b;
+            color: #cbd5e1;
             margin: 2px 0 0 0;
             white-space: nowrap;
             text-overflow: ellipsis;
@@ -136,8 +136,8 @@
             align-items: center;
             font-size: 0.65rem;
             font-weight: 700;
-            color: #7C261B;
-            background-color: rgba(124, 38, 27, 0.08);
+            color: #fca5a5;
+            background-color: rgba(248, 113, 113, 0.15);
             padding: 2px 6px;
             border-radius: 4px;
             margin-top: 5px;
