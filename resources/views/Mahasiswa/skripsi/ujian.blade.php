@@ -82,8 +82,29 @@
                             </div>
                         </div>
 
+                        <!-- Global Payment Warning (For Non-OBE Prodi) -->
+                        <div id="payment_warning_global" style="display:none; margin-top: 20px; margin-bottom: 20px;">
+                            <div class="alert alert-danger py-12 px-20 mb-0" style="border: 1px solid #f5c6cb; background-color: #f8d7da; color: #721c24; border-radius: 8px;">
+                                <i class="fa fa-warning mr-10 fa-lg"></i> <strong>Peringatan Pembayaran:</strong> Sistem mendeteksi biaya Ujian/Sidang Tugas Akhir Anda <strong>belum lunas</strong>. Anda wajib melunasinya terlebih dahulu untuk dapat melanjutkan pendaftaran.
+                            </div>
+                        </div>
+
+                        <!-- Non-OBE Drive Link Input -->
+                        <div id="non_obe_drive_fields" class="box box-bordered border-primary mt-20" style="border-radius: 8px; overflow: hidden; border: 1px solid #ddd; display: none;">
+                            <div class="box-header with-border bg-primary-light" style="padding: 10px 15px; background-color: #f0f2ff;">
+                                <h5 class="box-title font-weight-600 text-primary mb-0"><i class="fa fa-hdd-o mr-10"></i> Draf Naskah Tugas Akhir / Skripsi</h5>
+                            </div>
+                            <div class="box-body bg-white" style="padding: 15px;">
+                                <div class="form-group mb-15">
+                                    <label class="font-weight-600">Link Google Drive Naskah Lengkap <span class="text-danger">*</span></label>
+                                    <input type="url" id="input_non_obe_drive_url" class="form-control" style="height: 45px;" placeholder="Contoh: https://drive.google.com/drive/folders/xxxx atau https://docs.google.com/document/d/xxxx">
+                                    <small class="text-muted">Masukkan link sharing Google Drive berisi draf lengkap naskah Tugas Akhir Anda. Pastikan akses link diset ke <strong>"Siapa saja yang memiliki link" (Anyone with the link can view)</strong> agar dosen penguji dapat mereview naskah Anda.</small>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Realisasi Luaran OBE -->
-                        <div class="box box-bordered border-primary mt-20" style="border-radius: 8px; overflow: hidden; border: 1px solid #ddd;">
+                        <div id="luaran_obe_card" class="box box-bordered border-primary mt-20" style="border-radius: 8px; overflow: hidden; border: 1px solid #ddd;">
                             <div class="box-header with-border bg-primary-light" style="padding: 10px 15px; background-color: #f0f2ff;">
                                 <h5 class="box-title font-weight-600 text-primary mb-0"><i class="fa fa-graduation-cap mr-10"></i> Laporan Realisasi Luaran (OBE)</h5>
                             </div>
@@ -100,6 +121,11 @@
                                         <option value="lainnya">Lainnya / Sesuai Kebijakan Prodi</option>
                                     </select>
                                     <small class="text-muted">Pilih jenis luaran yang telah direalisasikan atau akan dicapai.</small>
+                                    <div id="payment_warning_non_obe" style="display:none; margin-top: 10px;">
+                                        <div class="alert alert-warning py-10 px-15 mb-0" style="border: 1px solid #ffeeba; background-color: #fff3cd; color: #856404; border-radius: 8px;">
+                                            <i class="fa fa-warning mr-5"></i> <strong>Peringatan Pembayaran:</strong> Anda memilih opsi Non-OBE (Buku Skripsi). Sistem mendeteksi biaya Ujian Skripsi Anda <strong>belum lunas</strong>. Anda wajib melunasinya terlebih dahulu untuk dapat melanjutkan pendaftaran.
+                                        </div>
+                                    </div>
                                 </div>
                                 
                                 <!-- Dynamic Fields Container -->
@@ -164,8 +190,12 @@
                                 <div class="col-md-8" id="review_judul"></div>
                             </div>
                             <div class="row mb-10">
-                                <div class="col-md-4 font-weight-bold">Jenis Luaran OBE:</div>
+                                <div class="col-md-4 font-weight-bold">Jenis Luaran OBE / Tugas Akhir:</div>
                                 <div class="col-md-8" id="review_jenis_luaran">-</div>
+                            </div>
+                            <div class="row mb-10" id="review_non_obe_drive_item" style="display: none;">
+                                <div class="col-md-4 font-weight-bold">Link Drive Naskah Lengkap:</div>
+                                <div class="col-md-8" id="review_non_obe_drive">-</div>
                             </div>
                             <div class="row mb-10 luaran-review-item" style="display: none;">
                                 <div class="col-md-4 font-weight-bold">Judul Artikel Luaran:</div>
@@ -198,18 +228,54 @@
     var token = "{{ $api_token }}";
     var nim = "{{ $session_nim }}";
     var userlogin = "{{ $session_nim }}";
+    var isBayarUjianLunas = false;
+    var taIsObe = true; // Default supports OBE
 
     $(document).ready(function() {
         // Luaran Type Change listener
         $('#select_jenis_luaran').on('change', function() {
             var val = $(this).val();
+            
+            if (!taIsObe) {
+                // If prodi doesn't support OBE
+                $('#luaran_obe_card').hide();
+                $('#non_obe_drive_fields').show();
+                $('#input_non_obe_drive_url').attr('required', true);
+                
+                if (!isBayarUjianLunas) {
+                    $('#payment_warning_global').slideDown();
+                } else {
+                    $('#payment_warning_global').slideUp();
+                }
+                return;
+            }
+
+            // If prodi supports OBE
+            $('#luaran_obe_card').show();
+            $('#payment_warning_global').hide();
+
             if (val === 'buku_skripsi') {
                 $('#luaran_dynamic_fields').slideUp();
                 $('#input_judul_luaran').removeAttr('required');
                 $('#input_nama_media').removeAttr('required');
                 $('#input_file_bukti').removeAttr('required');
+                
+                $('#non_obe_drive_fields').show();
+                $('#input_non_obe_drive_url').attr('required', true);
+                
+                // Show payment warning for Non-OBE if unpaid
+                if (!isBayarUjianLunas) {
+                    $('#payment_warning_non_obe').slideDown();
+                } else {
+                    $('#payment_warning_non_obe').slideUp();
+                }
             } else {
                 $('#luaran_dynamic_fields').slideDown();
+                $('#payment_warning_non_obe').slideUp();
+                
+                $('#non_obe_drive_fields').hide();
+                $('#input_non_obe_drive_url').removeAttr('required');
+                
                 $('#input_judul_luaran').attr('required', true);
                 $('#input_nama_media').attr('required', true);
                 if (!$('#link_existing_file_bukti').attr('href') || $('#link_existing_file_bukti').attr('href') === '#') {
@@ -237,8 +303,31 @@
                     return;
                 }
                 
-                var jenisLuaran = $('#select_jenis_luaran').val();
-                if (jenisLuaran !== 'buku_skripsi') {
+                var jenisLuaran = taIsObe ? $('#select_jenis_luaran').val() : 'buku_skripsi';
+                if (jenisLuaran === 'buku_skripsi') {
+                    // Drive Link Validation
+                    var driveUrl = $('#input_non_obe_drive_url').val().trim();
+                    if (!driveUrl) {
+                        e.preventDefault();
+                        showToastr('error', 'Validasi Gagal', 'Link Google Drive Naskah Lengkap wajib diisi');
+                        $('#input_non_obe_drive_url').focus();
+                        return;
+                    }
+                    
+                    if (!driveUrl.startsWith('http://') && !driveUrl.startsWith('https://')) {
+                        e.preventDefault();
+                        showToastr('error', 'Validasi Gagal', 'Masukkan format URL Link Google Drive yang valid (dimulai dengan https:// atau http://)');
+                        $('#input_non_obe_drive_url').focus();
+                        return;
+                    }
+
+                    // Non-OBE validation: Must have paid Ujian Skripsi fee
+                    if (!isBayarUjianLunas) {
+                        e.preventDefault();
+                        showToastr('error', 'Validasi Gagal', 'Anda belum melunasi pembayaran Ujian/Tugas Akhir. Silakan lakukan pembayaran terlebih dahulu.');
+                        return;
+                    }
+                } else {
                     var judulLuaran = $('#input_judul_luaran').val().trim();
                     var namaMedia = $('#input_nama_media').val().trim();
                     var hasFile = $('#link_existing_file_bukti').attr('href') && $('#link_existing_file_bukti').attr('href') !== '#';
@@ -376,9 +465,40 @@
                         $('#upload-container').html('<div class="alert alert-info">Tidak ada form berkas untuk prodi ini.</div>');
                     }
 
-                    if(res.data.semua_lolos) {
-                        $('#btn-next-to-2').removeAttr('disabled').html('Syarat Lengkap, Lanjut Step 2 <i class="fa fa-arrow-right ml-10"></i>');
+                    // Check if ta_is_obe and ujian_skripsi_lunas are present in response data
+                    taIsObe = res.data.ta_is_obe !== undefined ? (res.data.ta_is_obe == 1) : true;
+                    isBayarUjianLunas = res.data.ujian_skripsi_lunas !== undefined ? res.data.ujian_skripsi_lunas : true;
+                    
+                    // Fallback to syarat_list if not defined
+                    if (res.data.ujian_skripsi_lunas === undefined) {
+                        let bayarUjianSyarat = res.data.syarat_list.find(item => item.kode_syarat === 'BAYAR_UJIAN');
+                        isBayarUjianLunas = bayarUjianSyarat ? (bayarUjianSyarat.status === 'v' || bayarUjianSyarat.status === 'i') : true;
+                    }
+
+                    // Trigger select_jenis_luaran change immediately
+                    $('#select_jenis_luaran').trigger('change');
+
+                    // Filter other failures (excluding BAYAR_UJIAN or any payment requirement related to Ujian/Skripsi)
+                    let otherFailures = res.data.syarat_list.filter(item => {
+                        let isUjianPayment = item.kode_syarat === 'BAYAR_UJIAN' || 
+                                             (item.jenis === 'pembayaran' && item.syarat && 
+                                              (item.syarat.toLowerCase().includes('ujian') || item.syarat.toLowerCase().includes('skripsi') || item.syarat.toLowerCase().includes('tugas akhir')));
+                        if (isUjianPayment) return false;
+                        return item.status !== 'v' && item.status !== 'i';
+                    });
+                    
+                    let canGoToStep2 = otherFailures.length === 0;
+
+                    if (canGoToStep2) {
+                        $('#btn-next-to-2').removeAttr('disabled');
+                        if (!isBayarUjianLunas) {
+                            $('#btn-next-to-2').html('Lanjut Step 2 (Peringatan Ujian Belum Lunas) <i class="fa fa-arrow-right ml-10"></i>');
+                            $('#syarat-container').append('<div class="alert alert-warning mt-20"><i class="fa fa-info-circle"></i> Biaya Ujian/Tugas Akhir Anda belum lunas. Anda tetap dapat melanjutkan ke Step 2. Namun, jika Anda menempuh skema Buku Skripsi (Non-OBE), pendaftaran akan diblokir.</div>');
+                        } else {
+                            $('#btn-next-to-2').html('Syarat Lengkap, Lanjut Step 2 <i class="fa fa-arrow-right ml-10"></i>');
+                        }
                     } else {
+                        $('#btn-next-to-2').attr('disabled', true).html('Syarat Belum Lengkap <i class="fa fa-arrow-right ml-10"></i>');
                         $('#syarat-container').append('<div class="alert alert-warning mt-20"><i class="fa fa-warning"></i> Ceklis yang berwarna merah menunjukkan syarat belum lengkap. Lengkapi dahulu sebelum mendaftar.</div>');
                     }
                 }
@@ -403,10 +523,14 @@
                     const luaran = res.data.luaran;
                     
                     if (luaran) {
+                        if (luaran.jenis_luaran === 'buku_skripsi') {
+                            $('#input_non_obe_drive_url').val(luaran.url_link);
+                        } else {
+                            $('#input_url_link').val(luaran.url_link);
+                        }
                         $('#select_jenis_luaran').val(luaran.jenis_luaran).trigger('change');
                         $('#input_judul_luaran').val(luaran.judul_luaran);
                         $('#input_nama_media').val(luaran.nama_media);
-                        $('#input_url_link').val(luaran.url_link);
                         if (luaran.file_bukti) {
                             const baseUrl = "{{ config('setting.second_url') }}".replace('/api/', '');
                             $('#link_existing_file_bukti').attr('href', baseUrl + '/storage/' + luaran.file_bukti);
@@ -433,15 +557,23 @@
             var btn = $(this);
             btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Menyimpan...');
             
-            // 1. Simpan/Upload Luaran OBE First
+            // 1. Simpan/Upload Luaran OBE / Link Drive First
             var luaranFormData = new FormData();
             luaranFormData.append('nim', nim);
-            luaranFormData.append('jenis_luaran', $('#select_jenis_luaran').val());
-            luaranFormData.append('judul_luaran', $('#input_judul_luaran').val() || '');
-            luaranFormData.append('nama_media', $('#input_nama_media').val() || '');
-            luaranFormData.append('url_link', $('#input_url_link').val() || '');
-            if ($('#input_file_bukti')[0].files.length > 0) {
-                luaranFormData.append('file_bukti', $('#input_file_bukti')[0].files[0]);
+            var targetJenis = taIsObe ? $('#select_jenis_luaran').val() : 'buku_skripsi';
+            luaranFormData.append('jenis_luaran', targetJenis);
+            
+            if (targetJenis === 'buku_skripsi') {
+                luaranFormData.append('url_link', $('#input_non_obe_drive_url').val() || '');
+                luaranFormData.append('judul_luaran', '');
+                luaranFormData.append('nama_media', '');
+            } else {
+                luaranFormData.append('judul_luaran', $('#input_judul_luaran').val() || '');
+                luaranFormData.append('nama_media', $('#input_nama_media').val() || '');
+                luaranFormData.append('url_link', $('#input_url_link').val() || '');
+                if ($('#input_file_bukti')[0].files.length > 0) {
+                    luaranFormData.append('file_bukti', $('#input_file_bukti')[0].files[0]);
+                }
             }
             
             $.ajax({
@@ -498,8 +630,8 @@
         $('#review_judul').html($('#input_judul').val() || '-');
         
         var selectEl = $('#select_jenis_luaran option:selected');
-        var jenisText = selectEl.text();
-        var jenisVal = selectEl.val();
+        var jenisText = taIsObe ? selectEl.text() : 'Buku Skripsi / Tugas Akhir (Non-OBE)';
+        var jenisVal = taIsObe ? selectEl.val() : 'buku_skripsi';
         
         $('#review_jenis_luaran').html(jenisText);
         
@@ -508,8 +640,11 @@
             $('#review_nama_media').html($('#input_nama_media').val() || '-');
             $('#review_url_link').html($('#input_url_link').val() || '-');
             $('.luaran-review-item').show();
+            $('#review_non_obe_drive_item').hide();
         } else {
             $('.luaran-review-item').hide();
+            $('#review_non_obe_drive').html($('#input_non_obe_drive_url').val() || '-');
+            $('#review_non_obe_drive_item').show();
         }
     }
 

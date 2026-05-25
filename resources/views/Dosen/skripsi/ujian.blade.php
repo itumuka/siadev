@@ -109,6 +109,14 @@
                                 <div class="col-md-6 border-right">
                                     <span class="text-muted text-uppercase font-weight-bold small">Judul Skripsi / Luaran</span>
                                     <p id="n_mhs_judul" class="font-italic text-dark mb-0"></p>
+                                    <div id="n_mhs_drive_container" style="display: none; margin-top: 10px;">
+                                        <span class="text-muted text-uppercase font-weight-bold small d-block">Link Drive Naskah:</span>
+                                        <a id="n_mhs_drive_link" href="#" target="_blank" class="btn btn-xs btn-success text-white font-weight-bold py-5 px-10"><i class="fa fa-external-link mr-5"></i> Buka Drive Naskah</a>
+                                    </div>
+                                    <div id="n_mhs_luaran_container" style="display: none; margin-top: 10px;">
+                                        <span class="text-muted text-uppercase font-weight-bold small d-block">Link Publikasi Luaran:</span>
+                                        <a id="n_mhs_luaran_link" href="#" target="_blank" class="btn btn-xs btn-info text-white font-weight-bold py-5 px-10"><i class="fa fa-external-link mr-5"></i> Buka Link Luaran</a>
+                                    </div>
                                 </div>
                                 <div class="col-md-3">
                                     <span class="text-muted text-uppercase font-weight-bold small">Jalur & Peran Anda</span>
@@ -315,6 +323,20 @@
                 $('#n_mhs_nim').text(student.nim);
                 $('#n_mhs_judul').text(student.judul || 'Belum ada judul/luaran');
                 $('#n_mhs_peran').text(getRoleLabel(student.role_dosen, isObe));
+
+                // Handle Drive / Luaran URL display
+                $('#n_mhs_drive_container').hide();
+                $('#n_mhs_luaran_container').hide();
+                
+                if (student.url_link) {
+                    if (student.jenis_luaran === 'buku_skripsi' || !isObe) {
+                        $('#n_mhs_drive_link').attr('href', student.url_link);
+                        $('#n_mhs_drive_container').show();
+                    } else {
+                        $('#n_mhs_luaran_link').attr('href', student.url_link);
+                        $('#n_mhs_luaran_container').show();
+                    }
+                }
                 
                 // Dynamic labels depending on OBE status
                 if (isObe) {

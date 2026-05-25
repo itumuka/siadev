@@ -181,14 +181,38 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label>Komponen Bayar (Pisahkan dengan koma)</label>
-                                    <input class="form-control" type="text" name="eta_komponen_bayar" id="eta_komponen_bayar" placeholder="Contoh: Bimbingan Skripsi, Ujian Skripsi">
-                                    <small class="text-muted">*Harus persis dengan nama komponen di sistem Keuangan.</small>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Mendukung OBE?</label>
+                                            <select class="form-control" name="eta_is_obe" id="eta_is_obe">
+                                                <option value="1">Ya (Mendukung Opsi Luaran)</option>
+                                                <option value="0">Tidak (Hanya Buku Tugas Akhir)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Minimal Bimbingan (Kali)</label>
+                                            <input class="form-control" type="number" name="eta_min_bimbingan" id="eta_min_bimbingan" placeholder="Contoh: 8">
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label>Minimal Bimbingan (Kali)</label>
-                                    <input class="form-control" type="number" name="eta_min_bimbingan" id="eta_min_bimbingan" placeholder="Contoh: 8">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Komponen Bayar Bimbingan</label>
+                                            <input class="form-control" type="text" name="eta_komponen_bayar" id="eta_komponen_bayar" placeholder="Contoh: Bimbingan Skripsi">
+                                            <small class="text-muted">*Nama tagihan sempro/bimbingan</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Komponen Bayar Ujian</label>
+                                            <input class="form-control" type="text" name="eta_komponen_bayar_ujian" id="eta_komponen_bayar_ujian" placeholder="Contoh: Ujian Skripsi">
+                                            <small class="text-muted">*Nama tagihan ujian/sidang</small>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="modal-footer float-right">
@@ -275,6 +299,21 @@
                                                 <div>
                                                     <small class="text-muted d-block mb-1">Wajib Seminar Proposal</small>
                                                     <span id="detail_ta_sempro" class="font-weight-600">-</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="card border-0 shadow-sm h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-start">
+                                                <div class="d-flex align-items-center justify-content-center rounded-circle mr-3" style="width: 40px; height: 40px; background-color: rgba(111, 66, 193, 0.1);">
+                                                    <i class="fa fa-graduation-cap text-purple" style="color: #6f42c1;"></i>
+                                                </div>
+                                                <div>
+                                                    <small class="text-muted d-block mb-1">Mendukung OBE?</small>
+                                                    <span id="detail_ta_is_obe" class="font-weight-600">-</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -575,7 +614,9 @@
                 // TA Config fields
                 $('#eta_sks_minimal').val(data['ta_sks_minimal']);
                 $('#eta_ada_sempro').val(data['ta_ada_sempro']);
+                $('#eta_is_obe').val(data['ta_is_obe'] !== undefined ? data['ta_is_obe'] : 1);
                 $('#eta_komponen_bayar').val(data['ta_komponen_bayar']);
+                $('#eta_komponen_bayar_ujian').val(data['ta_komponen_bayar_ujian']);
                 $('#eta_min_bimbingan').val(data['ta_minimal_bimbingan'] ?? data['ta_min_bimbingan']);
 
                 $("#" + data.trash).prop("checked", true)
@@ -592,6 +633,7 @@
                 $('#detail_ta_nama').text(data['ta_nama_tugas_akhir'] || 'Skripsi');
                 $('#detail_ta_sks').text((data['ta_sks_minimal'] || '-') + ' SKS');
                 $('#detail_ta_sempro').text(data['ta_ada_sempro'] == '1' || data['ta_ada_sempro'] == 1 ? 'Ya (Wajib)' : 'Tidak (Langsung Bimbingan)');
+                $('#detail_ta_is_obe').text(data['ta_is_obe'] == '1' || data['ta_is_obe'] == 1 ? 'Ya (Mendukung Opsi Luaran)' : 'Tidak (Hanya Buku Tugas Akhir)');
                 $('#detail_ta_bimbingan').text((data['ta_minimal_bimbingan'] || data['ta_min_bimbingan'] || '8') + ' kali');
                 $('#detail_ta_komponen').text(data['ta_komponen_bayar'] || '-');
                 $('#detail_ta_komponen_ujian').text(data['ta_komponen_bayar_ujian'] || '-');
