@@ -1028,6 +1028,12 @@
                             }
                         });
                         drawKrsChart(accCount, pendingCount);
+                    } else {
+                        $('#krs-chart').html(`
+                            <div class="d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <p class="text-muted">Tidak ada data bimbingan.</p>
+                            </div>
+                        `);
                     }
 
                     // Update Opsi C widget
@@ -1038,12 +1044,6 @@
                     } else {
                         $('#action-desc-krs').text('Semua KRS sudah di-ACC');
                         $('#action-val-krs').removeClass('pulse-badge');
-                    } else {
-                        $('#krs-chart').html(`
-                            <div class="d-flex align-items-center justify-content-center" style="height: 200px;">
-                                <p class="text-muted">Tidak ada data bimbingan.</p>
-                            </div>
-                        `);
                     }
                 },
                 error: function() {
@@ -1092,6 +1092,13 @@
                         
                         $('#stat-siap-ujian').text(readyCount);
                         drawSkripsiChart(proposalCount, bimbinganCount, readyCount);
+                    } else {
+                        $('#stat-siap-ujian').text('0');
+                        $('#skripsi-chart').html(`
+                            <div class="d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <p class="text-muted">Tidak ada data bimbingan skripsi.</p>
+                            </div>
+                        `);
                     }
 
                     // Update Opsi C widget
@@ -1100,13 +1107,6 @@
                         $('#action-desc-skripsi').text(readyCount + ' mahasiswa siap ujian');
                     } else {
                         $('#action-desc-skripsi').text('Tidak ada antrean ujian');
-                    } else {
-                        $('#stat-siap-ujian').text('0');
-                        $('#skripsi-chart').html(`
-                            <div class="d-flex align-items-center justify-content-center" style="height: 200px;">
-                                <p class="text-muted">Tidak ada data bimbingan skripsi.</p>
-                            </div>
-                        `);
                     }
                 },
                 error: function() {
