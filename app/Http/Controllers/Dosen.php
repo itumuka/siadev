@@ -263,4 +263,52 @@ class Dosen extends Controller
         $child_breadcrumb = "Ganti Password";
         return view('Dosen/pengaturan/gantipassword', compact('title', 'parent_breadcrumb', 'child_breadcrumb', 'session_tahun', 'session_semester', 'session_kode_program_studi', 'session_tipe', 'session_kode_dosen'));
     }
+
+    public function makul_ditawarkan_dosen()
+    {
+        if (Session::has('session_tahun')) {
+            $session_tahun = Session::get('session_tahun');
+        } else {
+            $session_tahun = '';
+        }
+        if (Session::has('session_semester')) {
+            $session_semester = Session::get('session_semester');
+        } else {
+            $session_semester = '';
+        }
+        $session_kode_program_studi = (Session::has('kode_program_studi')) ? Session::get('kode_program_studi') : '';
+
+        $session_tipe = (Session::has('tipe')) ? Session::get('tipe') : '';
+        $session_kode_dosen = (Session::has('id_dosen')) ? Session::get('id_dosen') : '';
+        $session_nama_tahunakademik = (Session::has('session_nama_tahunakademik')) ? Session::get('session_nama_tahunakademik') : '';
+
+        $title = "Mata Kuliah Ditawarkan";
+        $parent_breadcrumb = "Matakuliah";
+        $child_breadcrumb = "Mata Kuliah Ditawarkan";
+        return view('Dosen/makulditawarkan/makulditawarkan', compact('title', 'parent_breadcrumb', 'child_breadcrumb', 'session_tahun', 'session_semester', 'session_kode_program_studi', 'session_tipe', 'session_kode_dosen', 'session_nama_tahunakademik'));
+    }
+
+    public function kurikulum_dosen()
+    {
+        if (Session::has('session_tahun')) {
+            $session_tahun = Session::get('session_tahun');
+        } else {
+            $session_tahun = '';
+        }
+        if (Session::has('session_semester')) {
+            $session_semester = Session::get('session_semester');
+        } else {
+            $session_semester = '';
+        }
+        $session_kode_program_studi = (Session::has('kode_program_studi')) ? Session::get('kode_program_studi') : '';
+
+        $session_tipe = (Session::has('tipe')) ? Session::get('tipe') : '';
+        $session_kode_dosen = (Session::has('id_dosen')) ? Session::get('id_dosen') : '';
+        $session_nama_tahunakademik = (Session::has('session_nama_tahunakademik')) ? Session::get('session_nama_tahunakademik') : '';
+
+        $title = "Kurikulum Program Studi";
+        $parent_breadcrumb = "Matakuliah";
+        $child_breadcrumb = "Kurikulum Prodi";
+        return view('Dosen/kurikulum/kurikulum', compact('title', 'parent_breadcrumb', 'child_breadcrumb', 'session_tahun', 'session_semester', 'session_kode_program_studi', 'session_tipe', 'session_kode_dosen', 'session_nama_tahunakademik'));
+    }
 }

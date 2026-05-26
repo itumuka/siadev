@@ -95,11 +95,34 @@
                             <span>Riwayat Mengajar</span>
                         </a>
                     </li>
-                    <li class="{{ Route::is('makul_diampu_dosen') ? 'active' : '' }}">
-                        <a href="{{ route('makul_diampu_dosen') }}" title="Makul Diampu">
-                            <i class="fa fa-id-card"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Makul Diampu</span>
+                    <li class="treeview {{ Route::is('makul_diampu_dosen') || Route::is('dosen.makul_ditawarkan') || Route::is('dosen.kurikulum') ? 'active' : '' }}">
+                        <a href="#">
+                            <i class="fa fa-book"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Matakuliah</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
                         </a>
+                        <ul class="treeview-menu">
+                            <li class="{{ Route::is('makul_diampu_dosen') ? 'active' : '' }}">
+                                <a href="{{ route('makul_diampu_dosen') }}" title="Mata Kuliah Diampu">
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    <span>Mata Kuliah Diampu</span>
+                                </a>
+                            </li>
+                            <li class="{{ Route::is('dosen.makul_ditawarkan') ? 'active' : '' }}">
+                                <a href="{{ route('dosen.makul_ditawarkan') }}" title="Mata Kuliah Ditawarkan">
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    <span>Mata Kuliah Ditawarkan</span>
+                                </a>
+                            </li>
+                            <li class="{{ Route::is('dosen.kurikulum') ? 'active' : '' }}">
+                                <a href="{{ route('dosen.kurikulum') }}" title="Kurikulum Prodi">
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    <span>Kurikulum Prodi</span>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     
                     <li class="treeview {{ Route::is('dosen.skripsi.index') || Route::is('dosen.skripsi.detail_bimbingan') || Route::is('dosen.skripsi.ujian') || Route::is('dosen.skripsi.penetapan') ? 'active' : '' }}">

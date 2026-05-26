@@ -84,6 +84,8 @@ Route::middleware(['ceklogin'])->group(function () {
         Route::get("/dosen/acc-krs", "Dosen@acckrs")->name('dosenacckrs');
         Route::get("/dosen/daftarmhs-pa", "Dosen@daftarmhs_pa")->name('dosendaftarmhs_pa');
         Route::get("/dosen/makul-diampu", "Dosen@makul_diampu_dosen")->name('makul_diampu_dosen');
+        Route::get("/dosen/makul-ditawarkan", "Dosen@makul_ditawarkan_dosen")->name('dosen.makul_ditawarkan');
+        Route::get("/dosen/kurikulum", "Dosen@kurikulum_dosen")->name('dosen.kurikulum');
         Route::get("/dosen/berita-acara", "Dosen@berita_acara")->name('berita_acara_dosen');
         Route::get("/dosen/berita-acara-ujian", "Dosen@berita_acara_ujian")->name('berita_acara_ujian_dosen');
         Route::get("/dosen/riwayat-mengajar", "Dosen@riwayat_mengajar")->name('dsnriwayat_mengajar');
