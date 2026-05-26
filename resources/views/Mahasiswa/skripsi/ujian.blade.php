@@ -235,7 +235,6 @@
 
     function setSubmitUjianButtonState(isLocked) {
         var btn = $('#btn-submit-final');
-
         if (isLocked) {
             btn.prop('disabled', true).html('<i class="fa fa-check mr-10"></i> Pendaftaran Sudah Terkirim');
         } else {
@@ -557,8 +556,10 @@
                             </div>
                         `).show();
                     }
-
-                    ujianLocked = !!res.data.ujian_locked;
+                    
+                    if (res.data.ujian_locked !== undefined) {
+                        ujianLocked = !!res.data.ujian_locked;
+                    }
                     setSubmitUjianButtonState(ujianLocked);
 
                     const target = res.data.target_luaran || 'buku_skripsi';
