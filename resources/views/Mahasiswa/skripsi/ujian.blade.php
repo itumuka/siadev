@@ -52,6 +52,7 @@
                     <!-- Step 1 -->
                     <div class="wizard-content active" id="step-1">
                         <h4 class="mb-20">Verifikasi Prasyarat Sidang Akhir</h4>
+                        <div id="ujian-info" class="mb-20" style="display:none;"></div>
                         
                         <div id="loading-syarat" class="text-center py-20">
                             <i class="fa fa-spinner fa-spin fa-3x" style="color: #6f42c1;"></i>
@@ -228,8 +229,12 @@
     var token = "{{ $api_token }}";
     var nim = "{{ $session_nim }}";
     var userlogin = "{{ $session_nim }}";
+<<<<<<< HEAD
+    var ujianLocked = false;
+=======
     var isBayarUjianLunas = false;
     var taIsObe = true; // Default supports OBE
+>>>>>>> cc99b40ac0fb0acc1419403651007f4f4fb360f7
 
     $(document).ready(function() {
         // Luaran Type Change listener
@@ -531,6 +536,21 @@
             },
             success: function(res) {
                 if (res.status == 'success' && res.data) {
+                    if (res.data.notice_message) {
+                        ujianLocked = !!res.data.ujian_locked;
+                        $('#ujian-info').html(`
+                            <div class="alert ${ujianLocked ? 'alert-info' : 'alert-warning'} border-${ujianLocked ? 'info' : 'warning'} mb-0" style="border-left: 4px solid ${ujianLocked ? '#17a2b8' : '#ffc107'};">
+                                <div class="d-flex align-items-start">
+                                    <i class="fa ${ujianLocked ? 'fa-info-circle' : 'fa-exclamation-triangle'} mr-10 mt-1"></i>
+                                    <div>
+                                        <strong>${ujianLocked ? 'Data Anda Sudah Tercatat' : 'Data Tersimpan Sebelumnya'}</strong>
+                                        <div class="mt-1">${res.data.notice_message}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `).show();
+                    }
+
                     const target = res.data.target_luaran || 'buku_skripsi';
                     const luaran = res.data.luaran;
                     
@@ -559,6 +579,11 @@
 
         // Submit form placeholder (Endpoint pendaftaran ujian bisa diseragamkan dengan modul skripsi update)
         $('#btn-submit-final').click(function(){
+            if (ujianLocked) {
+                showToastr('info', 'Sudah Tercatat', 'Pendaftaran ujian Anda sudah pernah dikirim sebelumnya.');
+                return;
+            }
+
             var judul = $('#input_judul').val().trim();
             if (!judul) {
                 showToastr('error', 'Validasi Gagal', 'Judul final skripsi wajib diisi');
@@ -616,7 +641,11 @@
                             window.location.href = "{{ route('skripsi.dashboard') }}";
                         },
                         error: function(err) {
-                            showToastr('error', 'Gagal', 'Gagal memproses pendaftaran ujian.');
+                            var errorMsg = 'Gagal memproses pendaftaran ujian.';
+                            if (err.responseJSON && err.responseJSON.error) {
+                                errorMsg = err.responseJSON.error;
+                            }
+                            showToastr('error', 'Gagal', errorMsg);
                             btn.prop('disabled', false).html('Konfirmasi Pendaftaran Ujian');
                         }
                     });
