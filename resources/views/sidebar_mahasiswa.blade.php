@@ -3,17 +3,27 @@
     <section class="sidebar position-relative">
         <div class="multinav">
             <div class="multinav-scroll" style="height: 100%;">
+                @php
+                    $nama = Session::get('nama') ?? 'Mahasiswa';
+                    $words = explode(' ', $nama);
+                    $initials = '';
+                    if (count($words) >= 2) {
+                        $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
+                    } else {
+                        $initials = strtoupper(substr($nama, 0, 2));
+                    }
+                @endphp
+                <div class="sidebar-user-panel">
+                    <div class="sidebar-user-avatar">{{ $initials }}</div>
+                    <div class="sidebar-user-info">
+                        <h4 class="sidebar-user-name" title="{{ Session::get('nama') }}">{{ Session::get('nama') }}</h4>
+                        <span class="sidebar-user-email" title="{{ Session::get('username') }}">{{ strtolower(Session::get('username')) }}</span>
+                        <span class="sidebar-user-role">Mahasiswa</span>
+                    </div>
+                </div>
+
                 <!-- sidebar menu-->
                 <ul class="sidebar-menu" data-widget="tree">
-                    {{-- <center><a href="#"
-                            class="mr-15 bg-lightest h-50 w-50 l-h-50 rounded-circle text-center overflow-hidden">
-                            <img src="{{ url('images/student.png') }}" class="h-50 align-self-end" alt="">
-                        </a><br><br><small>Mahasiswa</small></center><br><br> --}}
-
-
-                    <li class="header"><h6>{{ Session::get('nama') }}<br>
-                    <span>({{ Session::get('username') }})</span></h6>
-                    </li>
                     <li class="header">Daftar Menu</li>
                     <li class="{{ Route::is('home') ? 'active' : '' }}">
                         <a href="{{ route('home') }}"><i class="fa fa-home"><span class="path1"></span><span

@@ -1,21 +1,24 @@
-                <!-- sidebar menu-->
-                <ul class="sidebar-menu" data-widget="tree"><br><br>
-                    {{-- <center><a href="#"
-                            class="mr-15 bg-lightest h-50 w-50 l-h-50 rounded-circle text-center overflow-hidden">
-                            <img src="{{ url('images/usernew.jpg') }}" class="h-50 align-self-end" alt="">
-                    </a><br><br><small>Admin Akademik</small></center><br><br> --}}
-                    <div class="media-list">
-                        <div class="media py-10 px-0 align-items-center">
-                            <p class="avatar avatar-lg status-success">
-                                {{-- <img src="{{ url('images/usernew.jpg') }}" alt="..."> --}}
-                            </p>
-                            <div class="media-body">
-                                <p class="font-size-14"style="color: #fff;">
-                                    {{ Session::get('nama') }}
-                                </p>
-                            </div>
-                        </div>
+                @php
+                    $nama = Session::get('nama') ?? 'Dekan';
+                    $words = explode(' ', $nama);
+                    $initials = '';
+                    if (count($words) >= 2) {
+                        $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
+                    } else {
+                        $initials = strtoupper(substr($nama, 0, 2));
+                    }
+                @endphp
+                <div class="sidebar-user-panel">
+                    <div class="sidebar-user-avatar">{{ $initials }}</div>
+                    <div class="sidebar-user-info">
+                        <h4 class="sidebar-user-name" title="{{ Session::get('nama') }}">{{ Session::get('nama') }}</h4>
+                        <span class="sidebar-user-email" title="{{ Session::get('username') }}">{{ strtolower(Session::get('username') ?? 'dekanat@umuka.ac.id') }}</span>
+                        <span class="sidebar-user-role">Dekanat</span>
                     </div>
+                </div>
+
+                <!-- sidebar menu-->
+                <ul class="sidebar-menu" data-widget="tree">
                     <li class="header">Daftar Menu</li>
 
                     <li class="{{ Route::is('home') ? 'active' : '' }}">

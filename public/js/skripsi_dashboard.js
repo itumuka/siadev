@@ -182,7 +182,7 @@ function renderTimeline(data) {
         // Consider sempro done when either disabled, explicitly 'lulus', or Kaprodi has approved/scheduled it
         { label: semproLabel, done: semproDisabled || (data.sempro && (data.sempro.status === 'disetujui' || data.sempro.status === 'lulus' || data.sempro.tanggal_sempro)), skipped: semproDisabled },
         { label: 'Masa Bimbingan', done: bimbingan.total >= (config.min_bimbingan || 8) },
-        { label: 'Sidang Akhir', done: data.ujian && data.ujian.status === 'lulus' }
+        { label: 'Sidang Akhir', done: data.ujian && ['lulus', 'tidak_lulus'].includes(data.ujian.status) }
     ];
 
     // Determine the first uncompleted step as the "active" one
@@ -205,6 +205,79 @@ function renderTimeline(data) {
     });
 }
 
+function renderExamScheduleCard(schedule) {
+    const container = $('#exam_schedule_container');
+    if (!schedule) {
+        container.hide().empty();
+        return;
+    }
+
+    // Format date Indonesian style
+    const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const dateFormatted = new Date(schedule.tgl_ujian).toLocaleDateString('id-ID', dateOptions);
+
+    let pengujiHtml = '';
+    if (schedule.penguji && schedule.penguji.length > 0) {
+        pengujiHtml = '<div class="mt-15"><h6 class="font-weight-600 mb-10 text-dark">Dosen Penguji:</h6><div class="row">';
+        schedule.penguji.forEach(p => {
+            let roleBadge = 'badge-primary';
+            if (p.peran === 'Ketua Penguji') roleBadge = 'badge-info';
+            else if (p.peran === 'Penguji 2') roleBadge = 'badge-secondary';
+            else if (p.peran === 'Penguji 3') roleBadge = 'badge-dark';
+            
+            pengujiHtml += `
+                <div class="col-12 mb-5">
+                    <div class="d-flex justify-content-between align-items-center bg-light p-10 rounded">
+                        <span class="text-dark font-weight-500 font-size-13">${p.nama}</span>
+                        <span class="badge ${roleBadge}">${p.peran}</span>
+                    </div>
+                </div>
+            `;
+        });
+        pengujiHtml += '</div></div>';
+    }
+
+    const html = `
+        <div class="box-header with-border">
+            <h4 class="box-title"><i class="fa fa-calendar text-primary mr-10"></i> Jadwal Sidang Ujian Akhir</h4>
+        </div>
+        <div class="box-body">
+            <div class="row">
+                <div class="col-12 mb-10">
+                    <div class="d-flex align-items-center">
+                        <i class="fa fa-calendar-o font-size-18 text-muted mr-15"></i>
+                        <div>
+                            <span class="text-muted font-size-12">Hari & Tanggal</span>
+                            <h6 class="mb-0 font-weight-600 text-dark">${dateFormatted}</h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 mb-10">
+                    <div class="d-flex align-items-center">
+                        <i class="fa fa-clock-o font-size-18 text-muted mr-15"></i>
+                        <div>
+                            <span class="text-muted font-size-12">Waktu</span>
+                            <h6 class="mb-0 font-weight-600 text-dark">${schedule.jam_mulai || '--:--'} s/d ${schedule.jam_selesai || 'Selesai'}</h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 mb-10">
+                    <div class="d-flex align-items-center">
+                        <i class="fa fa-map-marker font-size-18 text-muted mr-15"></i>
+                        <div>
+                            <span class="text-muted font-size-12">Ruangan / Link</span>
+                            <h6 class="mb-0 font-weight-600 text-dark">${schedule.ruang || '-'}</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            ${pengujiHtml}
+        </div>
+    `;
+
+    container.html(html).fadeIn();
+}
+
 function renderCTA(cta) {
     const actions = $('#cta_actions');
     const loading = $('#cta_default');
@@ -219,10 +292,43 @@ function renderCTA(cta) {
 
     $('#btn_cta_link, #btn_cta_proposal, #btn_cta_upload, #cta_status_only').hide();
 
+    // Render schedule card if extra_data exists, otherwise hide it
+    if (cta.extra_data) {
+        renderExamScheduleCard(cta.extra_data);
+    } else {
+        $('#exam_schedule_container').hide().empty();
+    }
+
     if (cta.disabled) {
-        // Status only phase
-        $('#cta_status_only').show().find('.status-text').text(cta.label);
-        $('#cta_label').text('Status Progres Saat Ini');
+        // Status only phase - apply dynamic warna
+        const warna = cta.warna || 'secondary';
+        const iconMap = {
+            'success': 'fa-trophy',
+            'danger': 'fa-exclamation-triangle',
+            'secondary': 'fa-clock-o',
+            'warning': 'fa-clock-o',
+            'info': 'fa-info-circle'
+        };
+        const icon = iconMap[warna] || 'fa-clock-o';
+
+        // Apply dynamic color to the status box
+        $('#cta_status_only')
+            .removeClass('alert-secondary alert-success alert-danger alert-warning alert-info bg-gray-100')
+            .addClass(`alert-${warna}`)
+            .show()
+            .find('.status-text').text(cta.label);
+        
+        // Update icon inside status box
+        $('#cta_status_only').find('i').attr('class', `fa ${icon} mr-5`);
+
+        // Update the label above the button area
+        if (warna === 'success') {
+            $('#cta_label').html('<span class="text-success"><i class="fa fa-check-circle mr-5"></i>Progres Selesai!</span>');
+        } else if (warna === 'danger') {
+            $('#cta_label').html('<span class="text-danger"><i class="fa fa-exclamation-circle mr-5"></i>Perhatian</span>');
+        } else {
+            $('#cta_label').text('Status Progres Saat Ini');
+        }
     } else {
         const warna = cta.warna || 'warning';
         $('#cta_label').text('Lanjutkan Progres Anda');
@@ -243,7 +349,7 @@ function renderCTA(cta) {
             const relativeUrl = cta.url.replace(/^\//, ''); // Remove leading slash
             const absoluteUrl = cta.url.startsWith('http') ? cta.url : `${baseUrl}/${relativeUrl}`;
             
-            $('#btn_cta_link').removeClass('btn-primary btn-warning btn-success btn-info').addClass('btn-' + warna);
+            $('#btn_cta_link').removeClass('btn-primary btn-warning btn-success btn-info btn-danger').addClass('btn-' + warna);
             $('#btn_cta_link').show().attr('href', absoluteUrl).find('.label-text').text(cta.label);
             
             // Adjust icon based on context
@@ -254,6 +360,7 @@ function renderCTA(cta) {
         }
     }
 }
+
 
 async function saveProposal(form) {
     const btn = $('#btn_simpan_proposal');

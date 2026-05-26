@@ -300,7 +300,7 @@
                         no++;
                     }
                     $('#totalsks{{ $row }}').html(totalsks);
-                    $('#totalbobot{{ $row }}').html(totalbobot);
+                    $('#totalbobot{{ $row }}').html(Math.round(totalbobot));
                     $('#totalipk{{ $row }}').html(totalipk.toFixed(2));
                     $('#transkipnilai{{ $row }}').html(tampil);
                     $('#transkipnilai1{{ $row }}').html(tampil2);

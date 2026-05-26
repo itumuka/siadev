@@ -5,12 +5,7 @@
         table.dataTable td {
             padding: 3px 6px;
             font-size: 0.8em;
-            /* e.g. change 8x to 4px here */
         }
-
-        /* thead {
-                background-color: #7C261B !important;
-            } */
 
         /* Custom Calendar Styling */
         #calendar {
@@ -172,30 +167,6 @@
                                             <p class="text-dark my-10 font-size-16"><strong
                                                     class="text-warning">{{ $session_nama }}</strong>
                                             </p>
-
-                                            <!-- Awal Notifikasi Lengkapi Profil -->
-                                            <div id="notif-lengkapi-profil" style="display: none;">
-                                                <div class="alert alert-warning d-flex justify-content-between align-items-center py-2 px-3">
-                                                  <small class="mb-0">Profil belum lengkap.</small>
-                                                  <a href="{{ url('/mahasiswa/profil') }}" class="btn btn-danger btn-xs">Lengkapi</a>
-                                                </div>
-                                            </div>
-                                            <!-- Akhir Notifikasi Lengkapi Profil -->
-
-                                            {{-- @if (Session::get('tipe') == 'Pegawai') 
-                                                <p class="text-dark my-10 font-size-16">
-                                                    Sesuaikan <strong class="text-warning">Tahun Akademik</strong> pilihanmu!
-                                                </p>
-                                                <p class="mb-2 text-dark my-10 font-size-16">
-                                                    <select class="form-control selecttahunakademik" style="width: 100%;" name="tahunakademik" id="tahunakademik"></select>
-                                                </p>
-                                                <p>
-                                                    <button type="submit" class="btn btn-sm btn-rounded btn-primary btn-outline"><i class="ti-reload"></i> Pilih
-                                                    </button>
-                                                </p>
-                                            @endif --}}
-
-
                                         </div>
                                         <div class="col-12 col-xl-6"></div>
                                     </div>
@@ -332,13 +303,7 @@
                     },
                     url: "{{ config('setting.second_url') }}akademik/home-kalenderakademik",
                     success: function(result) {
-                        var rawEvents = result || [];
-                        calendarEvents = [];
-                        rawEvents.forEach(function(item) {
-                            if (!(item.kode_kegiatan_akademik == '22' && tipe == 'Mahasiswa')) {
-                                calendarEvents.push(item);
-                            }
-                        });
+                        calendarEvents = result || [];
                         legendCurrentPage = 0;
                         
                         // Set up initial pagination HTML controls
@@ -372,47 +337,6 @@
             }
             home_kalenderakademik();
 
-
-
-            // function make_session_depan(a) {
-            //     $.ajax({
-            //         url:"{{ route('make_session') }}",
-            //         method:"GET",
-            //         data:a,
-            //         dataType:"json",
-            //         success: function(result) {
-            //             location.reload();
-            //         }
-            //     })
-            // }
-
-            // $('#form_tahunakademik').on('submit', function(event){
-            //       event.preventDefault();
-            //       var form_data = $(this).serialize();
-            //       $.ajax({
-            //           url:"{{ config('setting.second_url') }}akademik/change-session-tahunakademik",
-            //           method:"GET",
-            //           data:form_data,
-            //           dataType:"json",
-            //           beforeSend: function() {
-            //             $("#btsubmit").prop('disabled', true);
-            //           },
-            //           success:function(data)
-            //           {
-            //               if(data.error){
-            //                 showToastr('error', 'Error!', data.error);  
-            //                   $("#btsubmit").prop('disabled', false);                                         
-            //               }
-            //               else if(data.success){ 
-            //                 showToastr('success', 'Success!', data.success);   
-            //                 $("#btsubmit").prop('disabled', false);
-            //                 make_session_depan(form_data);
-
-            //             }                                   
-            //           }              
-            //       })                     
-            //   });
-
             var clg = [];
             $.ajax({
                 type: 'GET',
@@ -430,24 +354,12 @@
                     var jml = result.length;
 
                     for (i = 0; i < jml; i++) {
-                        // s = s +
-                        //     '{title:' +
-                        //     result[i].nama_kegiatan +
-                        //     ',start' +
-                        //     result[i].tanggal_mulai +
-                        //     ',end' +
-                        //     result[i].tanggal_selesai + ',backgroundColor' + result[i].background +
-                        //     '},'
-                        if (result[i].kode_kegiatan_akademik == '22' && tipe == 'Mahasiswa') {
-                            // kosongan koyo bakso
-                        } else {
-                            clg.push({
-                                title: result[i].nama_kegiatan,
-                                start: result[i].tanggal_mulai,
-                                end: result[i].tanggal_akhir,
-                                backgroundColor: result[i].background
-                            });
-                        }
+                        clg.push({
+                            title: result[i].nama_kegiatan,
+                            start: result[i].tanggal_mulai,
+                            end: result[i].tanggal_akhir,
+                            backgroundColor: result[i].background
+                        });
                     }
                     var CalendarApp = function() {
                         this.$calendar = $('#calendar');
@@ -502,77 +414,8 @@
 
                     $.CalendarApp = new CalendarApp, $.CalendarApp.Constructor = CalendarApp;
                     $.CalendarApp.init();
-
-
                 }
             })
-
-
-
-
         });
-
-    @if (Session::get('tipe') == 'Mahasiswa')
-        $(document).ready(function() {
-            var token = "{{ Session::get('token') }}";
-            var userlogin = "{{ Session::get('username') }}";
-            var cek_profil_lengkap = true;
-
-            // 1. Cek Profil Personal & Pendidikan
-            $.ajax({
-                type: 'POST',
-                url: "{{ config('setting.second_url') }}mahasiswa/profil-personal",
-                headers: {
-                    "Authorization": 'Bearer ' + token,
-                    "username": userlogin
-                },
-                data: {
-                    nim: userlogin
-                },
-                success: function(result) {
-                    if (!result.nik_mhs || !result.tempat_lahir || !result.alamat_asal || !result.pendidikan_terakhir) {
-                        cek_profil_lengkap = false;
-                        $('#notif-lengkapi-profil').fadeIn();
-                    }
-                }
-            });
-
-            // 2. Cek Profil Ayah
-            $.ajax({
-                type: 'POST',
-                url: "{{ config('setting.second_url') }}mahasiswa/profil-ayah",
-                headers: {
-                    "Authorization": 'Bearer ' + token,
-                    "username": userlogin
-                },
-                data: { nim: userlogin },
-                success: function(result) {
-                    if (!result.nama || !result.nik_ayah) {
-                        cek_profil_lengkap = false;
-                        $('#notif-lengkapi-profil').fadeIn();
-                    }
-                }
-            });
-
-            // 3. Cek Profil Ibu
-            $.ajax({
-                type: 'POST',
-                url: "{{ config('setting.second_url') }}mahasiswa/profil-ibu",
-                headers: {
-                    "Authorization": 'Bearer ' + token,
-                    "username": userlogin
-                },
-                data: { nim: userlogin },
-                success: function(result) {
-                    if (!result.nama || !result.nik_ibu) {
-                        cek_profil_lengkap = false;
-                        $('#notif-lengkapi-profil').fadeIn();
-                    }
-                }
-            });
-        });
-    @endif
     </script>
-
-
 @stop

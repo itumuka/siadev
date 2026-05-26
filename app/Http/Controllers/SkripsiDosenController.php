@@ -49,4 +49,13 @@ class SkripsiDosenController extends Controller
         
         return view('Dosen.skripsi.ujian', $data);
     }
+
+    public function penetapan()
+    {
+        $data = $this->getCommonData();
+        $data['title'] = 'Persetujuan Berita Acara & Nilai Ujian';
+        $data['child_breadcrumb'] = 'Penetapan Nilai';
+        
+        return view('Dosen.skripsi.penetapan', $data);
+    }
 }

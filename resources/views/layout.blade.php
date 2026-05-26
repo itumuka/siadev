@@ -68,9 +68,94 @@
             border-radius: 10px;
             vertical-align: middle;
         }
-        /* thead th {
-            background-color: #172B4C !important;
-        } */
+        /* Logo Hover Micro-animation */
+        .logo-lg img {
+            transition: transform 0.3s ease;
+        }
+        .logo:hover .logo-lg img {
+            transform: scale(1.05);
+        }
+
+        /* Premium Sidebar User Panel */
+        .sidebar-user-panel {
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background-color: rgba(255, 255, 255, 0.03);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-user-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #7C261B 0%, #a8382a 100%);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.05rem;
+            box-shadow: 0 4px 10px rgba(124, 38, 27, 0.15);
+            flex-shrink: 0;
+            text-transform: uppercase;
+        }
+
+        .sidebar-user-info {
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .sidebar-user-name {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #f8fafc;
+            margin: 0;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            line-height: 1.3;
+        }
+
+        .sidebar-user-email {
+            font-size: 0.72rem;
+            color: #cbd5e1;
+            margin: 2px 0 0 0;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            line-height: 1.2;
+        }
+
+        .sidebar-user-role {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #fca5a5;
+            background-color: rgba(248, 113, 113, 0.15);
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-top: 5px;
+            width: fit-content;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Collapsed Sidebar User Panel Styles */
+        .sidebar-collapse .sidebar-user-panel {
+            padding: 12px 0;
+            justify-content: center;
+            gap: 0;
+        }
+
+        .sidebar-collapse .sidebar-user-info {
+            display: none !important;
+        }
     </style>
 
     @yield('css')
@@ -91,13 +176,13 @@
                     <span class="icon-Align-right"><span class="path1"></span><span class="path2"></span><span
                             class="path3"></span></span>
                 </a>
-                <a href="index.html" class="logo">
+                <a href="{{ route('home') }}" class="logo">
                     <!-- logo-->
                     <div class="logo-lg">
                         <span class="light-logo"><img src="{{ url('imageup45/logoumukapanjang.png') }}" alt="logo"
-                                style="width:100px"></span>
+                                style="max-height: 38px; width: auto !important; object-fit: contain;"></span>
                         <span class="dark-logo"><img src="{{ url('imageup45/logoumukapanjang.png') }}" alt="logo"
-                                style="width:100px"></span>
+                                style="max-height: 38px; width: auto !important; object-fit: contain;"></span>
                     </div>
                 </a>
             </div>
@@ -219,7 +304,7 @@
                     </li>
                 </ul>
             </div>
-            &copy; 2023 <a href="#">Universitas Muhammadiyah Karanganyar</a>. All Rights Reserved.
+            &copy; 2026 <a href="#">Universitas Muhammadiyah Karanganyar</a>. All Rights Reserved.
         </footer>
 
         <!-- Control Sidebar -->

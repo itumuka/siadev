@@ -36,6 +36,7 @@ Route::middleware(['ceklogin'])->group(function () {
     Route::get("/akademik/cetak/cetakkhs/{a}/{b}/{c}/{d}/{e?}", "Akademik@cetakkhs")->name('mhs_cetakkhs');
     Route::get("/akademik/cetak/cetakberitaacara/{a}", "Akademik@cetakberitaacara")->name('cetakberitaacara');
     Route::get("/akademik/cetak/cetakberitaacaraujian/{id}", "Akademik@cetakberitaacaraujian")->name('cetakberitaacaraujian');
+    Route::get("/akademik/cetak/cetakberitaacaraskripsi/{id}", "Akademik@cetakberitaacaraskripsi")->name('cetakberitaacaraskripsi');
     Route::get("/akademik/cetak/cetakpresensi/{a}", "Akademik@cetakpresensi")->name('cetakpresensi');
     Route::get("/akademik/cetak/cetakkartuujian/{nim}/{tahun}/{semester}/{jenisujian}", "Akademik@cetakkartuujian")->name('cetakkartuujian');
     Route::get("/akademik/cetak/cetak-revisi-krs/{a}/{b}/{c}", "Akademik@cetak_revisikrs")->name('cetak_revisikrs');
@@ -51,6 +52,9 @@ Route::middleware(['ceklogin'])->group(function () {
     Route::get("/akademik/lihat-penilaian", "Akademik@lihat_penilaian")->name('aklihat_penilaian');
     Route::get("/kaprodi/lihat-penilaian", "Kaprodi@lihat_penilaian")->name('kplihat_penilaian');
     Route::get("/kaprodi/skripsi/manajemen", "Kaprodi@skripsi_index")->name('kpskripsi_index');
+    Route::get("/kaprodi/skripsi/syarat", "Kaprodi@skripsi_syarat")->name('kpskripsi_syarat');
+    Route::get("/kaprodi/skripsi/cpmk", "Kaprodi@skripsi_cpmk")->name('kpskripsi_cpmk');
+    Route::get("/kaprodi/skripsi/penetapan", "Kaprodi@skripsi_penetapan")->name('kpskripsi_penetapan');
     
     Route::get("/dosen/input-nilai-khs", "Dosen@input_nilai_khs")->name('input_nilai_khs_dosen');
     Route::get("/dosen/form-input-nilai-uts", "Dosen@form_input_nilai_uts")->name('form_input_nilai_uts_dosen');
@@ -80,6 +84,8 @@ Route::middleware(['ceklogin'])->group(function () {
         Route::get("/dosen/acc-krs", "Dosen@acckrs")->name('dosenacckrs');
         Route::get("/dosen/daftarmhs-pa", "Dosen@daftarmhs_pa")->name('dosendaftarmhs_pa');
         Route::get("/dosen/makul-diampu", "Dosen@makul_diampu_dosen")->name('makul_diampu_dosen');
+        Route::get("/dosen/makul-ditawarkan", "Dosen@makul_ditawarkan_dosen")->name('dosen.makul_ditawarkan');
+        Route::get("/dosen/kurikulum", "Dosen@kurikulum_dosen")->name('dosen.kurikulum');
         Route::get("/dosen/berita-acara", "Dosen@berita_acara")->name('berita_acara_dosen');
         Route::get("/dosen/berita-acara-ujian", "Dosen@berita_acara_ujian")->name('berita_acara_ujian_dosen');
         Route::get("/dosen/riwayat-mengajar", "Dosen@riwayat_mengajar")->name('dsnriwayat_mengajar');
@@ -91,6 +97,7 @@ Route::middleware(['ceklogin'])->group(function () {
         Route::get("/dosen/skripsi/bimbingan", "SkripsiDosenController@index")->name('dosen.skripsi.index');
         Route::get("/dosen/skripsi/bimbingan/{id_skripsi}", "SkripsiDosenController@bimbingan")->name('dosen.skripsi.detail_bimbingan');
         Route::get("/dosen/skripsi/ujian", "SkripsiDosenController@ujian")->name('dosen.skripsi.ujian');
+        Route::get("/dosen/skripsi/penetapan", "SkripsiDosenController@penetapan")->name('dosen.skripsi.penetapan');
     });
 
     Route::middleware(['cekpegawai'])->group(function () {

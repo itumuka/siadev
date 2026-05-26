@@ -5,11 +5,12 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Sistem Informasi Akademik Universitas Muhammadiyah Karanganyar">
+    <meta name="author" content="UMUKA">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="{{ url('imageup45/logoumuka.png') }}">
 
-    <title> Log in </title>
+    <title>SIAKAD UMUKA - Log in</title>
 
     <!-- Vendors Style-->
     <link rel="stylesheet" href="{{ url('css/vendors_css.css') }}">
@@ -17,95 +18,435 @@
     <!-- Style-->
     <link rel="stylesheet" href="{{ url('css/style.css') }}">
     <link rel="stylesheet" href="{{ url('css/skin_color.css') }}">
+    
+    <!-- Google Fonts Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
-        /* .bg-img{
-        filter: blur(8px);
-    } */
+        body {
+            font-family: 'Outfit', sans-serif !important;
+            background-color: #0b1329;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .login-wrapper {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+        }
+
+        /* Left Panel: Branding / Curves */
+        .branding-panel {
+            flex: 1.2;
+            background: linear-gradient(135deg, #112240 0%, #172B4C 50%, #1d3d75 100%);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        /* Glowing accents */
+        .branding-panel::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            right: -20%;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle, rgba(234, 179, 8, 0.12) 0%, rgba(234, 179, 8, 0) 70%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .branding-panel::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 90%;
+            height: 90%;
+            background: radial-gradient(circle, rgba(0, 180, 216, 0.18) 0%, rgba(0, 180, 216, 0) 70%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Background organic curved SVG */
+        .branding-bg-curves {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.35;
+        }
+
+        .branding-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 520px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .brand-logo {
+            width: 130px;
+            height: 130px;
+            margin-bottom: 25px;
+            filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.4));
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px;
+            border: 2px dashed rgba(234, 179, 8, 0.6);
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-block;
+        }
+
+        .brand-logo:hover {
+            transform: rotate(15deg) scale(1.08);
+        }
+
+        .brand-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: 0.8px;
+            line-height: 1.3;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .brand-divider {
+            width: 80px;
+            height: 4px;
+            background: #eab308;
+            border-radius: 2px;
+            margin: 15px auto;
+        }
+
+        .brand-subtitle {
+            font-size: 1.15rem;
+            font-weight: 400;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+
+        /* Right Panel: Form */
+        .form-panel {
+            flex: 1;
+            background-color: #0b1329;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Wave Divider between panels */
+        .wave-divider {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 120px;
+            fill: #0b1329;
+            transform: translateX(-99%);
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 430px;
+            background: rgba(23, 43, 76, 0.25);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 30px;
+            padding: 45px 35px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeInRight 1s ease-out;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .login-header h3 {
+            font-weight: 600;
+            font-size: 1.8rem;
+            color: #ffffff !important;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .login-header p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        /* Custom Input Groups */
+        .custom-input-group {
+            position: relative;
+            margin-bottom: 22px;
+        }
+
+        .custom-input-group i.input-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+            z-index: 5;
+        }
+
+        .custom-input-group .form-control {
+            background: rgba(15, 23, 42, 0.65) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.1) !important;
+            color: #ffffff !important;
+            border-radius: 18px !important;
+            padding: 15px 20px 15px 52px !important;
+            height: 56px !important;
+            font-size: 0.98rem !important;
+            transition: all 0.3s ease !important;
+            box-shadow: none !important;
+            font-family: 'Outfit', sans-serif !important;
+        }
+
+        .custom-input-group .form-control::placeholder {
+            color: #64748b;
+        }
+
+        .custom-input-group .form-control:focus {
+            border-color: #eab308 !important; /* Gold focus glow */
+            background: rgba(15, 23, 42, 0.8) !important;
+            box-shadow: 0 0 14px rgba(234, 179, 8, 0.25) !important;
+        }
+
+        .custom-input-group .form-control:focus ~ i.input-icon {
+            color: #eab308;
+        }
+
+        /* Password Toggle Eye Icon */
+        .password-toggle {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            cursor: pointer;
+            transition: color 0.3s;
+            z-index: 10;
+            font-size: 1.1rem;
+        }
+
+        .password-toggle:hover {
+            color: #eab308;
+        }
+
+        /* Login Button */
+        .btn-login {
+            background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%) !important;
+            border: none !important;
+            color: #0f172a !important;
+            font-weight: 600 !important;
+            font-size: 1.05rem !important;
+            height: 56px !important;
+            border-radius: 18px !important;
+            width: 100% !important;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(234, 179, 8, 0.3) !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif !important;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(234, 179, 8, 0.45) !important;
+            filter: brightness(1.05);
+        }
+
+        .btn-login:active {
+            transform: translateY(1px);
+        }
+
+        /* Alert styling override */
+        .notiferror .alert {
+            border-radius: 16px;
+            background-color: rgba(239, 68, 68, 0.15) !important;
+            border: 1px solid rgba(239, 68, 68, 0.3) !important;
+            color: #fca5a5 !important;
+            padding: 15px;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .notiferror .close {
+            color: #fca5a5 !important;
+            opacity: 0.8;
+            text-shadow: none;
+        }
+
+        .notiferror .close:hover {
+            opacity: 1;
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 35px;
+            font-size: 0.88rem;
+            color: #64748b;
+        }
+
+        .login-footer a {
+            color: #eab308;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        .login-footer a:hover {
+            color: #ca8a04;
+            text-decoration: underline;
+        }
+
+        /* Keyframe Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(45px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Responsive Mobile Layout */
+        @media (max-width: 991px) {
+            body {
+                overflow: auto;
+            }
+            .login-wrapper {
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+            }
+            .branding-panel {
+                flex: none;
+                padding: 60px 20px;
+            }
+            .brand-logo {
+                width: 100px;
+                height: 100px;
+                margin-bottom: 15px;
+            }
+            .brand-title {
+                font-size: 1.5rem;
+            }
+            .form-panel {
+                flex: 1;
+                padding: 40px 20px;
+                background-color: #0b1329;
+            }
+            .wave-divider {
+                display: none;
+            }
+            .login-card {
+                padding: 35px 25px;
+                box-shadow: none;
+                background: transparent;
+                border: none;
+            }
+        }
     </style>
 </head>
 
-<body class="hold-transition theme-primary bg-img" style="background-color: #172B4C;">
-    {{-- <body class="hold-transition theme-primary bg-img"
-    style="background-image: url(../imageup45/up45covercoklat.jpg);background-repeat: no-repeat;background-size: 100% 100%;"> --}}
+<body>
 
-    <div class="container h-p100">
-        <div class="row align-items-center justify-content-md-center h-p100">
+    <div class="login-wrapper">
+        <!-- Left Column: Branding Section with Curved Elements -->
+        <div class="branding-panel">
+            <!-- Organic elegant curves background -->
+            <svg class="branding-bg-curves" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M-100,200 C100,300 200,100 400,300 C600,500 700,300 900,400" stroke="rgba(234, 179, 8, 0.12)" stroke-width="4" stroke-dasharray="10 15" />
+                <path d="M-50,300 C150,450 300,250 500,450 C700,650 650,400 850,550" stroke="rgba(0, 180, 216, 0.16)" stroke-width="6" />
+                <path d="M-200,450 C50,600 150,400 350,600 C550,800 600,550 800,700" stroke="rgba(234, 179, 8, 0.08)" stroke-width="8" />
+            </svg>
 
-            <div class="col-12">
-                <div class="row justify-content-center no-gutters">
-                    <div class="col-lg-5 col-md-5 col-12">
-                        <div class="bg-white rounded30 shadow-lg">
-                            <div class="content-top-agile p-20 pb-0">
-                                <img src="{{ url('imageup45/logoumuka.png') }}" alt="User Image"
-                                    class="h-100 align-self-end rounded-circle"><br><br>
-                                <b class="mb-0">UNIVERSITAS MUHAMMADIYAH KARANGANYAR</b>
-                                <h2 style="color: #172B4C;">Sistem Informasi Akademik</h2>
-                            </div>
-                            <div class="p-40">
-                                {{-- <form method="post"> --}}
-                                <p class="notiferror"></p>
-                                <div class="form-group">
-                                    <div class="input-group mb-3" style="height: 50px;">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text bg-transparent"><i
-                                                    class="fa fa-user "></i></span>
-                                        </div>
-                                        <input type="text" class="form-control" name="username" id="username"
-                                            placeholder="Username">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="input-group mb-3" style="height: 50px;">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text  bg-transparent"><i
-                                                    class="fa fa-lock"></i></span>
-                                        </div>
-                                        <input type="password" class="form-control" name="password" id="password"
-                                            placeholder="Password">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    {{-- <div class="col-6">
-										  <div class="checkbox">
-											<input type="checkbox" id="basic_checkbox_1" >
-											<label for="basic_checkbox_1">Remember Me</label>
-										  </div>
-										</div>
-										<!-- /.col -->
-										<div class="col-6">
-										 <div class="fog-pwd text-right">
-											<a href="javascript:void(0)" class="hover-warning"><i class="ion ion-locked"></i> Forgot pwd?</a><br>
-										  </div>
-										</div> --}}
-                                    <!-- /.col -->
-                                    <div class="col-12 text-center">
-                                        <button type="button" id="login_enter" onclick="aksilogin();" class="btn"
-                                            style="width: 100%;background-color:#172B4C;color:#fff;">Login</button>
-                                    </div>
-                                    <!-- /.col -->
-                                    {{-- <a href="http://up45.ac.id">UP45</a>
-                                    © 2023 --}}
-                                </div>
+            <div class="branding-content">
+                <div class="brand-logo">
+                    <img src="{{ url('imageup45/logoumuka.png') }}" alt="Logo UMUKA" class="img-fluid rounded-circle" style="background: white;">
+                </div>
+                <h1 class="brand-title">UNIVERSITAS MUHAMMADIYAH KARANGANYAR</h1>
+                <div class="brand-divider"></div>
+                <p class="brand-subtitle">Sistem Informasi Akademik (SIAKAD) terintegrasi untuk mahasiswa, dosen, dan staf universitas.</p>
+            </div>
+        </div>
 
-                                {{-- </form> --}}
-                                {{-- <div class="text-center">
-									<p class="mt-15 mb-0">Don't have an account? <a href="auth_register.html" class="text-warning ml-5">Sign Up</a></p>
-								</div> --}}
-                            </div>
-                        </div>
-                        <br>
-                        <div class="text-center">
-                            <p><a class="mt-20 text-white" href="http://sia.umuka.ac.id">UMUKA © 2023</a></p>
-                        </div>
-                        {{-- <div class="text-center">
-						  <p class="mt-20 text-white">- Sign With -</p>
-						  <p class="gap-items-2 mb-20">
-							  <a class="btn btn-social-icon btn-round btn-facebook" href="#"><i class="fa fa-facebook"></i></a>
-							  <a class="btn btn-social-icon btn-round btn-twitter" href="#"><i class="fa fa-twitter"></i></a>
-							  <a class="btn btn-social-icon btn-round btn-instagram" href="#"><i class="fa fa-instagram"></i></a>
-							</p>	
-						</div> --}}
-                    </div>
+        <!-- Right Column: Login Form Section with Wave Divider -->
+        <div class="form-panel">
+            <!-- Wave Divider cutting into left column -->
+            <svg class="wave-divider" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M100,0 C30,30 0,70 100,100 Z" />
+            </svg>
+
+            <div class="login-card">
+                <div class="login-header">
+                    <h3>Selamat Datang</h3>
+                    <p>Silakan masuk menggunakan akun SIAKAD Anda</p>
+                </div>
+
+                <div class="notiferror"></div>
+
+                <!-- Input Username -->
+                <div class="custom-input-group">
+                    <i class="fa fa-user input-icon"></i>
+                    <input type="text" class="form-control" name="username" id="username" placeholder="Email / NIM" autocomplete="username">
+                </div>
+
+                <!-- Input Password -->
+                <div class="custom-input-group">
+                    <i class="fa fa-lock input-icon"></i>
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Password" autocomplete="current-password">
+                    <i class="fa fa-eye password-toggle" id="toggle-password-icon" onclick="togglePasswordVisibility()"></i>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="button" id="login_enter" onclick="aksilogin();" class="btn-login">
+                    <i class="fa fa-sign-in mr-2"></i> Login
+                </button>
+
+                <div class="login-footer">
+                    <p>UMUKA &copy; 2026 | <a href="http://sia.umuka.ac.id" target="_blank">Bagian Sistem Informasi</a></p>
                 </div>
             </div>
         </div>
@@ -118,13 +459,31 @@
     <script src="{{ url('assets/icons/feather-icons/feather.min.js') }}"></script>
     <script src="{{ url('assets/vendor_components/jquery-toast-plugin-master/src/jquery.toast.js') }}"></script>
     <script>
-        // $("#password").keypress(function(event) {
-        //     if (event.keyCode === 13) {
-        //         $("#login_enter").click();
-        //     }
-        // });
+        // Password Visibility Toggle Function
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggle-password-icon');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        // Enter keypress handler to trigger login
+        $(document).keypress(function(event) {
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if (keycode == '13') {
+                $("#login_enter").click();
+            }
+        });
+
+        // Toast notification helper
         function showToastr(type, title, message) {
-            let body;
             $.toast({
                 heading: title,
                 text: message,
@@ -136,30 +495,27 @@
             });
         }
 
-
-        $(document).keypress(function(event) {
-            var keycode = (event.keyCode ? event.keyCode : event.which);
-            if (keycode == '13') {
-                $("#login_enter").click();
-            }
-        });
-
         function startSpinner() {
             $("#login_enter").prop("disabled", true);
             $("#login_enter").html(
-                '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+                '<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span> Loading...'
             );
         }
 
         function stopSpinner() {
             $("#login_enter").prop("disabled", false);
-            $("#login_enter").html('<i class="fas fa-sync"></i> Login');
+            $("#login_enter").html('<i class="fa fa-sign-in mr-2"></i> Login');
         }
-
 
         function aksilogin() {
             var username = $("input[name=username]").val();
             var password = $("input[name=password]").val();
+            
+            if (!username || !password) {
+                showToastr('warning', 'Peringatan', 'Username dan Password wajib diisi.');
+                return;
+            }
+            
             startSpinner();
             $.ajax({
                 type: 'POST',
@@ -170,7 +526,6 @@
                 },
                 success: function(result) {
                     if (result.success == 'Pegawai') {
-                        // console.log(result.data);
                         $.ajax({
                             type: 'GET',
                             url: "{{ url('makesession-pegawai') }}",
@@ -186,14 +541,12 @@
                                 token: result.token
                             },
                             success: function(result) {
-                                // console.log(result.data.username);
                                 document.location.href = "{{ url('home') }}";
                             }
                         })
                     } else if (result.success == 'Mahasiswa') {
-                        // Simpan token di localStorage
                         if (result.token) {
-                            localStorage.setItem("user_token", result.token); // Menyimpan token JWT
+                            localStorage.setItem("user_token", result.token);
                         }
                         $.ajax({
                             type: 'GET',
@@ -212,11 +565,9 @@
                                 token: result.token
                             },
                             success: function(result) {
-                                console.log(result);
                                 document.location.href = "{{ route('home') }}";
                             }
                         })
-
                     } else if (result.success == 'Dosen') {
                         $.ajax({
                             type: 'GET',
@@ -235,20 +586,20 @@
                                 token: result.token
                             },
                             success: function(result) {
-                                console.log(result);
                                 document.location.href = "{{ route('home') }}";
                             }
                         })
-
                     } else {
                         $(".notiferror").html(
                             '<div class="alert alert-danger alert-dismissible fade show" role="alert"><strong>Gagal Login!! </strong><br> ' +
                             result.error +
                             '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
                         );
-                        // showToastr('error', 'Error!', result.error);
                     }
-                    // console.log(result);
+                    stopSpinner();
+                },
+                error: function(xhr, status, error) {
+                    showToastr('error', 'Error', 'Terjadi kesalahan sistem. Silakan coba beberapa saat lagi.');
                     stopSpinner();
                 }
             })
