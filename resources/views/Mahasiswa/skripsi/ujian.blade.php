@@ -229,12 +229,9 @@
     var token = "{{ $api_token }}";
     var nim = "{{ $session_nim }}";
     var userlogin = "{{ $session_nim }}";
-<<<<<<< HEAD
     var ujianLocked = false;
-=======
     var isBayarUjianLunas = false;
     var taIsObe = true; // Default supports OBE
->>>>>>> cc99b40ac0fb0acc1419403651007f4f4fb360f7
 
     $(document).ready(function() {
         // Luaran Type Change listener
