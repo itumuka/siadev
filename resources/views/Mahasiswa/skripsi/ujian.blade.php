@@ -233,15 +233,6 @@
     var isBayarUjianLunas = false;
     var taIsObe = true; // Default supports OBE
 
-    function setSubmitUjianButtonState(isLocked) {
-        var btn = $('#btn-submit-final');
-        if (isLocked) {
-            btn.prop('disabled', true).html('<i class="fa fa-check mr-10"></i> Pendaftaran Sudah Terkirim');
-        } else {
-            btn.prop('disabled', false).html('<i class="fa fa-paper-plane mr-10"></i> Konfirmasi Pendaftaran Ujian');
-        }
-    }
-
     $(document).ready(function() {
         // Luaran Type Change listener
         $('#select_jenis_luaran').on('change', function() {
@@ -556,11 +547,6 @@
                             </div>
                         `).show();
                     }
-                    
-                    if (res.data.ujian_locked !== undefined) {
-                        ujianLocked = !!res.data.ujian_locked;
-                    }
-                    setSubmitUjianButtonState(ujianLocked);
 
                     const target = res.data.target_luaran || 'buku_skripsi';
                     const luaran = res.data.luaran;
@@ -657,7 +643,7 @@
                                 errorMsg = err.responseJSON.error;
                             }
                             showToastr('error', 'Gagal', errorMsg);
-                            setSubmitUjianButtonState(false);
+                            btn.prop('disabled', false).html('Konfirmasi Pendaftaran Ujian');
                         }
                     });
                 },
@@ -667,7 +653,7 @@
                         errorMsg += ' ' + (Array.isArray(err.responseJSON.error) ? err.responseJSON.error.join(', ') : err.responseJSON.error);
                     }
                     showToastr('error', 'Gagal', errorMsg);
-                    setSubmitUjianButtonState(false);
+                    btn.prop('disabled', false).html('Konfirmasi Pendaftaran Ujian');
                 }
             });
         });
