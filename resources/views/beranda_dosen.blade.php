@@ -801,8 +801,8 @@
                                 </div>
                             </div>
                             <div class="box">
-                                <div class="box-body bg-warning-light d-flex flex-column justify-content-between" style="border-radius: 16px; height: 480px; padding: 20px;">
-                                    <div id="tabel_kalenderakademik" style="height: 380px;"></div>
+                                <div class="box-body bg-warning-light d-flex flex-column justify-content-between" style="border-radius: 16px; height: 535px; padding: 20px;">
+                                    <div id="tabel_kalenderakademik" style="height: 440px;"></div>
                                     <div id="kalender_pagination" class="d-flex align-items-center justify-content-between pt-15" style="border-top: 1px solid rgba(0, 0, 0, 0.05);"></div>
                                 </div>
                             </div>
@@ -1173,14 +1173,14 @@
             // 4. Academic Calendar Loader & Pagination
             var calendarEvents = [];
             var legendCurrentPage = 0;
-            var legendItemsPerPage = 4;
+            var legendItemsPerPage = 5;
 
             function renderLegendPage() {
                 var start = legendCurrentPage * legendItemsPerPage;
                 var end = start + legendItemsPerPage;
                 var pageItems = calendarEvents.slice(start, end);
                 
-                var s = '<div class="calendar-legend-list" style="height: 380px;">';
+                var s = '<div class="calendar-legend-list" style="height: 440px;">';
                 if (pageItems.length > 0) {
                     pageItems.forEach(function(item) {
                         s += `

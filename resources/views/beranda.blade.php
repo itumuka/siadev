@@ -100,14 +100,53 @@
             color: #1e293b !important;
         }
 
-        @media (max-width: 767px) {
-            .fc-header-toolbar {
-                flex-direction: column !important;
-                gap: 10px !important;
-            }
             .fc-center h2 {
                 font-size: 1.1rem !important;
             }
+        }
+
+        /* Calendar Legend Styles */
+        .border-bottom-dashed {
+            border-bottom: 1px dashed rgba(0, 0, 0, 0.08);
+        }
+        .border-bottom-dashed:last-child {
+            border-bottom: none;
+            margin-bottom: 0 !important;
+            padding-bottom: 0 !important;
+        }
+        .legend-color-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+            margin-top: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .legend-item {
+            transition: transform 0.2s ease;
+        }
+        .legend-item:hover {
+            transform: translateX(3px);
+        }
+        .btn-outline-primary {
+            border-color: rgba(37, 99, 235, 0.2) !important;
+            color: #2563eb !important;
+            background-color: transparent !important;
+            border-radius: 6px !important;
+            padding: 4px 8px !important;
+            transition: all 0.2s ease !important;
+        }
+        .btn-outline-primary:hover:not(:disabled) {
+            background-color: #2563eb !important;
+            border-color: #2563eb !important;
+            color: #ffffff !important;
+        }
+        .btn-outline-primary:disabled {
+            opacity: 0.4 !important;
+            cursor: not-allowed !important;
+            border-color: rgba(0, 0, 0, 0.05) !important;
+            color: #64748b !important;
         }
     </style>
 @endsection
@@ -180,15 +219,15 @@
                     </div>
                 </div>
                 <div class="col-xl-4 col-12">
-
-                    <h4 class="box-title">Keterangan</h4>
+                    <div class="box bg-transparent no-shadow mb-0">
+                        <div class="box-header no-border px-0">
+                            <h4 class="box-title">Keterangan Kalender</h4>
+                        </div>
+                    </div>
                     <div class="box">
-                        <div class="box-body bg-warning-light">
-                            <div class="box no-shadow mb-0">
-                                <div class="box-body px-0 py-0 pt-0" id="tabel_kalenderakademik">
-                                </div>
-                            </div>
-
+                        <div class="box-body bg-warning-light d-flex flex-column justify-content-between" style="border-radius: 16px; height: 535px; padding: 20px;">
+                            <div id="tabel_kalenderakademik" style="height: 440px;"></div>
+                            <div id="kalender_pagination" class="d-flex align-items-center justify-content-between pt-15" style="border-top: 1px solid rgba(0, 0, 0, 0.05);"></div>
                         </div>
                     </div>
                 </div>
@@ -234,6 +273,52 @@
             var session_tahun = $('#session_tahun').val();
             var session_semester = $('#session_semester').val();
 
+            // Academic Calendar Loader & Pagination
+            var calendarEvents = [];
+            var legendCurrentPage = 0;
+            var legendItemsPerPage = 5;
+
+            function renderLegendPage() {
+                var start = legendCurrentPage * legendItemsPerPage;
+                var end = start + legendItemsPerPage;
+                var pageItems = calendarEvents.slice(start, end);
+                
+                var s = '<div class="calendar-legend-list" style="height: 440px;">';
+                if (pageItems.length > 0) {
+                    pageItems.forEach(function(item) {
+                        s += `
+                            <div class="legend-item d-flex align-items-start mb-15 pb-15 border-bottom-dashed">
+                                <span class="legend-color-dot mr-10" style="background-color: ${item.background};"></span>
+                                <div class="legend-text">
+                                    <div class="legend-title font-size-13 font-weight-600" style="color: #1e293b; line-height: 1.3; font-family: 'Outfit', sans-serif;">${item.nama_kegiatan}</div>
+                                    <div class="legend-date text-warning font-size-11 mt-5" style="font-weight: 500;">
+                                        <i class="fa fa-calendar-o mr-5"></i>${item.tanggal_mulailook} s/d ${item.tanggal_akhirlook}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    s += `
+                        <div class="d-flex align-items-center justify-content-center" style="height: 300px;">
+                            <p class="text-muted">Tidak ada agenda kegiatan.</p>
+                        </div>
+                    `;
+                }
+                s += '</div>';
+                $('#tabel_kalenderakademik').html(s);
+
+                // Update pagination controls
+                var total = calendarEvents.length;
+                var shownStart = total > 0 ? start + 1 : 0;
+                var shownEnd = Math.min(end, total);
+                
+                $('#pagination-info').text(`Menampilkan ${shownStart}-${shownEnd} dari ${total}`);
+                
+                $('#btn-prev-legend').prop('disabled', legendCurrentPage === 0);
+                $('#btn-next-legend').prop('disabled', end >= total);
+            }
+
             function home_kalenderakademik() {
                 $.ajax({
                     type: 'GET',
@@ -247,27 +332,43 @@
                     },
                     url: "{{ config('setting.second_url') }}akademik/home-kalenderakademik",
                     success: function(result) {
-                        var jml = result.length;
-                        var s = '';
-                        for (i = 0; i < jml; i++) {
-                            if (result[i].kode_kegiatan_akademik == '22' && tipe == 'Mahasiswa') {
-                                s = s + "";
-                            } else {
-                                s = s +
-                                    '<div class="table-responsive"><table class="table table-sm no-border mb-0"><tbody><tr><td><div class="h-20 w-20 l-h-20 rounded text-center" style="background-color:' +
-                                    result[i].background +
-                                    '"><p class="mb-0 font-size-15 font-weight-200"></p></div></td><td class="float-left font-size-15 font-weight-500">' +
-                                    result[i].nama_kegiatan +
-                                    '<br><p class="text-warning">(' +
-                                    result[i].tanggal_mulailook + ' s/d ' + result[i]
-                                    .tanggal_akhirlook +
-                                    ')</p></td></tr></tbody></table></div>';
+                        var rawEvents = result || [];
+                        calendarEvents = [];
+                        rawEvents.forEach(function(item) {
+                            if (!(item.kode_kegiatan_akademik == '22' && tipe == 'Mahasiswa')) {
+                                calendarEvents.push(item);
                             }
-                        }
-                        // console.log(result);
-                        $('#tabel_kalenderakademik').html(s);
+                        });
+                        legendCurrentPage = 0;
+                        
+                        // Set up initial pagination HTML controls
+                        var paginationHtml = `
+                            <span class="text-muted font-size-12" id="pagination-info">-</span>
+                            <div class="pagination-buttons">
+                                <button class="btn btn-outline-primary mr-5" id="btn-prev-legend" style="padding: 4px 8px; font-size: 11px;"><i class="fa fa-chevron-left"></i></button>
+                                <button class="btn btn-outline-primary" id="btn-next-legend" style="padding: 4px 8px; font-size: 11px;"><i class="fa fa-chevron-right"></i></button>
+                            </div>
+                        `;
+                        $('#kalender_pagination').html(paginationHtml);
+
+                        // Bind event handlers
+                        $('#btn-prev-legend').off('click').on('click', function() {
+                            if (legendCurrentPage > 0) {
+                                legendCurrentPage--;
+                                renderLegendPage();
+                            }
+                        });
+
+                        $('#btn-next-legend').off('click').on('click', function() {
+                            if ((legendCurrentPage + 1) * legendItemsPerPage < calendarEvents.length) {
+                                legendCurrentPage++;
+                                renderLegendPage();
+                            }
+                        });
+
+                        renderLegendPage();
                     }
-                })
+                });
             }
             home_kalenderakademik();
 
