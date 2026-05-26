@@ -392,6 +392,16 @@
                 $('#syarat-container').show();
                 
                 if(res.status == 'success') {
+                    // Extract OBE support and Payment status first so they are available during syarat_list rendering
+                    taIsObe = res.data.ta_is_obe !== undefined ? (res.data.ta_is_obe == 1) : true;
+                    isBayarUjianLunas = res.data.ujian_skripsi_lunas !== undefined ? res.data.ujian_skripsi_lunas : true;
+                    
+                    // Fallback to syarat_list if not defined
+                    if (res.data.ujian_skripsi_lunas === undefined) {
+                        let bayarUjianSyarat = res.data.syarat_list.find(item => item.kode_syarat === 'BAYAR_UJIAN');
+                        isBayarUjianLunas = bayarUjianSyarat ? (bayarUjianSyarat.status === 'v' || bayarUjianSyarat.status === 'i') : true;
+                    }
+
                     if (res.data.judul_proposal) {
                         $('#input_judul').val(res.data.judul_proposal);
                         $('#btn_use_rekomendasi').text(res.data.judul_proposal);
@@ -406,6 +416,10 @@
 
                     res.data.syarat_list.forEach(function(item) {
                         let isOk = item.status == 'v' || item.status == 'i';
+                        let isUjianPayment = item.kode_syarat === 'BAYAR_UJIAN' || 
+                                             (item.jenis === 'pembayaran' && item.syarat && 
+                                              (item.syarat.toLowerCase().includes('ujian') || item.syarat.toLowerCase().includes('skripsi') || item.syarat.toLowerCase().includes('tugas akhir')));
+                        
                         let liClass = isOk ? 'badge-success' : 'badge-danger';
                         let iClass = isOk ? 'fa-check' : 'fa-times';
                         let label = item.syarat;
@@ -413,7 +427,11 @@
                         // Detail info for failed requirements
                         let detail = '';
                         if (!isOk) {
-                            if (item.kode_syarat === 'LULUS_SEMPRO') {
+                            if (isUjianPayment && taIsObe) {
+                                liClass = 'badge-info';
+                                iClass = 'fa-info-circle';
+                                detail = ' <br><small class="text-info"><i class="fa fa-info-circle"></i> Hanya wajib jika memilih skema Non-OBE (Buku Skripsi) pada Step 2.</small>';
+                            } else if (item.kode_syarat === 'LULUS_SEMPRO') {
                                 detail = ' <br><small class="text-danger">Anda wajib lulus Seminar Proposal terlebih dahulu.</small>';
                             } else {
                                 detail = ' <small style="color:red">('+item.isi+')</small>';
@@ -467,16 +485,6 @@
                         $('#upload-container').html('<div class="alert alert-info">Tidak ada form berkas untuk prodi ini.</div>');
                     }
 
-                    // Check if ta_is_obe and ujian_skripsi_lunas are present in response data
-                    taIsObe = res.data.ta_is_obe !== undefined ? (res.data.ta_is_obe == 1) : true;
-                    isBayarUjianLunas = res.data.ujian_skripsi_lunas !== undefined ? res.data.ujian_skripsi_lunas : true;
-                    
-                    // Fallback to syarat_list if not defined
-                    if (res.data.ujian_skripsi_lunas === undefined) {
-                        let bayarUjianSyarat = res.data.syarat_list.find(item => item.kode_syarat === 'BAYAR_UJIAN');
-                        isBayarUjianLunas = bayarUjianSyarat ? (bayarUjianSyarat.status === 'v' || bayarUjianSyarat.status === 'i') : true;
-                    }
-
                     // Trigger select_jenis_luaran change immediately
                     $('#select_jenis_luaran').trigger('change');
 
@@ -494,8 +502,12 @@
                     if (canGoToStep2) {
                         $('#btn-next-to-2').removeAttr('disabled');
                         if (!isBayarUjianLunas) {
-                            $('#btn-next-to-2').html('Lanjut Step 2 (Peringatan Ujian Belum Lunas) <i class="fa fa-arrow-right ml-10"></i>');
-                            $('#syarat-container').append('<div class="alert alert-warning mt-20"><i class="fa fa-info-circle"></i> Biaya Ujian/Tugas Akhir Anda belum lunas. Anda tetap dapat melanjutkan ke Step 2. Namun, jika Anda menempuh skema Buku Skripsi (Non-OBE), pendaftaran akan diblokir.</div>');
+                            if (taIsObe) {
+                                $('#btn-next-to-2').html('Lanjut Step 2 <i class="fa fa-arrow-right ml-10"></i>');
+                            } else {
+                                $('#btn-next-to-2').html('Lanjut Step 2 (Peringatan Ujian Belum Lunas) <i class="fa fa-arrow-right ml-10"></i>');
+                                $('#syarat-container').append('<div class="alert alert-warning mt-20"><i class="fa fa-info-circle"></i> Biaya Ujian/Tugas Akhir Anda belum lunas. Anda tetap dapat melanjutkan ke Step 2. Namun, pendaftaran akan diblokir karena program studi Anda tidak mendukung OBE.</div>');
+                            }
                         } else {
                             $('#btn-next-to-2').html('Syarat Lengkap, Lanjut Step 2 <i class="fa fa-arrow-right ml-10"></i>');
                         }
