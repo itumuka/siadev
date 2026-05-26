@@ -365,6 +365,148 @@
                 color: #5b21b6;
                 border: 1px solid #ddd6fe;
             }
+
+            /* Welcome Action Card Styles (Glassmorphism) */
+            .welcome-action-card {
+                background: rgba(255, 255, 255, 0.75);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.8);
+                border-radius: 16px;
+                padding: 16px 20px;
+                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .welcome-action-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.07);
+            }
+
+            .action-item-link {
+                text-decoration: none !important;
+                display: block;
+                margin-bottom: 10px;
+            }
+            
+            .action-item-link:last-child {
+                margin-bottom: 0;
+            }
+
+            .action-item {
+                background: rgba(255, 255, 255, 0.6);
+                border: 1px solid rgba(255, 255, 255, 0.4);
+                border-radius: 12px;
+                padding: 10px 14px;
+                transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .action-item:hover {
+                background: #ffffff;
+                border-color: rgba(37, 99, 235, 0.25);
+                transform: scale(1.02) translateX(4px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            }
+
+            .action-item-icon {
+                width: 38px;
+                height: 38px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.15rem;
+                margin-right: 12px;
+                flex-shrink: 0;
+                transition: all 0.3s ease;
+            }
+            
+            .action-item:hover .action-item-icon {
+                transform: rotate(8deg) scale(1.05);
+            }
+
+            .bg-light-blue {
+                background-color: rgba(37, 99, 235, 0.1);
+            }
+            .bg-light-warning {
+                background-color: rgba(245, 158, 11, 0.1);
+            }
+            .bg-light-success {
+                background-color: rgba(16, 185, 129, 0.1);
+            }
+
+            .action-item-content {
+                display: flex;
+                flex-direction: column;
+                min-width: 0;
+            }
+
+            .action-item-label {
+                font-size: 0.88rem;
+                font-weight: 600;
+                color: #1e293b;
+                line-height: 1.2;
+                margin-bottom: 2px;
+            }
+
+            .action-item-desc {
+                font-size: 0.75rem;
+                color: #64748b;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .action-badge {
+                padding: 5px 10px !important;
+                border-radius: 8px !important;
+                font-weight: 600 !important;
+                font-size: 0.8rem !important;
+                min-width: 24px;
+                text-align: center;
+            }
+
+            @keyframes pulse-soft {
+                0% {
+                    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+                }
+                70% {
+                    box-shadow: 0 0 0 6px rgba(245, 158, 11, 0);
+                }
+                100% {
+                    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+                }
+            }
+            .pulse-badge {
+                animation: pulse-soft 2s infinite;
+            }
+            
+            /* Responsive adjustments for desktop resolutions */
+            @media (max-width: 1199px) {
+                .welcome-action-card {
+                    padding: 12px 16px;
+                }
+                .action-item {
+                    padding: 8px 12px;
+                }
+                .action-item-icon {
+                    width: 34px;
+                    height: 34px;
+                    font-size: 1rem;
+                    margin-right: 10px;
+                }
+                .action-item-label {
+                    font-size: 0.82rem;
+                }
+                .action-item-desc {
+                    font-size: 0.7rem;
+                }
+            }
+            @media (max-width: 991px) {
+                .mt-20 {
+                    margin-top: 20px !important;
+                }
+            }
         </style>
 @endsection
 @section('content')
@@ -383,7 +525,7 @@
                     <!-- Welcome Box -->
                     <div class="welcome-banner">
                         <div class="row align-items-center">
-                            <div class="col-12 col-xl-10">
+                            <div class="col-12 col-lg-7 col-xl-8">
                                 <span style="color: #2563eb; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Portal Akademik Dosen</span>
                                 <h2 class="mt-10">Selamat Datang Kembali,</h2>
                                 <h1 class="font-size-28">{{ $session_nama }}</h1>
@@ -409,6 +551,66 @@
                                     <div class="meta-pill" title="Tahun Akademik Aktif">
                                         <i class="fa fa-calendar-check-o"></i>
                                         TA: <strong>{{ $session_nama_tahunakademik }} ({{ $session_semester == 1 ? 'Ganjil' : 'Genap' }})</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-5 col-xl-4 mt-20 mt-lg-0">
+                                <div class="welcome-action-card">
+                                    <div class="action-card-header d-flex justify-content-between align-items-center mb-15">
+                                        <h5 class="action-card-title mb-0 font-weight-600 font-size-14" style="color: #0f172a;">
+                                            <i class="fa fa-tasks text-primary mr-5"></i> Agenda & Status Tindakan
+                                        </h5>
+                                    </div>
+                                    <div class="action-card-body">
+                                        <!-- Action Item 1: Jadwal Mengajar -->
+                                        <a href="{{ route('makul_diampu_dosen') }}" class="action-item-link">
+                                            <div class="action-item d-flex align-items-center">
+                                                <div class="action-item-icon bg-light-blue text-primary">
+                                                    <i class="fa fa-calendar-check-o"></i>
+                                                </div>
+                                                <div class="action-item-content">
+                                                    <span class="action-item-label">Mengajar Hari Ini</span>
+                                                    <small class="action-item-desc" id="action-desc-jadwal">Memuat jadwal...</small>
+                                                </div>
+                                                <div class="ml-auto">
+                                                    <span class="action-badge badge badge-primary" id="action-val-jadwal">-</span>
+                                                </div>
+                                            </div>
+                                        </a>
+
+                                        <!-- Action Item 2: Persetujuan KRS -->
+                                        @if (Session::get('dosen_wali') == 1)
+                                        <a href="{{ route('dosenacckrs') }}" class="action-item-link">
+                                            <div class="action-item d-flex align-items-center">
+                                                <div class="action-item-icon bg-light-warning text-warning">
+                                                    <i class="fa fa-check-square-o"></i>
+                                                </div>
+                                                <div class="action-item-content">
+                                                    <span class="action-item-label">Persetujuan KRS (PA)</span>
+                                                    <small class="action-item-desc" id="action-desc-krs">Memuat status...</small>
+                                                </div>
+                                                <div class="ml-auto">
+                                                    <span class="action-badge badge badge-warning" id="action-val-krs">-</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        @endif
+
+                                        <!-- Action Item 3: Bimbingan Skripsi -->
+                                        <a href="{{ route('dosen.skripsi.index') }}" class="action-item-link">
+                                            <div class="action-item d-flex align-items-center">
+                                                <div class="action-item-icon bg-light-success text-success">
+                                                    <i class="fa fa-graduation-cap"></i>
+                                                </div>
+                                                <div class="action-item-content">
+                                                    <span class="action-item-label">Bimbingan Skripsi</span>
+                                                    <small class="action-item-desc" id="action-desc-skripsi">Memuat status...</small>
+                                                </div>
+                                                <div class="ml-auto">
+                                                    <span class="action-badge badge badge-success" id="action-val-skripsi">-</span>
+                                                </div>
+                                            </div>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -746,6 +948,15 @@
                         });
                     }
 
+                    // Update Opsi C widget
+                    var countJadwal = todayClasses.length;
+                    $('#action-val-jadwal').text(countJadwal);
+                    if (countJadwal > 0) {
+                        $('#action-desc-jadwal').text(countJadwal + ' kelas perlu diajar hari ini');
+                    } else {
+                        $('#action-desc-jadwal').text('Tidak ada kelas hari ini');
+                    }
+
                     if (todayClasses.length > 0) {
                         scheduleHtml += '<ul class="schedule-list">';
                         todayClasses.forEach(function(row) {
@@ -780,6 +991,9 @@
                             <p class="text-danger">Gagal memuat jadwal.</p>
                         </div>
                     `);
+                    // Update Opsi C widget error state
+                    $('#action-val-jadwal').text('0');
+                    $('#action-desc-jadwal').text('Gagal memuat jadwal');
                 }
             });
 
@@ -814,6 +1028,16 @@
                             }
                         });
                         drawKrsChart(accCount, pendingCount);
+                    }
+
+                    // Update Opsi C widget
+                    $('#action-val-krs').text(pendingCount);
+                    if (pendingCount > 0) {
+                        $('#action-desc-krs').text(pendingCount + ' mahasiswa menunggu ACC KRS');
+                        $('#action-val-krs').addClass('pulse-badge');
+                    } else {
+                        $('#action-desc-krs').text('Semua KRS sudah di-ACC');
+                        $('#action-val-krs').removeClass('pulse-badge');
                     } else {
                         $('#krs-chart').html(`
                             <div class="d-flex align-items-center justify-content-center" style="height: 200px;">
@@ -829,6 +1053,9 @@
                             <p class="text-danger">Gagal memuat data PA.</p>
                         </div>
                     `);
+                    // Update Opsi C widget error state
+                    $('#action-val-krs').text('0');
+                    $('#action-desc-krs').text('Gagal memuat data KRS');
                 }
             });
 
@@ -865,6 +1092,14 @@
                         
                         $('#stat-siap-ujian').text(readyCount);
                         drawSkripsiChart(proposalCount, bimbinganCount, readyCount);
+                    }
+
+                    // Update Opsi C widget
+                    $('#action-val-skripsi').text(readyCount);
+                    if (readyCount > 0) {
+                        $('#action-desc-skripsi').text(readyCount + ' mahasiswa siap ujian');
+                    } else {
+                        $('#action-desc-skripsi').text('Tidak ada antrean ujian');
                     } else {
                         $('#stat-siap-ujian').text('0');
                         $('#skripsi-chart').html(`
@@ -882,6 +1117,9 @@
                             <p class="text-danger">Gagal memuat data skripsi.</p>
                         </div>
                     `);
+                    // Update Opsi C widget error state
+                    $('#action-val-skripsi').text('0');
+                    $('#action-desc-skripsi').text('Gagal memuat data skripsi');
                 }
             });
 
