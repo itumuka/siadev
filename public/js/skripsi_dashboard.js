@@ -498,18 +498,65 @@ async function loadPortfolioCPL() {
                 else if (pct >= 55) barColor = 'bg-warning';
                 else barColor = 'bg-danger';
 
+                const status = item.status || (pct >= 70.00 ? 'Tercapai' : 'Perlu Penguatan');
+                const statusBadgeClass = status === 'Tercapai' ? 'badge-success' : 'badge-warning';
+
                 html += `
                     <div class="col-12 mb-15">
                         <div class="d-flex justify-content-between align-items-center mb-5">
                             <span class="font-weight-600 text-dark">${item.cpl}</span>
-                            <span class="badge badge-secondary font-weight-bold">${pct.toFixed(2)} %</span>
+                            <div>
+                                <span class="badge ${statusBadgeClass} mr-5 font-size-10">${status.toUpperCase()}</span>
+                                <span class="badge badge-secondary font-weight-bold">${pct.toFixed(2)} %</span>
+                            </div>
                         </div>
-                        <div class="progress progress-sm mb-0">
+                        <div class="progress progress-sm mb-0" style="height: 8px; border-radius: 4px; background-color: #e9ecef;">
                             <div class="progress-bar ${barColor}" role="progressbar" style="width: ${pct}%"></div>
                         </div>
                     </div>
                 `;
             });
+
+            // Render CPMK Details Table
+            if (result.data.cpmk_scores && result.data.cpmk_scores.length > 0) {
+                html += `
+                    <div class="col-12 mt-25">
+                        <h6 class="font-weight-600 text-dark mb-10"><i class="fa fa-list text-info mr-5"></i> Rincian Ketercapaian CPMK</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered table-striped font-size-12 mb-0">
+                                <thead class="bg-light text-dark">
+                                    <tr>
+                                        <th style="width: 15%;" class="font-weight-600">Kode</th>
+                                        <th style="width: 50%;" class="font-weight-600">Deskripsi CPMK</th>
+                                        <th style="width: 11%; text-align: right;" class="font-weight-600">Nilai</th>
+                                        <th style="width: 11%; text-align: right;" class="font-weight-600">KKM</th>
+                                        <th style="width: 13%; text-align: center;" class="font-weight-600">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                `;
+                
+                result.data.cpmk_scores.forEach(c => {
+                    const statusClass = c.status === 'Lulus' ? 'text-success font-weight-bold' : 'text-danger font-weight-bold';
+                    html += `
+                        <tr>
+                            <td class="font-weight-600">${c.kode_cpmk}</td>
+                            <td class="text-muted small">${c.nama_cpmk}</td>
+                            <td class="text-right font-weight-600">${c.nilai.toFixed(2)}</td>
+                            <td class="text-right text-muted">${c.kkm.toFixed(2)}</td>
+                            <td class="text-center ${statusClass}">${c.status}</td>
+                        </tr>
+                    `;
+                });
+                
+                html += `
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            }
+
             html += '</div>';
             container.html(html);
         } else {

@@ -70,9 +70,10 @@
                                     <thead class="bg-dark text-white">
                                         <tr>
                                             <th style="width: 5%; text-align: center;">No</th>
-                                            <th style="width: 15%;">Kode CPMK <span class="text-danger">*</span></th>
-                                            <th style="width: 50%;">Deskripsi / Capaian Pembelajaran Mata Kuliah <span class="text-danger">*</span></th>
-                                            <th style="width: 13%;">Bobot Penilaian <span class="text-danger">*</span></th>
+                                            <th style="width: 13%;">Kode CPMK <span class="text-danger">*</span></th>
+                                            <th style="width: 42%;">Deskripsi / Capaian Pembelajaran Mata Kuliah <span class="text-danger">*</span></th>
+                                            <th style="width: 12%;">Bobot Penilaian <span class="text-danger">*</span></th>
+                                            <th style="width: 11%;">Batas KKM <span class="text-danger">*</span></th>
                                             <th style="width: 12%;">Pemetaan CPL</th>
                                             <th style="width: 5%; text-align: center;">Aksi</th>
                                         </tr>
@@ -165,7 +166,7 @@
         function renderRows(data) {
             let html = '';
             if (!data || data.length === 0) {
-                html = '<tr id="no-data-row"><td colspan="6" class="text-center text-muted py-20">Belum ada rubrik CPMK yang diatur. Klik "Tambah CPMK" untuk menambahkan.</td></tr>';
+                html = '<tr id="no-data-row"><td colspan="7" class="text-center text-muted py-20">Belum ada rubrik CPMK yang diatur. Klik "Tambah CPMK" untuk menambahkan.</td></tr>';
                 $('#cpmk_rows').html(html);
                 recalculateTotal();
                 return;
@@ -190,7 +191,10 @@
                         </div>
                     </td>
                     <td>
-                        <input type="text" class="form-control txt-kode-cpl" value="${item.kode_cpl || ''}" placeholder="Contoh: CPL-1">
+                        <input type="number" class="form-control text-right txt-kkm" value="${item.kkm || 70.00}" min="0" max="100" step="0.01" placeholder="70.00" required>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control txt-kode-cpl" value="${item.kode_cpl || ''}" placeholder="Contoh: CPL-1, CPL-2">
                     </td>
                     <td class="text-center">
                         <button type="button" class="btn btn-sm btn-danger btn-delete-row" title="Hapus CPMK">
@@ -282,7 +286,10 @@
                     </div>
                 </td>
                 <td>
-                    <input type="text" class="form-control txt-kode-cpl" placeholder="Contoh: CPL-1">
+                    <input type="number" class="form-control text-right txt-kkm" value="70.00" min="0" max="100" step="0.01" placeholder="70.00" required>
+                </td>
+                <td>
+                    <input type="text" class="form-control txt-kode-cpl" placeholder="Contoh: CPL-1, CPL-2">
                 </td>
                 <td class="text-center">
                     <button type="button" class="btn btn-sm btn-danger btn-delete-row" title="Hapus CPMK">
@@ -303,7 +310,7 @@
             row.remove();
             
             if ($('#cpmk_rows tr.cpmk-row').length === 0) {
-                let html = '<tr id="no-data-row"><td colspan="6" class="text-center text-muted py-20">Belum ada rubrik CPMK yang diatur. Klik "Tambah CPMK" untuk menambahkan.</td></tr>';
+                let html = '<tr id="no-data-row"><td colspan="7" class="text-center text-muted py-20">Belum ada rubrik CPMK yang diatur. Klik "Tambah CPMK" untuk menambahkan.</td></tr>';
                 $('#cpmk_rows').html(html);
             } else {
                 updateRowNumbers();
@@ -332,6 +339,8 @@
                 let nama_cpmk = $(this).find('.txt-nama-cpmk').val().trim();
                 let bobotVal = $(this).find('.txt-bobot').val();
                 let bobot = parseFloat(bobotVal);
+                let kkmVal = $(this).find('.txt-kkm').val();
+                let kkm = parseFloat(kkmVal);
                 let kode_cpl = $(this).find('.txt-kode-cpl').val().trim();
                 
                 if (kode_cpmk === "") {
@@ -348,11 +357,16 @@
                 } else {
                     totalBobot += bobot;
                 }
+                if (isNaN(kkm) || kkm < 0 || kkm > 100) {
+                    $(this).find('.txt-kkm').addClass('is-invalid');
+                    isValid = false;
+                }
                 
                 rubrik.push({
                     kode_cpmk: kode_cpmk,
                     nama_cpmk: nama_cpmk,
                     bobot: bobot,
+                    kkm: kkm,
                     kode_cpl: kode_cpl
                 });
             });
