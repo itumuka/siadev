@@ -148,15 +148,19 @@
                 },
                 success: function(res) {
                     if (res.status === 'success') {
-                        // Filter CPL by active curriculum year or fallback to all active
-                        let activeYear = CONFIG.tahun;
-                        activeCplList = res.data.filter(c => 
-                            parseInt(c.is_aktif) === 1 && 
-                            String(c.tahun_kurikulum) === String(activeYear)
-                        );
-                        if (activeCplList.length === 0) {
-                            activeCplList = res.data.filter(c => parseInt(c.is_aktif) === 1);
-                        }
+                        // Get all active CPLs
+                        let allActive = res.data.filter(c => parseInt(c.is_aktif) === 1);
+                        
+                        // Unique by kode_cpl, keeping the first occurrence (latest year due to API sort order)
+                        let uniqueCpls = [];
+                        let seenCodes = new Set();
+                        allActive.forEach(c => {
+                            if (!seenCodes.has(c.kode_cpl)) {
+                                seenCodes.add(c.kode_cpl);
+                                uniqueCpls.push(c);
+                            }
+                        });
+                        activeCplList = uniqueCpls;
                     }
                 }
             });
@@ -209,7 +213,7 @@
                 
                 activeCplList.forEach(c => {
                     let selected = selectedCpls.includes(c.kode_cpl) ? 'selected' : '';
-                    selectOptions += `<option value="${c.kode_cpl}" ${selected}>${c.kode_cpl} - ${c.kode_kategori}</option>`;
+                    selectOptions += `<option value="${c.kode_cpl}" ${selected}>${c.kode_cpl} - ${c.kode_kategori} (Kurikulum ${c.tahun_kurikulum})</option>`;
                 });
 
                 html += `
@@ -318,7 +322,7 @@
             
             let selectOptions = '';
             activeCplList.forEach(c => {
-                selectOptions += `<option value="${c.kode_cpl}">${c.kode_cpl} - ${c.kode_kategori}</option>`;
+                selectOptions += `<option value="${c.kode_cpl}">${c.kode_cpl} - ${c.kode_kategori} (Kurikulum ${c.tahun_kurikulum})</option>`;
             });
 
             let newRow = `
