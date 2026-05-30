@@ -135,8 +135,39 @@
     };
 
     $(document).ready(function () {
-        // Load data on page load
-        loadCpmkData();
+        let activeCplList = [];
+
+        // Fetch CPL Master Data first
+        function loadActiveCpl() {
+            return $.ajax({
+                url: CONFIG.api_url + "kaprodi/skripsi/get-cpl/" + CONFIG.kode_prodi,
+                type: "GET",
+                headers: {
+                    "Authorization": "Bearer " + CONFIG.token,
+                    "username": CONFIG.username
+                },
+                success: function(res) {
+                    if (res.status === 'success') {
+                        // Filter CPL by active curriculum year or fallback to all active
+                        let activeYear = CONFIG.tahun;
+                        activeCplList = res.data.filter(c => 
+                            parseInt(c.is_aktif) === 1 && 
+                            String(c.tahun_kurikulum) === String(activeYear)
+                        );
+                        if (activeCplList.length === 0) {
+                            activeCplList = res.data.filter(c => parseInt(c.is_aktif) === 1);
+                        }
+                    }
+                }
+            });
+        }
+
+        // Load data sequentially
+        loadActiveCpl().then(function() {
+            loadCpmkData();
+        }).catch(function() {
+            loadCpmkData();
+        });
 
         // 1. Fetch current CPMK Rubrics
         function loadCpmkData() {
@@ -173,6 +204,14 @@
             }
             
             data.forEach((item, index) => {
+                let selectedCpls = item.kode_cpl ? item.kode_cpl.split(',').map(s => s.trim()) : [];
+                let selectOptions = '';
+                
+                activeCplList.forEach(c => {
+                    let selected = selectedCpls.includes(c.kode_cpl) ? 'selected' : '';
+                    selectOptions += `<option value="${c.kode_cpl}" ${selected}>${c.kode_cpl} - ${c.kode_kategori}</option>`;
+                });
+
                 html += `
                 <tr class="cpmk-row">
                     <td class="row-no text-center font-weight-600">${index + 1}</td>
@@ -194,7 +233,9 @@
                         <input type="number" class="form-control text-right txt-kkm" value="${item.kkm || 70.00}" min="0" max="100" step="0.01" placeholder="70.00" required>
                     </td>
                     <td>
-                        <input type="text" class="form-control txt-kode-cpl" value="${item.kode_cpl || ''}" placeholder="Contoh: CPL-1, CPL-2">
+                        <select class="form-control select-cpl-mapping" style="width: 100%;" multiple="multiple">
+                            ${selectOptions}
+                        </select>
                     </td>
                     <td class="text-center">
                         <button type="button" class="btn btn-sm btn-danger btn-delete-row" title="Hapus CPMK">
@@ -206,6 +247,13 @@
             });
             
             $('#cpmk_rows').html(html);
+
+            // Initialize Select2 on the dynamically loaded rows
+            $('.select-cpl-mapping').select2({
+                placeholder: "Pilih CPL...",
+                allowClear: true
+            });
+
             updateRowNumbers();
             recalculateTotal();
         }
@@ -268,6 +316,11 @@
             let rowCount = $('#cpmk_rows tr.cpmk-row').length + 1;
             let suggestedCode = "CPMK-" + rowCount;
             
+            let selectOptions = '';
+            activeCplList.forEach(c => {
+                selectOptions += `<option value="${c.kode_cpl}">${c.kode_cpl} - ${c.kode_kategori}</option>`;
+            });
+
             let newRow = `
             <tr class="cpmk-row animate-fade-in">
                 <td class="row-no text-center font-weight-600">${rowCount}</td>
@@ -289,7 +342,9 @@
                     <input type="number" class="form-control text-right txt-kkm" value="70.00" min="0" max="100" step="0.01" placeholder="70.00" required>
                 </td>
                 <td>
-                    <input type="text" class="form-control txt-kode-cpl" placeholder="Contoh: CPL-1, CPL-2">
+                    <select class="form-control select-cpl-mapping" style="width: 100%;" multiple="multiple">
+                        ${selectOptions}
+                    </select>
                 </td>
                 <td class="text-center">
                     <button type="button" class="btn btn-sm btn-danger btn-delete-row" title="Hapus CPMK">
@@ -300,6 +355,13 @@
             `;
             
             $('#cpmk_rows').append(newRow);
+
+            // Initialize Select2 specifically for the new row
+            $('#cpmk_rows tr:last-child').find('.select-cpl-mapping').select2({
+                placeholder: "Pilih CPL...",
+                allowClear: true
+            });
+
             recalculateTotal();
             $('#cpmk_rows tr:last-child').find('.txt-nama-cpmk').focus();
         });
@@ -341,7 +403,9 @@
                 let bobot = parseFloat(bobotVal);
                 let kkmVal = $(this).find('.txt-kkm').val();
                 let kkm = parseFloat(kkmVal);
-                let kode_cpl = $(this).find('.txt-kode-cpl').val().trim();
+                
+                let selectedCpls = $(this).find('.select-cpl-mapping').val();
+                let kode_cpl = selectedCpls ? selectedCpls.join(',') : '';
                 
                 if (kode_cpmk === "") {
                     $(this).find('.txt-kode-cpmk').addClass('is-invalid');

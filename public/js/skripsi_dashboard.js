@@ -504,7 +504,7 @@ async function loadPortfolioCPL() {
                 html += `
                     <div class="col-12 mb-15">
                         <div class="d-flex justify-content-between align-items-center mb-5">
-                            <span class="font-weight-600 text-dark">${item.cpl}</span>
+                            <span class="font-weight-600 text-dark">${item.cpl} ${item.deskripsi ? `<small class="text-muted d-block mt-2 font-weight-normal font-size-12" style="white-space: normal; line-height: 1.4;"><i class="fa fa-info-circle mr-5"></i>${item.deskripsi}</small>` : ''}</span>
                             <div>
                                 <span class="badge ${statusBadgeClass} mr-5 font-size-10">${status.toUpperCase()}</span>
                                 <span class="badge badge-secondary font-weight-bold">${pct.toFixed(2)} %</span>

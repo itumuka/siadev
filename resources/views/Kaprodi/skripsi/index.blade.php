@@ -29,6 +29,9 @@
                             <a href="{{ route('kpskripsi_syarat') }}" class="btn btn-sm btn-dark mr-5">
                                 <i class="fa fa-list mr-5"></i> Syarat Sempro & Ujian
                             </a>
+                            <a href="{{ route('kpskripsi_cpl') }}" class="btn btn-sm btn-info mr-5">
+                                <i class="fa fa-book mr-5"></i> Master Data CPL
+                            </a>
                             <a href="{{ route('kpskripsi_cpmk') }}" class="btn btn-sm btn-warning mr-5">
                                 <i class="fa fa-sliders mr-5"></i> Konfigurasi Rubrik CPMK
                             </a>
