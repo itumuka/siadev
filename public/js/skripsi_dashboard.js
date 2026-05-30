@@ -156,12 +156,12 @@ function renderDashboard(data) {
     renderTimeline(data);
     renderCTA(data.cta);
 
-    // 6. Portfolio CPL (OBE)
-    if (data.skripsi && data.skripsi.is_obe == 1) {
-        loadPortfolioCPL();
-    } else {
-        $('#box_portfolio_cpl').hide();
-    }
+    // 6. Portfolio CPL (OBE) - Removed/Disabled per leadership request
+    // if (data.skripsi && data.skripsi.is_obe == 1) {
+    //     loadPortfolioCPL();
+    // } else {
+    //     $('#box_portfolio_cpl').hide();
+    // }
 }
 
 function renderTimeline(data) {
@@ -465,105 +465,4 @@ function showError(msg) {
             </div>
         </div>
     `).show();
-}
-
-async function loadPortfolioCPL() {
-    const container = $('#portfolio_cpl_container');
-    container.html('<div class="text-center py-20"><i class="fa fa-spinner fa-spin fa-2x text-primary"></i><p class="mt-10 small text-muted">Memuat portofolio CPL...</p></div>');
-    $('#box_portfolio_cpl').show();
-
-    try {
-        const response = await fetch(`${CONFIG.api_url}mahasiswa/skripsi/portofolio-cpl?nim=${CONFIG.nim}`, {
-            headers: {
-                'Authorization': `Bearer ${CONFIG.token}`,
-                'username': CONFIG.username,
-                'Accept': 'application/json'
-            }
-        });
-        const result = await response.json();
-
-        if (result.status === 'success' && result.data && result.data.cpl_portfolio) {
-            const portfolio = result.data.cpl_portfolio;
-            if (portfolio.length === 0) {
-                container.html('<div class="alert alert-info py-15 mb-0"><i class="fa fa-info-circle mr-5"></i> Penilaian luaran belum diinput/diverifikasi oleh Tim Verifikator. Portofolio CPL akan muncul setelah penilaian disimpan.</div>');
-                return;
-            }
-
-            let html = '<div class="row">';
-            portfolio.forEach(item => {
-                const pct = item.achievement;
-                let barColor = 'bg-primary';
-                if (pct >= 85) barColor = 'bg-success';
-                else if (pct >= 70) barColor = 'bg-info';
-                else if (pct >= 55) barColor = 'bg-warning';
-                else barColor = 'bg-danger';
-
-                const status = item.status || (pct >= 70.00 ? 'Tercapai' : 'Perlu Penguatan');
-                const statusBadgeClass = status === 'Tercapai' ? 'badge-success' : 'badge-warning';
-
-                html += `
-                    <div class="col-12 mb-15">
-                        <div class="d-flex justify-content-between align-items-center mb-5">
-                            <span class="font-weight-600 text-dark">${item.cpl} ${item.deskripsi ? `<small class="text-muted d-block mt-2 font-weight-normal font-size-12" style="white-space: normal; line-height: 1.4;"><i class="fa fa-info-circle mr-5"></i>${item.deskripsi}</small>` : ''}</span>
-                            <div>
-                                <span class="badge ${statusBadgeClass} mr-5 font-size-10">${status.toUpperCase()}</span>
-                                <span class="badge badge-secondary font-weight-bold">${pct.toFixed(2)} %</span>
-                            </div>
-                        </div>
-                        <div class="progress progress-sm mb-0" style="height: 8px; border-radius: 4px; background-color: #e9ecef;">
-                            <div class="progress-bar ${barColor}" role="progressbar" style="width: ${pct}%"></div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            // Render CPMK Details Table
-            if (result.data.cpmk_scores && result.data.cpmk_scores.length > 0) {
-                html += `
-                    <div class="col-12 mt-25">
-                        <h6 class="font-weight-600 text-dark mb-10"><i class="fa fa-list text-info mr-5"></i> Rincian Ketercapaian CPMK</h6>
-                        <div class="table-responsive">
-                            <table class="table table-sm table-bordered table-striped font-size-12 mb-0">
-                                <thead class="bg-light text-dark">
-                                    <tr>
-                                        <th style="width: 15%;" class="font-weight-600">Kode</th>
-                                        <th style="width: 50%;" class="font-weight-600">Deskripsi CPMK</th>
-                                        <th style="width: 11%; text-align: right;" class="font-weight-600">Nilai</th>
-                                        <th style="width: 11%; text-align: right;" class="font-weight-600">KKM</th>
-                                        <th style="width: 13%; text-align: center;" class="font-weight-600">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                `;
-                
-                result.data.cpmk_scores.forEach(c => {
-                    const statusClass = c.status === 'Lulus' ? 'text-success font-weight-bold' : 'text-danger font-weight-bold';
-                    html += `
-                        <tr>
-                            <td class="font-weight-600">${c.kode_cpmk}</td>
-                            <td class="text-muted small">${c.nama_cpmk}</td>
-                            <td class="text-right font-weight-600">${c.nilai.toFixed(2)}</td>
-                            <td class="text-right text-muted">${c.kkm.toFixed(2)}</td>
-                            <td class="text-center ${statusClass}">${c.status}</td>
-                        </tr>
-                    `;
-                });
-                
-                html += `
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                `;
-            }
-
-            html += '</div>';
-            container.html(html);
-        } else {
-            container.html('<div class="text-danger small"><i class="fa fa-exclamation-triangle"></i> Gagal memuat portofolio CPL.</div>');
-        }
-    } catch (e) {
-        console.error(e);
-        container.html('<div class="text-danger small"><i class="fa fa-exclamation-triangle"></i> Terjadi masalah koneksi saat memuat portofolio CPL.</div>');
-    }
-}
+}
