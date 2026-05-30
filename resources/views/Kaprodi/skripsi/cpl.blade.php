@@ -368,12 +368,14 @@
                     orderable: false,
                     render: function(data) {
                         return `
-                            <button class="waves-effect waves-light btn btn-xs btn-outline btn-warning mr-5" onclick="openEditModal(${JSON.stringify(data).replace(/"/g, '&quot;')})" title="Ubah CPL">
-                                <i class="fa fa-pencil"></i>
-                            </button>
-                            <button class="waves-effect waves-light btn btn-xs btn-outline btn-danger" onclick="deleteCpl(${data.id}, '${data.kode_cpl}')" title="Hapus CPL">
-                                <i class="fa fa-trash"></i>
-                            </button>
+                            <div class="text-nowrap">
+                                <button class="waves-effect waves-light btn btn-xs btn-outline btn-warning mr-5" onclick="openEditModal(${JSON.stringify(data).replace(/"/g, '&quot;')})" title="Ubah CPL">
+                                    <i class="fa fa-pencil"></i>
+                                </button>
+                                <button class="waves-effect waves-light btn btn-xs btn-outline btn-danger" onclick="deleteCpl(${data.id}, '${data.kode_cpl}')" title="Hapus CPL">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </div>
                         `;
                     }
                 }
