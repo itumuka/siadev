@@ -368,11 +368,11 @@
                     orderable: false,
                     render: function(data) {
                         return `
-                            <button class="btn btn-xs btn-warning text-white mr-5" onclick="openEditModal(${JSON.stringify(data).replace(/"/g, '&quot;')})" title="Ubah CPL">
-                                <i class="fa fa-pencil"></i> Ubah
+                            <button class="waves-effect waves-light btn btn-xs btn-outline btn-warning mr-5" onclick="openEditModal(${JSON.stringify(data).replace(/"/g, '&quot;')})" title="Ubah CPL">
+                                <i class="fa fa-pencil"></i>
                             </button>
-                            <button class="btn btn-xs btn-danger" onclick="deleteCpl(${data.id}, '${data.kode_cpl}')" title="Hapus CPL">
-                                <i class="fa fa-trash"></i> Hapus
+                            <button class="waves-effect waves-light btn btn-xs btn-outline btn-danger" onclick="deleteCpl(${data.id}, '${data.kode_cpl}')" title="Hapus CPL">
+                                <i class="fa fa-trash"></i>
                             </button>
                         `;
                     }
