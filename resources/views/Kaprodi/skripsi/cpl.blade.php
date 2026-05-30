@@ -304,9 +304,7 @@
             processing: true,
             serverSide: false, // We're handling list locally via AJAX return
             ajax: {
-                url: function() {
-                    return CONFIG.api_url + "kaprodi/skripsi/get-cpl/" + CONFIG.kode_prodi;
-                },
+                url: CONFIG.api_url + "kaprodi/skripsi/get-cpl/" + CONFIG.kode_prodi,
                 type: "GET",
                 headers: {
                     "Authorization": "Bearer " + CONFIG.token,
