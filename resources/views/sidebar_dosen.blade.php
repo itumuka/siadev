@@ -17,7 +17,8 @@
                     <div class="sidebar-user-avatar">{{ $initials }}</div>
                     <div class="sidebar-user-info">
                         <h4 class="sidebar-user-name" title="{{ Session::get('nama') }}">{{ Session::get('nama') }}</h4>
-                        <span class="sidebar-user-email" title="{{ Session::get('username') }}">{{ strtolower(Session::get('username')) }}</span>
+                        <span class="sidebar-user-email"
+                            title="{{ Session::get('username') }}">{{ strtolower(Session::get('username')) }}</span>
                         <span class="sidebar-user-role">
                             @if (Session::get('kaprodi') == 1)
                                 Kaprodi
@@ -39,49 +40,53 @@
                             <span>Beranda</span>
                         </a>
                     </li>
-                    @if (Session::get('kaprodi') != NULL || Session::get('kaprodi') != '' )
-                    <li class="treeview">
-                        <a href="#">
-                            <i class="fa fa-user-circle-o"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Kaprodi</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-right pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li class="{{ Route::is('akdaftardosen') ? 'active' : '' }}">
-                                <a href="{{ route('akdaftardosen') }}"><i class="fa fa-file-text"><span
-                                            class="path1"></span><span class="path2"></span></i>Jurnal Perkuliahan Prodi</a>
-                            </li>
-                            <li class="{{ Route::is('kplihat_penilaian') ? 'active' : '' }}">
-                                <a href="{{ route('kplihat_penilaian') }}"><i class="fa fa-list-alt"><span
-                                            class="path1"></span><span class="path2"></span></i>Penilaian Semester</a>
-                            </li>
-                            <li class="{{ Route::is('kpskripsi_index') ? 'active' : '' }}">
-                                <a href="{{ route('kpskripsi_index') }}"><i class="fa fa-graduation-cap"><span
-                                             class="path1"></span><span class="path2"></span></i>Manajemen Skripsi <sup class="text-danger">(Beta)</sup></a>
-                            </li>
-                            <li class="{{ Route::is('kpskripsi_cpl') ? 'active' : '' }}">
-                                <a href="{{ route('kpskripsi_cpl') }}"><i class="fa fa-book"><span
-                                             class="path1"></span><span class="path2"></span></i>Master Data CPL</a>
-                            </li>
-                            <li class="{{ Route::is('kpskripsi_cpmk') ? 'active' : '' }}">
-                                <a href="{{ route('kpskripsi_cpmk') }}"><i class="fa fa-sliders"><span
-                                             class="path1"></span><span class="path2"></span></i>Konfigurasi Rubrik CPMK</a>
-                            </li>
-                            <li class="{{ Route::is('kpskripsi_penetapan') ? 'active' : '' }}">
-                                <a href="{{ route('kpskripsi_penetapan') }}"><i class="fa fa-gavel"><span
-                                             class="path1"></span><span class="path2"></span></i>Penetapan Nilai (BA)</a>
-                            </li>
-                        </ul>
-                    </li>
+                    @if (Session::get('kaprodi') != NULL || Session::get('kaprodi') != '')
+                        <li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-user-circle-o"><span class="path1"></span><span class="path2"></span></i>
+                                <span>Kaprodi</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-right pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li class="{{ Route::is('akdaftardosen') ? 'active' : '' }}">
+                                    <a href="{{ route('akdaftardosen') }}"><i class="fa fa-file-text"><span
+                                                class="path1"></span><span class="path2"></span></i>Jurnal Perkuliahan
+                                        Prodi</a>
+                                </li>
+                                <li class="{{ Route::is('kplihat_penilaian') ? 'active' : '' }}">
+                                    <a href="{{ route('kplihat_penilaian') }}"><i class="fa fa-list-alt"><span
+                                                class="path1"></span><span class="path2"></span></i>Penilaian Semester</a>
+                                </li>
+                                <li class="{{ Route::is('kpskripsi_index') ? 'active' : '' }}">
+                                    <a href="{{ route('kpskripsi_index') }}"><i class="fa fa-graduation-cap"><span
+                                                class="path1"></span><span class="path2"></span></i>Manajemen Skripsi <sup
+                                            class="text-danger">(Beta)</sup></a>
+                                </li>
+                                <li class="{{ Route::is('kpskripsi_cpl') ? 'active' : '' }}">
+                                    <a href="{{ route('kpskripsi_cpl') }}"><i class="fa fa-book"><span
+                                                class="path1"></span><span class="path2"></span></i>Master Data CPL <sup
+                                            class="text-danger">(Beta)</sup></a>
+                                </li>
+                                <li class="{{ Route::is('kpskripsi_cpmk') ? 'active' : '' }}">
+                                    <a href="{{ route('kpskripsi_cpmk') }}"><i class="fa fa-sliders"><span
+                                                class="path1"></span><span class="path2"></span></i>Konfigurasi Rubrik
+                                        CPMK <sup class="text-danger">(Beta)</sup></a>
+                                </li>
+                                <li class="{{ Route::is('kpskripsi_penetapan') ? 'active' : '' }}">
+                                    <a href="{{ route('kpskripsi_penetapan') }}"><i class="fa fa-gavel"><span
+                                                class="path1"></span><span class="path2"></span></i>Penetapan Nilai (BA)
+                                        <sup class="text-danger">(Beta)</sup></a>
+                                </li>
+                            </ul>
+                        </li>
                     @endif
 
                     @if (Session::get('dosen_wali') == 1)
                         <li class="{{ Route::is('dosenacckrs') ? 'active' : '' }}">
                             <a href="{{ route('dosenacckrs') }}" title="Acc KRS">
-                                <i class="fa fa-check-square-o"><span class="path1"></span><span
-                                        class="path2"></span></i>
+                                <i class="fa fa-check-square-o"><span class="path1"></span><span class="path2"></span></i>
                                 <span>Acc KRS</span>
                             </a>
                         </li>
@@ -99,7 +104,8 @@
                             <span>Riwayat Mengajar</span>
                         </a>
                     </li>
-                    <li class="treeview {{ Route::is('makul_diampu_dosen') || Route::is('dosen.makul_ditawarkan') || Route::is('dosen.kurikulum') ? 'active' : '' }}">
+                    <li
+                        class="treeview {{ Route::is('makul_diampu_dosen') || Route::is('dosen.makul_ditawarkan') || Route::is('dosen.kurikulum') ? 'active' : '' }}">
                         <a href="#">
                             <i class="fa fa-book"><span class="path1"></span><span class="path2"></span></i>
                             <span>Matakuliah</span>
@@ -128,20 +134,22 @@
                             </li>
                         </ul>
                     </li>
-                    
-                    <li class="treeview {{ Route::is('dosen.skripsi.index') || Route::is('dosen.skripsi.detail_bimbingan') || Route::is('dosen.skripsi.ujian') || Route::is('dosen.skripsi.penetapan') ? 'active' : '' }}">
+
+                    <li
+                        class="treeview {{ Route::is('dosen.skripsi.index') || Route::is('dosen.skripsi.detail_bimbingan') || Route::is('dosen.skripsi.ujian') || Route::is('dosen.skripsi.penetapan') ? 'active' : '' }}">
                         <a href="#">
                             <i class="fa fa-graduation-cap"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Skripsi</span>
+                            <span>Skripsi <sup class="text-danger">(Beta)</sup></span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{ Route::is('dosen.skripsi.index') || Route::is('dosen.skripsi.detail_bimbingan') ? 'active' : '' }}">
+                            <li
+                                class="{{ Route::is('dosen.skripsi.index') || Route::is('dosen.skripsi.detail_bimbingan') ? 'active' : '' }}">
                                 <a href="{{ route('dosen.skripsi.index') }}" title="Pembimbing Skripsi">
                                     <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                    <span>Pembimbing Skripsi <sup class="text-danger">(Beta)</sup></span>
+                                    <span>Pembimbing Skripsi</span>
                                 </a>
                             </li>
                             <li class="{{ Route::is('dosen.skripsi.ujian') ? 'active' : '' }}">
@@ -158,7 +166,7 @@
                             </li>
                         </ul>
                     </li>
-                    
+
                     <li class="treeview">
                         <a href="#">
                             <i class="fa fa-list-alt"><span class="path1"></span><span class="path2"></span></i>
@@ -178,8 +186,8 @@
                             </li>
                         </ul>
                     </li>
-                    
-                    
+
+
                     <!--<li class="{{ Route::is('berita_acara_dosen') ? 'active' : '' }}">-->
                     <!--    <a href="{{ route('berita_acara_dosen') }}" title="Berita Acara">-->
                     <!--        <i class="fa fa-window-restore"><span class="path1"></span><span class="path2"></span></i>-->
@@ -239,23 +247,20 @@
                         <li>
                             <a target="_blank" href="{{ url('file') }}/PANDUAN_MODUL_DOSEN_WALI.pdf"
                                 title="Link Panduan Modul Dosen">
-                                <i class="fa fa-question-circle"><span class="path1"></span><span
-                                        class="path2"></span></i>
+                                <i class="fa fa-question-circle"><span class="path1"></span><span class="path2"></span></i>
                                 <span>Bantuan</span>
                             </a>
                         </li>
                     @else
                         <li>
                             <a target="_blank" href="#" title="Link Panduan Modul Dosen">
-                                <i class="fa fa-question-circle"><span class="path1"></span><span
-                                        class="path2"></span></i>
+                                <i class="fa fa-question-circle"><span class="path1"></span><span class="path2"></span></i>
                                 <span>Bantuan</span>
                             </a>
                             {{-- <a href="javascript:void(0)" id="bantuan" title="Download">
-                            <i class="fa fa-question-circle"><span class="path1"></span><span
-                                    class="path2"></span></i>
-                            <span>Bantuan</span>
-                        </a> --}}
+                                <i class="fa fa-question-circle"><span class="path1"></span><span class="path2"></span></i>
+                                <span>Bantuan</span>
+                            </a> --}}
                         </li>
                     @endif
                 </ul>
@@ -265,12 +270,12 @@
 </aside>
 @section('script-advanced')
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(document).ready(function () {
 
             var token = "{{ Session::get('token') }}";
             var userlogin = "{{ Session::get('username') }}";
 
-            $('#bantuan').on('click', function() {
+            $('#bantuan').on('click', function () {
                 $.ajax({
                     url: "{{ config('setting.second_url') }}akademik/download-bantuan",
                     method: 'GET',
@@ -281,7 +286,7 @@
                     xhrFields: {
                         responseType: 'blob'
                     },
-                    success: function(data) {
+                    success: function (data) {
                         var a = document.createElement('a');
                         var url = window.URL.createObjectURL(data);
                         a.href = url;
