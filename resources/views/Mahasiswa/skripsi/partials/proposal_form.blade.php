@@ -17,15 +17,15 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-700">Topik Utama (Bahasa Indonesia)</label>
-                                <input type="text" name="topik" class="form-control" placeholder="Contoh: Kecerdasan Buatan" maxlength="50" required>
-                                <small class="text-muted">Kategori penelitian Anda (Max 50 karakter)</small>
+                                <input type="text" name="topik" class="form-control" placeholder="Contoh: Kecerdasan Buatan" maxlength="100" required>
+                                <small class="text-muted">Kategori penelitian Anda (Max 100 karakter)</small>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-700">Topic (English)</label>
-                                <input type="text" name="topik_en" class="form-control" placeholder="Example: Artificial Intelligence" maxlength="50" required>
-                                <small class="text-muted">Research category (Max 50 characters)</small>
+                                <input type="text" name="topik_en" class="form-control" placeholder="Example: Artificial Intelligence" maxlength="100" required>
+                                <small class="text-muted">Research category (Max 100 characters)</small>
                             </div>
                         </div>
                     </div>
@@ -34,14 +34,14 @@
 
                     <div class="form-group">
                         <label class="font-weight-700">Judul Lengkap (Bahasa Indonesia)</label>
-                        <textarea name="judul" class="form-control" rows="3" placeholder="Masukan judul lengkap penelitian Anda..." maxlength="100" required></textarea>
-                        <small class="text-muted">Maksimal 100 karakter</small>
+                        <textarea name="judul" class="form-control" rows="3" placeholder="Masukan judul lengkap penelitian Anda..." maxlength="255" required></textarea>
+                        <small class="text-muted">Maksimal 255 karakter</small>
                     </div>
 
                     <div class="form-group">
                         <label class="font-weight-700">Full Title (English)</label>
-                        <textarea name="judul_en" class="form-control" rows="3" placeholder="Enter your full research title in English..." maxlength="100" required></textarea>
-                        <small class="text-muted">Maximum 100 characters</small>
+                        <textarea name="judul_en" class="form-control" rows="3" placeholder="Enter your full research title in English..." maxlength="255" required></textarea>
+                        <small class="text-muted">Maximum 255 characters</small>
                     </div>
 
                     <hr>
@@ -61,6 +61,22 @@
                                 <small class="text-muted">Maximum 2000 characters</small>
                             </div>
                         </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="form-group">
+                        <label class="font-weight-700 text-primary"><i class="fa fa-graduation-cap mr-5"></i> Target Luaran Skripsi (Kurikulum OBE)</label>
+                        <select name="target_luaran" class="form-control" required>
+                            <option value="buku_skripsi">Buku Skripsi / Tugas Akhir</option>
+                            <option value="jurnal_sinta">Publikasi Jurnal SINTA</option>
+                            <option value="jurnal_internasional">Publikasi Jurnal Internasional</option>
+                            <option value="prosiding">Publikasi Prosiding Konferensi Ilmiah</option>
+                            <option value="paten">Paten / Paten Sederhana</option>
+                            <option value="hki">Hak Cipta / HKI Non-Paten</option>
+                            <option value="lainnya">Lainnya / Sesuai Kebijakan Prodi</option>
+                        </select>
+                        <small class="text-muted">Pilih target luaran utama sesuai dengan kurikulum OBE prodi Anda</small>
                     </div>
                 </div>
                 <div class="modal-footer">
