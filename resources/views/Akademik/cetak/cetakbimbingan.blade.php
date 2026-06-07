@@ -238,18 +238,28 @@
         <tr>
             <td class="signature-col" style="width: 50%;">
                 <div>Ketua Program Studi</div>
-                <div id="qrcode_kaprodi_container" style="width: 75px; height: 75px; margin: 8px auto;"></div>
+                <div id="qrcode_kaprodi_container" style="width: 75px; height: 75px; margin: 8px auto; display: flex; align-items: center; justify-content: center;">
+                    <img id="img_qrcode_kaprodi" style="width: 75px; height: 75px; display: none;" />
+                </div>
                 <div class="font-bold" id="sign_kaprodi">-</div>
                 <div style="font-size: 9pt;" id="nidn_kaprodi">NIDN. -</div>
             </td>
             <td class="signature-col" style="width: 50%;">
                 <div>Dosen Pembimbing I</div>
-                <div id="qrcode_pembimbing1_container" style="width: 75px; height: 75px; margin: 8px auto;"></div>
+                <div id="qrcode_pembimbing1_container" style="width: 75px; height: 75px; margin: 8px auto; display: flex; align-items: center; justify-content: center;">
+                    <img id="img_qrcode_pembimbing1" style="width: 75px; height: 75px; display: none;" />
+                </div>
                 <div class="font-bold" id="sign_pembimbing1">-</div>
                 <div style="font-size: 9pt;" id="nidn_pembimbing1">NIDN. -</div>
             </td>
         </tr>
     </table>
+
+    <!-- Hidden container to generate QR codes silently before printing -->
+    <div id="qrcode_generators" style="display: none;">
+        <div id="gen_qr_kaprodi"></div>
+        <div id="gen_qr_pembimbing1"></div>
+    </div>
 
     <script src="{{ URL::asset('js/jquery.min.js') }}"></script>
     <script src="{{ URL::asset('js/qrcode.js') }}"></script>
@@ -265,6 +275,22 @@
                 const dt = new Date(dateStr);
                 if (isNaN(dt.getTime())) return dateStr;
                 return dt.getDate() + ' ' + months[dt.getMonth()] + ' ' + dt.getFullYear();
+            }
+
+            function formatTanggal(tgl) {
+                if (!tgl) return '-';
+                const d = new Date(tgl);
+                if (isNaN(d.getTime())) return tgl;
+                const hasTime = /[T ]\d{2}:\d{2}/.test(tgl) || (d.getHours() > 0 || d.getMinutes() > 0);
+                return d.toLocaleDateString("id-ID", {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric',
+                    ...(hasTime && {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })
+                });
             }
 
             $.ajax({
@@ -319,7 +345,10 @@
                                 const description = `<strong>${log.topik}</strong><br><span style="color:#444; font-size:9.5pt;">${log.uraian || ''}</span>`;
                                 
                                 const statusBadge = `<div class="signature-status-signed">✓ VERIFIKASI DIGITAL</div>`;
-                                const dosenBadge = `<div class="row-qrcode" data-valid-id="${log.valid_id || ''}" id="row_qr_${log.id}" style="width: 55px; height: 55px; margin: 0 auto;"></div>`;
+                                const dosenBadge = `
+                                    <div class="row-qrcode" style="width: 55px; height: 55px; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                                        <img id="img_row_qr_${log.id}" style="width: 55px; height: 55px; display: none;" />
+                                    </div>`;
 
                                 html += `<tr>
                                     <td>${index}</td>
@@ -342,48 +371,87 @@
 
                         $('#tbody_logs').html(html);
 
-                        // Generate QRCodes dynamically for rows
+                        // Generate QRCodes dynamically inside hidden generators
+                        if (m.valid_id_kaprodi) {
+                            let qrKaprodiText = `VALID ID: ${m.valid_id_kaprodi}`;
+                            qrKaprodiText += `\nPengesahan Administratif Log Bimbingan`;
+                            qrKaprodiText += `\nMahasiswa: ${m.nama_mahasiswa} (${m.nim})`;
+                            qrKaprodiText += `\nProdi: ${m.nama_program_studi}`;
+                            qrKaprodiText += `\nKaprodi: ${m.nama_kaprodi}`;
+                            if (m.nidn_kaprodi) qrKaprodiText += ` (NIDN: ${m.nidn_kaprodi})`;
+
+                            new QRCode(document.getElementById("gen_qr_kaprodi"), {
+                                text: qrKaprodiText,
+                                width: 150,
+                                height: 150,
+                                correctLevel: QRCode.CorrectLevel.H
+                            });
+                        }
+
+                        if (s && s.valid_id_pembimbing1) {
+                            let qrPemb1Text = `VALID ID: ${s.valid_id_pembimbing1}`;
+                            qrPemb1Text += `\nPersetujuan Buku Bimbingan Skripsi`;
+                            qrPemb1Text += `\nMahasiswa: ${m.nama_mahasiswa} (${m.nim})`;
+                            qrPemb1Text += `\nPembimbing I: ${s.nama_pembimbing1}`;
+                            if (s.nidn_pembimbing1) qrPemb1Text += ` (NIDN: ${s.nidn_pembimbing1})`;
+
+                            new QRCode(document.getElementById("gen_qr_pembimbing1"), {
+                                text: qrPemb1Text,
+                                width: 150,
+                                height: 150,
+                                correctLevel: QRCode.CorrectLevel.H
+                            });
+                        }
+
                         logs.forEach(function(log) {
                             if (log.valid_id) {
-                                new QRCode(document.getElementById("row_qr_" + log.id), {
-                                    text: log.valid_id,
-                                    width: 55,
-                                    height: 55,
-                                    colorDark : "#000000",
-                                    colorLight : "#ffffff",
-                                    correctLevel : QRCode.CorrectLevel.M
+                                $('#qrcode_generators').append(`<div id="gen_qr_row_${log.id}"></div>`);
+                                
+                                let qrRowText = `VALID ID: ${log.valid_id}`;
+                                qrRowText += `\nPersetujuan Log Bimbingan`;
+                                qrRowText += `\nMahasiswa: ${m.nama_mahasiswa} (${m.nim})`;
+                                qrRowText += `\nTanggal: ${formatTanggal(log.tanggal)}`;
+                                qrRowText += `\nTopik: ${log.topik}`;
+                                qrRowText += `\nPembimbing: ${log.nama_dosen}`;
+                                if (log.nidn_dosen) qrRowText += ` (NIDN: ${log.nidn_dosen})`;
+                                if (log.updated_at) qrRowText += `\nWaktu ACC: ${formatTanggal(log.updated_at)}`;
+
+                                new QRCode(document.getElementById("gen_qr_row_" + log.id), {
+                                    text: qrRowText,
+                                    width: 150,
+                                    height: 150,
+                                    correctLevel: QRCode.CorrectLevel.H
                                 });
                             }
                         });
 
-                        // Generate QRCode for Kaprodi
-                        if (m.valid_id_kaprodi) {
-                            new QRCode(document.getElementById("qrcode_kaprodi_container"), {
-                                text: m.valid_id_kaprodi,
-                                width: 75,
-                                height: 75,
-                                colorDark : "#000000",
-                                colorLight : "#ffffff",
-                                correctLevel : QRCode.CorrectLevel.M
-                            });
-                        }
-
-                        // Generate QRCode for Pembimbing I
-                        if (s && s.valid_id_pembimbing1) {
-                            new QRCode(document.getElementById("qrcode_pembimbing1_container"), {
-                                text: s.valid_id_pembimbing1,
-                                width: 75,
-                                height: 75,
-                                colorDark : "#000000",
-                                colorLight : "#ffffff",
-                                correctLevel : QRCode.CorrectLevel.M
-                            });
-                        }
-
-                        // Trigger print dialogue after resources load
+                        // Extract generated image URLs to visible img tags, then print
                         setTimeout(function() {
+                            if (m.valid_id_kaprodi) {
+                                const qrImg = document.querySelector('#gen_qr_kaprodi img');
+                                if (qrImg && qrImg.src) {
+                                    $('#img_qrcode_kaprodi').attr('src', qrImg.src).show();
+                                }
+                            }
+
+                            if (s && s.valid_id_pembimbing1) {
+                                const qrImg = document.querySelector('#gen_qr_pembimbing1 img');
+                                if (qrImg && qrImg.src) {
+                                    $('#img_qrcode_pembimbing1').attr('src', qrImg.src).show();
+                                }
+                            }
+
+                            logs.forEach(function(log) {
+                                if (log.valid_id) {
+                                    const qrImg = document.querySelector('#gen_qr_row_' + log.id + ' img');
+                                    if (qrImg && qrImg.src) {
+                                        $('#img_row_qr_' + log.id).attr('src', qrImg.src).show();
+                                    }
+                                }
+                            });
+
                             window.print();
-                        }, 800);
+                        }, 500);
                     }
                 },
                 error: function() {

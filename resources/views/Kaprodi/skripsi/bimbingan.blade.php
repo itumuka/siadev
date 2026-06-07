@@ -222,10 +222,19 @@
                     className: "text-center",
                     orderable: false,
                     render: function(data) {
+                        let btnSahkan = '';
+                        if (parseInt(data.total_waiting_kaprodi) > 0 || !data.valid_id_kaprodi) {
+                            btnSahkan = `
+                                <button class="btn btn-sm btn-success mr-5" onclick="sahkanBimbinganDirect(${data.id}, '${data.nama_mahasiswa.replace(/'/g, "\\'")}')" title="Sahkan Bimbingan">
+                                    <i class="fa fa-check"></i> Sahkan
+                                </button>
+                            `;
+                        }
                         return `
                             <div class="text-nowrap">
-                                <button class="btn btn-sm btn-info mr-5" onclick="openDetailModal(${data.id}, '${data.nim}', '${data.nama_mahasiswa.replace(/'/g, "\\'")}', '${(data.pembimbing || '-').replace(/'/g, "\\'")}', ${data.total_approved})" title="Detail dan Approval">
-                                    <i class="fa fa-check-square-o"></i>
+                                ${btnSahkan}
+                                <button class="btn btn-sm btn-info mr-5" onclick="openDetailModal(${data.id}, '${data.nim}', '${data.nama_mahasiswa.replace(/'/g, "\\'")}', '${(data.pembimbing || '-').replace(/'/g, "\\'")}', ${data.total_approved}, '${data.valid_id_kaprodi || ''}')" title="Detail Bimbingan">
+                                    <i class="fa fa-search"></i> Detail
                                 </button>
                                 <button class="btn btn-sm btn-dark" onclick="printBimbingan('${data.nim}')" title="Cetak Buku Bimbingan">
                                     <i class="fa fa-print"></i>
@@ -237,7 +246,7 @@
             ]
         });
 
-        // Event handler for Sahkan Bimbingan (Bulk Approve)
+        // Event handler for Sahkan Bimbingan (Bulk Approve from modal)
         $('#btn-approve-all').on('click', function() {
             if (!selectedSkripsiId) return;
 
@@ -276,13 +285,50 @@
         });
     });
 
+    function sahkanBimbinganDirect(id_skripsi, nama) {
+        swal({
+            title: "Sahkan Bimbingan?",
+            text: "Apakah Anda yakin ingin mengesahkan secara administratif seluruh log bimbingan mahasiswa " + nama + " untuk dilanjutkan ke Ujian?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#28a745",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Ya, Sahkan!",
+            cancelButtonText: "Batal"
+        }, function(isConfirm) {
+            if (isConfirm) {
+                $.ajax({
+                    url: CONFIG.api_url + "kaprodi/skripsi/bimbingan/approve",
+                    type: "POST",
+                    headers: {
+                        "Authorization": "Bearer " + CONFIG.token,
+                        "username": CONFIG.username
+                    },
+                    data: { id_skripsi: id_skripsi },
+                    success: function(res) {
+                        if (res.success) {
+                            swal("Berhasil!", "Administrasi bimbingan berhasil disahkan.", "success");
+                            tableBimbingan.ajax.reload(null, false);
+                        }
+                    },
+                    error: function(err) {
+                        swal("Gagal!", err.responseJSON?.error || "Gagal mengesahkan bimbingan.", "error");
+                    }
+                });
+            }
+        });
+    }
+
     function printBimbingan(nim) {
         window.open("{{ url('akademik/manajemen-ta/rekap-bimbingan/cetak') }}/" + nim, '_blank');
     }
 
-    function openDetailModal(id_skripsi, nim, nama, pembimbing, totalApproved) {
+    let selectedValidIdKaprodi = null;
+
+    function openDetailModal(id_skripsi, nim, nama, pembimbing, totalApproved, validIdKaprodi) {
         selectedSkripsiId = id_skripsi;
         selectedStudentNim = nim;
+        selectedValidIdKaprodi = validIdKaprodi;
 
         $('#modal_nim').text(nim);
         $('#modal_nama').text(nama);
@@ -344,7 +390,7 @@
 
                     $('#logs-container').html(html);
 
-                    if (hasWaiting) {
+                    if (hasWaiting || !selectedValidIdKaprodi) {
                         $('#kaprodi-decision-actions').show();
                     } else {
                         $('#kaprodi-decision-actions').hide();
