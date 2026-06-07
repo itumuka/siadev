@@ -275,7 +275,6 @@
             });
         });
     });
-});
 
     function printBimbingan(nim) {
         window.open("{{ url('akademik/manajemen-ta/rekap-bimbingan/cetak') }}/" + nim, '_blank');
