@@ -34,6 +34,9 @@
                         <button class="btn btn-warning mt-30 btn-block" data-toggle="modal" data-target="#modalTambahBimbingan">
                             <i class="fa fa-plus"></i> Tambah Catatan Bimbingan
                         </button>
+                        <button class="btn btn-dark mt-10 btn-block" id="btnCetakBimbingan">
+                            <i class="fa fa-print"></i> Cetak Buku Bimbingan
+                        </button>
                     </div>
                 </div>
             </div>
@@ -159,12 +162,22 @@ $(document).ready(function() {
                         var date = new Date(item.tanggal).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'});
                         
                         var statusBadge = '';
-                        if(item.status == 'disetujui') {
-                            statusBadge = '<span class="status-acc"><i class="fa fa-check-circle"></i> Disetujui Dosen</span>';
+                        if(item.status == 'pending') {
+                            statusBadge = '<span class="status-pending"><i class="fa fa-clock-o"></i> Menunggu Dosen</span>';
                         } else if(item.status == 'revisi') {
-                            statusBadge = '<span class="status-revisi"><i class="fa fa-times-circle"></i> Perlu Revisi</span>';
+                            statusBadge = '<span class="status-revisi"><i class="fa fa-times-circle"></i> Revisi Dosen</span>';
+                        } else if(item.status == 'disetujui') {
+                            statusBadge = '<span class="status-acc"><i class="fa fa-check-circle"></i> Disetujui Dosen</span>';
+                        } else if(item.status == 'revisi_kaprodi') {
+                            statusBadge = '<span class="status-revisi"><i class="fa fa-times-circle"></i> Revisi Kaprodi</span>';
+                        } else if(item.status == 'disetujui_kaprodi') {
+                            statusBadge = '<span class="status-acc"><i class="fa fa-check-circle"></i> Disetujui Kaprodi</span>';
+                        } else if(item.status == 'revisi_dekan') {
+                            statusBadge = '<span class="status-revisi"><i class="fa fa-times-circle"></i> Revisi Dekan</span>';
+                        } else if(item.status == 'disetujui_dekan') {
+                            statusBadge = '<span class="status-acc" style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;"><i class="fa fa-check-double"></i> Disetujui Dekan</span>';
                         } else {
-                            statusBadge = '<span class="status-pending"><i class="fa fa-clock-o"></i> Menunggu Validasi</span>';
+                            statusBadge = '<span class="status-pending"><i class="fa fa-clock-o"></i> ' + (item.status || '') + '</span>';
                         }
 
                         var fileBadge = item.path_file ? '<a href="'+item.path_file+'" target="_blank" class="btn btn-sm btn-outline-info ml-2"><i class="fa fa-download"></i> Unduh Lampiran</a>' : '';
@@ -204,6 +217,11 @@ $(document).ready(function() {
 
     loadDashboardData();
     loadLogs();
+
+    $('#btnCetakBimbingan').on('click', function(e) {
+        e.preventDefault();
+        window.open("{{ url('akademik/manajemen-ta/rekap-bimbingan/cetak') }}/" + nim, '_blank');
+    });
 
     $('#formTambahBimbingan').on('submit', function(e) {
         e.preventDefault();

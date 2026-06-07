@@ -103,6 +103,12 @@
                             <span>Validasi SK Pembimbing <sup class="text-danger">(Beta)</sup></span>
                         </a>
                     </li>
+                    <li class="{{ Route::is('dknskripsi_bimbingan') ? 'active' : '' }}">
+                        <a href="{{ route('dknskripsi_bimbingan') }}"><i class="fa fa-check-square-o"><span
+                                    class="path1"></span><span class="path2"></span></i>
+                            <span>Approval Bimbingan <sup class="text-danger">(Beta)</sup></span>
+                        </a>
+                    </li>
                     <li class="{{ Route::is('dknlap_ipkmahasiswa') ? 'active' : '' }}">
                         <a href="{{ route('dknlap_ipkmahasiswa') }}"><i class="fa fa-file-text-o"><span
                                     class="path1"></span><span class="path2"></span></i>

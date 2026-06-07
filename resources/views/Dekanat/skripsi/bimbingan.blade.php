@@ -1,0 +1,517 @@
+@extends('layout')
+
+@section('content')
+<div class="container-full">
+    <div class="content-header">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="page-title">{{ $title }}</h3>
+                <div class="d-inline-block align-items-center">
+                    <nav>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#"><i class="mdi mdi-home-outline"></i></a></li>
+                            <li class="breadcrumb-item" aria-current="page">{{ $parent_breadcrumb }}</li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ $child_breadcrumb }}</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="box animate-fade-in">
+                    <div class="box-header with-border bg-primary-light">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 class="box-title text-dark">Persetujuan Bimbingan Skripsi (Dekan / Dekanat)</h4>
+                                <p class="mb-0 text-muted small mt-5">Tinjau dan lakukan validasi akhir (approval Dekan) pada log bimbingan skripsi mahasiswa di tingkat Fakultas Anda.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="box-body">
+                        <!-- Data Table -->
+                        <div class="table-responsive">
+                            <table id="table_bimbingan_dekan" class="table table-hover table-bordered table-striped" style="width: 100%;">
+                                <thead class="bg-dark text-white">
+                                    <tr>
+                                        <th style="width: 5%; text-align: center;">No</th>
+                                        <th style="width: 12%;">NIM</th>
+                                        <th style="width: 20%;">Nama Mahasiswa</th>
+                                        <th style="width: 15%;">Program Studi</th>
+                                        <th style="width: 20%;">Dosen Pembimbing I</th>
+                                        <th style="width: 13%; text-align: center;">Progres</th>
+                                        <th style="width: 10%; text-align: center;">Menunggu Dekan</th>
+                                        <th style="width: 10%; text-align: center;">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Loaded dynamically via AJAX -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Modal Detail Bimbingan -->
+<div class="modal fade" id="modal-detail-bimbingan" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+            <div class="modal-header bg-primary py-15">
+                <h5 class="modal-title text-white font-weight-600">Detail Log Bimbingan Mahasiswa</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body py-20 px-25">
+                <!-- Info Mahasiswa -->
+                <div class="row mb-15 pb-15 border-bottom">
+                    <div class="col-md-6">
+                        <table class="table table-sm table-borderless mb-0">
+                            <tr>
+                                <td style="width: 30%;" class="font-weight-600">NIM</td>
+                                <td style="width: 5%;">:</td>
+                                <td id="modal_nim">Loading...</td>
+                            </tr>
+                            <tr>
+                                <td class="font-weight-600">Nama</td>
+                                <td>:</td>
+                                <td id="modal_nama" class="font-weight-600">Loading...</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-sm table-borderless mb-0">
+                            <tr>
+                                <td style="width: 30%;" class="font-weight-600">Pembimbing I</td>
+                                <td style="width: 5%;">:</td>
+                                <td id="modal_pembimbing">Loading...</td>
+                            </tr>
+                            <tr>
+                                <td class="font-weight-600">Total Approved</td>
+                                <td>:</td>
+                                <td id="modal_total_approved" class="font-weight-700 text-success">Loading...</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-15">
+                    <h5 class="box-title mb-0">Riwayat Bimbingan</h5>
+                    <button type="button" class="btn btn-sm btn-success font-weight-600" id="btn-approve-all" style="display:none;">
+                        <i class="fa fa-check-double mr-5"></i> Setujui Semua Menunggu Dekan
+                    </button>
+                </div>
+
+                <div id="logs-container" style="max-height: 450px; overflow-y: auto; padding-right: 5px;">
+                    <!-- Cards Loaded dynamically -->
+                </div>
+            </div>
+            <div class="modal-footer bg-light py-15">
+                <button type="button" class="btn btn-secondary px-20 font-weight-600" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Input Revisi / Tolak -->
+<div class="modal fade" id="modal-reject-reason" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1060;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+            <div class="modal-header bg-danger text-white py-10">
+                <h5 class="modal-title font-weight-600">Catatan Revisi Dekan</h5>
+                <button type="button" class="close text-white" id="close-reject-reason">&times;</button>
+            </div>
+            <form id="form_reject_bimbingan">
+                <div class="modal-body">
+                    <input type="hidden" id="reject_id_log">
+                    <div class="form-group mb-0">
+                        <label class="font-weight-600 text-dark">Alasan Penolakan / Catatan Revisi <span class="text-danger">*</span></label>
+                        <textarea id="reject_reason" class="form-control" rows="4" placeholder="Tuliskan feedback atau revisi yang harus diperbaiki mahasiswa..." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light py-10">
+                    <button type="button" class="btn btn-sm btn-secondary font-weight-600" id="btn-cancel-reject">Batal</button>
+                    <button type="submit" class="btn btn-sm btn-danger font-weight-600"><i class="fa fa-save mr-5"></i> Simpan Catatan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .animate-fade-in {
+        animation: fadeIn 0.4s ease-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .log-item-card {
+        border-left: 4px solid #dee2e6;
+        background: #f8f9fa;
+        transition: all 0.2s;
+    }
+    .log-item-card.state-pending { border-left-color: #ffb136; }
+    .log-item-card.state-revisi { border-left-color: #ef5350; }
+    .log-item-card.state-disetujui { border-left-color: #0288d1; }
+    .log-item-card.state-revisi-kaprodi { border-left-color: #d32f2f; }
+    .log-item-card.state-disetujui-kaprodi { border-left-color: #00acc1; }
+    .log-item-card.state-revisi-dekan { border-left-color: #c2185b; }
+    .log-item-card.state-disetujui-dekan { border-left-color: #2e7d32; }
+
+    .log-item-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+</style>
+@endsection
+
+@section('script-advanced')
+<script>
+    const CONFIG = {
+        api_url: "{{ $api_url }}",
+        kode_fakultas: "{{ $session_kode_fakultas }}",
+        token: "{{ $api_token }}",
+        username: "{{ $session_nim }}"
+    };
+
+    let tableBimbingan;
+    let selectedSkripsiId = null;
+    let selectedStudentNim = null;
+
+    $(document).ready(function() {
+        // Initialize Datatable
+        tableBimbingan = $('#table_bimbingan_dekan').DataTable({
+            processing: true,
+            ajax: {
+                url: CONFIG.api_url + "dekan/skripsi/bimbingan/list",
+                type: "GET",
+                headers: {
+                    "Authorization": "Bearer " + CONFIG.token,
+                    "username": CONFIG.username
+                },
+                data: { kode_fakultas: CONFIG.kode_fakultas },
+                dataSrc: "data"
+            },
+            columns: [
+                {
+                    data: null,
+                    className: "text-center font-weight-600",
+                    render: (data, type, row, meta) => meta.row + 1
+                },
+                { data: 'nim', className: "font-weight-600" },
+                { data: 'nama_mahasiswa', className: "font-weight-600 text-dark" },
+                { data: 'prodi', className: "small font-weight-500" },
+                { data: 'pembimbing', defaultContent: '<span class="text-muted">-</span>' },
+                {
+                    data: null,
+                    className: "text-center",
+                    render: function(row) {
+                        let total = parseInt(row.total_approved) || 0;
+                        let min = parseInt(row.min_bimbingan) || 8;
+                        let pct = Math.min(100, Math.round((total / min) * 100));
+                        let colorClass = pct >= 100 ? 'bg-success' : 'bg-warning';
+                        return `
+                            <div class="d-flex align-items-center justify-content-center">
+                                <span class="font-weight-700 mr-10">${total}/${min}</span>
+                                <div class="progress progress-xs w-60 mb-0">
+                                    <div class="progress-bar ${colorClass}" role="progressbar" style="width: ${pct}%" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                },
+                {
+                    data: 'total_waiting_dekan',
+                    className: "text-center",
+                    render: function(val) {
+                        let count = parseInt(val) || 0;
+                        if (count > 0) {
+                            return `<span class="badge badge-pill badge-info font-weight-700" style="font-size: 11px;">${count} Baru</span>`;
+                        }
+                        return `<span class="badge badge-pill badge-light text-muted">0</span>`;
+                    }
+                },
+                {
+                    data: null,
+                    className: "text-center",
+                    orderable: false,
+                    render: function(data) {
+                        return `
+                            <div class="text-nowrap">
+                                <button class="btn btn-xs btn-info font-weight-600 mr-5" onclick="openDetailModal(${data.id}, '${data.nim}', '${data.nama_mahasiswa.replace(/'/g, "\\'")}', '${(data.pembimbing || '-').replace(/'/g, "\\'")}', ${data.total_approved})">
+                                    <i class="fa fa-search mr-5"></i> Detail
+                                </button>
+                                <button class="btn btn-xs btn-dark font-weight-600" onclick="printBimbingan('${data.nim}')">
+                                    <i class="fa fa-print"></i> Cetak
+                                </button>
+                            </div>
+                        `;
+                    }
+                }
+            ]
+        });
+
+        // Event handler for Bulk Approve
+        $('#btn-approve-all').on('click', function() {
+            if (!selectedSkripsiId) return;
+
+            swal({
+                title: "Approve Semua?",
+                text: "Apakah Anda yakin ingin memberikan persetujuan Dekan untuk semua log bimbingan mahasiswa ini yang sedang menunggu?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#28a745",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Ya, Setujui Semua!",
+                cancelButtonText: "Batal"
+            }, function(isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        url: CONFIG.api_url + "dekan/skripsi/bimbingan/approve",
+                        type: "POST",
+                        headers: {
+                            "Authorization": "Bearer " + CONFIG.token,
+                            "username": CONFIG.username
+                        },
+                        data: { id_skripsi: selectedSkripsiId },
+                        success: function(res) {
+                            if (res.success) {
+                                swal("Berhasil!", res.success, "success");
+                                $('#modal-detail-bimbingan').modal('hide');
+                                tableBimbingan.ajax.reload(null, false);
+                            }
+                        },
+                        error: function(err) {
+                            swal("Gagal!", err.responseJSON?.error || "Gagal melakukan approval.", "error");
+                        }
+                    });
+                }
+            });
+        });
+
+        // Event handler for Reject Reason
+        $('#close-reject-reason, #btn-cancel-reject').on('click', function() {
+            $('#modal-reject-reason').modal('hide');
+        });
+
+        $('#form_reject_bimbingan').on('submit', function(e) {
+            e.preventDefault();
+            let id_log = $('#reject_id_log').val();
+            let note = $('#reject_reason').val();
+
+            $.ajax({
+                url: CONFIG.api_url + "dekan/skripsi/bimbingan/reject",
+                type: "POST",
+                headers: {
+                    "Authorization": "Bearer " + CONFIG.token,
+                    "username": CONFIG.username
+                },
+                data: {
+                    id_log: id_log,
+                    catatan_dosen: note
+                },
+                success: function(res) {
+                    if (res.success) {
+                        $.toast({
+                            heading: 'Berhasil',
+                            text: res.success,
+                            position: 'top-right',
+                            icon: 'success',
+                            hideAfter: 3000
+                        });
+                        $('#modal-reject-reason').modal('hide');
+                        
+                        // Refresh modal logs list
+                        loadModalLogs(selectedStudentNim, selectedSkripsiId);
+                        tableBimbingan.ajax.reload(null, false);
+                    }
+                },
+                error: function(err) {
+                    swal("Gagal!", err.responseJSON?.error || "Gagal menolak log bimbingan.", "error");
+                }
+            });
+        });
+    });
+
+    function printBimbingan(nim) {
+        window.open("{{ url('akademik/manajemen-ta/rekap-bimbingan/cetak') }}/" + nim, '_blank');
+    }
+
+    function openDetailModal(id_skripsi, nim, nama, pembimbing, totalApproved) {
+        selectedSkripsiId = id_skripsi;
+        selectedStudentNim = nim;
+
+        $('#modal_nim').text(nim);
+        $('#modal_nama').text(nama);
+        $('#modal_pembimbing').text(pembimbing);
+        $('#modal_total_approved').text(totalApproved + ' Log Disetujui');
+
+        $('#logs-container').html('<div class="text-center py-20"><i class="fa fa-spinner fa-spin fa-2x"></i><p class="mt-5">Memuat logs bimbingan...</p></div>');
+        $('#btn-approve-all').hide();
+        $('#modal-detail-bimbingan').modal('show');
+
+        loadModalLogs(nim, id_skripsi);
+    }
+
+    function loadModalLogs(nim, id_skripsi) {
+        $.ajax({
+            url: CONFIG.api_url + "mahasiswa/skripsi/log-bimbingan",
+            type: "GET",
+            headers: {
+                "Authorization": "Bearer " + CONFIG.token,
+                "username": CONFIG.username
+            },
+            data: { nim: nim },
+            success: function(res) {
+                if (res.status === 'success' && res.data.length > 0) {
+                    let html = '';
+                    let hasWaiting = false;
+
+                    res.data.forEach(function(item, idx) {
+                        let date = item.tanggal ? new Date(item.tanggal).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'}) : '-';
+                        let stateClass = 'state-' + (item.status || 'pending');
+                        let statusText = getStatusLabel(item.status);
+                        
+                        let badge = `<span class="badge ${getStatusBadgeClass(item.status)}">${statusText}</span>`;
+                        let fileLink = item.path_file ? `<a href="${item.path_file}" target="_blank" class="btn btn-xs btn-outline-info ml-10"><i class="fa fa-download mr-5"></i> Unduh Lampiran</a>` : '';
+                        let notes = item.catatan_dosen ? `<div class="mt-5 p-5 bg-danger-light rounded small text-danger font-weight-500"><strong>Catatan/Revisi:</strong> ${item.catatan_dosen}</div>` : '';
+
+                        let actionBtn = '';
+                        if (item.status === 'disetujui_kaprodi') {
+                            hasWaiting = true;
+                            actionBtn = `
+                                <div class="mt-10 pt-10 border-top d-flex justify-content-end">
+                                    <button class="btn btn-xs btn-success font-weight-600 mr-5" onclick="approveSingleLog(${item.id})">
+                                        <i class="fa fa-check mr-5"></i> Setujui (ACC)
+                                    </button>
+                                    <button class="btn btn-xs btn-danger font-weight-600" onclick="rejectSingleLog(${item.id})">
+                                        <i class="fa fa-times mr-5"></i> Minta Revisi
+                                    </button>
+                                </div>
+                            `;
+                        }
+
+                        html += `
+                            <div class="card mb-15 p-15 log-item-card ${stateClass}">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <span class="text-primary font-weight-700 small">Bimbingan #${idx + 1}</span>
+                                        <h5 class="my-5 font-weight-600 text-dark">${item.topik || '-'}</h5>
+                                        <p class="mb-5 text-muted small">${item.uraian || '-'}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <div>${badge}</div>
+                                        <div class="text-muted small mt-5"><i class="fa fa-calendar mr-5"></i> ${date}</div>
+                                    </div>
+                                </div>
+                                ${notes}
+                                <div class="mt-10">${fileLink}</div>
+                                ${actionBtn}
+                            </div>
+                        `;
+                    });
+
+                    $('#logs-container').html(html);
+
+                    if (hasWaiting) {
+                        $('#btn-approve-all').show();
+                    } else {
+                        $('#btn-approve-all').hide();
+                    }
+                } else {
+                    $('#logs-container').html('<div class="alert alert-info">Belum ada riwayat bimbingan.</div>');
+                    $('#btn-approve-all').hide();
+                }
+            },
+            error: function() {
+                $('#logs-container').html('<div class="alert alert-danger">Gagal memuat log bimbingan.</div>');
+                $('#btn-approve-all').hide();
+            }
+        });
+    }
+
+    function approveSingleLog(id_log) {
+        swal({
+            title: "Setujui Bimbingan?",
+            text: "Berikan approval Dekan untuk catatan log bimbingan ini?",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonColor: "#28a745",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Ya, Setujui!",
+            cancelButtonText: "Batal"
+        }, function(isConfirm) {
+            if (isConfirm) {
+                $.ajax({
+                    url: CONFIG.api_url + "dekan/skripsi/bimbingan/approve",
+                    type: "POST",
+                    headers: {
+                        "Authorization": "Bearer " + CONFIG.token,
+                        "username": CONFIG.username
+                    },
+                    data: { id_log: id_log },
+                    success: function(res) {
+                        if (res.success) {
+                            $.toast({
+                                heading: 'Berhasil',
+                                text: res.success,
+                                position: 'top-right',
+                                icon: 'success',
+                                hideAfter: 3000
+                            });
+                            // Refresh modal logs list
+                            loadModalLogs(selectedStudentNim, selectedSkripsiId);
+                            tableBimbingan.ajax.reload(null, false);
+                        }
+                    },
+                    error: function(err) {
+                        swal("Gagal!", err.responseJSON?.error || "Gagal melakukan approval.", "error");
+                    }
+                });
+            }
+        });
+    }
+
+    function rejectSingleLog(id_log) {
+        $('#reject_id_log').val(id_log);
+        $('#reject_reason').val('');
+        $('#modal-reject-reason').modal('show');
+    }
+
+    function getStatusLabel(status) {
+        switch(status) {
+            case 'pending': return 'Menunggu Dosen';
+            case 'revisi': return 'Revisi Dosen';
+            case 'disetujui': return 'Menunggu Kaprodi';
+            case 'revisi_kaprodi': return 'Revisi Kaprodi';
+            case 'disetujui_kaprodi': return 'Menunggu Dekan';
+            case 'revisi_dekan': return 'Revisi Dekan';
+            case 'disetujui_dekan': return 'Selesai (Approved Dekan)';
+            default: return status || '';
+        }
+    }
+
+    function getStatusBadgeClass(status) {
+        switch(status) {
+            case 'pending': return 'badge-warning';
+            case 'revisi': return 'badge-danger';
+            case 'disetujui': return 'badge-primary';
+            case 'revisi_kaprodi': return 'badge-danger';
+            case 'disetujui_kaprodi': return 'badge-info';
+            case 'revisi_dekan': return 'badge-danger';
+            case 'disetujui_dekan': return 'badge-success';
+            default: return 'badge-secondary';
+        }
+    }
+</script>
+@endsection

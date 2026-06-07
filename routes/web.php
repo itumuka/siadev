@@ -52,10 +52,13 @@ Route::middleware(['ceklogin'])->group(function () {
     Route::get("/akademik/lihat-penilaian", "Akademik@lihat_penilaian")->name('aklihat_penilaian');
     Route::get("/kaprodi/lihat-penilaian", "Kaprodi@lihat_penilaian")->name('kplihat_penilaian');
     Route::get("/kaprodi/skripsi/manajemen", "Kaprodi@skripsi_index")->name('kpskripsi_index');
+    Route::get("/kaprodi/skripsi/bimbingan", "Kaprodi@skripsi_bimbingan")->name('kpskripsi_bimbingan');
     Route::get("/kaprodi/skripsi/syarat", "Kaprodi@skripsi_syarat")->name('kpskripsi_syarat');
     Route::get("/kaprodi/skripsi/cpl", "Kaprodi@skripsi_cpl")->name('kpskripsi_cpl');
     Route::get("/kaprodi/skripsi/cpmk", "Kaprodi@skripsi_cpmk")->name('kpskripsi_cpmk');
     Route::get("/kaprodi/skripsi/penetapan", "Kaprodi@skripsi_penetapan")->name('kpskripsi_penetapan');
+    Route::get("/akademik/manajemen-ta/rekap-bimbingan/cetak/{nim}", "Akademik@cetak_bimbingan")->name('cetak_bimbingan');
+
     
     Route::get("/dosen/input-nilai-khs", "Dosen@input_nilai_khs")->name('input_nilai_khs_dosen');
     Route::get("/dosen/form-input-nilai-uts", "Dosen@form_input_nilai_uts")->name('form_input_nilai_uts_dosen');
@@ -122,9 +125,11 @@ Route::middleware(['ceklogin'])->group(function () {
 
         // Skripsi Dekanat
         Route::get("/dekanat/skripsi/validasi-sk", "Dekanat@skripsi_index_sk")->name('dknskripsi_index_sk');
+        Route::get("/dekanat/skripsi/bimbingan", "Dekanat@skripsi_bimbingan")->name('dknskripsi_bimbingan');
         Route::get("/dekanat/skripsi/cetak-sk/{id}", "Dekanat@skripsi_print_sk")->name('dknskripsi_print_sk');
         Route::get("/dekanat/skripsi/cetak-surat-tugas/{id}", "Dekanat@skripsi_print_surat_tugas")->name('dknskripsi_print_st');
         Route::get("/dekanat/skripsi/print-sk/{id}", "Dekanat@skripsi_print_sk")->name('dknskripsi_print_sk_old');
+
 
 
         Route::get("/akademik/tahunajaran", "Akademik@tahunajaran")->name('aktahunajaran');

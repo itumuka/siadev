@@ -1007,6 +1007,15 @@ class Akademik extends Controller
         return view('Akademik/cetak/cetakberitaacaraskripsi', compact('title', 'id_skripsi_ujian', 'session_nama_tahunakademik', 'tgl'));
     }
 
+    public function cetak_bimbingan($nim)
+    {
+        $title = "Cetak Buku Bimbingan Skripsi";
+        $session_nama_tahunakademik = Session::has('session_nama_tahunakademik') ? Session::get('session_nama_tahunakademik') : '';
+        $tgl = date('d F Y');
+        return view('Akademik/cetak/cetakbimbingan', compact('title', 'nim', 'session_nama_tahunakademik', 'tgl'));
+    }
+
+
     public function cetakpresensi($a)
     {
         $id_kelas = $a;

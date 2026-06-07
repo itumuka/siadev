@@ -79,6 +79,11 @@
                                                 class="path1"></span><span class="path2"></span></i>Penetapan Nilai (BA)
                                         <sup class="text-danger">(Beta)</sup></a>
                                 </li>
+                                <li class="{{ Route::is('kpskripsi_bimbingan') ? 'active' : '' }}">
+                                    <a href="{{ route('kpskripsi_bimbingan') }}"><i class="fa fa-check-square-o"><span
+                                                class="path1"></span><span class="path2"></span></i>Approval Bimbingan
+                                        <sup class="text-danger">(Beta)</sup></a>
+                                </li>
                             </ul>
                         </li>
                     @endif

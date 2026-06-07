@@ -68,6 +68,9 @@
                                     <button class="btn btn-block btn-success" id="btn_acc_ujian" style="display:none;" data-toggle="modal" data-target="#modal_acc_ujian">
                                         <i class="fa fa-check-circle"></i> Berikan ACC Ujian
                                     </button>
+                                    <button class="btn btn-block btn-dark mt-2" id="btn_cetak_bimbingan" style="display:none;">
+                                        <i class="fa fa-print"></i> Cetak Bimbingan
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -227,6 +230,7 @@
                             if(mhs.total_bimbingan_acc >= minBimbingan) {
                                 $('#btn_acc_ujian').show();
                             }
+                            $('#btn_cetak_bimbingan').data('nim', mhs.nim).show();
                         }
                     }
                 }
@@ -273,9 +277,13 @@
                         data: 'status',
                         className: 'text-center',
                         render: function(data) {
-                            if(data == 'pending') return '<span class="badge badge-warning">Pending</span>';
-                            if(data == 'disetujui') return '<span class="badge badge-success">Disetujui</span>';
-                            if(data == 'revisi') return '<span class="badge badge-danger">Revisi</span>';
+                            if(data == 'pending') return '<span class="badge badge-warning">Pending Dosen</span>';
+                            if(data == 'revisi') return '<span class="badge badge-danger">Revisi Dosen</span>';
+                            if(data == 'disetujui') return '<span class="badge badge-primary">Menunggu Kaprodi</span>';
+                            if(data == 'revisi_kaprodi') return '<span class="badge badge-danger">Revisi Kaprodi</span>';
+                            if(data == 'disetujui_kaprodi') return '<span class="badge badge-info">Menunggu Dekan</span>';
+                            if(data == 'revisi_dekan') return '<span class="badge badge-danger">Revisi Dekan</span>';
+                            if(data == 'disetujui_dekan') return '<span class="badge badge-success">Approved Dekan</span>';
                             return data;
                         }
                     },
@@ -283,6 +291,9 @@
                         data: null,
                         className: 'text-center',
                         render: function(data, type, row) {
+                            if (row.status !== 'pending' && row.status !== 'revisi') {
+                                return '<button class="btn btn-sm btn-secondary" disabled><i class="fa fa-lock"></i> Terkunci</button>';
+                            }
                             // Convert object to base64 to pass to modal safely
                             let b64 = btoa(unescape(encodeURIComponent(JSON.stringify(row))));
                             return '<button class="btn btn-sm btn-primary btn-validasi" data-row="'+b64+'"><i class="fa fa-edit"></i> Validasi</button>';
@@ -408,6 +419,17 @@
                         btn.prop('disabled', false).html('<i class="fa fa-check-circle"></i> Simpan ACC');
                     }
                 });
+            });
+
+            // 6. Cetak Bimbingan Handler
+            $('#btn_cetak_bimbingan').on('click', function(e) {
+                e.preventDefault();
+                var nim = $(this).data('nim');
+                if(nim) {
+                    window.open("{{ url('akademik/manajemen-ta/rekap-bimbingan/cetak') }}/" + nim, '_blank');
+                } else {
+                    showToastr('error', 'Gagal', 'NIM mahasiswa tidak ditemukan.');
+                }
             });
         });
     </script>

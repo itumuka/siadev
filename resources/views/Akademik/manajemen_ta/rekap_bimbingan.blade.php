@@ -168,7 +168,8 @@ $(function(){
                 searchable: false,
                 className: 'text-center',
                 render: function(data, type, row) {
-                    return '<button class="btn btn-sm btn-info btn-view-log" data-nim="'+row.nim+'" data-nama="'+(row.nama_mahasiswa||'')+'">Lihat</button>';
+                    return '<button class="btn btn-sm btn-info btn-view-log mr-1" data-nim="'+row.nim+'" data-nama="'+(row.nama_mahasiswa||'')+'">Lihat</button>' +
+                           '<button class="btn btn-sm btn-dark btn-print-log" data-nim="'+row.nim+'"><i class="fa fa-print"></i> Cetak</button>';
                 }
             }
         ],
@@ -238,6 +239,7 @@ $(function(){
         var nim = $(this).data('nim');
         var nama = $(this).data('nama');
         $('#modal_nama').text(' - ' + nama + ' ('+nim+')');
+        $('#btnModalPrint').data('nim', nim).show();
         $('#rekapLogContainer').html('<div class="text-center p-20"><i class="fa fa-spinner fa-spin fa-2x"></i><p>Memuat rekapan bimbingan...</p></div>');
         $('#modalRekapLog').modal('show');
 
@@ -256,11 +258,18 @@ $(function(){
                             var date = item.tanggal ? new Date(item.tanggal).toLocaleDateString('id-ID') : '-';
                             var status = item.status || '';
                             var badge = '<span class="badge badge-secondary">'+status+'</span>';
-                            if(status == 'disetujui') badge = '<span class="badge badge-success">Disetujui</span>';
-                            if(status == 'revisi') badge = '<span class="badge badge-warning">Revisi</span>';
+                            if(status == 'pending') badge = '<span class="badge badge-warning">Menunggu Dosen</span>';
+                            if(status == 'revisi') badge = '<span class="badge badge-danger">Revisi Dosen</span>';
+                            if(status == 'disetujui') badge = '<span class="badge badge-primary">Menunggu Kaprodi</span>';
+                            if(status == 'revisi_kaprodi') badge = '<span class="badge badge-danger">Revisi Kaprodi</span>';
+                            if(status == 'disetujui_kaprodi') badge = '<span class="badge badge-info">Menunggu Dekan</span>';
+                            if(status == 'revisi_dekan') badge = '<span class="badge badge-danger">Revisi Dekan</span>';
+                            if(status == 'disetujui_dekan') badge = '<span class="badge badge-success">Selesai (Approved Dekan)</span>';
+
+                            var notes = item.catatan_dosen ? '<div class="text-danger small mt-2"><strong>Catatan:</strong> '+item.catatan_dosen+'</div>' : '';
 
                             html += '<div class="card mb-2"><div class="card-body">' +
-                                    '<div class="d-flex justify-content-between"><div><strong>'+ (idx+1) +'. '+ (item.topik || '-') +'</strong><div class="text-muted small">'+(item.uraian||'')+'</div></div><div class="text-right">'+badge+'<div class="text-muted small">'+date+'</div></div></div>' +
+                                    '<div class="d-flex justify-content-between"><div><strong>'+ (idx+1) +'. '+ (item.topik || '-') +'</strong><div class="text-muted small">'+(item.uraian||'')+'</div>'+notes+'</div><div class="text-right">'+badge+'<div class="text-muted small">'+date+'</div></div></div>' +
                                     '</div></div>';
                         });
                     }
@@ -278,10 +287,17 @@ $(function(){
         });
     });
 
+    $(document).on('click', '.btn-print-log, .btn-modal-print', function(e){
+        e.preventDefault();
+        var nim = $(this).data('nim');
+        window.open("{{ url('akademik/manajemen-ta/rekap-bimbingan/cetak') }}/" + nim, '_blank');
+    });
+
     $('#refreshList').on('click', function(e){
         e.preventDefault();
         table.ajax.reload(null, false);
     });
 });
+
 </script>
 @endsection
