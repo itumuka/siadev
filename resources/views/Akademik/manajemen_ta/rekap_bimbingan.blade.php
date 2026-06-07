@@ -261,10 +261,7 @@ $(function(){
                             if(status == 'pending') badge = '<span class="badge badge-warning">Menunggu Dosen</span>';
                             if(status == 'revisi') badge = '<span class="badge badge-danger">Revisi Dosen</span>';
                             if(status == 'disetujui') badge = '<span class="badge badge-primary">Menunggu Kaprodi</span>';
-                            if(status == 'revisi_kaprodi') badge = '<span class="badge badge-danger">Revisi Kaprodi</span>';
-                            if(status == 'disetujui_kaprodi') badge = '<span class="badge badge-info">Menunggu Dekan</span>';
-                            if(status == 'revisi_dekan') badge = '<span class="badge badge-danger">Revisi Dekan</span>';
-                            if(status == 'disetujui_dekan') badge = '<span class="badge badge-success">Selesai (Approved Dekan)</span>';
+                            if(status == 'disetujui_kaprodi') badge = '<span class="badge badge-success">Selesai (Disetujui Kaprodi)</span>';
 
                             var notes = item.catatan_dosen ? '<div class="text-danger small mt-2"><strong>Catatan:</strong> '+item.catatan_dosen+'</div>' : '';
 

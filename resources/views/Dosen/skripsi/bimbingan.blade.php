@@ -280,10 +280,7 @@
                             if(data == 'pending') return '<span class="badge badge-warning">Pending Dosen</span>';
                             if(data == 'revisi') return '<span class="badge badge-danger">Revisi Dosen</span>';
                             if(data == 'disetujui') return '<span class="badge badge-primary">Menunggu Kaprodi</span>';
-                            if(data == 'revisi_kaprodi') return '<span class="badge badge-danger">Revisi Kaprodi</span>';
-                            if(data == 'disetujui_kaprodi') return '<span class="badge badge-info">Menunggu Dekan</span>';
-                            if(data == 'revisi_dekan') return '<span class="badge badge-danger">Revisi Dekan</span>';
-                            if(data == 'disetujui_dekan') return '<span class="badge badge-success">Approved Dekan</span>';
+                            if(data == 'disetujui_kaprodi') return '<span class="badge badge-success">Selesai (Disetujui Kaprodi)</span>';
                             return data;
                         }
                     },

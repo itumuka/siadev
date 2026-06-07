@@ -168,14 +168,8 @@ $(document).ready(function() {
                             statusBadge = '<span class="status-revisi"><i class="fa fa-times-circle"></i> Revisi Dosen</span>';
                         } else if(item.status == 'disetujui') {
                             statusBadge = '<span class="status-acc"><i class="fa fa-check-circle"></i> Disetujui Dosen</span>';
-                        } else if(item.status == 'revisi_kaprodi') {
-                            statusBadge = '<span class="status-revisi"><i class="fa fa-times-circle"></i> Revisi Kaprodi</span>';
                         } else if(item.status == 'disetujui_kaprodi') {
-                            statusBadge = '<span class="status-acc"><i class="fa fa-check-circle"></i> Disetujui Kaprodi</span>';
-                        } else if(item.status == 'revisi_dekan') {
-                            statusBadge = '<span class="status-revisi"><i class="fa fa-times-circle"></i> Revisi Dekan</span>';
-                        } else if(item.status == 'disetujui_dekan') {
-                            statusBadge = '<span class="status-acc" style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;"><i class="fa fa-check-double"></i> Disetujui Dekan</span>';
+                            statusBadge = '<span class="status-acc" style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;"><i class="fa fa-check-double"></i> Selesai (Disetujui Kaprodi)</span>';
                         } else {
                             statusBadge = '<span class="status-pending"><i class="fa fa-clock-o"></i> ' + (item.status || '') + '</span>';
                         }

@@ -109,9 +109,6 @@
                         <button type="button" class="btn btn-sm btn-success font-weight-600 mr-5" id="btn-approve-all">
                             <i class="fa fa-check mr-5"></i> Sahkan Bimbingan
                         </button>
-                        <button type="button" class="btn btn-sm btn-danger font-weight-600" id="btn-reject-all">
-                            <i class="fa fa-times mr-5"></i> Minta Revisi
-                        </button>
                     </div>
                 </div>
 
@@ -126,30 +123,6 @@
     </div>
 </div>
 
-<!-- Modal Input Revisi / Tolak -->
-<div class="modal fade" id="modal-reject-reason" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1060;">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content" style="border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
-            <div class="modal-header bg-danger text-white py-10">
-                <h5 class="modal-title font-weight-600">Catatan Revisi Kaprodi</h5>
-                <button type="button" class="close text-white" id="close-reject-reason">&times;</button>
-            </div>
-            <form id="form_reject_bimbingan">
-                <div class="modal-body">
-                    <input type="hidden" id="reject_id_log">
-                    <div class="form-group mb-0">
-                        <label class="font-weight-600 text-dark">Alasan Penolakan / Catatan Revisi <span class="text-danger">*</span></label>
-                        <textarea id="reject_reason" class="form-control" rows="4" placeholder="Tuliskan feedback atau revisi yang harus diperbaiki mahasiswa..." required></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer bg-light py-10">
-                    <button type="button" class="btn btn-sm btn-secondary font-weight-600" id="btn-cancel-reject">Batal</button>
-                    <button type="submit" class="btn btn-sm btn-danger font-weight-600"><i class="fa fa-save mr-5"></i> Simpan Catatan</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 
 <style>
     .animate-fade-in {
@@ -299,59 +272,6 @@
                         }
                     });
                 }
-            });
-        });
-
-        // Event handler for Bulk Reject (Minta Revisi)
-        $('#btn-reject-all').on('click', function() {
-            $('#reject_id_log').val(''); // Empty means bulk for student skripsi
-            $('#reject_reason').val('');
-            $('#modal-reject-reason').modal('show');
-        });
-
-        // Event handler for Reject Reason
-        $('#close-reject-reason, #btn-cancel-reject').on('click', function() {
-            $('#modal-reject-reason').modal('hide');
-        });
-
-        $('#form_reject_bimbingan').on('submit', function(e) {
-            e.preventDefault();
-            let id_log = $('#reject_id_log').val();
-            let note = $('#reject_reason').val();
-
-            let payload = { catatan_dosen: note };
-            if (id_log) {
-                payload.id_log = id_log;
-            } else {
-                payload.id_skripsi = selectedSkripsiId;
-            }
-
-            $.ajax({
-                url: CONFIG.api_url + "kaprodi/skripsi/bimbingan/reject",
-                type: "POST",
-                headers: {
-                    "Authorization": "Bearer " + CONFIG.token,
-                    "username": CONFIG.username
-                },
-                data: payload,
-                success: function(res) {
-                    if (res.success) {
-                        $.toast({
-                            heading: 'Berhasil',
-                            text: res.success,
-                            position: 'top-right',
-                            icon: 'success',
-                            hideAfter: 3000
-                        });
-                        $('#modal-reject-reason').modal('hide');
-                        $('#modal-detail-bimbingan').modal('hide'); // Close detail modal on bulk reject
-                        tableBimbingan.ajax.reload(null, false);
-                    }
-                },
-                error: function(err) {
-                    swal("Gagal!", err.responseJSON?.error || "Gagal memproses penolakan.", "error");
-                }
-            });
         });
     });
 
@@ -445,10 +365,7 @@
             case 'pending': return 'Menunggu Dosen';
             case 'revisi': return 'Revisi Dosen';
             case 'disetujui': return 'Menunggu Kaprodi';
-            case 'revisi_kaprodi': return 'Revisi Kaprodi';
-            case 'disetujui_kaprodi': return 'Menunggu Dekan';
-            case 'revisi_dekan': return 'Revisi Dekan';
-            case 'disetujui_dekan': return 'Selesai (Approved Dekan)';
+            case 'disetujui_kaprodi': return 'Selesai (Disetujui Kaprodi)';
             default: return status || '';
         }
     }
@@ -458,10 +375,7 @@
             case 'pending': return 'badge-warning';
             case 'revisi': return 'badge-danger';
             case 'disetujui': return 'badge-primary';
-            case 'revisi_kaprodi': return 'badge-danger';
-            case 'disetujui_kaprodi': return 'badge-info';
-            case 'revisi_dekan': return 'badge-danger';
-            case 'disetujui_dekan': return 'badge-success';
+            case 'disetujui_kaprodi': return 'badge-success';
             default: return 'badge-secondary';
         }
     }
