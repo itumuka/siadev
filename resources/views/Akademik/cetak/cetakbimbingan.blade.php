@@ -303,6 +303,7 @@
                 },
                 data: { nim: nim },
                 success: function(res) {
+                    console.log("Cetak Data Response:", res);
                     if (res.status === 'success') {
                         const m = res.data.mahasiswa;
                         const s = res.data.skripsi;
