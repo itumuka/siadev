@@ -373,33 +373,31 @@
 
                         // Generate QRCodes dynamically inside hidden generators
                         if (m.valid_id_kaprodi) {
-                            let qrKaprodiText = `VALID ID: ${m.valid_id_kaprodi}`;
-                            qrKaprodiText += `\nPengesahan Administratif Log Bimbingan`;
-                            qrKaprodiText += `\nMahasiswa: ${m.nama_mahasiswa} (${m.nim})`;
-                            qrKaprodiText += `\nProdi: ${m.nama_program_studi}`;
-                            qrKaprodiText += `\nKaprodi: ${m.nama_kaprodi}`;
-                            if (m.nidn_kaprodi) qrKaprodiText += ` (NIDN: ${m.nidn_kaprodi})`;
+                            let qrKaprodiText = `VALID ID: ${m.valid_id_kaprodi}\n` +
+                                                `Pengesahan Kaprodi\n` +
+                                                `Mhs: ${(m.nama_mahasiswa || '').substring(0, 35)} (${m.nim || ''})\n` +
+                                                `Prodi: ${(m.nama_program_studi || '').substring(0, 35)}\n` +
+                                                `Kaprodi: ${(m.nama_kaprodi || '').substring(0, 35)}`;
 
                             new QRCode(document.getElementById("gen_qr_kaprodi"), {
                                 text: qrKaprodiText,
                                 width: 150,
                                 height: 150,
-                                correctLevel: QRCode.CorrectLevel.H
+                                correctLevel: QRCode.CorrectLevel.M
                             });
                         }
 
                         if (s && s.valid_id_pembimbing1) {
-                            let qrPemb1Text = `VALID ID: ${s.valid_id_pembimbing1}`;
-                            qrPemb1Text += `\nPersetujuan Buku Bimbingan Skripsi`;
-                            qrPemb1Text += `\nMahasiswa: ${m.nama_mahasiswa} (${m.nim})`;
-                            qrPemb1Text += `\nPembimbing I: ${s.nama_pembimbing1}`;
-                            if (s.nidn_pembimbing1) qrPemb1Text += ` (NIDN: ${s.nidn_pembimbing1})`;
+                            let qrPemb1Text = `VALID ID: ${s.valid_id_pembimbing1}\n` +
+                                              `Persetujuan Pembimbing I\n` +
+                                              `Mhs: ${(m.nama_mahasiswa || '').substring(0, 35)} (${m.nim || ''})\n` +
+                                              `Pembimbing: ${(s.nama_pembimbing1 || '').substring(0, 35)}`;
 
                             new QRCode(document.getElementById("gen_qr_pembimbing1"), {
                                 text: qrPemb1Text,
                                 width: 150,
                                 height: 150,
-                                correctLevel: QRCode.CorrectLevel.H
+                                correctLevel: QRCode.CorrectLevel.M
                             });
                         }
 
@@ -407,20 +405,18 @@
                             if (log.valid_id) {
                                 $('#qrcode_generators').append(`<div id="gen_qr_row_${log.id}"></div>`);
                                 
-                                let qrRowText = `VALID ID: ${log.valid_id}`;
-                                qrRowText += `\nPersetujuan Log Bimbingan`;
-                                qrRowText += `\nMahasiswa: ${m.nama_mahasiswa} (${m.nim})`;
-                                qrRowText += `\nTanggal: ${formatTanggal(log.tanggal)}`;
-                                qrRowText += `\nTopik: ${log.topik}`;
-                                qrRowText += `\nPembimbing: ${log.nama_dosen}`;
-                                if (log.nidn_dosen) qrRowText += ` (NIDN: ${log.nidn_dosen})`;
-                                if (log.updated_at) qrRowText += `\nWaktu ACC: ${formatTanggal(log.updated_at)}`;
+                                let qrRowText = `VALID ID: ${log.valid_id}\n` +
+                                                `ACC Log Bimbingan\n` +
+                                                `Mhs: ${m.nim || ''}\n` +
+                                                `Dosen: ${(log.nama_dosen || '').substring(0, 35)}\n` +
+                                                `Tgl: ${formatTanggal(log.tanggal)}`;
+                                if (log.updated_at) qrRowText += `\nWaktu: ${formatTanggal(log.updated_at)}`;
 
                                 new QRCode(document.getElementById("gen_qr_row_" + log.id), {
                                     text: qrRowText,
                                     width: 150,
                                     height: 150,
-                                    correctLevel: QRCode.CorrectLevel.H
+                                    correctLevel: QRCode.CorrectLevel.M
                                 });
                             }
                         });
