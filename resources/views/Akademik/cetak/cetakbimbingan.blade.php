@@ -129,6 +129,20 @@
             line-height: 1.1;
         }
 
+        .row-qrcode img, .row-qrcode canvas { 
+            width: 55px; 
+            height: 55px; 
+            display: block; 
+            margin: 0 auto;
+        }
+        #qrcode_kaprodi_container img, #qrcode_kaprodi_container canvas,
+        #qrcode_pembimbing1_container img, #qrcode_pembimbing1_container canvas { 
+            width: 75px; 
+            height: 75px; 
+            display: block; 
+            margin: 0 auto;
+        }
+
         .footer-date {
             text-align: right;
             margin-bottom: 10px;
@@ -224,13 +238,13 @@
         <tr>
             <td class="signature-col" style="width: 50%;">
                 <div>Ketua Program Studi</div>
-                <div style="height: 55px;"></div>
+                <div id="qrcode_kaprodi_container" style="width: 75px; height: 75px; margin: 8px auto;"></div>
                 <div class="font-bold" id="sign_kaprodi">-</div>
                 <div style="font-size: 9pt;" id="nidn_kaprodi">NIDN. -</div>
             </td>
             <td class="signature-col" style="width: 50%;">
                 <div>Dosen Pembimbing I</div>
-                <div style="height: 55px;"></div>
+                <div id="qrcode_pembimbing1_container" style="width: 75px; height: 75px; margin: 8px auto;"></div>
                 <div class="font-bold" id="sign_pembimbing1">-</div>
                 <div style="font-size: 9pt;" id="nidn_pembimbing1">NIDN. -</div>
             </td>
@@ -238,6 +252,7 @@
     </table>
 
     <script src="{{ URL::asset('js/jquery.min.js') }}"></script>
+    <script src="{{ URL::asset('js/qrcode.js') }}"></script>
     <script>
         $(document).ready(function() {
             const token = "{{ Session::get('token') }}";
@@ -250,21 +265,6 @@
                 const dt = new Date(dateStr);
                 if (isNaN(dt.getTime())) return dateStr;
                 return dt.getDate() + ' ' + months[dt.getMonth()] + ' ' + dt.getFullYear();
-            }
-
-            function formatDateTime(dateTimeStr) {
-                if (!dateTimeStr) return '';
-                try {
-                    const dt = new Date(dateTimeStr);
-                    if (isNaN(dt.getTime())) return '';
-                    return dt.toLocaleDateString('id-ID', {
-                        day: 'numeric',
-                        month: 'short',
-                        year: 'numeric'
-                    }) + ' ' + dt.toTimeString().substring(0, 5);
-                } catch (e) {
-                    return '';
-                }
             }
 
             $.ajax({
@@ -319,9 +319,7 @@
                                 const description = `<strong>${log.topik}</strong><br><span style="color:#444; font-size:9.5pt;">${log.uraian || ''}</span>`;
                                 
                                 const statusBadge = `<div class="signature-status-signed">✓ VERIFIKASI DIGITAL</div>`;
-                                
-                                const verifiedAt = log.updated_at || log.created_at;
-                                const dosenBadge = `<div class="signature-status-signed">✓ TTD DIGITAL<br><span style="font-size: 6.5pt; font-weight: normal;">${formatDateTime(verifiedAt)}</span></div>`;
+                                const dosenBadge = `<div class="row-qrcode" data-valid-id="${log.valid_id || ''}" id="row_qr_${log.id}" style="width: 55px; height: 55px; margin: 0 auto;"></div>`;
 
                                 html += `<tr>
                                     <td>${index}</td>
@@ -344,10 +342,48 @@
 
                         $('#tbody_logs').html(html);
 
+                        // Generate QRCodes dynamically for rows
+                        logs.forEach(function(log) {
+                            if (log.valid_id) {
+                                new QRCode(document.getElementById("row_qr_" + log.id), {
+                                    text: log.valid_id,
+                                    width: 55,
+                                    height: 55,
+                                    colorDark : "#000000",
+                                    colorLight : "#ffffff",
+                                    correctLevel : QRCode.CorrectLevel.M
+                                });
+                            }
+                        });
+
+                        // Generate QRCode for Kaprodi
+                        if (m.valid_id_kaprodi) {
+                            new QRCode(document.getElementById("qrcode_kaprodi_container"), {
+                                text: m.valid_id_kaprodi,
+                                width: 75,
+                                height: 75,
+                                colorDark : "#000000",
+                                colorLight : "#ffffff",
+                                correctLevel : QRCode.CorrectLevel.M
+                            });
+                        }
+
+                        // Generate QRCode for Pembimbing I
+                        if (s && s.valid_id_pembimbing1) {
+                            new QRCode(document.getElementById("qrcode_pembimbing1_container"), {
+                                text: s.valid_id_pembimbing1,
+                                width: 75,
+                                height: 75,
+                                colorDark : "#000000",
+                                colorLight : "#ffffff",
+                                correctLevel : QRCode.CorrectLevel.M
+                            });
+                        }
+
                         // Trigger print dialogue after resources load
                         setTimeout(function() {
                             window.print();
-                        }, 500);
+                        }, 800);
                     }
                 },
                 error: function() {

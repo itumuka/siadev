@@ -105,9 +105,14 @@
 
                 <div class="d-flex justify-content-between align-items-center mb-15">
                     <h5 class="box-title mb-0">Riwayat Bimbingan</h5>
-                    <button type="button" class="btn btn-sm btn-success font-weight-600" id="btn-approve-all" style="display:none;">
-                        <i class="fa fa-check-double mr-5"></i> Setujui Semua Menunggu Kaprodi
-                    </button>
+                    <div id="kaprodi-decision-actions" style="display:none;">
+                        <button type="button" class="btn btn-sm btn-success font-weight-600 mr-5" id="btn-approve-all">
+                            <i class="fa fa-check mr-5"></i> Sahkan Bimbingan
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger font-weight-600" id="btn-reject-all">
+                            <i class="fa fa-times mr-5"></i> Minta Revisi
+                        </button>
+                    </div>
                 </div>
 
                 <div id="logs-container" style="max-height: 450px; overflow-y: auto; padding-right: 5px;">
@@ -246,11 +251,11 @@
                     render: function(data) {
                         return `
                             <div class="text-nowrap">
-                                <button class="btn btn-xs btn-info font-weight-600 mr-5" onclick="openDetailModal(${data.id}, '${data.nim}', '${data.nama_mahasiswa.replace(/'/g, "\\'")}', '${(data.pembimbing || '-').replace(/'/g, "\\'")}', ${data.total_approved})">
-                                    <i class="fa fa-search mr-5"></i> Detail
+                                <button class="btn btn-sm btn-info mr-5" onclick="openDetailModal(${data.id}, '${data.nim}', '${data.nama_mahasiswa.replace(/'/g, "\\'")}', '${(data.pembimbing || '-').replace(/'/g, "\\'")}', ${data.total_approved})" title="Detail dan Approval">
+                                    <i class="fa fa-check-square-o"></i>
                                 </button>
-                                <button class="btn btn-xs btn-dark font-weight-600" onclick="printBimbingan('${data.nim}')">
-                                    <i class="fa fa-print"></i> Cetak
+                                <button class="btn btn-sm btn-dark" onclick="printBimbingan('${data.nim}')" title="Cetak Buku Bimbingan">
+                                    <i class="fa fa-print"></i>
                                 </button>
                             </div>
                         `;
@@ -259,18 +264,18 @@
             ]
         });
 
-        // Event handler for Bulk Approve
+        // Event handler for Sahkan Bimbingan (Bulk Approve)
         $('#btn-approve-all').on('click', function() {
             if (!selectedSkripsiId) return;
 
             swal({
-                title: "Approve Semua?",
-                text: "Apakah Anda yakin ingin menyetujui seluruh log bimbingan mahasiswa ini yang sedang menunggu approval Kaprodi?",
+                title: "Sahkan Bimbingan?",
+                text: "Apakah Anda yakin ingin mengesahkan secara administratif seluruh log bimbingan mahasiswa ini untuk dilanjutkan ke Ujian?",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#28a745",
                 cancelButtonColor: "#3085d6",
-                confirmButtonText: "Ya, Setujui Semua!",
+                confirmButtonText: "Ya, Sahkan!",
                 cancelButtonText: "Batal"
             }, function(isConfirm) {
                 if (isConfirm) {
@@ -284,17 +289,24 @@
                         data: { id_skripsi: selectedSkripsiId },
                         success: function(res) {
                             if (res.success) {
-                                swal("Berhasil!", res.success, "success");
+                                swal("Berhasil!", "Administrasi bimbingan berhasil disahkan.", "success");
                                 $('#modal-detail-bimbingan').modal('hide');
                                 tableBimbingan.ajax.reload(null, false);
                             }
                         },
                         error: function(err) {
-                            swal("Gagal!", err.responseJSON?.error || "Gagal melakukan approval.", "error");
+                            swal("Gagal!", err.responseJSON?.error || "Gagal mengesahkan bimbingan.", "error");
                         }
                     });
                 }
             });
+        });
+
+        // Event handler for Bulk Reject (Minta Revisi)
+        $('#btn-reject-all').on('click', function() {
+            $('#reject_id_log').val(''); // Empty means bulk for student skripsi
+            $('#reject_reason').val('');
+            $('#modal-reject-reason').modal('show');
         });
 
         // Event handler for Reject Reason
@@ -307,6 +319,13 @@
             let id_log = $('#reject_id_log').val();
             let note = $('#reject_reason').val();
 
+            let payload = { catatan_dosen: note };
+            if (id_log) {
+                payload.id_log = id_log;
+            } else {
+                payload.id_skripsi = selectedSkripsiId;
+            }
+
             $.ajax({
                 url: CONFIG.api_url + "kaprodi/skripsi/bimbingan/reject",
                 type: "POST",
@@ -314,10 +333,7 @@
                     "Authorization": "Bearer " + CONFIG.token,
                     "username": CONFIG.username
                 },
-                data: {
-                    id_log: id_log,
-                    catatan_dosen: note
-                },
+                data: payload,
                 success: function(res) {
                     if (res.success) {
                         $.toast({
@@ -328,14 +344,12 @@
                             hideAfter: 3000
                         });
                         $('#modal-reject-reason').modal('hide');
-                        
-                        // Refresh modal logs list
-                        loadModalLogs(selectedStudentNim, selectedSkripsiId);
+                        $('#modal-detail-bimbingan').modal('hide'); // Close detail modal on bulk reject
                         tableBimbingan.ajax.reload(null, false);
                     }
                 },
                 error: function(err) {
-                    swal("Gagal!", err.responseJSON?.error || "Gagal menolak log bimbingan.", "error");
+                    swal("Gagal!", err.responseJSON?.error || "Gagal memproses penolakan.", "error");
                 }
             });
         });
@@ -384,19 +398,8 @@
                         let fileLink = item.path_file ? `<a href="${item.path_file}" target="_blank" class="btn btn-xs btn-outline-info ml-10"><i class="fa fa-download mr-5"></i> Unduh Lampiran</a>` : '';
                         let notes = item.catatan_dosen ? `<div class="mt-5 p-5 bg-danger-light rounded small text-danger font-weight-500"><strong>Catatan/Revisi:</strong> ${item.catatan_dosen}</div>` : '';
 
-                        let actionBtn = '';
                         if (item.status === 'disetujui') {
                             hasWaiting = true;
-                            actionBtn = `
-                                <div class="mt-10 pt-10 border-top d-flex justify-content-end">
-                                    <button class="btn btn-xs btn-success font-weight-600 mr-5" onclick="approveSingleLog(${item.id})">
-                                        <i class="fa fa-check mr-5"></i> Setujui (ACC)
-                                    </button>
-                                    <button class="btn btn-xs btn-danger font-weight-600" onclick="rejectSingleLog(${item.id})">
-                                        <i class="fa fa-times mr-5"></i> Minta Revisi
-                                    </button>
-                                </div>
-                            `;
                         }
 
                         html += `
@@ -414,7 +417,6 @@
                                 </div>
                                 ${notes}
                                 <div class="mt-10">${fileLink}</div>
-                                ${actionBtn}
                             </div>
                         `;
                     });
@@ -422,68 +424,20 @@
                     $('#logs-container').html(html);
 
                     if (hasWaiting) {
-                        $('#btn-approve-all').show();
+                        $('#kaprodi-decision-actions').show();
                     } else {
-                        $('#btn-approve-all').hide();
+                        $('#kaprodi-decision-actions').hide();
                     }
                 } else {
                     $('#logs-container').html('<div class="alert alert-info">Belum ada riwayat bimbingan.</div>');
-                    $('#btn-approve-all').hide();
+                    $('#kaprodi-decision-actions').hide();
                 }
             },
             error: function() {
                 $('#logs-container').html('<div class="alert alert-danger">Gagal memuat log bimbingan.</div>');
-                $('#btn-approve-all').hide();
+                $('#kaprodi-decision-actions').hide();
             }
         });
-    }
-
-    function approveSingleLog(id_log) {
-        swal({
-            title: "Setujui Bimbingan?",
-            text: "Setujui catatan log bimbingan ini?",
-            type: "info",
-            showCancelButton: true,
-            confirmButtonColor: "#28a745",
-            cancelButtonColor: "#3085d6",
-            confirmButtonText: "Ya, Setujui!",
-            cancelButtonText: "Batal"
-        }, function(isConfirm) {
-            if (isConfirm) {
-                $.ajax({
-                    url: CONFIG.api_url + "kaprodi/skripsi/bimbingan/approve",
-                    type: "POST",
-                    headers: {
-                        "Authorization": "Bearer " + CONFIG.token,
-                        "username": CONFIG.username
-                    },
-                    data: { id_log: id_log },
-                    success: function(res) {
-                        if (res.success) {
-                            $.toast({
-                                heading: 'Berhasil',
-                                text: res.success,
-                                position: 'top-right',
-                                icon: 'success',
-                                hideAfter: 3000
-                            });
-                            // Refresh modal logs list
-                            loadModalLogs(selectedStudentNim, selectedSkripsiId);
-                            tableBimbingan.ajax.reload(null, false);
-                        }
-                    },
-                    error: function(err) {
-                        swal("Gagal!", err.responseJSON?.error || "Gagal melakukan approval.", "error");
-                    }
-                });
-            }
-        });
-    }
-
-    function rejectSingleLog(id_log) {
-        $('#reject_id_log').val(id_log);
-        $('#reject_reason').val('');
-        $('#modal-reject-reason').modal('show');
     }
 
     function getStatusLabel(status) {
