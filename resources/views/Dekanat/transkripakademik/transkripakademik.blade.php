@@ -38,6 +38,13 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <select class="form-control" name="programstudi" id="programstudi">
+                                        <option value="">Semua Program Studi</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -61,17 +68,15 @@
                     </div>
                     <div class="col-sm-1">
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-5">
                         <div class="text-left">
+                            <button type="button" class="btn btn-primary btn-sm float-left mr-2" id="btn-sinkron" onclick="btn_sinkron();">
+                                <i class="fa fa-refresh"></i> Sinkron Transkrip
+                            </button>
                             <button type="button" class="btn btn-warning btn-sm float-left" onclick="cetak();"
                                 data-toggle="modal" data-target="#modal_add"><i class="fa fa-print"></i>
                                 Cetak</button>
                         </div>
-                        {{-- <div class="text-center">
-                            <button type="button" class="btn btn-warning btn-sm float-center" onclick="cetak1();"
-                                data-toggle="modal" data-target="#modal_add1"><i class="fa fa-print"></i>
-                                Inggris</button>
-                        </div> --}}
                     </div>
                 </div>
                 <!-- /.box-body -->
@@ -192,7 +197,27 @@
         $(document).ready(function() {
             var token = "{{ Session::get('token') }}";
             var userlogin = "{{ Session::get('username') }}";
+            dropdown_prodi();
             tahunangkatan();
+
+            function dropdown_prodi() {
+                $.ajax({
+                    type: "POST",
+                    url: "{{ config('setting.second_url') }}akademik/dropdown-prodi",
+                    dataType: "json",
+                    headers: {
+                        "Authorization": 'Bearer ' + token,
+                        "username": userlogin
+                    },
+                    success: function(data) {
+                        let target = $("#programstudi");
+                        target.empty().append('<option value="">Semua Program Studi</option>');
+                        $.each(data, function(index, value) {
+                            target.append('<option value="' + value.kode_program_studi + '">' + value.nama_program_studi + '</option>');
+                        });
+                    }
+                });
+            }
 
             function tahunangkatan() {
                 $.ajax({
@@ -213,14 +238,16 @@
                         // console.log(result);
                         $('#tahunangkatan').html(s);
                         var thnn = $('#tahunangkatan').val();
-                        tbnilai(thnn);
+                        var prodi = $('#programstudi').val();
+                        tbnilai(thnn, prodi);
                     }
                 })
             }
 
-            $('#tahunangkatan').on('change', function(event) {
+            $('#tahunangkatan, #programstudi').on('change', function(event) {
                 var thnn = $('#tahunangkatan').val();
-                tbnilai(thnn);
+                var prodi = $('#programstudi').val();
+                tbnilai(thnn, prodi);
 
             });
 
@@ -274,7 +301,7 @@
             // var ta = $('#ta').val();
             // var smt = $('#smt').val();
             // var token = $('#token').val();
-            function tbnilai(thn) {
+            function tbnilai(thn, prodi = '') {
                 var table = $("#kgttranskipakademik").DataTable({
                     destroy: true,
                     dom: 'Bfrtip',
@@ -300,6 +327,7 @@
                         },
                         data: {
                             tahunangkatan: thn,
+                            kode_prodi: prodi
                         },
                         dataSrc: function(json) {
                             return json;
@@ -442,6 +470,90 @@
                 });
 
             }
+
+            window.btn_sinkron = function() {
+                var nim = $('#nimjamak').val();
+                var tahunangkatan = $('#tahunangkatan').val();
+                var kode_prodi = $('#programstudi').val();
+
+                if (nim) {
+                    swal({
+                        title: "Sinkronisasi Transkrip",
+                        text: "Apakah Anda yakin ingin mensinkronkan nilai KRS mahasiswa yang dipilih ke transkrip?",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        confirmButtonText: "Ya, Sinkronkan!",
+                        cancelButtonText: "Batal",
+                        closeOnConfirm: false
+                    }, function(isConfirm) {
+                        if (isConfirm) {
+                            ajax_sinkron({ nim: nim });
+                        }
+                    });
+                } else {
+                    var textMsg = "Apakah Anda yakin ingin mensinkronkan nilai KRS seluruh mahasiswa Angkatan " + tahunangkatan;
+                    if (kode_prodi) {
+                        var prodiText = $('#programstudi option:selected').text();
+                        textMsg += " program studi " + prodiText;
+                    }
+                    textMsg += " ke transkrip?";
+
+                    swal({
+                        title: "Sinkronisasi Massal Transkrip",
+                        text: textMsg,
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        confirmButtonText: "Ya, Sinkronkan Massal!",
+                        cancelButtonText: "Batal",
+                        closeOnConfirm: false
+                    }, function(isConfirm) {
+                        if (isConfirm) {
+                            ajax_sinkron({
+                                tahun_angkatan: tahunangkatan,
+                                kode_prodi: kode_prodi
+                            });
+                        }
+                    });
+                }
+
+                function ajax_sinkron(post_data) {
+                    swal({
+                        title: "Sedang memproses...",
+                        text: "Mohon tunggu hingga proses sinkronisasi selesai.",
+                        showConfirmButton: false,
+                        allowOutsideClick: false
+                    });
+
+                    $.ajax({
+                        url: "{{ config('setting.second_url') }}akademik/sinkron-transkrip",
+                        type: "POST",
+                        headers: {
+                            "Authorization": 'Bearer ' + token,
+                            "username": userlogin
+                        },
+                        data: post_data,
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                swal("Berhasil!", response.message, "success");
+                                var thnn = $('#tahunangkatan').val();
+                                var prodi = $('#programstudi').val();
+                                tbnilai(thnn, prodi);
+                            } else {
+                                swal("Gagal!", response.message, "error");
+                            }
+                        },
+                        error: function(xhr) {
+                            var errMsg = "Terjadi kesalahan saat memproses sinkronisasi.";
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                errMsg = xhr.responseJSON.message;
+                            }
+                            swal("Gagal!", errMsg, "error");
+                        }
+                    });
+                }
+            };
         });
     </script>
 @stop
