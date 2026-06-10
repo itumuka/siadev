@@ -159,8 +159,8 @@
                             <li class="{{ request()->is('akademik/manajemen-ta/rekap-bimbingan') ? 'active' : '' }}">
                                 <a href="{{ url('akademik/manajemen-ta/rekap-bimbingan') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Rekap Bimbingan</a>
                             </li>
-                            <li class="{{ request()->is('akademik/manajemen-ta/validasi-sempro') ? 'active' : '' }}">
-                                <a href="{{ url('akademik/manajemen-ta/validasi-sempro') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Validasi Sempro Prodi</a>
+                            <li class="{{ request()->is('akademik/manajemen-ta/pemantauan-sempro') ? 'active' : '' }}">
+                                <a href="{{ url('akademik/manajemen-ta/pemantauan-sempro') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pemantauan Sempro Prodi</a>
                             </li>
                         </ul>
                     </li>
