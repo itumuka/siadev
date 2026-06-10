@@ -32,13 +32,17 @@
                     </div>
                     <div class="box-header no-border">
                         <div class="row">
-                            <div class="row">
-                        <div class="col-md-2">
-                            <input type="text" name="nim_filter" id="nim_filter" class="form-control mb-2"
-                                placeholder="Filter NIM (Opsional)">
-                            <input type="text" name="tahunangkatan" id="tahunangkatan" class="form-control"
-                                placeholder="Masukkan Tahun Angkatan">
-                        </div>
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <input type="text" name="nim_filter" id="nim_filter" class="form-control"
+                                        placeholder="NIM (Opsional)">
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <select class="form-control" name="tahunangkatan" id="tahunangkatan">
+                                    </select>
+                                </div>
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group">
