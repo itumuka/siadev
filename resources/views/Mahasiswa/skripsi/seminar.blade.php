@@ -240,9 +240,39 @@
                             return;
                         }
 
-                        // Check Skema
+                        // Check Skema: only enter matakuliah branch if scheme is configured
                         if (config?.ta_sempro_skema === 'matakuliah') {
-                            showSemproMatakuliahMessage(dashboardResponse.data.sempro, !!dashboardResponse.data.skripsi);
+                            // If sempro already has a status from dashboard, show it
+                            if (dashboardResponse.data.sempro) {
+                                showSemproMatakuliahMessage(dashboardResponse.data.sempro, !!dashboardResponse.data.skripsi);
+                                return;
+                            }
+                            // If sempro is null (e.g. ta_sempro_is_validated was 0 or no proposal record),
+                            // double-check via cek-kelayakan API before showing error
+                            $.ajax({
+                                url: '{{ $api_url }}mahasiswa/skripsi/cek-kelayakan',
+                                method: 'GET',
+                                data: { nim: '{{ $session_nim }}', fase: 'sempro' },
+                                headers: {
+                                    'Authorization': 'Bearer {{ $api_token }}',
+                                    'username': '{{ $session_nim }}'
+                                },
+                                success: function(kelayakanRes) {
+                                    if (kelayakanRes.status === 'success') {
+                                        var semproSyarat = kelayakanRes.data.syarat_list ? kelayakanRes.data.syarat_list.find(function(s) {
+                                            return s.kode_syarat === 'NILAI_SEMPRO';
+                                        }) : null;
+                                        var isLulusMk = semproSyarat ? semproSyarat.status === 'v' : false;
+                                        var fakeSempro = isLulusMk ? { status: 'lulus', keterangan: 'Lulus berdasarkan rekam nilai mata kuliah Seminar Proposal.' } : null;
+                                        showSemproMatakuliahMessage(fakeSempro, !!dashboardResponse.data.skripsi);
+                                    } else {
+                                        showSemproMatakuliahMessage(null, !!dashboardResponse.data.skripsi);
+                                    }
+                                },
+                                error: function() {
+                                    showSemproMatakuliahMessage(null, !!dashboardResponse.data.skripsi);
+                                }
+                            });
                             return;
                         }
                         
