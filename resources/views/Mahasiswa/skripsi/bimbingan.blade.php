@@ -95,10 +95,64 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Edit Bimbingan -->
+<div class="modal fade" id="modalEditBimbingan" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Edit Catatan Bimbingan</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formEditBimbingan" enctype="multipart/form-data">
+                    <input type="hidden" name="id" id="edit_id">
+                    <div class="form-group">
+                        <label>Tanggal Bimbingan</label>
+                        <input type="date" class="form-control" name="tanggal" id="edit_tanggal_bimbingan" required>
+                        <small class="text-muted">Tanggal tidak boleh melebihi hari ini</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Materi / Topik Konsultasi</label>
+                        <input type="text" class="form-control" name="topik" id="edit_topik" placeholder="Cth: Bab 3 - Perancangan Sistem" maxlength="250" required>
+                        <small class="text-muted">Maksimal 250 karakter</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Uraian / Pesan ke Pembimbing</label>
+                        <textarea class="form-control" name="uraian" id="edit_uraian" rows="4" placeholder="Jelaskan progres Anda..." maxlength="500" required></textarea>
+                        <small class="text-muted">Maksimal 500 karakter</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Upload File Baru (Opsional, menggantikan file lama)</label>
+                        <input type="file" class="form-control-file" name="file_lampiran" accept=".pdf,.doc,.docx">
+                        <small class="text-muted">Format .pdf atau .docx Maks 5MB.</small>
+                        <div id="edit_current_file" class="mt-2 text-info small"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                <button type="submit" form="formEditBimbingan" class="btn btn-primary" id="btnUpdateBimbingan"><i class="fa fa-save"></i> Simpan Perubahan</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('script-advanced')
 <script>
+function escapeHtml(text) {
+    if (!text) return '';
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
 $(document).ready(function() {
     var token = "{{ $api_token }}";
     var nim = "{{ $session_nim }}";
@@ -192,6 +246,16 @@ $(document).ready(function() {
                                 <div class="mt-15">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>${statusBadge} ${fileBadge}</div>
+                                        ${(item.status == 'pending' || item.status == 'revisi') ? `
+                                            <div>
+                                                <button class="btn btn-sm btn-outline-primary btn-edit-log" data-id="${item.id}" data-tanggal="${item.tanggal}" data-topik="${escapeHtml(item.topik)}" data-uraian="${escapeHtml(item.uraian)}" data-file="${item.path_file || ''}">
+                                                    <i class="fa fa-edit"></i> Edit
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-danger btn-hapus-log ml-2" data-id="${item.id}">
+                                                    <i class="fa fa-trash"></i> Hapus
+                                                </button>
+                                            </div>
+                                        ` : ''}
                                     </div>
                                     ${dosenFeedback}
                                 </div>
@@ -269,6 +333,135 @@ $(document).ready(function() {
             },
             complete: function() {
                 btn.prop('disabled', false).html('<i class="fa fa-save"></i> Simpan Catatan');
+            }
+        });
+    });
+
+    // Set max date for edit form date input
+    $('#edit_tanggal_bimbingan').attr('max', today);
+
+    // Click handler for Edit button
+    $(document).on('click', '.btn-edit-log', function() {
+        var id = $(this).data('id');
+        var tanggal = $(this).data('tanggal');
+        var topik = $(this).data('topik');
+        var uraian = $(this).data('uraian');
+        var file = $(this).data('file');
+
+        $('#edit_id').val(id);
+        $('#edit_tanggal_bimbingan').val(tanggal);
+        $('#edit_topik').val(topik);
+        $('#edit_uraian').val(uraian);
+
+        if (file) {
+            // Get original filename from path
+            var fileName = file.substring(file.lastIndexOf('/') + 1);
+            $('#edit_current_file').html('File saat ini: <a href="' + file + '" target="_blank">' + fileName + '</a>');
+        } else {
+            $('#edit_current_file').empty();
+        }
+
+        $('#modalEditBimbingan').modal('show');
+    });
+
+    // Submit handler for Edit form
+    $('#formEditBimbingan').on('submit', function(e) {
+        e.preventDefault();
+        var id = $('#edit_id').val();
+        var formData = new FormData(this);
+        formData.append('nim', nim);
+
+        // Client-side validation for file size
+        var fileInput = $('#formEditBimbingan input[name="file_lampiran"]')[0];
+        if (fileInput.files.length > 0) {
+            var file = fileInput.files[0];
+            if (file.size > 5 * 1024 * 1024) { // 5MB
+                showToastr('error', 'Gagal', 'Ukuran file lampiran maksimal 5MB.');
+                return false;
+            }
+        }
+
+        var btn = $('#btnUpdateBimbingan');
+        btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Menyimpan...');
+
+        $.ajax({
+            url: apiUrl + "update-bimbingan/" + id,
+            type: "POST",
+            headers: {
+                "Authorization": "Bearer " + token,
+                "username": nim
+            },
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(res) {
+                if(res.success) {
+                    showToastr('success', 'Berhasil', res.success);
+                    $('#modalEditBimbingan').modal('hide');
+                    $('#formEditBimbingan')[0].reset();
+                    loadLogs(); // Reload data
+                    loadDashboardData(); // Update progress bar
+                } else {
+                    showToastr('error', 'Gagal', 'Terjadi kesalahan.');
+                }
+            },
+            error: function(err) {
+                var msg = 'Terjadi kesalahan server.';
+                if(err.responseJSON && err.responseJSON.error) {
+                    if(typeof err.responseJSON.error === 'object') {
+                        msg = Object.values(err.responseJSON.error)[0][0];
+                    } else {
+                        msg = err.responseJSON.error;
+                    }
+                }
+                showToastr('error', 'Gagal', msg);
+            },
+            complete: function() {
+                btn.prop('disabled', false).html('<i class="fa fa-save"></i> Simpan Perubahan');
+            }
+        });
+    });
+
+    // Click handler for Delete button
+    $(document).on('click', '.btn-hapus-log', function() {
+        var id = $(this).data('id');
+        
+        swal({
+            title: "Apakah Anda yakin?",
+            text: "Catatan bimbingan ini akan dihapus permanen!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#f96868",
+            confirmButtonText: "Ya, hapus!",
+            cancelButtonText: "Batal",
+            closeOnConfirm: false
+        }, function(isConfirm) {
+            if (isConfirm) {
+                $.ajax({
+                    url: apiUrl + "hapus-bimbingan/" + id,
+                    type: "POST",
+                    headers: {
+                        "Authorization": "Bearer " + token,
+                        "username": nim
+                    },
+                    data: { nim: nim },
+                    success: function(res) {
+                        if(res.success) {
+                            swal("Terhapus!", res.success, "success");
+                            loadLogs(); // Reload data
+                            loadDashboardData(); // Update progress bar
+                        } else {
+                            swal("Gagal!", "Gagal menghapus catatan.", "error");
+                        }
+                    },
+                    error: function(err) {
+                        var msg = 'Terjadi kesalahan server.';
+                        if(err.responseJSON && err.responseJSON.error) {
+                            msg = err.responseJSON.error;
+                        }
+                        swal("Gagal!", msg, "error");
+                    }
+                });
             }
         });
     });
