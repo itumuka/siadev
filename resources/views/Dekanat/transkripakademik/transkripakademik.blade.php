@@ -32,6 +32,12 @@
                     </div>
                     <div class="box-header no-border">
                         <div class="row">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <input type="text" name="nim_filter" id="nim_filter" class="form-control mb-2"
+                                        placeholder="Filter NIM (Opsional)">
+                                </div>
+                            </div>
                             <div class="col-sm-3">
                                 <div class="form-group">
                                     <select class="form-control" name="tahunangkatan" id="tahunangkatan">
@@ -254,53 +260,6 @@
 
             var id_mhs = $('#id_mhs').val();
 
-            // function dropdown_angkatan() {
-            //     $.ajax({
-            //         type: "POST",
-            //         url: "{{ config('setting.second_url') }}akademik/dropdown-angkatan",
-            //         dataType: "json",
-            //         headers: {
-            //             "Authorization": 'Bearer ' + token,
-            //             "username": userlogin
-            //         },
-            //         success: function(data) {
-            //             // $('.test').fadeOut();
-            //             let target = $(".dropdown-prodi")
-            //             $.each(data, function(index, value) {
-            //                 var el = data[index];
-            //                 var flag = 0;
-            //                 target.append(
-            //                     '<a href="#" class="dropdown-item" id="btmodal_add" data-id=' +
-            //                     el.id_mhs + ' data-prodi=' + el
-            //                     .tahun_angkatan +
-            //                     ' data-toggle="modal" data-target="#modal_add">' + el
-            //                     .tahun_angkatan + '</a>')
-            //             });
-            //         },
-            //         error: function(error) {
-            //             alert(error);
-            //         }
-            //     });
-            // }
-            // dropdown_angkatan();
-
-            // $(".tst3").on("click", function () {
-            //     // $.toast({
-            //     //     heading: 'Welcome to my EduAdmin',
-            //     //     text: 'Use the predefined ones, or specify a custom position object.',
-            //     //     position: 'top-right',
-            //     //     loaderBg: '#ff6849',
-            //     //     icon: 'success',
-            //     //     hideAfter: 3500,
-            //     //     stack: 6
-            //     // });
-            //     showToastr('error', 'Success!', 'Data telah disimpan');
-            // });
-
-            // var nim = $('#nim').val();
-            // var ta = $('#ta').val();
-            // var smt = $('#smt').val();
-            // var token = $('#token').val();
             function tbnilai(thn, prodi = '') {
                 var table = $("#kgttranskipakademik").DataTable({
                     destroy: true,
@@ -308,16 +267,9 @@
                     buttons: [
                         'copy', 'csv', 'excel'
                     ],
-                    // responsive: true,
-                    // autoWidth: false,
                     pageLength: 10,
                     processing: true,
                     lengthChange: true,
-                    // searching: false,
-                    // serverSide: true,
-                    // stateSave: true,
-                    // scrollX: true,
-                    // orderable: false,
                     ajax: {
                         type: "GET",
                         url: "{{ config('setting.second_url') }}akademik/transkipakademik",
@@ -384,12 +336,9 @@
                                 str = str + "-" + oData[i]['nm'];
                             }
                         }
-                        // console.log(str);
                         $('#nimjamak').val(str);
                     })
                     .on('deselect', function(e, dt, type, indexes) {
-                        // var rowData = table.rows(indexes).data().toArray();
-                        // console.log(table.rows('.selected').data());
                         var oData = table.rows('.selected').data();
                         var str = "";
                         for (var i = 0; i < oData.length; i++) {
@@ -399,7 +348,6 @@
                                 str = str + "-" + oData[i]['nm'];
                             }
                         }
-                        // console.log(str);
                         $('#nimjamak').val(str);
                     });
 
@@ -472,11 +420,27 @@
             }
 
             window.btn_sinkron = function() {
+                var nim_filter = $('#nim_filter').val();
                 var nim = $('#nimjamak').val();
                 var tahunangkatan = $('#tahunangkatan').val();
                 var kode_prodi = $('#programstudi').val();
 
-                if (nim) {
+                if (nim_filter) {
+                    swal({
+                        title: "Konfirmasi Sinkronisasi",
+                        text: "Sinkronisasi Transkrip berdasarkan Filter NIM?",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        confirmButtonText: "Ya, Sinkronkan!",
+                        cancelButtonText: "Batal",
+                        closeOnConfirm: false
+                    }, function(isConfirm) {
+                        if (isConfirm) {
+                            ajax_sinkron({ nim: nim_filter });
+                        }
+                    });
+                } else if (nim) {
                     swal({
                         title: "Sinkronisasi Transkrip",
                         text: "Apakah Anda yakin ingin mensinkronkan nilai KRS mahasiswa yang dipilih ke transkrip?",
@@ -492,28 +456,18 @@
                         }
                     });
                 } else {
-                    var textMsg = "Apakah Anda yakin ingin mensinkronkan nilai KRS seluruh mahasiswa Angkatan " + tahunangkatan;
-                    if (kode_prodi) {
-                        var prodiText = $('#programstudi option:selected').text();
-                        textMsg += " program studi " + prodiText;
-                    }
-                    textMsg += " ke transkrip?";
-
                     swal({
-                        title: "Sinkronisasi Massal Transkrip",
-                        text: textMsg,
+                        title: "Sinkronisasi Transkrip Massal",
+                        text: "Apakah Anda yakin ingin mensinkronkan nilai KRS SELURUH mahasiswa pada angkatan dan program studi terpilih ke transkrip? (Proses ini mungkin memakan waktu agak lama)",
                         type: "warning",
                         showCancelButton: true,
                         confirmButtonColor: "#3085d6",
-                        confirmButtonText: "Ya, Sinkronkan Massal!",
+                        confirmButtonText: "Ya, Sinkronkan Semua!",
                         cancelButtonText: "Batal",
                         closeOnConfirm: false
                     }, function(isConfirm) {
                         if (isConfirm) {
-                            ajax_sinkron({
-                                tahun_angkatan: tahunangkatan,
-                                kode_prodi: kode_prodi
-                            });
+                            ajax_sinkron({ tahun_angkatan: tahunangkatan, kode_prodi: kode_prodi });
                         }
                     });
                 }
