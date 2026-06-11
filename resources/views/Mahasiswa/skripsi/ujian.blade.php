@@ -638,6 +638,14 @@
                             window.location.href = "{{ route('skripsi.dashboard') }}";
                         },
                         error: function(err) {
+                            // 409 = sudah diajukan sebelumnya, ini bukan error - redirect ke dashboard
+                            if (err.status === 409) {
+                                showToastr('info', 'Info', 'Pendaftaran ujian Anda sudah tercatat sebelumnya.');
+                                setTimeout(function() {
+                                    window.location.href = "{{ route('skripsi.dashboard') }}";
+                                }, 1500);
+                                return;
+                            }
                             var errorMsg = 'Gagal memproses pendaftaran ujian.';
                             if (err.responseJSON && err.responseJSON.error) {
                                 errorMsg = err.responseJSON.error;
