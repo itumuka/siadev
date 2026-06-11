@@ -337,7 +337,7 @@ function renderCTA(cta) {
             // Proposal Modal
             $('#btn_cta_proposal').removeClass('btn-primary btn-warning btn-success btn-info').addClass('btn-' + warna);
             $('#btn_cta_proposal').show().html(`<i class="fa fa-edit mr-10"></i> ${cta.label}`);
-        } else if (cta.url && (cta.url.includes('upload-naskah') || cta.url.includes('seminar') || cta.url.includes('ujian'))) {
+        } else if (cta.url && (cta.url.includes('upload-naskah') || (cta.url.includes('seminar') && !cta.url.includes('mahasiswa/skripsi/seminar')) || (cta.url.includes('ujian') && !cta.url.includes('mahasiswa/skripsi/ujian')))) {
             // Upload Modal
             const fase = cta.url.includes('seminar') ? 'sempro' : 'ujian';
             $('#btn_cta_upload').removeClass('btn-primary btn-warning btn-success btn-info').addClass('btn-' + warna);
