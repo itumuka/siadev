@@ -268,17 +268,17 @@
                         }
                     },
                     { 
-                        data: 'cpmk_based',
+                        data: 'is_obe',
                         className: 'text-center',
                         render: function(data) {
-                            if (data == 1) return '<span class="badge badge-success px-2 py-1"><i class="fa fa-graduation-cap"></i> CPMK-Based</span>';
-                            return '<span class="badge badge-primary px-2 py-1"><i class="fa fa-file-text"></i> Non-CPMK-Based</span>';
+                            if (data == 1) return '<span class="badge badge-success px-2 py-1"><i class="fa fa-graduation-cap"></i> OBE (Luaran)</span>';
+                            return '<span class="badge badge-primary px-2 py-1"><i class="fa fa-file-text"></i> Non-OBE</span>';
                         }
                     },
                     { 
                         data: 'role_dosen',
                         render: function(data, type, row) {
-                            return '<strong>' + getRoleLabel(data, row.cpmk_based == 1) + '</strong>';
+                            return '<strong>' + getRoleLabel(data, row.is_obe == 1) + '</strong>';
                         }
                     },
                     { 
@@ -296,9 +296,9 @@
                         data: null,
                         className: 'text-center',
                         render: function(data, type, row) {
-                            let isCpmkBased = row.cpmk_based == 1;
-                            let btnText = isCpmkBased ? '<i class="fa fa-check-square-o"></i> Verifikasi Luaran' : '<i class="fa fa-pencil"></i> Input Nilai Sidang';
-                            let btnClass = isCpmkBased ? 'btn-success' : 'btn-primary';
+                            let isObe = row.is_obe == 1;
+                            let btnText = isObe ? '<i class="fa fa-check-square-o"></i> Verifikasi Luaran' : '<i class="fa fa-pencil"></i> Input Nilai Sidang';
+                            let btnClass = isObe ? 'btn-success' : 'btn-primary';
                             
                             // Base64 serialize student details
                             let b64 = btoa(unescape(encodeURIComponent(JSON.stringify(row))));
@@ -313,6 +313,7 @@
             var currentRubrics = [];
             $('#tb_mahasiswa_diuji').on('click', '.btn-grade', function() {
                 var student = JSON.parse(decodeURIComponent(escape(atob($(this).data('row')))));
+                var isObe = student.is_obe == 1;
                 var isCpmkBased = student.cpmk_based == 1;
                 currentStudentKodePenilaian = student.kode_penilaian || 1;
                 
@@ -322,14 +323,14 @@
                 $('#n_mhs_nama').text(student.nama_mahasiswa);
                 $('#n_mhs_nim').text(student.nim);
                 $('#n_mhs_judul').text(student.judul || 'Belum ada judul/luaran');
-                $('#n_mhs_peran').text(getRoleLabel(student.role_dosen, isCpmkBased));
+                $('#n_mhs_peran').text(getRoleLabel(student.role_dosen, isObe));
 
                 // Handle Drive / Luaran URL display
                 $('#n_mhs_drive_container').hide();
                 $('#n_mhs_luaran_container').hide();
                 
                 if (student.url_link) {
-                    if (student.jenis_luaran === 'buku_skripsi' || !isCpmkBased) {
+                    if (student.jenis_luaran === 'buku_skripsi' || !isObe) {
                         $('#n_mhs_drive_link').attr('href', student.url_link);
                         $('#n_mhs_drive_container').show();
                     } else {
@@ -338,17 +339,17 @@
                     }
                 }
                 
-                // Dynamic labels depending on CPMK-Based status
-                if (isCpmkBased) {
-                    $('#modal_title_text').text('Pertanggungjawaban Luaran (Jalur CPMK-Based) - Verifikasi Tim Verifikator');
-                    $('#n_mhs_jalur').text('CPMK-BASED').removeClass('badge-primary').addClass('badge-success');
+                // Dynamic labels depending on OBE status
+                if (isObe) {
+                    $('#modal_title_text').text('Pertanggungjawaban Luaran (Jalur OBE) - Verifikasi Tim Verifikator');
+                    $('#n_mhs_jalur').text('OBE (LUARAN)').removeClass('badge-primary').addClass('badge-success');
                     $('#rubrik_panel_title').text('Kriteria Kelayakan & Capaian CPMK Luaran');
                     $('#lbl_catatan').text('Catatan Hasil Verifikasi & Pertanggungjawaban Luaran');
                     $('#n_catatan').attr('placeholder', 'Tuliskan catatan hasil verifikasi luaran, kesesuaian dengan CPL, atau rekomendasi perbaikan...');
                 } else {
                     $('#modal_title_text').text('Sidang Pertanggungjawaban Skripsi - Penilaian Dosen Penguji');
-                    $('#n_mhs_jalur').text('NON-CPMK-BASED').removeClass('badge-success').addClass('badge-primary');
-                    $('#rubrik_panel_title').text('Rubrik Penilaian Ujian (Existing)');
+                    $('#n_mhs_jalur').text('NON-OBE').removeClass('badge-success').addClass('badge-primary');
+                    $('#rubrik_panel_title').text(isCpmkBased ? 'Rubrik Penilaian Ujian (CPMK)' : 'Rubrik Penilaian Ujian (Existing)');
                     $('#lbl_catatan').text('Catatan & Masukan Dosen Penguji');
                     $('#n_catatan').attr('placeholder', 'Tuliskan revisi, masukan, atau catatan khusus jalannya ujian sidang...');
                 }

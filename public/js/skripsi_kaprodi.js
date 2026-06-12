@@ -89,7 +89,7 @@ $(document).ready(function () {
                                     data-id="${data.id_skripsi}" 
                                     data-nim="${data.nim}" 
                                     data-nama="${data.nama_mhs}" 
-                                    data-cpmk-based="${data.cpmk_based || 0}"
+                                    data-is-obe="${data.is_obe || 0}"
                                     title="Jadwal Ujian Akhir">
                                     <i class="fa fa-graduation-cap"></i>
                                 </button>
@@ -214,7 +214,7 @@ $(document).ready(function () {
     // 4b. Event Handlers - Plot Ujian / Sidang Akhir
     $(document).on('click', '.btn-plot-ujian', function () {
         const d = $(this).data();
-        const isCpmkBased = parseInt(d.cpmkBased) === 1;
+        const isObe = parseInt(d.isObe) === 1;
 
         $('#ujian_id_skripsi').val(d.id);
         
@@ -224,14 +224,14 @@ $(document).ready(function () {
         $('#ujian_penguji2').val(null).trigger('change');
         $('#ujian_penguji3').val(null).trigger('change');
 
-        // Dynamic labels based on CPMK-Based
-        if (isCpmkBased) {
-            $('#modal-plot-ujian-title').text('Jadwal Verifikasi Luaran & Tim Verifikator (OBE/CPMK-Based)');
+        // Dynamic labels based on OBE
+        if (isObe) {
+            $('#modal-plot-ujian-title').text('Jadwal Verifikasi Luaran & Tim Verifikator (OBE)');
             $('#label_penguji1').text('Tim Verifikator 1');
             $('#label_penguji2').text('Tim Verifikator 2');
             $('#label_penguji3').text('Tim Verifikator 3 (Optional)');
         } else {
-            $('#modal-plot-ujian-title').text('Jadwal Ujian Sidang Akhir & Dosen Penguji (Non-CPMK-Based)');
+            $('#modal-plot-ujian-title').text('Jadwal Ujian Sidang Akhir & Dosen Penguji');
             $('#label_penguji1').text('Dosen Penguji 1');
             $('#label_penguji2').text('Dosen Penguji 2');
             $('#label_penguji3').text('Dosen Penguji 3 (Optional)');
