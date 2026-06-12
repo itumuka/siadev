@@ -20,28 +20,33 @@
 
     <!-- Main content -->
     <section class="content">
+        <div class="row mb-10">
+            <div class="col-12">
+                <div class="d-flex flex-wrap align-items-center">
+                    <a href="{{ route('kpskripsi_syarat') }}" class="btn btn-sm btn-dark mr-10 mb-5">
+                        <i class="fa fa-list mr-5"></i> Syarat Sempro & Ujian
+                    </a>
+                    <a href="{{ route('kpskripsi_cpl') }}" class="btn btn-sm btn-info mr-10 mb-5">
+                        <i class="fa fa-book mr-5"></i> Master Data CPL
+                    </a>
+                    <a href="{{ route('kpskripsi_cpmk') }}" class="btn btn-sm btn-warning mr-10 mb-5">
+                        <i class="fa fa-sliders mr-5"></i> Konfigurasi Rubrik CPMK
+                    </a>
+                    <button class="btn btn-sm btn-info mr-10 mb-5" onclick="openConfigModal()">
+                        <i class="fa fa-cog mr-5"></i> Konfigurasi Sempro
+                    </button>
+                    <button class="btn btn-sm btn-success mb-5" onclick="openConfigGradingModal()">
+                        <i class="fa fa-check-square mr-5"></i> Metode Penilaian
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-12">
                 <div class="box">
                     <div class="box-header with-border bg-primary-light">
                         <h4 class="box-title text-dark">Daftar Pengajuan Skripsi Mahasiswa</h4>
-                        <div class="box-controls pull-right">
-                            <a href="{{ route('kpskripsi_syarat') }}" class="btn btn-sm btn-dark mr-5">
-                                <i class="fa fa-list mr-5"></i> Syarat Sempro & Ujian
-                            </a>
-                            <a href="{{ route('kpskripsi_cpl') }}" class="btn btn-sm btn-info mr-5">
-                                <i class="fa fa-book mr-5"></i> Master Data CPL
-                            </a>
-                            <a href="{{ route('kpskripsi_cpmk') }}" class="btn btn-sm btn-warning mr-5">
-                                <i class="fa fa-sliders mr-5"></i> Konfigurasi Rubrik CPMK
-                            </a>
-                            <button class="btn btn-sm btn-info mr-5" onclick="openConfigModal()">
-                                <i class="fa fa-cog mr-5"></i> Konfigurasi Sempro
-                            </button>
-                            <button class="btn btn-sm btn-success" onclick="openConfigGradingModal()">
-                                <i class="fa fa-check-square mr-5"></i> Metode Penilaian
-                            </button>
-                        </div>
                         <p class="mb-0 text-muted">Kelola ploting dosen pembimbing dan penjadwalan ujian untuk mahasiswa di Program Studi Anda.</p>
                     </div>
                     <div class="box-body">
