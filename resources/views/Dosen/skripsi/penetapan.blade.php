@@ -310,17 +310,17 @@
                         }
                     },
                     { 
-                        data: 'is_obe',
+                        data: 'cpmk_based',
                         className: 'text-center',
                         render: function(data) {
-                            if (data == 1) return '<span class="badge badge-success px-2 py-1"><i class="fa fa-graduation-cap"></i> OBE</span>';
-                            return '<span class="badge badge-primary px-2 py-1"><i class="fa fa-file-text"></i> Non-OBE</span>';
+                            if (data == 1) return '<span class="badge badge-success px-2 py-1"><i class="fa fa-graduation-cap"></i> CPMK-Based</span>';
+                            return '<span class="badge badge-primary px-2 py-1"><i class="fa fa-file-text"></i> Non-CPMK-Based</span>';
                         }
                     },
                     { 
                         data: 'role_dosen',
                         render: function(data, type, row) {
-                            return '<strong>' + getRoleLabel(data, row.is_obe == 1) + '</strong>';
+                            return '<strong>' + getRoleLabel(data, row.cpmk_based == 1) + '</strong>';
                         }
                     },
                     { 
@@ -365,13 +365,13 @@
                 $('#ba_mhs_nim').text(row.nim);
                 $('#ba_mhs_judul').text(row.judul || '-');
                 
-                const isObe = row.is_obe == 1;
-                if (isObe) {
-                    $('#ba_mhs_jalur').removeClass().addClass('badge badge-success font-weight-bold px-2 py-1 mt-1').html('<i class="fa fa-graduation-cap"></i> OBE (Luaran)');
+                const isCpmkBased = row.cpmk_based == 1;
+                if (isCpmkBased) {
+                    $('#ba_mhs_jalur').removeClass().addClass('badge badge-success font-weight-bold px-2 py-1 mt-1').html('<i class="fa fa-graduation-cap"></i> CPMK-Based');
                 } else {
-                    $('#ba_mhs_jalur').removeClass().addClass('badge badge-primary font-weight-bold px-2 py-1 mt-1').html('<i class="fa fa-file-text"></i> Non-OBE');
+                    $('#ba_mhs_jalur').removeClass().addClass('badge badge-primary font-weight-bold px-2 py-1 mt-1').html('<i class="fa fa-file-text"></i> Non-CPMK-Based');
                 }
-                $('#ba_mhs_peran').text(getRoleLabel(row.role_dosen, isObe));
+                $('#ba_mhs_peran').text(getRoleLabel(row.role_dosen, isCpmkBased));
 
                 // Load Berita Acara details
                 loadBeritaAcaraDetails(row.id_skripsi_ujian);
@@ -432,9 +432,9 @@
                             // Catatan
                             $('#ba_catatan').html(ba && ba.catatan ? ba.catatan : '<em class="text-muted">Tidak ada catatan perbaikan.</em>');
 
-                             const isObe = activeUjianData.is_obe == 1;
-                             $('#cpmk_card_title').html(isObe ? '<i class="fa fa-table text-primary"></i> Rincian Nilai CPMK dari Tim Penguji' : '<i class="fa fa-table text-primary"></i> Rincian Nilai dari Tim Penguji');
-                             $('#cpmk_th_title').text(isObe ? 'Kriteria Rubrik CPMK' : 'Kriteria Penilaian');
+                             const isCpmkBased = activeUjianData.cpmk_based == 1;
+                             $('#cpmk_card_title').html(isCpmkBased ? '<i class="fa fa-table text-primary"></i> Rincian Nilai CPMK dari Tim Penguji' : '<i class="fa fa-table text-primary"></i> Rincian Nilai dari Tim Penguji');
+                             $('#cpmk_th_title').text(isCpmkBased ? 'Kriteria Rubrik CPMK' : 'Kriteria Penilaian');
 
                              // Rincian CPMK table
                              // Group scores by CPMK ID
@@ -442,7 +442,7 @@
                              nilais.forEach(function(n) {
                                  if (!cpmkMap[n.id_cpmk]) {
                                      cpmkMap[n.id_cpmk] = {
-                                         kode_cpmk: n.kode_cpmk || 'Non-OBE',
+                                         kode_cpmk: n.kode_cpmk || 'Non-CPMK',
                                          nama_cpmk: n.nama_cpmk || 'Nilai Ujian Skripsi / Sidang Akhir',
                                          bobot: n.bobot !== null && n.bobot !== undefined ? n.bobot : 100.00,
                                          scores: {}
@@ -469,7 +469,7 @@
 
                                  cpmkHtml += `<tr>
                                      <td class="text-left font-weight-medium">
-                                         <span class="badge ${isObe ? 'badge-secondary' : 'badge-primary'} mr-1">${item.kode_cpmk}</span> ${item.nama_cpmk}
+                                         <span class="badge ${isCpmkBased ? 'badge-secondary' : 'badge-primary'} mr-1">${item.kode_cpmk}</span> ${item.nama_cpmk}
                                      </td>
                                      <td>${parseFloat(item.bobot)}%</td>
                                      <td>${score1}</td>
@@ -487,9 +487,9 @@
                             // Signature List
                             let sigHtml = '';
                             const examiners = [
-                                { key: 'penguji1', id: u.id_penguji1, nama: u.nama_penguji1 || 'Penguji 1', roleLabel: getRoleLabel('penguji1', isObe), ttd: ba ? ba.setuju_penguji1 : null },
-                                { key: 'penguji2', id: u.id_penguji2, nama: u.nama_penguji2 || 'Penguji 2', roleLabel: getRoleLabel('penguji2', isObe), ttd: ba ? ba.setuju_penguji2 : null },
-                                { key: 'penguji3', id: u.id_penguji3, nama: u.nama_penguji3 || 'Penguji 3', roleLabel: getRoleLabel('penguji3', isObe), ttd: ba ? ba.setuju_penguji3 : null }
+                                { key: 'penguji1', id: u.id_penguji1, nama: u.nama_penguji1 || 'Penguji 1', roleLabel: getRoleLabel('penguji1', isCpmkBased), ttd: ba ? ba.setuju_penguji1 : null },
+                                { key: 'penguji2', id: u.id_penguji2, nama: u.nama_penguji2 || 'Penguji 2', roleLabel: getRoleLabel('penguji2', isCpmkBased), ttd: ba ? ba.setuju_penguji2 : null },
+                                { key: 'penguji3', id: u.id_penguji3, nama: u.nama_penguji3 || 'Penguji 3', roleLabel: getRoleLabel('penguji3', isCpmkBased), ttd: ba ? ba.setuju_penguji3 : null }
                             ];
 
                             let myRoleKey = null;

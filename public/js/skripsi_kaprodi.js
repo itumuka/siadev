@@ -89,7 +89,7 @@ $(document).ready(function () {
                                     data-id="${data.id_skripsi}" 
                                     data-nim="${data.nim}" 
                                     data-nama="${data.nama_mhs}" 
-                                    data-is-obe="${data.is_obe || 0}"
+                                    data-cpmk-based="${data.cpmk_based || 0}"
                                     title="Jadwal Ujian Akhir">
                                     <i class="fa fa-graduation-cap"></i>
                                 </button>
@@ -214,7 +214,7 @@ $(document).ready(function () {
     // 4b. Event Handlers - Plot Ujian / Sidang Akhir
     $(document).on('click', '.btn-plot-ujian', function () {
         const d = $(this).data();
-        const isObe = parseInt(d.isObe) === 1;
+        const isCpmkBased = parseInt(d.cpmkBased) === 1;
 
         $('#ujian_id_skripsi').val(d.id);
         
@@ -224,14 +224,14 @@ $(document).ready(function () {
         $('#ujian_penguji2').val(null).trigger('change');
         $('#ujian_penguji3').val(null).trigger('change');
 
-        // Dynamic labels based on OBE
-        if (isObe) {
-            $('#modal-plot-ujian-title').text('Jadwal Verifikasi Luaran & Tim Verifikator (OBE)');
+        // Dynamic labels based on CPMK-Based
+        if (isCpmkBased) {
+            $('#modal-plot-ujian-title').text('Jadwal Verifikasi Luaran & Tim Verifikator (OBE/CPMK-Based)');
             $('#label_penguji1').text('Tim Verifikator 1');
             $('#label_penguji2').text('Tim Verifikator 2');
             $('#label_penguji3').text('Tim Verifikator 3 (Optional)');
         } else {
-            $('#modal-plot-ujian-title').text('Jadwal Ujian Sidang Akhir & Dosen Penguji');
+            $('#modal-plot-ujian-title').text('Jadwal Ujian Sidang Akhir & Dosen Penguji (Non-CPMK-Based)');
             $('#label_penguji1').text('Dosen Penguji 1');
             $('#label_penguji2').text('Dosen Penguji 2');
             $('#label_penguji3').text('Dosen Penguji 3 (Optional)');
@@ -406,8 +406,8 @@ $(document).ready(function () {
                 if (res.status === 'success' && res.data.length > 0) {
                     let html = '';
                     res.data.forEach(mk => {
-                        let selectedObe = parseInt(mk.is_obe) === 1 ? 'selected' : '';
-                        let selectedNonObe = parseInt(mk.is_obe) === 0 ? 'selected' : '';
+                        let selectedObe = parseInt(mk.cpmk_based) === 1 ? 'selected' : '';
+                        let selectedNonObe = parseInt(mk.cpmk_based) === 0 ? 'selected' : '';
                         
                         html += `
                             <tr>
@@ -415,8 +415,8 @@ $(document).ready(function () {
                                 <td><strong>${mk.nama_matakuliah}</strong></td>
                                 <td class="text-center">
                                     <select class="form-control select-change-grading" data-id="${mk.id_matakuliah}">
-                                        <option value="1" ${selectedObe}>OBE (CPMK & Rubrik)</option>
-                                        <option value="0" ${selectedNonObe}>Non-OBE (Nilai Angka Langsung)</option>
+                                        <option value="1" ${selectedObe}>CPMK-Based (OBE & Rubrik)</option>
+                                        <option value="0" ${selectedNonObe}>Non-CPMK-Based (Nilai Angka Langsung)</option>
                                     </select>
                                 </td>
                             </tr>
@@ -436,7 +436,7 @@ $(document).ready(function () {
     // Handle change of grading configuration
     $(document).on('change', '.select-change-grading', function () {
         const id_matakuliah = $(this).data('id');
-        const is_obe = $(this).val();
+        const cpmk_based = $(this).val();
 
         $.ajax({
             url: CONFIG.api_url + "kaprodi/skripsi/update-config-grading",
@@ -448,7 +448,7 @@ $(document).ready(function () {
             },
             data: JSON.stringify({
                 id_matakuliah: id_matakuliah,
-                is_obe: is_obe
+                cpmk_based: cpmk_based
             }),
             success: function (res) {
                 if (res.status === 'success') {
