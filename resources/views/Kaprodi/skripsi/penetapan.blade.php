@@ -134,7 +134,7 @@
                         <!-- Left: Rubric & Score Breakdowns -->
                         <div class="col-lg-8">
                             <div class="card border-0 shadow-sm mb-4">
-                                <div class="card-header bg-white font-weight-bold text-dark">
+                                <div class="card-header bg-white font-weight-bold text-dark" id="cpmk_card_title">
                                     <i class="fa fa-table text-primary"></i> Rincian Penilaian CPMK dari Ketiga Penguji
                                 </div>
                                 <div class="card-body">
@@ -142,7 +142,7 @@
                                         <table class="table table-bordered table-sm text-center" id="table_cpmk_breakdown">
                                             <thead class="bg-secondary text-white">
                                                 <tr>
-                                                    <th class="text-left">Kriteria Rubrik CPMK</th>
+                                                    <th class="text-left" id="cpmk_th_title">Kriteria Rubrik CPMK</th>
                                                     <th>Bobot</th>
                                                     <th>Penguji 1</th>
                                                     <th>Penguji 2</th>
@@ -250,6 +250,20 @@
                     return `<span class="badge badge-success" title="Sudah TTD pada ${formatDateTime(ttdTime)}"><i class="fa fa-check"></i> Sudah TTD</span>`;
                 }
                 return '<span class="badge badge-warning" title="Belum menyetujui"><i class="fa fa-clock-o"></i> Belum TTD</span>';
+            }
+
+            function getRoleLabel(role, isObe) {
+                if (isObe) {
+                    if (role === 'penguji1') return 'Verifikator 1 (Utama)';
+                    if (role === 'penguji2') return 'Verifikator 2';
+                    if (role === 'ketua' || role === 'penguji3') return 'Ketua Tim Verifikasi';
+                    return 'Tim Verifikator';
+                } else {
+                    if (role === 'penguji1') return 'Dosen Penguji 1';
+                    if (role === 'penguji2') return 'Dosen Penguji 2';
+                    if (role === 'ketua' || role === 'penguji3') return 'Ketua Penguji / Sidang';
+                    return 'Dosen Penguji';
+                }
             }
 
             // Initialize Table
@@ -406,14 +420,18 @@
                             // Catatan
                             $('#ba_catatan').html(ba && ba.catatan ? ba.catatan : '<em class="text-muted">Tidak ada catatan perbaikan.</em>');
 
+                            const isCpmkBased = activeUjianData.cpmk_based == 1;
+                            $('#cpmk_card_title').html(isCpmkBased ? '<i class="fa fa-table text-primary"></i> Rincian Nilai CPMK dari Ketiga Penguji' : '<i class="fa fa-table text-primary"></i> Rincian Nilai dari Ketiga Penguji');
+                            $('#cpmk_th_title').text(isCpmkBased ? 'Kriteria Rubrik CPMK' : 'Kriteria Penilaian');
+
                             // Rincian CPMK table
                             const cpmkMap = {};
                             nilais.forEach(function(n) {
                                 if (!cpmkMap[n.id_cpmk]) {
                                     cpmkMap[n.id_cpmk] = {
-                                        kode_cpmk: n.kode_cpmk,
-                                        nama_cpmk: n.nama_cpmk,
-                                        bobot: n.bobot,
+                                        kode_cpmk: n.kode_cpmk || 'Non-CPMK',
+                                        nama_cpmk: n.nama_cpmk || 'Nilai Ujian Skripsi / Sidang Akhir',
+                                        bobot: n.bobot !== null && n.bobot !== undefined ? n.bobot : 100.00,
                                         scores: {}
                                     };
                                 }
@@ -435,7 +453,7 @@
 
                                 cpmkHtml += `<tr>
                                     <td class="text-left font-weight-medium">
-                                        <span class="badge badge-secondary mr-1">${item.kode_cpmk}</span> ${item.nama_cpmk}
+                                        <span class="badge ${isCpmkBased ? 'badge-secondary' : 'badge-primary'} mr-1">${item.kode_cpmk}</span> ${item.nama_cpmk}
                                     </td>
                                     <td>${parseFloat(item.bobot)}%</td>
                                     <td>${score1}</td>
@@ -451,10 +469,11 @@
                             $('#tbody_cpmk_breakdown').html(cpmkHtml);
 
                             // Signatures
+                            const isObe = activeUjianData.is_obe == 1;
                             const examiners = [
-                                { name: u.nama_penguji1 || 'Penguji 1 (Ketua)', role: 'Ketua Penguji', ttd: ba ? ba.setuju_penguji1 : null },
-                                { name: u.nama_penguji2 || 'Penguji 2', role: 'Anggota Penguji 2', ttd: ba ? ba.setuju_penguji2 : null },
-                                { name: u.nama_penguji3 || 'Penguji 3', role: 'Anggota Penguji 3', ttd: ba ? ba.setuju_penguji3 : null }
+                                { name: u.nama_penguji1 || 'Penguji 1 (Ketua)', role: getRoleLabel('penguji1', isObe), ttd: ba ? ba.setuju_penguji1 : null },
+                                { name: u.nama_penguji2 || 'Penguji 2', role: getRoleLabel('penguji2', isObe), ttd: ba ? ba.setuju_penguji2 : null },
+                                { name: u.nama_penguji3 || 'Penguji 3', role: getRoleLabel('penguji3', isObe), ttd: ba ? ba.setuju_penguji3 : null }
                             ];
 
                             let allSigned = true;

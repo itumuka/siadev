@@ -76,7 +76,7 @@
                                 </li>
                                 <li class="{{ Route::is('kpskripsi_penetapan') ? 'active' : '' }}">
                                     <a href="{{ route('kpskripsi_penetapan') }}"><i class="fa fa-gavel"><span
-                                                class="path1"></span><span class="path2"></span></i>Penetapan Nilai (BA)
+                                                class="path1"></span><span class="path2"></span></i>Penetapan Nilai
                                         <sup class="text-danger">(Beta)</sup></a>
                                 </li>
                                 <li class="{{ Route::is('kpskripsi_bimbingan') ? 'active' : '' }}">
@@ -154,19 +154,19 @@
                                 class="{{ Route::is('dosen.skripsi.index') || Route::is('dosen.skripsi.detail_bimbingan') ? 'active' : '' }}">
                                 <a href="{{ route('dosen.skripsi.index') }}" title="Pembimbing Skripsi">
                                     <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                    <span>Pembimbing Skripsi</span>
+                                    <span>List Bimbingan</span>
                                 </a>
                             </li>
                             <li class="{{ Route::is('dosen.skripsi.ujian') ? 'active' : '' }}">
                                 <a href="{{ route('dosen.skripsi.ujian') }}" title="Ujian / Verifikasi Skripsi">
                                     <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                    <span>Ujian & Luaran Skripsi</span>
+                                    <span>Penilaian Ujian</span>
                                 </a>
                             </li>
                             <li class="{{ Route::is('dosen.skripsi.penetapan') ? 'active' : '' }}">
                                 <a href="{{ route('dosen.skripsi.penetapan') }}" title="Persetujuan Berita Acara (TTD)">
                                     <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                    <span>Penetapan Nilai (BA)</span>
+                                    <span>Penetapan BA</span>
                                 </a>
                             </li>
                         </ul>
