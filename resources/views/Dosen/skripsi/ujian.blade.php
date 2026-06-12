@@ -361,76 +361,103 @@
                 // Open modal
                 $('#modal_nilai_ujian').modal('show');
 
-                // Load rubrics first, then load existing scores
-                $.ajax({
-                    url: "{{ $api_url }}dosen/skripsi/get-rubrik-cpmk",
-                    method: "GET",
-                    headers: {
-                        "Authorization": 'Bearer ' + token,
-                        "username": userlogin
-                    },
-                    data: { kode_prodi: student.kode_prodi },
-                    success: function(rubricRes) {
-                        if (rubricRes.status === 'success') {
-                            currentRubrics = rubricRes.data;
+                if (!isObe) {
+                    // Load existing grades directly (no need to fetch rubrics)
+                    $.ajax({
+                        url: "{{ $api_url }}dosen/skripsi/get-nilai-ujian-cpmk",
+                        method: "GET",
+                        headers: {
+                            "Authorization": 'Bearer ' + token,
+                            "username": userlogin
+                        },
+                        data: { id_skripsi_ujian: student.id_skripsi_ujian, id_dosen: id_dosen },
+                        success: function(nilaiRes) {
+                            var gradesMap = {};
+                            var existingCatatan = '';
+                            if (nilaiRes.status === 'success') {
+                                nilaiRes.data.forEach(function(n) {
+                                    gradesMap[n.id_cpmk] = n.nilai;
+                                });
+                                existingCatatan = nilaiRes.catatan || '';
+                            }
                             
-                            // Load existing grades
-                            $.ajax({
-                                url: "{{ $api_url }}dosen/skripsi/get-nilai-ujian-cpmk",
-                                method: "GET",
-                                headers: {
-                                    "Authorization": 'Bearer ' + token,
-                                    "username": userlogin
-                                },
-                                data: { id_skripsi_ujian: student.id_skripsi_ujian, id_dosen: id_dosen },
-                                success: function(nilaiRes) {
-                                    var gradesMap = {};
-                                    var existingCatatan = '';
-                                    if (nilaiRes.status === 'success') {
-                                        nilaiRes.data.forEach(function(n) {
-                                            gradesMap[n.id_cpmk] = n.nilai;
-                                        });
-                                        existingCatatan = nilaiRes.catatan || '';
-                                    }
-                                    
-                                    $('#n_catatan').val(existingCatatan);
-                                    renderRubricInputs(currentRubrics, gradesMap);
-                                }
-                            });
-                        } else {
-                            $('#rubrik_inputs_container').html('<div class="alert alert-danger">Gagal memuat rubrik penilaian.</div>');
+                            $('#n_catatan').val(existingCatatan);
+                            renderRubricInputs([], gradesMap, false);
+                        },
+                        error: function() {
+                            $('#rubrik_inputs_container').html('<div class="alert alert-danger">Koneksi API bermasalah.</div>');
                         }
-                    },
-                    error: function() {
-                        $('#rubrik_inputs_container').html('<div class="alert alert-danger">Koneksi API bermasalah.</div>');
-                    }
-                });
+                    });
+                } else {
+                    // Load rubrics first, then load existing scores
+                    $.ajax({
+                        url: "{{ $api_url }}dosen/skripsi/get-rubrik-cpmk",
+                        method: "GET",
+                        headers: {
+                            "Authorization": 'Bearer ' + token,
+                            "username": userlogin
+                        },
+                        data: { kode_prodi: student.kode_prodi },
+                        success: function(rubricRes) {
+                            if (rubricRes.status === 'success') {
+                                currentRubrics = rubricRes.data;
+                                
+                                // Load existing grades
+                                $.ajax({
+                                    url: "{{ $api_url }}dosen/skripsi/get-nilai-ujian-cpmk",
+                                    method: "GET",
+                                    headers: {
+                                        "Authorization": 'Bearer ' + token,
+                                        "username": userlogin
+                                    },
+                                    data: { id_skripsi_ujian: student.id_skripsi_ujian, id_dosen: id_dosen },
+                                    success: function(nilaiRes) {
+                                        var gradesMap = {};
+                                        var existingCatatan = '';
+                                        if (nilaiRes.status === 'success') {
+                                            nilaiRes.data.forEach(function(n) {
+                                                gradesMap[n.id_cpmk] = n.nilai;
+                                            });
+                                            existingCatatan = nilaiRes.catatan || '';
+                                        }
+                                        
+                                        $('#n_catatan').val(existingCatatan);
+                                        renderRubricInputs(currentRubrics, gradesMap, true);
+                                    }
+                                });
+                            } else {
+                                $('#rubrik_inputs_container').html('<div class="alert alert-danger">Gagal memuat rubrik penilaian.</div>');
+                            }
+                        },
+                        error: function() {
+                            $('#rubrik_inputs_container').html('<div class="alert alert-danger">Koneksi API bermasalah.</div>');
+                        }
+                    });
+                }
             });
 
             // Render Inputs dynamically
-            function renderRubricInputs(rubrics, gradesMap) {
+            function renderRubricInputs(rubrics, gradesMap, isObe) {
                 var html = '';
                 
-                rubrics.forEach(function(r) {
-                    var val = gradesMap[r.id] !== undefined ? gradesMap[r.id] : '';
-                    var cplBadge = r.kode_cpl ? '<span class="badge badge-info-light font-weight-bold ml-2">Mapping CPL: ' + r.kode_cpl + '</span>' : '';
-                    
+                if (!isObe) {
+                    var val = gradesMap[0] !== undefined ? gradesMap[0] : '';
                     html += `
                     <div class="form-group row align-items-center mb-3 py-2 border-bottom">
                         <div class="col-md-7">
                             <label class="font-weight-bold text-dark mb-0">
-                                <span class="badge badge-secondary mr-2">${r.kode_cpmk}</span> 
-                                ${r.nama_cpmk}
+                                <span class="badge badge-primary mr-2">Non-OBE</span> 
+                                Nilai Ujian Skripsi / Sidang Akhir (0 - 100)
                             </label>
-                            <div class="small text-muted mt-1">Bobot kriteria ini: <strong>${parseFloat(r.bobot)}%</strong> ${cplBadge}</div>
+                            <div class="small text-muted mt-1">Bobot kriteria ini: <strong>100%</strong></div>
                         </div>
                         <div class="col-md-3">
                             <div class="input-group">
                                 <input type="number" 
-                                       name="nilai[${r.id}]" 
+                                       name="nilai[0]" 
                                        class="form-control border-primary rubric-score-input" 
-                                       data-id="${r.id}" 
-                                       data-bobot="${r.bobot}" 
+                                       data-id="0" 
+                                       data-bobot="100" 
                                        min="0" 
                                        max="100" 
                                        step="0.01" 
@@ -444,10 +471,48 @@
                         </div>
                         <div class="col-md-2 text-right">
                             <span class="small text-muted font-weight-bold">Skor Tertimbang:</span>
-                            <div class="font-weight-bold text-dark text-right dynamic-weighted-score" id="weighted_score_${r.id}">0.00</div>
+                            <div class="font-weight-bold text-dark text-right dynamic-weighted-score" id="weighted_score_0">0.00</div>
                         </div>
                     </div>`;
-                });
+                } else {
+                    rubrics.forEach(function(r) {
+                        var val = gradesMap[r.id] !== undefined ? gradesMap[r.id] : '';
+                        var cplBadge = r.kode_cpl ? '<span class="badge badge-info-light font-weight-bold ml-2">Mapping CPL: ' + r.kode_cpl + '</span>' : '';
+                        
+                        html += `
+                        <div class="form-group row align-items-center mb-3 py-2 border-bottom">
+                            <div class="col-md-7">
+                                <label class="font-weight-bold text-dark mb-0">
+                                    <span class="badge badge-secondary mr-2">${r.kode_cpmk}</span> 
+                                    ${r.nama_cpmk}
+                                </label>
+                                <div class="small text-muted mt-1">Bobot kriteria ini: <strong>${parseFloat(r.bobot)}%</strong> ${cplBadge}</div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <input type="number" 
+                                           name="nilai[${r.id}]" 
+                                           class="form-control border-primary rubric-score-input" 
+                                           data-id="${r.id}" 
+                                           data-bobot="${r.bobot}" 
+                                           min="0" 
+                                           max="100" 
+                                           step="0.01" 
+                                           value="${val}" 
+                                           placeholder="0-100" 
+                                           required>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text bg-light font-weight-bold">/ 100</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 text-right">
+                                <span class="small text-muted font-weight-bold">Skor Tertimbang:</span>
+                                <div class="font-weight-bold text-dark text-right dynamic-weighted-score" id="weighted_score_${r.id}">0.00</div>
+                            </div>
+                        </div>`;
+                    });
+                }
 
                 $('#rubrik_inputs_container').html(html);
                 

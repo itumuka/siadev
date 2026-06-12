@@ -388,4 +388,76 @@ $(document).ready(function () {
             }
         });
     });
+
+    // 6. Grading Configuration Logic
+    window.openConfigGradingModal = function () {
+        const modal = $('#modal-config-grading');
+        $('#list_config_grading').html('<tr><td colspan="3" class="text-center">Memuat konfigurasi...</td></tr>');
+        modal.modal('show');
+
+        $.ajax({
+            url: CONFIG.api_url + "kaprodi/skripsi/config-grading/" + CONFIG.kode_prodi,
+            type: "GET",
+            headers: {
+                "Authorization": "Bearer " + CONFIG.token,
+                "username": CONFIG.username
+            },
+            success: function (res) {
+                if (res.status === 'success' && res.data.length > 0) {
+                    let html = '';
+                    res.data.forEach(mk => {
+                        let selectedObe = parseInt(mk.is_obe) === 1 ? 'selected' : '';
+                        let selectedNonObe = parseInt(mk.is_obe) === 0 ? 'selected' : '';
+                        
+                        html += `
+                            <tr>
+                                <td>${mk.kode_matakuliah}</td>
+                                <td><strong>${mk.nama_matakuliah}</strong></td>
+                                <td class="text-center">
+                                    <select class="form-control select-change-grading" data-id="${mk.id_matakuliah}">
+                                        <option value="1" ${selectedObe}>OBE (CPMK & Rubrik)</option>
+                                        <option value="0" ${selectedNonObe}>Non-OBE (Nilai Angka Langsung)</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    $('#list_config_grading').html(html);
+                } else {
+                    $('#list_config_grading').html('<tr><td colspan="3" class="text-center text-danger">Tidak ada mata kuliah tugas akhir/skripsi ditemukan untuk prodi ini.</td></tr>');
+                }
+            },
+            error: function () {
+                $('#list_config_grading').html('<tr><td colspan="3" class="text-center text-danger">Gagal memuat konfigurasi.</td></tr>');
+            }
+        });
+    };
+
+    // Handle change of grading configuration
+    $(document).on('change', '.select-change-grading', function () {
+        const id_matakuliah = $(this).data('id');
+        const is_obe = $(this).val();
+
+        $.ajax({
+            url: CONFIG.api_url + "kaprodi/skripsi/update-config-grading",
+            type: "POST",
+            headers: {
+                "Authorization": "Bearer " + CONFIG.token,
+                "username": CONFIG.username,
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify({
+                id_matakuliah: id_matakuliah,
+                is_obe: is_obe
+            }),
+            success: function (res) {
+                if (res.status === 'success') {
+                    swal("Berhasil!", res.message, "success");
+                }
+            },
+            error: function () {
+                swal("Gagal!", "Gagal menyimpan konfigurasi metode penilaian.", "error");
+            }
+        });
+    });
 });

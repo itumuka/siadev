@@ -35,8 +35,11 @@
                             <a href="{{ route('kpskripsi_cpmk') }}" class="btn btn-sm btn-warning mr-5">
                                 <i class="fa fa-sliders mr-5"></i> Konfigurasi Rubrik CPMK
                             </a>
-                            <button class="btn btn-sm btn-info" onclick="openConfigModal()">
+                            <button class="btn btn-sm btn-info mr-5" onclick="openConfigModal()">
                                 <i class="fa fa-cog mr-5"></i> Konfigurasi Sempro
+                            </button>
+                            <button class="btn btn-sm btn-success" onclick="openConfigGradingModal()">
+                                <i class="fa fa-check-square mr-5"></i> Metode Penilaian
                             </button>
                         </div>
                         <p class="mb-0 text-muted">Kelola ploting dosen pembimbing dan penjadwalan ujian untuk mahasiswa di Program Studi Anda.</p>
@@ -253,6 +256,38 @@
                     <button type="submit" class="btn btn-info btn-block">Simpan Konfigurasi</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Konfigurasi Metode Penilaian -->
+<div class="modal fade" id="modal-config-grading" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-success">
+                <h5 class="modal-title text-white">Konfigurasi Metode Penilaian Skripsi / Tugas Akhir</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted">Tentukan metode penilaian (OBE dengan CPMK/CPL vs Non-OBE dengan Nilai Angka Langsung) untuk masing-masing mata kuliah tugas akhir/skripsi aktif prodi Anda.</p>
+                <div class="table-responsive text-dark">
+                    <table class="table table-bordered table-striped" id="table_config_grading">
+                        <thead>
+                            <tr class="bg-dark">
+                                <th>Kode MK</th>
+                                <th>Nama Mata Kuliah</th>
+                                <th width="40%" class="text-center">Metode Penilaian</th>
+                            </tr>
+                        </thead>
+                        <tbody id="list_config_grading">
+                            <!-- Dynamic -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
         </div>
     </div>
 </div>

@@ -135,7 +135,7 @@
                         <!-- Left: Rubric & Score Breakdowns -->
                         <div class="col-lg-8">
                             <div class="card border-0 shadow-sm mb-4">
-                                <div class="card-header bg-white font-weight-bold text-dark">
+                                <div class="card-header bg-white font-weight-bold text-dark" id="cpmk_card_title">
                                     <i class="fa fa-table text-primary"></i> Rincian Nilai CPMK dari Tim Penguji
                                 </div>
                                 <div class="card-body">
@@ -143,7 +143,7 @@
                                         <table class="table table-bordered table-sm text-center" id="table_cpmk_breakdown">
                                             <thead class="bg-secondary text-white">
                                                 <tr>
-                                                    <th class="text-left">Kriteria Rubrik CPMK</th>
+                                                    <th class="text-left" id="cpmk_th_title">Kriteria Rubrik CPMK</th>
                                                     <th>Bobot</th>
                                                     <th>Penguji 1</th>
                                                     <th>Penguji 2</th>
@@ -432,53 +432,57 @@
                             // Catatan
                             $('#ba_catatan').html(ba && ba.catatan ? ba.catatan : '<em class="text-muted">Tidak ada catatan perbaikan.</em>');
 
-                            // Rincian CPMK table
-                            // Group scores by CPMK ID
-                            const cpmkMap = {};
-                            nilais.forEach(function(n) {
-                                if (!cpmkMap[n.id_cpmk]) {
-                                    cpmkMap[n.id_cpmk] = {
-                                        kode_cpmk: n.kode_cpmk,
-                                        nama_cpmk: n.nama_cpmk,
-                                        bobot: n.bobot,
-                                        scores: {}
-                                    };
-                                }
-                                cpmkMap[n.id_cpmk].scores[n.id_dosen] = parseFloat(n.nilai);
-                            });
+                             const isObe = activeUjianData.is_obe == 1;
+                             $('#cpmk_card_title').html(isObe ? '<i class="fa fa-table text-primary"></i> Rincian Nilai CPMK dari Tim Penguji' : '<i class="fa fa-table text-primary"></i> Rincian Nilai dari Tim Penguji');
+                             $('#cpmk_th_title').text(isObe ? 'Kriteria Rubrik CPMK' : 'Kriteria Penilaian');
 
-                            let cpmkHtml = '';
-                            let index = 0;
-                            for (let id_cpmk in cpmkMap) {
-                                index++;
-                                const item = cpmkMap[id_cpmk];
-                                const score1 = item.scores[u.id_penguji1] !== undefined ? item.scores[u.id_penguji1].toFixed(2) : '-';
-                                const score2 = item.scores[u.id_penguji2] !== undefined ? item.scores[u.id_penguji2].toFixed(2) : '-';
-                                const score3 = item.scores[u.id_penguji3] !== undefined ? item.scores[u.id_penguji3].toFixed(2) : '-';
-                                
-                                // Calculate average CPMK
-                                const valids = [];
-                                if (item.scores[u.id_penguji1] !== undefined) valids.push(item.scores[u.id_penguji1]);
-                                if (item.scores[u.id_penguji2] !== undefined) valids.push(item.scores[u.id_penguji2]);
-                                if (item.scores[u.id_penguji3] !== undefined) valids.push(item.scores[u.id_penguji3]);
-                                const avg = valids.length > 0 ? (valids.reduce((a, b) => a + b, 0) / valids.length).toFixed(2) : '-';
+                             // Rincian CPMK table
+                             // Group scores by CPMK ID
+                             const cpmkMap = {};
+                             nilais.forEach(function(n) {
+                                 if (!cpmkMap[n.id_cpmk]) {
+                                     cpmkMap[n.id_cpmk] = {
+                                         kode_cpmk: n.kode_cpmk || 'Non-OBE',
+                                         nama_cpmk: n.nama_cpmk || 'Nilai Ujian Skripsi / Sidang Akhir',
+                                         bobot: n.bobot !== null && n.bobot !== undefined ? n.bobot : 100.00,
+                                         scores: {}
+                                     };
+                                 }
+                                 cpmkMap[n.id_cpmk].scores[n.id_dosen] = parseFloat(n.nilai);
+                             });
 
-                                cpmkHtml += `<tr>
-                                    <td class="text-left font-weight-medium">
-                                        <span class="badge badge-secondary mr-1">${item.kode_cpmk}</span> ${item.nama_cpmk}
-                                    </td>
-                                    <td>${parseFloat(item.bobot)}%</td>
-                                    <td>${score1}</td>
-                                    <td>${score2}</td>
-                                    <td>${score3}</td>
-                                    <td class="font-weight-bold text-primary">${avg}</td>
-                                </tr>`;
-                            }
+                             let cpmkHtml = '';
+                             let index = 0;
+                             for (let id_cpmk in cpmkMap) {
+                                 index++;
+                                 const item = cpmkMap[id_cpmk];
+                                 const score1 = item.scores[u.id_penguji1] !== undefined ? item.scores[u.id_penguji1].toFixed(2) : '-';
+                                 const score2 = item.scores[u.id_penguji2] !== undefined ? item.scores[u.id_penguji2].toFixed(2) : '-';
+                                 const score3 = item.scores[u.id_penguji3] !== undefined ? item.scores[u.id_penguji3].toFixed(2) : '-';
+                                 
+                                 // Calculate average CPMK
+                                 const valids = [];
+                                 if (item.scores[u.id_penguji1] !== undefined) valids.push(item.scores[u.id_penguji1]);
+                                 if (item.scores[u.id_penguji2] !== undefined) valids.push(item.scores[u.id_penguji2]);
+                                 if (item.scores[u.id_penguji3] !== undefined) valids.push(item.scores[u.id_penguji3]);
+                                 const avg = valids.length > 0 ? (valids.reduce((a, b) => a + b, 0) / valids.length).toFixed(2) : '-';
 
-                            if (cpmkHtml === '') {
-                                cpmkHtml = '<tr><td colspan="6" class="text-center text-muted">Belum ada rincian nilai rubrik.</td></tr>';
-                            }
-                            $('#tbody_cpmk_breakdown').html(cpmkHtml);
+                                 cpmkHtml += `<tr>
+                                     <td class="text-left font-weight-medium">
+                                         <span class="badge ${isObe ? 'badge-secondary' : 'badge-primary'} mr-1">${item.kode_cpmk}</span> ${item.nama_cpmk}
+                                     </td>
+                                     <td>${parseFloat(item.bobot)}%</td>
+                                     <td>${score1}</td>
+                                     <td>${score2}</td>
+                                     <td>${score3}</td>
+                                     <td class="font-weight-bold text-primary">${avg}</td>
+                                 </tr>`;
+                             }
+
+                             if (cpmkHtml === '') {
+                                 cpmkHtml = '<tr><td colspan="6" class="text-center text-muted">Belum ada rincian nilai rubrik.</td></tr>';
+                             }
+                             $('#tbody_cpmk_breakdown').html(cpmkHtml);
 
                             // Signature List
                             let sigHtml = '';
