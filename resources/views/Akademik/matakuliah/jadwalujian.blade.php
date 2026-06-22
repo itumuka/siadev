@@ -55,7 +55,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                <button type="button" class="btn btn-sm btn-info" id="btn_modal_import" style="display:none; margin-top: 4px;">
+                                <button type="button" class="btn btn-sm btn-info" id="btn_modal_import" style="margin-top: 4px;">
                                     <i class="ti-import"></i> Import Massal
                                 </button>
                             </div>
@@ -458,13 +458,12 @@
                 });
 
                 // Import Massal logic
-                if ($('#programstudi').val()) {
-                    $('#btn_modal_import').show();
-                } else {
-                    $('#btn_modal_import').hide();
-                }
-
                 $('#btn_modal_import').off('click').on('click', function() {
+                    var prodi = $('#programstudi').val();
+                    if (!prodi) {
+                        showToastr('warning', 'Peringatan!', 'Silakan pilih Program Studi terlebih dahulu.');
+                        return;
+                    }
                     $('#modal_import').modal('show');
                     $('#fileimport').val('');
                     $('#alert-import-container').html('');
