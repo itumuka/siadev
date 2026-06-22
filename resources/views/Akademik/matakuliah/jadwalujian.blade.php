@@ -54,7 +54,13 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-sm-3">
+                                <button type="button" class="btn btn-sm btn-info" id="btn_modal_import" style="display:none; margin-top: 4px;">
+                                    <i class="ti-import"></i> Import Massal
+                                </button>
+                            </div>
                         </div>
+                        <div id="alert-import-container" class="mt-2"></div>
                     </div>
                     <div class="table-responsive">
                         <table id="tbmakulpenawaran" class="table table-hover table-striped">
@@ -228,6 +234,43 @@
                     <!-- /.modal-content -->
                 </div>
                 <!-- /.modal-dialog -->
+            </div>
+
+            {{-- modal import --}}
+            <div class="modal fade" id="modal_import" data-backdrop="static" tabindex="-1" role="dialog">
+                <form id="form_import_jadwal" method="POST" enctype="multipart/form-data">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Import Massal Jadwal Ujian</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <strong style="color: maroon;"><i class="fa fa-file-excel-o"></i> Download Template Pengisian</strong>
+                                    <p class="text-muted" style="font-size: 15px">
+                                        <a href="javascript:void(0)" id="link_download_template"><u>Klik di sini untuk mengunduh template</u></a>
+                                    </p>
+                                </div>
+                                <div class="form-group">
+                                    <label>Pilih File Excel Jadwal Ujian</label>
+                                    <input type="file" class="form-control" name="fileimport" id="fileimport" required>
+                                    <span class="text-danger font-italic">* Harus berupa ekstensi .xls atau .xlsx</span>
+                                </div>
+                            </div>
+                            <div class="modal-footer text-right">
+                                <button type="button" class="btn btn-rounded btn-warning btn-outline mr-1" data-dismiss="modal">
+                                    <i class="fa fa-times"></i> Tutup
+                                </button>
+                                <button type="submit" class="btn btn-rounded btn-primary btn-outline" id="btn_submit_import">
+                                    <i class="fa fa-upload"></i> Upload & Proses
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
 
         </section>
@@ -414,6 +457,95 @@
                     })
                 });
 
+                // Import Massal logic
+                if ($('#programstudi').val()) {
+                    $('#btn_modal_import').show();
+                } else {
+                    $('#btn_modal_import').hide();
+                }
+
+                $('#btn_modal_import').off('click').on('click', function() {
+                    $('#modal_import').modal('show');
+                    $('#fileimport').val('');
+                    $('#alert-import-container').html('');
+                });
+
+                $('#link_download_template').off('click').on('click', function() {
+                    var prodi = $('#programstudi').val();
+                    var query = {
+                        tahun: "{{ $session_tahun }}",
+                        semester: "{{ $session_semester }}",
+                        nama_program_studi: prodi
+                    };
+                    var url = "{{ config('setting.second_url') }}akademik/jadwalujian/export-template?" + $.param(query);
+                    window.location = url;
+                });
+
+                $('#form_import_jadwal').off('submit').on('submit', function(e) {
+                    e.preventDefault();
+                    $('#alert-import-container').html('');
+                    
+                    var formData = new FormData(this);
+                    
+                    $.ajax({
+                        url: "{{ config('setting.second_url') }}akademik/jadwalujian/import",
+                        method: "POST",
+                        headers: {
+                            "Authorization": 'Bearer ' + token,
+                            "username": userlogin
+                        },
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        beforeSend: function() {
+                            $('#btn_submit_import').prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Memproses...');
+                        },
+                        success: function(data) {
+                            $('#btn_submit_import').prop('disabled', false).html('<i class="fa fa-upload"></i> Upload & Proses');
+                            $('#modal_import').modal('hide');
+                            table.ajax.reload();
+                            
+                            if (data.status === 'error') {
+                                let alertHtml = '<div class="alert alert-warning alert-dismissible">';
+                                alertHtml += '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
+                                alertHtml += '<h4><i class="icon fa fa-warning"></i> Log Peringatan Import Ujian !</h4>';
+                                alertHtml += '<p>' + data.message + '</p>';
+                                alertHtml += '<ul class="pl-4">';
+                                data.messages.forEach(function(msg) {
+                                    alertHtml += '<li>' + msg + '</li>';
+                                });
+                                alertHtml += '</ul></div>';
+                                
+                                $('#alert-import-container').html(alertHtml);
+                                showToastr('warning', 'Selesai dengan error', 'Beberapa baris gagal diproses. Cek log error.');
+                            } else if (data.status === 'success') {
+                                showToastr('success', 'Sukses!', data.message);
+                            }
+                        },
+                        error: function(xhr) {
+                            $('#btn_submit_import').prop('disabled', false).html('<i class="fa fa-upload"></i> Upload & Proses');
+                            $('#modal_import').modal('hide');
+                            
+                            let response = xhr.responseJSON ? xhr.responseJSON : { messages: ['Gagal melakukan koneksi dengan API Backend.'] };
+                            let alertHtml = '<div class="alert alert-danger alert-dismissible">';
+                            alertHtml += '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
+                            alertHtml += '<h4><i class="icon fa fa-ban"></i> Kegagalan Sistem Import!</h4><ul class="pl-4">';
+                            
+                            if (Array.isArray(response.messages)) {
+                                response.messages.forEach(function(msg) {
+                                    alertHtml += '<li>' + msg + '</li>';
+                                });
+                            } else {
+                                alertHtml += '<li>' + response.messages + '</li>';
+                            }
+                            alertHtml += '</ul></div>';
+                            
+                            $('#alert-import-container').html(alertHtml);
+                            showToastr('error', 'Gagal', 'Terjadi kesalahan sistem saat memproses file.');
+                        }
+                    });
+                });
 
             }
 
