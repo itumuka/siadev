@@ -535,6 +535,18 @@
                 if (res.status == 'success' && res.data) {
                     if (res.data.notice_message) {
                         ujianLocked = !!res.data.ujian_locked;
+                        
+                        let cancelBtn = '';
+                        if (res.data.ujian_status === 'diajukan') {
+                            cancelBtn = `
+                                <div class="mt-15">
+                                    <button type="button" class="btn btn-sm btn-danger px-20 py-5" id="btn-cancel-ujian" style="border-radius: 6px;">
+                                        <i class="fa fa-undo mr-5"></i> Batalkan & Ubah Pendaftaran
+                                    </button>
+                                </div>
+                            `;
+                        }
+
                         $('#ujian-info').html(`
                             <div class="alert ${ujianLocked ? 'alert-info' : 'alert-warning'} border-${ujianLocked ? 'info' : 'warning'} mb-0" style="border-left: 4px solid ${ujianLocked ? '#17a2b8' : '#ffc107'};">
                                 <div class="d-flex align-items-start">
@@ -542,6 +554,7 @@
                                     <div>
                                         <strong>${ujianLocked ? 'Data Anda Sudah Tercatat' : 'Data Tersimpan Sebelumnya'}</strong>
                                         <div class="mt-1">${res.data.notice_message}</div>
+                                        ${cancelBtn}
                                     </div>
                                 </div>
                             </div>
@@ -669,6 +682,38 @@
         // Use proposal title recommendation click handler
         $('#btn_use_rekomendasi').on('click', function() {
             $('#input_judul').val($(this).text());
+        });
+
+        // Cancel and edit exam registration click handler
+        $(document).on('click', '#btn-cancel-ujian', function() {
+            if (confirm("Apakah Anda yakin ingin membatalkan pendaftaran ujian ini untuk mengubah pilihan luaran (OBE/Non-OBE)?")) {
+                var btn = $(this);
+                btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin mr-5"></i> Memproses...');
+                
+                $.ajax({
+                    url: "{{ config('setting.second_url') }}mahasiswa/skripsi/batalkan-ujian",
+                    method: "POST",
+                    data: { nim: nim },
+                    headers: {
+                        "Authorization": 'Bearer ' + token,
+                        "username": userlogin
+                    },
+                    success: function(res) {
+                        showToastr('success', 'Berhasil', 'Pendaftaran ujian berhasil dibatalkan. Silakan sesuaikan data Anda.');
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 1500);
+                    },
+                    error: function(err) {
+                        var errorMsg = 'Gagal membatalkan pendaftaran.';
+                        if (err.responseJSON && err.responseJSON.error) {
+                            errorMsg = err.responseJSON.error;
+                        }
+                        showToastr('error', 'Gagal', errorMsg);
+                        btn.prop('disabled', false).html('<i class="fa fa-undo mr-5"></i> Batalkan & Ubah Pendaftaran');
+                    }
+                });
+            }
         });
     });
 
