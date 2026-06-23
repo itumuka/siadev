@@ -127,7 +127,6 @@
                     </div>
                     
                     <div class="table-responsive">
-                        <input type="hidden" name="nimjamak" id="nimjamak">
                         <input type="hidden" name="tahun" id="tahun" value="{{ $session_tahun }}">
                         <input type="hidden" name="semester" id="semester" value="{{ $session_semester }}">
                         <input type="hidden" name="programstudi" id="programstudi" value="{{ $session_kode_program_studi }}">
@@ -136,7 +135,7 @@
                         <table id="kgttranskipnilai" class="table table-hover" width="100%">
                             <thead>
                                 <tr class="bg-dark text-white">
-                                    <th class="text-center" width="5%">Pilih</th>
+                                    <th class="text-center" width="5%">No</th>
                                     <th width="35%">Mahasiswa</th>
                                     <th width="15%">Kelas / Jenjang</th>
                                     <th width="30%">Program Studi</th>
@@ -147,63 +146,57 @@
                             </tbody>
                         </table>
                     </div>
-
-                    <div class="row mt-4">
-                        <div class="col-sm-12 d-flex align-items-center gap-3">
-                            <button type="button" class="btn btn-primary action-btn mr-2" id="btn-sinkron" onclick="btn_sinkron();">
-                                <i class="fa fa-refresh"></i> Sinkron Transkrip
-                            </button>
-                            <button type="button" class="btn btn-warning action-btn" onclick="cetak();">
-                                <i class="fa fa-print"></i> Print Terpilih
-                            </button>
-                        </div>
-                    </div>
                 </div>
                 <!-- /.box-body -->
-                <iframe id="printff" name="printff" style="display: none;"></iframe>
             </div>
 
-            <!-- Modal Edit Kelengkapan -->
-            <div class="modal fade" id="modal_edit">
-                <div class="modal-dialog" role="document">
+            <!-- Modal Transkrip -->
+            <div class="modal fade" id="modal_transkrip">
+                <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title" style="font-weight: 600;">Input Kelengkapan Transkip</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <div class="modal-header" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white;">
+                            <h4 class="modal-title" id="transkrip_title" style="font-weight: 600; color: white;">Transkrip Nilai Mahasiswa</h4>
+                            <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form id="form_edit" method="POST">
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <label class="font-weight-600">No Transkip</label>
-                                    <input class="form-control" type="hidden" name="id_program_studi" id="id_program_studi" value="{{ $session_kode_program_studi }}">
-                                    <input class="form-control" type="text" name="no_transkip" id="no_transkip" placeholder="Masukkan No Transkrip Nilai...">
-                                    <input class="form-control" type="hidden" name="enim" id="enim">
+                        <div class="modal-body" style="padding: 25px;">
+                            <div class="row mb-3">
+                                <div class="col-sm-6">
+                                    <p class="mb-1" style="font-weight: 500; color: #64748b;">NIM / Nama Mahasiswa:</p>
+                                    <h5 class="mb-0" id="lbl_mhs_info" style="font-weight: 700; color: #1e293b;">-</h5>
                                 </div>
-                                <div class="form-group">
-                                    <label class="font-weight-600">No SK BAN PT</label>
-                                    <input class="form-control" type="text" name="no_sk_banpt" id="no_sk_banpt" placeholder="Masukkan No SK BAN PT...">
-                                </div>
-                                <div class="form-group">
-                                    <label class="font-weight-600">Status Akreditasi</label>
-                                    <select class="form-control" name="status_akreditasi" id="status_akreditasi">
-                                        <option value="">-- Pilih Akreditasi --</option>
-                                        <option value="Terakreditasi">Terakreditasi</option>
-                                        <option value="Terakreditasi / A">Terakreditasi / A</option>
-                                        <option value="Terakreditasi / B">Terakreditasi / B</option>
-                                    </select>
+                                <div class="col-sm-6 text-sm-right mt-3 mt-sm-0">
+                                    <div class="d-inline-block text-left" style="background-color: #f8fafc; padding: 10px 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                        <span style="font-size: 13px; color: #64748b;">SKS Ditempuh: <b class="text-dark" id="totalsks">-</b></span><br>
+                                        <span style="font-size: 13px; color: #64748b;">IPK: <b class="text-dark" id="nilai_ipk">-</b></span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="modal-footer float-right">
-                                <button type="button" class="btn btn-rounded btn-warning btn-outline mr-2" data-dismiss="modal">
-                                    <i class="fa fa-times"></i> Close
-                                </button>
-                                <button type="submit" class="btn btn-rounded btn-primary btn-outline" id="btsubmit">
-                                    <i class="ti-save-alt"></i> Save
-                                </button>
+                            <div class="table-responsive">
+                                <table id="tbkhs" class="table table-hover table-sm text-nowrap" width="100%">
+                                    <thead class="bg-dark">
+                                        <tr class="text-white">
+                                            <th>No</th>
+                                            <th>Semester</th>
+                                            <th>Kode</th>
+                                            <th>Matakuliah</th>
+                                            <th class="text-center">SKS</th>
+                                            <th class="text-center">Nilai</th>
+                                            <th class="text-center">Bobot</th>
+                                            <th class="text-center">Kum</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
                             </div>
-                        </form>
+                        </div>
+                        <div class="modal-footer text-right" style="background-color: #f8fafc;">
+                            <button type="button" class="btn btn-rounded btn-warning btn-outline" data-dismiss="modal">
+                                <i class="fa fa-times"></i> Close
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -218,37 +211,6 @@
         var userlogin = "{{ Session::get('username') }}";
 
         function cetak() {
-            var nim = $('#nimjamak').val();
-            if (!nim) {
-                swal("Peringatan!", "Pilih minimal 1 mahasiswa terlebih dahulu.", "warning");
-                return;
-            }
-            var link = "{{ url('akademik/cetak/cetaktranskipnilai') }}/" + nim;
-            window.open(link, '_blank').focus();
-        }
-
-        function single_cetak(nim) {
-            var link = "{{ url('akademik/cetak/cetaktranskipnilai') }}/" + nim;
-            window.open(link, '_blank').focus();
-        }
-
-        function no_transkip() {
-            $.ajax({
-                type: 'GET',
-                url: "{{ config('setting.second_url') }}akademik/tampilno_transkip",
-                headers: {
-                    "Authorization": 'Bearer ' + token,
-                    "username": userlogin
-                },
-                success: function(result) {
-                    s = result.no_transkrip;
-                    t = result.no_sk;
-                    $('#no_transkip').val(s);
-                    $('#no_sk_banpt').val(t);
-                }
-            })
-        }
-
         $(document).ready(function() {
             // Fetch prodi name dynamically via API
             var session_kode_prodi = "{{ $session_kode_program_studi }}";
@@ -311,21 +273,7 @@
                     destroy: true,
                     dom: 'l<br>Bfrtip',
                     buttons: [
-                        'copy', 'csv', 'excel',
-                        {
-                            text: 'Pilih Semua',
-                            className: 'btn btn-success',
-                            action: function(e, dt, node, config) {
-                                dt.rows().select();
-                            }
-                        },
-                        {
-                            text: 'Batal Pilih Semua',
-                            className: 'btn btn-danger',
-                            action: function(e, dt, node, config) {
-                                dt.rows().deselect();
-                            }
-                        }
+                        'copy', 'csv', 'excel'
                     ],
                     pageLength: 50,
                     processing: true,
@@ -345,20 +293,12 @@
                             return json;
                         }
                     },
-                    columnDefs: [{
-                        orderable: false,
-                        className: 'select-checkbox',
-                        targets: 0
-                    }],
-                    select: {
-                        style: 'multi',
-                        selector: 'td:first-child'
-                    },
                     columns: [
                         {
                             data: null,
+                            className: 'text-center',
                             render: function(data, type, row, meta) {
-                                return '';
+                                return meta.row + meta.settings._iDisplayStart + 1;
                             }
                         },
                         {
@@ -390,14 +330,8 @@
                             className: 'text-center',
                             render: function(data, type, row, meta) {
                                 return `
-                                    <button type="button" class="btn btn-xs btn-info mr-1" onclick="edit_kelengkapan('${row.nim}')" title="Kelengkapan Transkrip">
-                                        <i class="ti-marker-alt"></i> Edit
-                                    </button>
-                                    <button type="button" class="btn btn-xs btn-warning mr-1" onclick="single_cetak('${row.nim}')" title="Print">
-                                        <i class="fa fa-print"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-xs btn-primary" onclick="single_sync('${row.nim}')" title="Sync Nilai">
-                                        <i class="fa fa-refresh"></i>
+                                    <button type="button" class="btn btn-xs btn-info" onclick="lihat_transkrip('${row.nim}', '${row.nama_mahasiswa}')" title="Lihat Nilai">
+                                        <i class="fa fa-eye"></i> Lihat Nilai
                                     </button>
                                 `;
                             }
@@ -405,183 +339,102 @@
                     ],
                     order: []
                 });
-
-                table
-                    .on('select', function(e, dt, type, indexes) {
-                        var oData = table.rows('.selected').data();
-                        var str = "";
-                        for (var i = 0; i < oData.length; i++) {
-                            if (i <= 0) {
-                                str = oData[i]['nim'];
-                            } else {
-                                str = str + "-" + oData[i]['nim'];
-                            }
-                        }
-                        $('#nimjamak').val(str);
-                    })
-                    .on('deselect', function(e, dt, type, indexes) {
-                        var oData = table.rows('.selected').data();
-                        var str = "";
-                        for (var i = 0; i < oData.length; i++) {
-                            if (i <= 0) {
-                                str = oData[i]['nim'];
-                            } else {
-                                str = str + "-" + oData[i]['nim'];
-                            }
-                        }
-                        $('#nimjamak').val(str);
-                    });
             }
 
-            // show data edit
-            window.edit_kelengkapan = function(nim) {
-                no_transkip();
-                $('#modal_edit').modal('show');
-                $('#enim').val(nim);
+            window.lihat_transkrip = function(nim, nama) {
+                $('#lbl_mhs_info').text(nim + ' / ' + nama);
+                $('#modal_transkrip').modal('show');
+                
+                var tbtranskrip = $("#tbkhs").DataTable({
+                    destroy: true,
+                    pageLength: 50,
+                    processing: true,
+                    lengthChange: false,
+                    info: false,
+                    paging: false,
+                    searching: false,
+                    ajax: {
+                        type: "GET",
+                        url: "{{ config('setting.second_url') }}akademik/cek-transkrip-krs",
+                        headers: {
+                            "Authorization": 'Bearer ' + token,
+                            "username": userlogin
+                        },
+                        data: {
+                            nim: nim
+                        },
+                        dataSrc: function(json) {
+                            return json;
+                        }
+                    },
+                    columns: [
+                        {
+                            data: null,
+                            render: function(data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            }
+                        },
+                        {
+                            data: 'smt_matakuliah',
+                            className: "text-center"
+                        },
+                        {
+                            data: 'kode_matakuliah'
+                        },
+                        {
+                            data: 'nama_matakuliah'
+                        },
+                        {
+                            data: 'sks_matakuliah',
+                            className: "text-center"
+                        },
+                        {
+                            data: 'nilai',
+                            className: "text-center"
+                        },
+                        {
+                            data: 'mutu_nilai',
+                            className: "text-center"
+                        },
+                        {
+                            data: 'kum_sksmutu',
+                            className: "text-center"
+                        }
+                    ]
+                });
+                
+                get_sks_ipk(nim);
             };
 
-            // edit submit
-            $('#form_edit').on('submit', function(event) {
-                event.preventDefault();
-                var form_data = $(this).serialize();
+            function get_sks_ipk(nim) {
                 $.ajax({
-                    url: "{{ config('setting.second_url') }}akademik/edit-transkipnilai",
-                    method: "POST",
-                    data: form_data,
+                    type: 'GET',
                     dataType: "json",
+                    url: "{{ config('setting.second_url') }}mahasiswa/transkrip-nilai",
                     headers: {
                         "Authorization": 'Bearer ' + token,
                         "username": userlogin
                     },
-                    beforeSend: function() {
-                        $("#btsubmit").prop('disabled', true);
+                    data: {
+                        nim: nim
                     },
                     success: function(data) {
-                        if (data.error) {
-                            showToastr('error', 'Error!', data.error);
-                            $("#btsubmit").prop('disabled', false);
-                        } else if (data.success) {
-                            $('#modal_edit').modal('hide');
-                            showToastr('success', 'Success!', data.success);
-                            $('#tbdaftarmhs_prodi').DataTable().ajax.reload();
-                            $('#form_edit')[0].reset();
-                            $("#btsubmit").prop('disabled', false);
-                            // reload table
-                            var thnn = $('#tahunangkatan').val();
-                            var prodi = $('#programstudi').val();
-                            tbnilai(thnn, prodi);
+                        var jml = data.length;
+                        var totalsks = 0;
+                        var total_nilai = 0;
+
+                        for (var i = 0; i < jml; i++) {
+                            totalsks += data[i].sks_matakuliah;
+                            total_nilai += data[i].kum_sksmutu;
                         }
-                    }
-                })
-            });
 
-            window.single_sync = function(nim) {
-                swal({
-                    title: "Sinkronisasi Transkrip",
-                    text: "Apakah Anda yakin ingin mensinkronkan nilai KRS mahasiswa dengan NIM " + nim + " ke transkrip?",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    confirmButtonText: "Ya, Sinkronkan!",
-                    cancelButtonText: "Batal",
-                    closeOnConfirm: false
-                }, function(isConfirm) {
-                    if (isConfirm) {
-                        ajax_sinkron({ nim: nim });
-                    }
-                });
-            }
-
-            window.btn_sinkron = function() {
-                var nim_filter = $('#nim_filter').val();
-                var nim = $('#nimjamak').val();
-                var tahunangkatan = $('#tahunangkatan').val();
-                var kode_prodi = $('#programstudi').val();
-
-                if (nim_filter) {
-                    swal({
-                        title: "Konfirmasi Sinkronisasi",
-                        text: "Sinkronisasi Transkrip berdasarkan Filter NIM?",
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#3085d6",
-                        confirmButtonText: "Ya, Sinkronkan!",
-                        cancelButtonText: "Batal",
-                        closeOnConfirm: false
-                    }, function(isConfirm) {
-                        if (isConfirm) {
-                            ajax_sinkron({ nim: nim_filter });
-                        }
-                    });
-                } else if (nim) {
-                    swal({
-                        title: "Sinkronisasi Transkrip",
-                        text: "Apakah Anda yakin ingin mensinkronkan nilai KRS mahasiswa yang dipilih ke transkrip?",
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#3085d6",
-                        confirmButtonText: "Ya, Sinkronkan!",
-                        cancelButtonText: "Batal",
-                        closeOnConfirm: false
-                    }, function(isConfirm) {
-                        if (isConfirm) {
-                            ajax_sinkron({ nim: nim });
-                        }
-                    });
-                } else {
-                    var textMsg = "Apakah Anda yakin ingin mensinkronkan nilai KRS seluruh mahasiswa Angkatan " + tahunangkatan + " ke transkrip?";
-                    swal({
-                        title: "Sinkronisasi Massal Transkrip",
-                        text: textMsg,
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#3085d6",
-                        confirmButtonText: "Ya, Sinkronkan Massal!",
-                        cancelButtonText: "Batal",
-                        closeOnConfirm: false
-                    }, function(isConfirm) {
-                        if (isConfirm) {
-                            ajax_sinkron({
-                                tahun_angkatan: tahunangkatan,
-                                kode_prodi: kode_prodi
-                            });
-                        }
-                    });
-                }
-            };
-
-            function ajax_sinkron(post_data) {
-                swal({
-                    title: "Sedang memproses...",
-                    text: "Mohon tunggu hingga proses sinkronisasi selesai.",
-                    showConfirmButton: false,
-                    allowOutsideClick: false
-                });
-
-                $.ajax({
-                    url: "{{ config('setting.second_url') }}akademik/sinkron-transkrip",
-                    type: "POST",
-                    headers: {
-                        "Authorization": 'Bearer ' + token,
-                        "username": userlogin
+                        $('#totalsks').html(totalsks + ' SKS');
+                        var ipkVal = totalsks > 0 ? (total_nilai / totalsks).toFixed(2) : '0.00';
+                        $('#nilai_ipk').html(ipkVal);
                     },
-                    data: post_data,
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            swal("Berhasil!", response.message, "success");
-                            var thnn = $('#tahunangkatan').val();
-                            var prodi = $('#programstudi').val();
-                            tbnilai(thnn, prodi);
-                        } else {
-                            swal("Gagal!", response.message, "error");
-                        }
-                    },
-                    error: function(xhr) {
-                        var errMsg = "Terjadi kesalahan saat memproses sinkronisasi.";
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            errMsg = xhr.responseJSON.message;
-                        }
-                        swal("Gagal!", errMsg, "error");
+                    error: function() {
+                        $('#totalsks').html('-');
+                        $('#nilai_ipk').html('-');
                     }
                 });
             }
