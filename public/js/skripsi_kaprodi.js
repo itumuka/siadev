@@ -69,6 +69,48 @@ $(document).ready(function () {
                 {
                     data: null,
                     render: function (data) {
+                        let semproBtn = '';
+                        let semproStatus = data.sempro_status || '';
+
+                        if (semproStatus === 'tidak_wajib') {
+                            semproBtn = `
+                                <button class="btn btn-sm btn-secondary" disabled title="Seminar Proposal tidak diwajibkan oleh Prodi">
+                                    <i class="fa fa-calendar"></i>
+                                </button>
+                            `;
+                        } else if (semproStatus === 'lulus_matakuliah') {
+                            semproBtn = `
+                                <button class="btn btn-sm btn-success" disabled title="Lulus Sempro otomatis via Nilai Mata Kuliah">
+                                    <i class="fa fa-check-circle"></i>
+                                </button>
+                            `;
+                        } else if (semproStatus === 'lulus') {
+                            semproBtn = `
+                                <button class="btn btn-sm btn-success" disabled title="Mahasiswa telah lulus Seminar Proposal">
+                                    <i class="fa fa-check-circle"></i>
+                                </button>
+                            `;
+                        } else if (semproStatus === 'belum_lulus_matakuliah') {
+                            semproBtn = `
+                                <button class="btn btn-sm btn-secondary" disabled title="Belum lulus mata kuliah syarat Sempro">
+                                    <i class="fa fa-calendar"></i>
+                                </button>
+                            `;
+                        } else if (semproStatus === 'belum_mengajukan') {
+                            semproBtn = `
+                                <button class="btn btn-sm btn-secondary" disabled title="Mahasiswa belum mengunggah naskah proposal">
+                                    <i class="fa fa-calendar"></i>
+                                </button>
+                            `;
+                        } else {
+                            // 'diajukan', 'dijadwalkan', 'draft', 'revisi', 'ditolak'
+                            semproBtn = `
+                                <button class="btn btn-sm btn-success btn-plot-sempro" data-nim="${data.nim}" title="Jadwal Sempro">
+                                    <i class="fa fa-calendar"></i>
+                                </button>
+                            `;
+                        }
+
                         return `
                             <div class="btn-group">
                                 <button class="btn btn-sm btn-info btn-plot-pembimbing" 
@@ -82,9 +124,7 @@ $(document).ready(function () {
                                     title="Plot Pembimbing">
                                     <i class="fa fa-users"></i>
                                 </button>
-                                <button class="btn btn-sm btn-success btn-plot-sempro" data-nim="${data.nim}" title="Jadwal Sempro">
-                                    <i class="fa fa-calendar"></i>
-                                </button>
+                                ${semproBtn}
                                 <button class="btn btn-sm btn-warning text-white btn-plot-ujian" 
                                     data-id="${data.id_skripsi}" 
                                     data-nim="${data.nim}" 
