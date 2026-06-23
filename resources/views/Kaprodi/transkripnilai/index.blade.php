@@ -286,7 +286,9 @@
                         },
                         data: {
                             tahunangkatan: thn,
-                            kode_prodi: prodi
+                            kode_prodi: prodi,
+                            tahun: $('#tahun').val(),
+                            semester: $('#semester').val()
                         },
                         dataSrc: function(json) {
                             return json;
@@ -318,7 +320,11 @@
                             data: null,
                             render: function(data, type, row, meta) {
                                 var jenjang = row.nama_program_pendidikan ? row.nama_program_pendidikan : '-';
-                                return `<span class="badge badge-primary-light font-size-11" style="padding: 4px 8px; border-radius: 4px;">${jenjang}</span>`;
+                                var smt = row.semester ? `Semester ${row.semester}` : '-';
+                                return `
+                                    <span class="badge badge-primary-light font-size-11" style="padding: 4px 8px; border-radius: 4px;">${jenjang}</span>
+                                    <span class="badge badge-secondary-light font-size-11" style="padding: 4px 8px; border-radius: 4px; margin-left: 4px;">${smt}</span>
+                                `;
                             }
                         },
                         {
