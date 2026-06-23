@@ -354,7 +354,7 @@
                     searching: false,
                     ajax: {
                         type: "GET",
-                        url: "{{ config('setting.second_url') }}akademik/cek-transkrip-krs",
+                        url: "{{ config('setting.second_url') }}mahasiswa/transkrip-nilai",
                         headers: {
                             "Authorization": 'Bearer ' + token,
                             "username": userlogin
@@ -389,15 +389,27 @@
                         },
                         {
                             data: 'nilai',
-                            className: "text-center"
+                            className: "text-center",
+                            render: function(data, type, row, meta) {
+                                return row.nilai ? row.nilai : '-';
+                            }
                         },
                         {
-                            data: 'mutu_nilai',
-                            className: "text-center"
+                            data: 'mutu',
+                            className: "text-center",
+                            render: function(data, type, row, meta) {
+                                return (row.mutu !== null && row.mutu !== undefined) ? parseFloat(row.mutu) : '-';
+                            }
                         },
                         {
                             data: 'kum_sksmutu',
-                            className: "text-center"
+                            className: "text-center",
+                            render: function(data, type, row, meta) {
+                                if (row.kum_sksmutu !== null && row.kum_sksmutu !== undefined) {
+                                    return parseFloat(row.kum_sksmutu).toFixed(1);
+                                }
+                                return '0.0';
+                            }
                         }
                     ]
                 });
@@ -423,8 +435,8 @@
                         var total_nilai = 0;
 
                         for (var i = 0; i < jml; i++) {
-                            totalsks += data[i].sks_matakuliah;
-                            total_nilai += data[i].kum_sksmutu;
+                            totalsks += parseFloat(data[i].sks_matakuliah || 0);
+                            total_nilai += parseFloat(data[i].kum_sksmutu || 0);
                         }
 
                         $('#totalsks').html(totalsks + ' SKS');
