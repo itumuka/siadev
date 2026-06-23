@@ -306,11 +306,14 @@
                             data: null,
                             render: function(data, type, row, meta) {
                                 var nimStr = row.nim ? row.nim : '-';
+                                var angkatanStr = row.tahun_angkatan ? row.tahun_angkatan : '-';
+                                var smt = row.semester ? `Semester ${row.semester}` : '-';
                                 return `
                                     <div class="d-flex flex-column">
                                         <span class="font-size-14 font-weight-700 text-dark">${row.nama_mahasiswa}</span>
                                         <div class="d-flex align-items-center mt-1">
-                                            <span class="mhs-badge mhs-badge-nim"><i class="fa fa-id-card-o mr-1"></i>${nimStr}</span>
+                                            <span class="mhs-badge mhs-badge-nim" style="margin-right: 6px;"><i class="fa fa-id-card-o mr-1"></i>${nimStr}</span>
+                                            <span class="mhs-badge mhs-badge-angkatan"><i class="fa fa-calendar mr-1"></i>Angkatan ${angkatanStr} (${smt})</span>
                                         </div>
                                     </div>
                                 `;
@@ -320,11 +323,7 @@
                             data: null,
                             render: function(data, type, row, meta) {
                                 var jenjang = row.nama_program_pendidikan ? row.nama_program_pendidikan : '-';
-                                var smt = row.semester ? `Semester ${row.semester}` : '-';
-                                return `
-                                    <span class="badge badge-primary-light font-size-11" style="padding: 4px 8px; border-radius: 4px;">${jenjang}</span>
-                                    <span class="badge badge-secondary-light font-size-11" style="padding: 4px 8px; border-radius: 4px; margin-left: 4px;">${smt}</span>
-                                `;
+                                return `<span class="badge badge-primary-light font-size-11" style="padding: 4px 8px; border-radius: 4px;">${jenjang}</span>`;
                             }
                         },
                         {
