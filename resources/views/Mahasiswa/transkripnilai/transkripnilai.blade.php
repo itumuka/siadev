@@ -197,34 +197,17 @@
                     }
                 ],
                 "footerCallback": function(row, data, start, end, display) {
-                    var api = this.api(),
-                        data;
-                    // Remove the formatting to get integer data for summation
-                    var intVal = function(i) {
-                        return typeof i === 'string' ?
-                            i.replace(/[\$,]/g, '') * 1 :
-                            typeof i === 'number' ?
-                            i : 0;
-                    };
-                    // Total SKS
-                    jumlahsks = api
-                        .column(4)
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+                    var totalsks = 0;
+                    var total_nilai = 0;
 
-                    jmlsksmutu = api
-                        .column(7)
-                        .data()
-                        .reduce(function(a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0);
+                    for (var i = 0; i < data.length; i++) {
+                        totalsks += parseFloat(data[i].sks_matakuliah || 0);
+                        total_nilai += parseFloat(data[i].kum_sksmutu || 0);
+                    }
 
-                    $('#total_sks').html(jumlahsks + ' sks');
-                    $('#ipk').html((jmlsksmutu / jumlahsks).toFixed(2));
-                    // Update footer
-                    // $( api.column( 2 ).footer() ).html(total);
+                    $('#total_sks').html(totalsks + ' sks');
+                    var ipkVal = totalsks > 0 ? (total_nilai / totalsks).toFixed(2) : '0.00';
+                    $('#ipk').html(ipkVal);
                 }
             });
 
