@@ -322,8 +322,10 @@
                         {
                             data: null,
                             render: function(data, type, row, meta) {
-                                var jenjang = row.nama_program_pendidikan ? row.nama_program_pendidikan : '-';
-                                return `<span class="badge badge-primary-light font-size-11" style="padding: 4px 8px; border-radius: 4px;">${jenjang}</span>`;
+                                var jenjang = row.nama_jenjang_pendidikan ? row.nama_jenjang_pendidikan : '';
+                                var kelas = row.nama_program_pendidikan ? row.nama_program_pendidikan : '';
+                                var label = [jenjang, kelas].filter(Boolean).join(' ');
+                                return `<span class="badge badge-primary-light font-size-11" style="padding: 4px 8px; border-radius: 4px;">${label || '-'}</span>`;
                             }
                         },
                         {

@@ -223,13 +223,15 @@
                         data: null,
                         render: function(data, type, row, meta) {
                             var prodi = row.nama_program_studi ? row.nama_program_studi : '-';
-                            var jenjang = row.nama_program_pendidikan ? row.nama_program_pendidikan : '';
+                            var jenjang = row.nama_jenjang_pendidikan ? row.nama_jenjang_pendidikan : '';
+                            var kelas = row.nama_program_pendidikan ? row.nama_program_pendidikan : '';
+                            var label = [jenjang, kelas].filter(Boolean).join(' ');
                             var smt = row.semester ? `Semester ${row.semester}` : '-';
                             return `
                                 <div class="d-flex flex-column">
                                     <span class="font-weight-600 text-dark" style="font-size: 13px;">${prodi}</span>
                                     <div class="mt-2">
-                                        <span class="badge badge-primary-light font-size-11" style="padding: 3px 6px; border-radius: 4px;">${jenjang}</span>
+                                        <span class="badge badge-primary-light font-size-11" style="padding: 3px 6px; border-radius: 4px;">${label || '-'}</span>
                                         <span class="badge badge-secondary-light font-size-11" style="padding: 3px 6px; border-radius: 4px; margin-left: 4px;">${smt}</span>
                                     </div>
                                 </div>
