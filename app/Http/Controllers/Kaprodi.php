@@ -157,4 +157,18 @@ class Kaprodi extends Controller
             'session_tahun', 'session_semester'
         ));
     }
+
+    public function daftar_mhs()
+    {
+        $session_tahun = (Session::has('session_tahun')) ? Session::get('session_tahun') : '';
+        $session_semester = (Session::has('session_semester')) ? Session::get('session_semester') : '';
+        $session_kode_program_studi = (Session::has('kode_program_studi')) ? Session::get('kode_program_studi') : '';
+        $session_jabatan = (Session::has('jabatan')) ? Session::get('jabatan') : '';
+
+        $title = "Daftar Mahasiswa Prodi";
+        $parent_breadcrumb = "Kaprodi";
+        $child_breadcrumb = "Daftar Mahasiswa";
+        
+        return view('Kaprodi/daftarmhs_prodi/index', compact('title', 'parent_breadcrumb', 'child_breadcrumb', 'session_tahun', 'session_semester', 'session_kode_program_studi', 'session_jabatan'));
+    }
 }
