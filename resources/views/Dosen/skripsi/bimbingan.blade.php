@@ -176,7 +176,7 @@
 
                         <div class="form-group">
                             <label class="font-weight-bold">Fase Ujian <span class="text-danger">*</span></label>
-                            <select name="fase" class="form-control" required>
+                            <select name="fase" id="acc_fase" class="form-control" required>
                                 <option value="">-- Pilih Fase --</option>
                                 <option value="sempro">Seminar Proposal (Sempro)</option>
                                 <option value="ujian">Ujian Skripsi (Pendadaran)</option>
@@ -236,6 +236,17 @@
                                 $('#btn_acc_ujian').show();
                             }
                             $('#btn_cetak_bimbingan').data('nim', mhs.nim).show();
+
+                            // Update opsi fase ujian berdasarkan konfigurasi prodi
+                            var selectFase = $('#acc_fase');
+                            selectFase.empty();
+                            selectFase.append('<option value="">-- Pilih Fase --</option>');
+                            if (mhs.ta_ada_sempro == 1 && mhs.ta_sempro_skema !== 'matakuliah') {
+                                selectFase.append('<option value="sempro">Seminar Proposal (Sempro)</option>');
+                                selectFase.append('<option value="ujian">Ujian Skripsi (Pendadaran)</option>');
+                            } else {
+                                selectFase.append('<option value="ujian" selected>Ujian Skripsi (Pendadaran)</option>');
+                            }
                         }
                     }
                 }
@@ -399,13 +410,24 @@
                                     if(res.status == 'success') {
                                         var mhs = res.data.find(m => m.id_skripsi == id_skripsi);
                                         if(mhs) {
-                                            // Refresh tombol ACC berdasarkan status baru
-                                            var minBimbingan = mhs.ta_minimal_bimbingan || 8;
-                                            if(mhs.total_bimbingan_acc >= minBimbingan) {
-                                                $('#btn_acc_ujian').show();
-                                            } else {
-                                                $('#btn_acc_ujian').hide();
-                                            }
+                                             // Refresh tombol ACC berdasarkan status baru
+                                             var minBimbingan = mhs.ta_minimal_bimbingan || 8;
+                                             if(mhs.total_bimbingan_acc >= minBimbingan) {
+                                                 $('#btn_acc_ujian').show();
+                                             } else {
+                                                 $('#btn_acc_ujian').hide();
+                                             }
+
+                                             // Update opsi fase ujian berdasarkan konfigurasi prodi
+                                             var selectFase = $('#acc_fase');
+                                             selectFase.empty();
+                                             selectFase.append('<option value="">-- Pilih Fase --</option>');
+                                             if (mhs.ta_ada_sempro == 1 && mhs.ta_sempro_skema !== 'matakuliah') {
+                                                 selectFase.append('<option value="sempro">Seminar Proposal (Sempro)</option>');
+                                                 selectFase.append('<option value="ujian">Ujian Skripsi (Pendadaran)</option>');
+                                             } else {
+                                                 selectFase.append('<option value="ujian" selected>Ujian Skripsi (Pendadaran)</option>');
+                                             }
                                         }
                                     }
                                 }
