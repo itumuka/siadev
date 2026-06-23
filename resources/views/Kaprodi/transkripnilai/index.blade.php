@@ -103,7 +103,7 @@
                         <div class="box-body ribbon-box">
                             <div class="ribbon ribbon-info" style="background-color: #1e3c72; border-radius: 3px 0px 0px 3px;">Program Studi Terkunci</div>
                             <p class="mb-0" style="font-weight: 500; color: #1e293b;">
-                                Menampilkan khusus mahasiswa aktif dari program studi <strong>{{ $nama_program_studi }}</strong> ({{ $session_kode_program_studi }}).
+                                Menampilkan khusus mahasiswa aktif dari program studi <strong id="lbl_nama_prodi">Loading...</strong> ({{ $session_kode_program_studi }}).
                             </p>
                         </div>
                     </div>
@@ -250,6 +250,32 @@
         }
 
         $(document).ready(function() {
+            // Fetch prodi name dynamically via API
+            var session_kode_prodi = "{{ $session_kode_program_studi }}";
+            $.ajax({
+                type: "POST",
+                url: "{{ config('setting.second_url') }}akademik/dropdown-prodi",
+                dataType: "json",
+                headers: {
+                    "Authorization": 'Bearer ' + token,
+                    "username": userlogin
+                },
+                data: {},
+                success: function(data) {
+                    var prodiName = session_kode_prodi;
+                    $.each(data, function(index, value) {
+                        if (value.kode_program_studi == session_kode_prodi) {
+                            prodiName = value.nama_program_studi;
+                            return false;
+                        }
+                    });
+                    $('#lbl_nama_prodi').text(prodiName);
+                },
+                error: function() {
+                    $('#lbl_nama_prodi').text(session_kode_prodi);
+                }
+            });
+
             tahunangkatan();
 
             function tahunangkatan() {
