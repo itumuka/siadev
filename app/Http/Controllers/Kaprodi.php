@@ -171,4 +171,27 @@ class Kaprodi extends Controller
         
         return view('Kaprodi/daftarmhs_prodi/index', compact('title', 'parent_breadcrumb', 'child_breadcrumb', 'session_tahun', 'session_semester', 'session_kode_program_studi', 'session_jabatan'));
     }
+
+    public function transkrip_nilai()
+    {
+        $session_tahun = (Session::has('session_tahun')) ? Session::get('session_tahun') : '';
+        $session_semester = (Session::has('session_semester')) ? Session::get('session_semester') : '';
+        $session_kode_program_studi = (Session::has('kode_program_studi')) ? Session::get('kode_program_studi') : '';
+        $session_jabatan = (Session::has('jabatan')) ? Session::get('jabatan') : '';
+
+        $prodi = DB::table('akd_program_studi')
+            ->where('kode_program_studi', $session_kode_program_studi)
+            ->first();
+        $nama_program_studi = $prodi ? $prodi->nama_program_studi : '';
+
+        $title = "Transkrip Nilai Mahasiswa";
+        $parent_breadcrumb = "Kaprodi";
+        $child_breadcrumb = "Transkrip Nilai";
+        
+        return view('Kaprodi/transkripnilai/index', compact(
+            'title', 'parent_breadcrumb', 'child_breadcrumb',
+            'session_tahun', 'session_semester', 'session_kode_program_studi',
+            'session_jabatan', 'nama_program_studi'
+        ));
+    }
 }

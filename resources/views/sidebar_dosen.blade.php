@@ -63,6 +63,10 @@
                                     <a href="{{ route('kpdaftar_mhs') }}"><i class="fa fa-users"><span
                                                 class="path1"></span><span class="path2"></span></i>Daftar Mahasiswa</a>
                                 </li>
+                                <li class="{{ Route::is('kptranskrip_nilai') ? 'active' : '' }}">
+                                    <a href="{{ route('kptranskrip_nilai') }}"><i class="fa fa-file-text-o"><span
+                                                class="path1"></span><span class="path2"></span></i>Transkrip Nilai</a>
+                                </li>
                                 <li class="{{ Route::is('kpskripsi_index') ? 'active' : '' }}">
                                     <a href="{{ route('kpskripsi_index') }}"><i class="fa fa-graduation-cap"><span
                                                 class="path1"></span><span class="path2"></span></i>Manajemen Skripsi <sup
