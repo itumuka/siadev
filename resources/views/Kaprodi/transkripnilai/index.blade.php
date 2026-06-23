@@ -210,7 +210,6 @@
         var token = "{{ Session::get('token') }}";
         var userlogin = "{{ Session::get('username') }}";
 
-        function cetak() {
         $(document).ready(function() {
             // Fetch prodi name dynamically via API
             var session_kode_prodi = "{{ $session_kode_program_studi }}";
