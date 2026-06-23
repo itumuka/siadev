@@ -20,6 +20,11 @@
         .status-badge {
             float: right;
         }
+        #mhs_judul, #tb_log_bimbingan td, #v_catatan_mhs {
+            word-break: break-word;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+        }
     </style>
 @endsection
 
