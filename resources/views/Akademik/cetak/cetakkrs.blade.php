@@ -1,5 +1,15 @@
 <html>
-
+<head>
+    <style>
+        #qrdowal_container img, #qrdowal_container canvas,
+        #qrkaprodi_container img, #qrkaprodi_container canvas {
+            width: 60px;
+            height: 60px;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
 <body>
     <input class="form-control" type="hidden" name="nim" id="nim" value="{{ $nim }}">
     <input class="form-control" type="hidden" name="tahun" id="tahun" value="{{ $tahun }}">
@@ -177,8 +187,18 @@
                         <td colspan="2" style='width:200px;text-align:center;'>Mahasiswa</td>
                     </tr>
                     <tr>
-                        <td style='width:50%;text-align:center;height:70px;' id="qrdowal"></td>
-                        <td style='width:50%;text-align:center;height:70px;' id="qrkaprodi"></td>
+                        <td style='width:50%;text-align:center;height:70px;'>
+                            <div id="qrdowal_container" style="width: 60px; height: 60px; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                                <img id="img_qrdowal" style="width: 60px; height: 60px; display: none;" />
+                            </div>
+                            <small><b>valid_id : <span id="text_qrdowal">-</span></b></small>
+                        </td>
+                        <td style='width:50%;text-align:center;height:70px;'>
+                            <div id="qrkaprodi_container" style="width: 60px; height: 60px; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                                <img id="img_qrkaprodi" style="width: 60px; height: 60px; display: none;" />
+                            </div>
+                            <small><b>valid_id : <span id="text_qrkaprodi">-</span></b></small>
+                        </td>
                         <td colspan="2" style='width:50%;text-align:center;height:70px;'></td>
                     </tr>
                     <tr>
@@ -237,10 +257,16 @@
             </div>
         </div>
     </div>
+    <!-- Hidden container to generate QR codes silently before printing -->
+    <div id="qrcode_generators" style="display: none;">
+        <div id="gen_qrdowal"></div>
+        <div id="gen_qrkaprodi"></div>
+    </div>
 </body>
 
 </html>
 <script src="{{ URL::asset('js/jquery.min.js') }}"></script>
+<script src="{{ URL::asset('js/qrcode.js') }}"></script>
 <script>
     $(document).ready(function() {
         var token = "{{ Session::get('token') }}";
@@ -283,6 +309,26 @@
                 } else {
                     $('.stratanya').html("Diploma 3");
                 }
+                
+                // Generate Kaprodi QR Code
+                if (result.valididprodi) {
+                    $('#text_qrkaprodi').html(result.valididprodi);
+                    let qrKaprodiText = `VALID ID: ${result.valididprodi}\n` +
+                                        `Pengesahan Kaprodi\n` +
+                                        `Mhs: ${(result.nama_mahasiswa || '').substring(0, 35)} (${result.nim || ''})\n` +
+                                        `Prodi: ${(result.nama_program_studi || '').substring(0, 35)}\n` +
+                                        `Kaprodi: ${(result.namaprodi || '').substring(0, 35)}`;
+
+                    new QRCode(document.getElementById("gen_qrkaprodi"), {
+                        text: qrKaprodiText,
+                        width: 120,
+                        height: 120,
+                        correctLevel: QRCode.CorrectLevel.M
+                    });
+                } else {
+                    $('#text_qrkaprodi').html('-');
+                }
+
                 $.ajax({
                     type: 'POST',
                     dataType: "json",
@@ -298,17 +344,29 @@
                     },
                     success: function(resulthereg) {
                         console.log(resulthereg);
-                        $('#qrdowal').html(
-                            `<img src="{{ url('qrcodeaccdowal/` + result.nidndosene + `-` + resulthereg.id_heregistrasi + `_ACC_KRS_MAHASISWA.png') }}" alt="Image" width='60' height='60' id="qrImagedowal"><br> <small><b>valid_id : ` +
-                            resulthereg.valid_id + `</b></small>`
-                        );
-                        get_data_krs();
+                        
+                        // Generate Dosen Wali QR Code
+                        if (resulthereg.valid_id) {
+                            $('#text_qrdowal').html(resulthereg.valid_id);
+                            let qrDowalText = `VALID ID: ${resulthereg.valid_id}\n` +
+                                               `Persetujuan Dosen Wali\n` +
+                                               `Mhs: ${(result.nama_mahasiswa || '').substring(0, 35)} (${result.nim || ''})\n` +
+                                               `Dosen Wali: ${(result.dosen_wali || '').substring(0, 35)}`;
+
+                            new QRCode(document.getElementById("gen_qrdowal"), {
+                                text: qrDowalText,
+                                width: 120,
+                                height: 120,
+                                correctLevel: QRCode.CorrectLevel.M
+                            });
+                        } else {
+                            $('#text_qrdowal').html('-');
+                        }
+                        
+                        get_data_krs(result, resulthereg);
                     }
                 });
-                $('#qrkaprodi').html(
-                    `<img src="{{ url('qrcodedosenmanajemen/` + result.nidnprodi + `_Daftar_Hadir_Kuliah.png') }}" alt="Image" width='60' height='60' id="qrImage"><br> <small><b>valid_id : ` +
-                    result.valididprodi + `</b></small>`
-                );
+
                 $('.nama_fakultas').html('FAKULTAS ' + result.nama_fakultas.toUpperCase());
                 $('.namakaprodi').html(result.namaprodi.toUpperCase());
                 $('.nama_dosen_wali').html((result.dosen_wali == null || result.dosen_wali == '') ?
@@ -317,7 +375,7 @@
         });
 
 
-        function get_data_krs() {
+        function get_data_krs(result, resulthereg) {
             $.ajax({
                 type: 'POST',
                 dataType: "json",
@@ -330,7 +388,6 @@
                     nim: nim,
                     tahun: tahun,
                     semester: semester
-
                 },
                 success: function(data) {
                     var jml = data.length;
@@ -383,11 +440,23 @@
                     $('.totalsksprak').html(totalsksprak);
                     $('.totalsksteori').html(totalsksteori);
                     console.log(tampil);
-                    // $('#qrImagedowal').on('load', function() {
-                    //     setTimeout(function() {
-                            window.print();
-                    //     }, 1000); // Tunggu 1 detik agar gambar benar-benar dimuat
-                    // });
+                    
+                    // Copy generated QR Code image sources to print preview and print
+                    setTimeout(function() {
+                        if (resulthereg && resulthereg.valid_id) {
+                            const qrImg = document.querySelector('#gen_qrdowal img');
+                            if (qrImg && qrImg.src) {
+                                $('#img_qrdowal').attr('src', qrImg.src).show();
+                            }
+                        }
+                        if (result && result.valididprodi) {
+                            const qrImg = document.querySelector('#gen_qrkaprodi img');
+                            if (qrImg && qrImg.src) {
+                                $('#img_qrkaprodi').attr('src', qrImg.src).show();
+                            }
+                        }
+                        window.print();
+                    }, 500);
                 }
             });
         }

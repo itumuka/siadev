@@ -811,158 +811,37 @@
                 return `${day}-${month}-${year} ${hours}:${minutes}:${seconds} WIB`;
             }
             function cetakqrcode(id, nim) {
-
                 return new Promise((resolve, reject) => {
-                    const qrDiv = document.createElement('div'); // Gunakan elemen <div>
                     const validId = generateValidId(12); // Setiap QR Code akan memiliki valid_id yang berbeda
-                    const signedDate = getFormattedTime(); // Ambil tanggal dan waktu saat ini
-                    const label = "ACC KRS MAHASISWA";
                     const nidndosen = $('#nidn').val();
-                    const namadosen = $('#namadosen').val();
+                    const label = "ACC KRS MAHASISWA";
                     
                     console.log("Valid ID yang dikirim ke server:", validId);
                     
-                    // const qrText =
-                    //     `[valid_id=${validId}]\n[${label}]\n[nama=${namadosen}]\n[nidn=${nidndosen}]\n[nim=${nim}]\n[signed=${signedDate}]`;
-                    let qrText = `[valid_id=${validId}]\n[${label}]\n[nama=${namadosen}]\n[nidn=${nidndosen}]\n[nim=${nim}]\n[signed=${signedDate}]`;
-                    qrText = qrText.normalize("NFKC").replace(/[^\x00-\x7F]/g, ""); // Remove hidden Unicode
-
-                    try {
-                        const qrCode = new QRCode(qrDiv, {
-                            text: qrText,
-                            width: 200,
-                            height: 200,
-                            colorDark: "#0000FF", // Warna teks QR Code
-                            colorLight: "#FFFFFF" // Warna latar belakang QR Code
-                        });
-                        setTimeout(() => {
-                            const qrCanvas = qrDiv.querySelector(
-                                'canvas'); // Ambil elemen canvas dari dalam <div>
-                            if (!qrCanvas) {
-                                reject(
-                                    `Gagal membuat QR Code untuk ${label} (canvas tidak ditemukan).`
-                                );
-                                return;
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ config('setting.second_url') }}akademik/saveqrcodeacc",
+                        headers: {
+                            "Authorization": 'Bearer ' + token,
+                            "username": userlogin
+                        },
+                        data: {
+                            nidn: nidndosen,
+                            id: id,
+                            valid_id: validId
+                        },
+                        success: function(response2) {
+                            console.log("Response dari saveqrcodeacc:", response2); // Cek response
+                            if (response2 == 1) {
+                                resolve(`Status ACC untuk ${nidndosen} (${label}) berhasil disimpan.`);
+                            } else {
+                                reject(response2.error || 'Unknown error (saveqrcode).');
                             }
-                            
-	
-                            qrCanvas.toBlob((blob) => {
-                                if (!blob) {
-                                    reject(
-                                        `Gagal membuat QR Code untuk ${label} (toBlob menghasilkan null).`
-                                    );
-                                    return;
-                                }
-                                
-	
-                                const formData = new FormData();
-                                formData.append('file', blob,
-                                    `${nidndosen}-${id}_${label.replace(/\s/g, '_')}.png`
-                                );
-                                formData.append('id', id);
-                                formData.append('nidn', nidndosen);
-                                formData.append('namafile',
-                                    `${nidndosen}-${id}_${label.replace(/\s/g, '_')}.png`
-                                );
-                                
-	
-                                // Kirim data ke endpoint pertama
-                                console.log(formData);
-                                $.ajax({
-                                    type: "POST",
-                                    url: "{{ url('akademik/qrcodedowalacc') }}",
-                                    headers: {
-                                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]')
-                                            .attr('content') // CSRF Token Laravel
-                                    },
-                                    data: formData,
-                                    processData: false,
-                                    contentType: false,
-                                    success: function(response) {
-                                        console.log(
-                                            "Response dari qrcodedowalacc:",
-                                            response); // Debugging
-                                        if (response.success) {
-                                            // Kirim data ke endpoint kedua
-                                            // $.ajax({
-                                            //     type: "POST",
-                                            //     url: "{{ config('setting.second_url') }}akademik/saveqrcodeacc",
-                                            //     headers: {
-                                            //         "Authorization": 'Bearer ' + token,
-                                            //         "username": userlogin
-                                            //     },
-                                            //     data: {
-                                            //         nidn: nidndosen,
-                                            //         id: id,
-                                            //         valid_id: validId
-                                            //     },
-                                            //     success: function(
-                                            //         response2) {
-                                            //         if (response2
-                                            //             .success) {
-                                            //             resolve(
-                                            //                 `QR Code untuk ${nidndosen} (${label}) berhasil disimpan.`
-                                            //             );
-                                            //         } else {
-                                            //             reject(response2
-                                            //                 .error ||
-                                            //                 'Unknown error (saveqrcode).'
-                                            //             );
-                                            //         }
-                                            //     },
-                                            //     error: function(xhr,
-                                            //         status, error) {
-                                            //         reject(error ||
-                                            //             'Request error (saveqrcode).'
-                                            //         );
-                                            //     }
-                                            // });
-                                            
-                                            $.ajax({
-                                                type: "POST",
-                                                url: "{{ config('setting.second_url') }}akademik/saveqrcodeacc",
-                                                headers: {
-                                                    "Authorization": 'Bearer ' + token,
-                                                    "username": userlogin
-                                                },
-                                                data: {
-                                                    nidn: nidndosen,
-                                                    id: id,
-                                                    valid_id: validId
-                                                },
-                                                success: function(response2) {
-                                                    console.log("Response dari saveqrcodeacc:", response2); // Cek response
-                                                    if (response2==1) { // Sekarang bisa dicek dengan benar!
-                                                        resolve(`QR Code untuk ${nidndosen} (${label}) berhasil disimpan.`);
-                                                    } else {
-                                                        reject(response2.error || 'Unknown error (saveqrcode).');
-                                                    }
-                                                },
-                                                error: function(xhr, status, error) {
-                                                    reject(error || 'Request error (saveqrcode).');
-                                                }
-                                            });
-
-
-                                        } else {
-                                            reject(response.error ||
-                                                'Unknown error (qrcodedosen).'
-                                            );
-                                        }
-                                    },
-                                    error: function(xhr, status, error) {
-                                        reject(error ||
-                                            'Request error (qrcodedosen).');
-                                    }
-                                });
-                                
-                                
-                                
-                            });
-                        }, 100);
-                    } catch (err) {
-                        reject(`QRCode is not a constructor atau library tidak ditemukan untuk ${label}.`);
-                    }
+                        },
+                        error: function(xhr, status, error) {
+                            reject(error || 'Request error (saveqrcode).');
+                        }
+                    });
                 });
             }
         });
