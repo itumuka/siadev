@@ -133,7 +133,8 @@
                                     'ts' => time()
                                 ]);
                                 $sso_encoded = base64_encode($sso_payload);
-                                $sso_signature = hash_hmac('sha256', $sso_encoded, 'sso-secret-siedom-123');
+                                $secret = env('SSO_SIEDOM_SECRET', 'sso-secret-siedom-123');
+                                $sso_signature = hash_hmac('sha256', $sso_encoded, $secret);
                                 $base_url = rtrim(env('SIEDOM_URL', 'https://siedom.umuka.ac.id'), '/');
                                 $sso_url = "{$base_url}/sso?payload={$sso_encoded}&sig={$sso_signature}";
                             @endphp
