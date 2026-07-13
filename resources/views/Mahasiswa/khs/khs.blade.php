@@ -119,14 +119,14 @@
                         <div class="box-body text-danger">
                             @php
                                 $sso_payload = json_encode([
-                                    'nim' => Session::get('session_nim'),
-                                    'tahun' => Session::get('session_tahun'),
-                                    'semester' => Session::get('session_semester'),
+                                    'nim' => $session_nim,
+                                    'tahun' => $session_tahun,
+                                    'semester' => $session_semester,
                                     'tahun_ajaran' => Session::get('session_nama_tahunakademik'),
-                                    'username' => Session::get('username'),
+                                    'username' => Session::get('username') ?: $session_nim,
                                     'gender' => Session::get('gender'),
                                     'nama' => Session::get('nama'),
-                                    'kode_program_studi' => Session::get('session_kode_prodi') ?? Session::get('kode_program_studi'),
+                                    'kode_program_studi' => $session_kode_prodi,
                                     'token' => Session::get('token'),
                                     'id_mhs' => Session::get('id_mhs'),
                                     'id_mreg' => Session::get('id_mreg'),
