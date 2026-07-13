@@ -117,7 +117,27 @@
                             <h4 class="box-title"><i class="fa fa-exclamation-circle"></i> Data Kuesioner Belum Di Isi</h4>
                         </div>
                         <div class="box-body text-danger">
-                            Anda belum mengisi kuesioner di <a href="https://siedom.umuka.ac.id" class="btn btn-xs btn-danger" target="_blank">SIEDOM</a>. Silahkan klik button SIEDOM dan isi kuesioner setiap matakuliah terlebih dahulu.
+                            @php
+                                $sso_payload = json_encode([
+                                    'nim' => Session::get('session_nim'),
+                                    'tahun' => Session::get('session_tahun'),
+                                    'semester' => Session::get('session_semester'),
+                                    'tahun_ajaran' => Session::get('session_nama_tahunakademik'),
+                                    'username' => Session::get('username'),
+                                    'gender' => Session::get('gender'),
+                                    'nama' => Session::get('nama'),
+                                    'kode_program_studi' => Session::get('session_kode_prodi') ?? Session::get('kode_program_studi'),
+                                    'token' => Session::get('token'),
+                                    'id_mhs' => Session::get('id_mhs'),
+                                    'id_mreg' => Session::get('id_mreg'),
+                                    'ts' => time()
+                                ]);
+                                $sso_encoded = base64_encode($sso_payload);
+                                $sso_signature = hash_hmac('sha256', $sso_encoded, 'sso-secret-siedom-123');
+                                $base_url = rtrim(env('SIEDOM_URL', 'https://siedom.umuka.ac.id'), '/');
+                                $sso_url = "{$base_url}/sso?payload={$sso_encoded}&sig={$sso_signature}";
+                            @endphp
+                            Anda belum mengisi kuesioner di <a href="{{ $sso_url }}" class="btn btn-xs btn-danger" target="_blank">SIEDOM</a>. Silahkan klik button SIEDOM dan isi kuesioner setiap matakuliah terlebih dahulu.
                         </div>
                     </div>
                 </div>
