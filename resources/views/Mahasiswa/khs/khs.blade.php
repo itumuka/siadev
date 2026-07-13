@@ -325,7 +325,7 @@ $(document).ready(function() {
                 if (status == 'notCompletedFilled') {
                     $("#default-content").addClass("sembunyi");
                     $("#warning-content").removeClass("sembunyi");
-                    var sso_base_url = "{{ $sso_url }}";
+                    var sso_base_url = "{!! $sso_url !!}";
                     $('#btn-siedom').attr('href', sso_base_url + "&req_tahun=" + f_tahun + "&req_semester=" + f_smt);
                     table_khs(f_id_hereg);
                 } else if (status == 'completedFilled') {
