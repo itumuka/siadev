@@ -138,7 +138,7 @@
                                 $base_url = rtrim(env('SIEDOM_URL', 'https://siedom.umuka.ac.id'), '/');
                                 $sso_url = "{$base_url}/sso?payload={$sso_encoded}&sig={$sso_signature}";
                             @endphp
-                            Anda belum mengisi kuesioner di <a href="{{ $sso_url }}" class="btn btn-xs btn-danger" target="_blank">SIEDOM</a>. Silahkan klik button SIEDOM dan isi kuesioner setiap matakuliah terlebih dahulu.
+                            Anda belum mengisi kuesioner di <a href="{{ $sso_url }}" class="btn btn-xs btn-danger" target="_blank" id="btn-siedom">SIEDOM</a>. Silahkan klik button SIEDOM dan isi kuesioner setiap matakuliah terlebih dahulu.
                         </div>
                     </div>
                 </div>
@@ -325,6 +325,8 @@ $(document).ready(function() {
                 if (status == 'notCompletedFilled') {
                     $("#default-content").addClass("sembunyi");
                     $("#warning-content").removeClass("sembunyi");
+                    var sso_base_url = "{{ $sso_url }}";
+                    $('#btn-siedom').attr('href', sso_base_url + "&req_tahun=" + f_tahun + "&req_semester=" + f_smt);
                     table_khs(f_id_hereg);
                 } else if (status == 'completedFilled') {
                     $("#default-content").removeClass("sembunyi");
