@@ -313,8 +313,8 @@
                             data: null,
                             className: 'text-center',
                             render: function(data, type, full, meta) {
-                                return '<a href="javascript:void(0)" class="text-info mr-10" id="cetak" data-toggle="tooltip" data-original-title="Edit" title="Cetak KRS" onclick="cetak(' +
-                                    full.nim + ',' + full.tahun + ',' + full.semester +
+                                return '<a href="javascript:void(0)" class="text-info mr-10" id="cetak" data-toggle="tooltip" data-original-title="Edit" title="Cetak KRS" onclick="cetak(\'' +
+                                    full.nim + '\',' + full.tahun + ',' + full.semester +
                                     ');"><i class="fa fa-print"></i></a>';
                             }
                         },
