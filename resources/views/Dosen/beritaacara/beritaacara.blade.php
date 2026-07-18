@@ -87,7 +87,7 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title">Berita Acara Perkuliahan</h4>
+                            <h4 class="modal-title">Berita Acara Perkuliahan <code id="add_nama_mk"></code></h4>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span></button>
                         </div>
@@ -153,7 +153,7 @@
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title">List Berita Acara Perkuliahan</h4>
+                            <h4 class="modal-title">List Berita Acara Perkuliahan <code id="l_nama_mk_ba"></code></h4>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span></button>
                         </div>
@@ -541,6 +541,8 @@
                 var data = table.row($tr).data();
                 $('#id_kelas').val(data['id_kelas']);
                 var id_kelas = $(this).data('id');
+                var nama = data['nama_matakuliah'];
+                $('#add_nama_mk').html(nama);
                 autopertemuanba(id_kelas);
                 $('#modal_add').modal('show');
 
@@ -550,6 +552,8 @@
                 $tr = $(this).closest('tr');
                 var data = table.row($tr).data();
                 var id_kelas = data['id_kelas'];
+                var nama = data['nama_matakuliah'];
+                $('#l_nama_mk_ba').html(nama);
                 tabelba(id_kelas);
                 $('#modal_list').modal('show');
             });
