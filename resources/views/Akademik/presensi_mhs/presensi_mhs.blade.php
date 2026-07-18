@@ -720,7 +720,8 @@
                                 if (full.xv == "H") jmlmsk++;
                                 if (full.xvi == "H") jmlmsk++;
 
-                                var persene = ((jmlmsk / 14) * 100);
+                                var jmlMaks = Math.min(jmlmsk, 14); // Jika jmlmsk lebih besar dari 14, gunakan 14
+                                var persene = ((jmlMaks / 14) * 100);
                                 return persene.toFixed(0) + ' %';
                             }
                         },
