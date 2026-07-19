@@ -56,7 +56,7 @@ Route::middleware(['ceklogin'])->group(function () {
     Route::get("/kaprodi/skripsi/manajemen", "Kaprodi@skripsi_index")->name('kpskripsi_index');
     Route::get("/kaprodi/skripsi/bimbingan", "Kaprodi@skripsi_bimbingan")->name('kpskripsi_bimbingan');
     Route::get("/kaprodi/skripsi/syarat", "Kaprodi@skripsi_syarat")->name('kpskripsi_syarat');
-    Route::get("/kaprodi/skripsi/cpl", "Kaprodi@skripsi_cpl")->name('kpskripsi_cpl');
+
     Route::get("/kaprodi/skripsi/rubrik", "Kaprodi@skripsi_rubrik")->name('kpskripsi_rubrik');
     Route::get("/kaprodi/skripsi/penetapan", "Kaprodi@skripsi_penetapan")->name('kpskripsi_penetapan');
     Route::get("/akademik/manajemen-ta/rekap-bimbingan/cetak/{nim}", "Akademik@cetak_bimbingan")->name('cetak_bimbingan');
