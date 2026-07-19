@@ -77,10 +77,10 @@
                                                 class="path1"></span><span class="path2"></span></i>Master Data CPL <sup
                                             class="text-danger">(Beta)</sup></a>
                                 </li>
-                                <li class="{{ Route::is('kpskripsi_cpmk') ? 'active' : '' }}">
-                                    <a href="{{ route('kpskripsi_cpmk') }}"><i class="fa fa-sliders"><span
+                                <li class="{{ Route::is('kpskripsi_rubrik') ? 'active' : '' }}">
+                                    <a href="{{ route('kpskripsi_rubrik') }}"><i class="fa fa-sliders"><span
                                                 class="path1"></span><span class="path2"></span></i>Konfigurasi Rubrik
-                                        CPMK <sup class="text-danger">(Beta)</sup></a>
+                                        Penilaian <sup class="text-danger">(Beta)</sup></a>
                                 </li>
                                 <li class="{{ Route::is('kpskripsi_penetapan') ? 'active' : '' }}">
                                     <a href="{{ route('kpskripsi_penetapan') }}"><i class="fa fa-gavel"><span

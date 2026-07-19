@@ -22,6 +22,16 @@
             border: 1px solid rgba(0, 0, 0, 0.08);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
+        .aspek-header {
+            background-color: #f1f3f5;
+            padding: 10px 15px;
+            font-weight: 750;
+            color: #343a40;
+            border-radius: 4px;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #007bff;
+        }
     </style>
 @endsection
 
@@ -56,7 +66,7 @@
                     <div class="box-body ribbon-box bg-light mb-4">
                         <div class="ribbon ribbon-info">Kebijakan Akademik</div>
                         <p class="mb-0 text-dark font-weight-medium">
-                            <i class="fa fa-info-circle text-info"></i> Jalur <strong>OBE (Luaran)</strong> dinilai melalui <strong>Pertanggungjawaban Luaran</strong> oleh <strong>Tim Verifikator</strong>. Jalur <strong>Non-OBE</strong> dinilai melalui <strong>Ujian Pendadaran</strong> oleh <strong>Tim Penguji</strong>. Kata/istilah disesuaikan secara dinamis untuk kenyamanan administrasi prodi.
+                            <i class="fa fa-info-circle text-info"></i> Jalur <strong>OBE (Luaran)</strong> dinilai melalui <strong>Pertanggungjawaban Luaran</strong> oleh <strong>Tim Verifikator</strong>. Jalur <strong>Non-OBE</strong> dinilai melalui <strong>Ujian Pendadaran</strong> oleh <strong>Tim Penguji</strong>.
                         </p>
                     </div>
 
@@ -132,7 +142,7 @@
                             <div class="col-lg-8">
                                 <div class="card border-0 shadow-sm">
                                     <div class="card-header bg-white font-weight-bold text-dark">
-                                        <i class="fa fa-list-ol text-primary"></i> <span id="rubrik_panel_title">Kriteria Penilaian / Rubrik CPMK</span>
+                                        <i class="fa fa-list-ol text-primary"></i> <span id="rubrik_panel_title">Kriteria Penilaian / Rubrik Indikator</span>
                                     </div>
                                     <div class="card-body">
                                         <input type="hidden" name="id_skripsi" id="n_id_skripsi">
@@ -140,7 +150,7 @@
                                         <input type="hidden" name="id_dosen" value="{{ $session_id_dosen }}">
                                         
                                         <div id="rubrik_inputs_container">
-                                            <!-- Dynamically generated list of CPMK inputs -->
+                                            <!-- Dynamically generated list of Indikator inputs -->
                                             <div class="text-center py-4">
                                                 <div class="spinner-border text-primary" role="status"></div>
                                                 <p class="mt-2 text-muted">Memuat rubrik penilaian...</p>
@@ -179,8 +189,8 @@
                                                 <h6 class="font-weight-bold mb-2 text-warning"><i class="fa fa-info-circle"></i> Informasi Penilaian:</h6>
                                                 <ul class="pl-3 mb-0 text-dark" style="line-height: 1.5; white-space: normal;">
                                                     <li class="mb-1">Nilai harus diisi dalam rentang <strong>0 - 100</strong>.</li>
-                                                    <li class="mb-1">Nilai Akhir adalah rata-rata tertimbang bobot CPMK.</li>
-                                                    <li>Nilai Huruf di atas dihitung berdasarkan standar konversi akademik universitas.</li>
+                                                    <li class="mb-1">Nilai akhir aspek Substansi berkontribusi <strong>60%</strong> dan Ujian/Presentasi berkontribusi <strong>40%</strong>.</li>
+                                                    <li>Nilai akhir dihitung secara tertimbang berdasarkan tipe pembobotan rubrik aktif.</li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -207,6 +217,7 @@
             var id_dosen = $('#id_dosen').val();
             var gradeRules = {};
             var currentStudentKodePenilaian = 1;
+            var currentTipeBobot = 'indikator';
 
             // Format Helper
             function getRoleLabel(role, isObe) {
@@ -292,7 +303,7 @@
                             return '<span class="badge badge-success px-2 py-1 font-weight-bold" style="font-size:0.95rem;">' + parseFloat(data).toFixed(2) + ' (' + letter + ')</span>';
                         }
                     },
-                    {
+                    { 
                         data: null,
                         className: 'text-center',
                         render: function(data, type, row) {
@@ -300,13 +311,12 @@
                             let btnText = isObe ? '<i class="fa fa-check-square-o"></i> Verifikasi Luaran' : '<i class="fa fa-pencil"></i> Input Nilai Sidang';
                             let btnClass = isObe ? 'btn-success' : 'btn-primary';
                             
-                            // Base64 serialize student details
                             let b64 = btoa(unescape(encodeURIComponent(JSON.stringify(row))));
                             return '<button class="btn btn-sm ' + btnClass + ' btn-grade" data-row="' + b64 + '">' + btnText + '</button>';
                         }
                     }
                 ],
-                order: [[6, 'asc']] // Belum dinilai first
+                order: [[6, 'asc']]
             });
 
             // Handle Input Click & Load Modal
@@ -314,7 +324,6 @@
             $('#tb_mahasiswa_diuji').on('click', '.btn-grade', function() {
                 var student = JSON.parse(decodeURIComponent(escape(atob($(this).data('row')))));
                 var isObe = student.is_obe == 1;
-                var isCpmkBased = student.cpmk_based == 1;
                 currentStudentKodePenilaian = student.kode_penilaian || 1;
                 
                 // Populate student header
@@ -343,13 +352,13 @@
                 if (isObe) {
                     $('#modal_title_text').text('Pertanggungjawaban Luaran (Jalur OBE) - Verifikasi Tim Verifikator');
                     $('#n_mhs_jalur').text('OBE (LUARAN)').removeClass('badge-primary').addClass('badge-success');
-                    $('#rubrik_panel_title').text('Kriteria Kelayakan & Capaian CPMK Luaran');
+                    $('#rubrik_panel_title').text('Kriteria Kelayakan & Aspek Luaran');
                     $('#lbl_catatan').text('Catatan Hasil Verifikasi & Pertanggungjawaban Luaran');
-                    $('#n_catatan').attr('placeholder', 'Tuliskan catatan hasil verifikasi luaran, kesesuaian dengan CPL, atau rekomendasi perbaikan...');
+                    $('#n_catatan').attr('placeholder', 'Tuliskan catatan hasil verifikasi luaran atau rekomendasi perbaikan...');
                 } else {
                     $('#modal_title_text').text('Sidang Pertanggungjawaban Skripsi - Penilaian Dosen Penguji');
                     $('#n_mhs_jalur').text('NON-OBE').removeClass('badge-success').addClass('badge-primary');
-                    $('#rubrik_panel_title').text(isCpmkBased ? 'Rubrik Penilaian Ujian (CPMK)' : 'Rubrik Penilaian Ujian (Existing)');
+                    $('#rubrik_panel_title').text('Rubrik Indikator Penilaian Ujian');
                     $('#lbl_catatan').text('Catatan & Masukan Dosen Penguji');
                     $('#n_catatan').attr('placeholder', 'Tuliskan revisi, masukan, atau catatan khusus jalannya ujian sidang...');
                 }
@@ -362,156 +371,82 @@
                 // Open modal
                 $('#modal_nilai_ujian').modal('show');
 
-                if (!isCpmkBased) {
-                    // Load existing grades directly (no need to fetch rubrics)
-                    $.ajax({
-                        url: "{{ $api_url }}dosen/skripsi/get-nilai-ujian-cpmk",
-                        method: "GET",
-                        headers: {
-                            "Authorization": 'Bearer ' + token,
-                            "username": userlogin
-                        },
-                        data: { id_skripsi_ujian: student.id_skripsi_ujian, id_dosen: id_dosen },
-                        success: function(nilaiRes) {
-                            var gradesMap = {};
-                            var existingCatatan = '';
-                            if (nilaiRes.status === 'success') {
-                                nilaiRes.data.forEach(function(n) {
-                                    gradesMap[n.id_cpmk] = n.nilai;
-                                });
-                                existingCatatan = nilaiRes.catatan || '';
+                // Load rubrics for the student's program study and pathway
+                let jalur = isObe ? 'obe' : 'reguler';
+                $.ajax({
+                    url: "{{ $api_url }}dosen/skripsi/get-rubrik-indikator",
+                    method: "GET",
+                    headers: {
+                        "Authorization": 'Bearer ' + token,
+                        "username": userlogin
+                    },
+                    data: { kode_prodi: student.kode_prodi, jalur: jalur },
+                    success: function(rubricRes) {
+                        if (rubricRes.status === 'success') {
+                            currentRubrics = rubricRes.data;
+                            if (currentRubrics.length > 0) {
+                                currentTipeBobot = currentRubrics[0].tipe_bobot || 'indikator';
                             }
                             
-                            $('#n_catatan').val(existingCatatan);
-                            renderRubricInputs([], gradesMap, false);
-                        },
-                        error: function() {
-                            $('#rubrik_inputs_container').html('<div class="alert alert-danger">Koneksi API bermasalah.</div>');
-                        }
-                    });
-                } else {
-                    // Load rubrics first, then load existing scores
-                    $.ajax({
-                        url: "{{ $api_url }}dosen/skripsi/get-rubrik-cpmk",
-                        method: "GET",
-                        headers: {
-                            "Authorization": 'Bearer ' + token,
-                            "username": userlogin
-                        },
-                        data: { kode_prodi: student.kode_prodi },
-                        success: function(rubricRes) {
-                            if (rubricRes.status === 'success') {
-                                currentRubrics = rubricRes.data;
-                                
-                                // Load existing grades
-                                $.ajax({
-                                    url: "{{ $api_url }}dosen/skripsi/get-nilai-ujian-cpmk",
-                                    method: "GET",
-                                    headers: {
-                                        "Authorization": 'Bearer ' + token,
-                                        "username": userlogin
-                                    },
-                                    data: { id_skripsi_ujian: student.id_skripsi_ujian, id_dosen: id_dosen },
-                                    success: function(nilaiRes) {
-                                        var gradesMap = {};
-                                        var existingCatatan = '';
-                                        if (nilaiRes.status === 'success') {
-                                            nilaiRes.data.forEach(function(n) {
-                                                gradesMap[n.id_cpmk] = n.nilai;
-                                            });
-                                            existingCatatan = nilaiRes.catatan || '';
-                                        }
-                                        
-                                        $('#n_catatan').val(existingCatatan);
-                                        renderRubricInputs(currentRubrics, gradesMap, true);
+                            // Load existing grades
+                            $.ajax({
+                                url: "{{ $api_url }}dosen/skripsi/get-nilai-ujian-indikator",
+                                method: "GET",
+                                headers: {
+                                    "Authorization": 'Bearer ' + token,
+                                    "username": userlogin
+                                },
+                                data: { id_skripsi_ujian: student.id_skripsi_ujian, id_dosen: id_dosen },
+                                success: function(nilaiRes) {
+                                    var gradesMap = {};
+                                    var existingCatatan = '';
+                                    if (nilaiRes.status === 'success') {
+                                        nilaiRes.data.forEach(function(n) {
+                                            gradesMap[n.id_rubrik_indikator] = n.nilai;
+                                        });
+                                        existingCatatan = nilaiRes.catatan || '';
                                     }
-                                });
-                            } else {
-                                $('#rubrik_inputs_container').html('<div class="alert alert-danger">Gagal memuat rubrik penilaian.</div>');
-                            }
-                        },
-                        error: function() {
-                            $('#rubrik_inputs_container').html('<div class="alert alert-danger">Koneksi API bermasalah.</div>');
+                                    
+                                    $('#n_catatan').val(existingCatatan);
+                                    renderRubricInputs(currentRubrics, gradesMap);
+                                }
+                            });
+                        } else {
+                            $('#rubrik_inputs_container').html('<div class="alert alert-danger">Gagal memuat rubrik penilaian.</div>');
                         }
-                    });
-                }
+                    },
+                    error: function() {
+                        $('#rubrik_inputs_container').html('<div class="alert alert-danger">Koneksi API bermasalah.</div>');
+                    }
+                });
             });
 
-            // Render Inputs dynamically
-            function renderRubricInputs(rubrics, gradesMap, isCpmkBased) {
+            // Render Inputs dynamically, split into Substansi (60%) vs Ujian (40%)
+            function renderRubricInputs(rubrics, gradesMap) {
                 var html = '';
                 
-                if (!isCpmkBased) {
-                    var val = gradesMap[0] !== undefined ? gradesMap[0] : '';
-                    html += `
-                    <div class="form-group row align-items-center mb-3 py-2 border-bottom">
-                        <div class="col-md-7">
-                            <label class="font-weight-bold text-dark mb-0">
-                                <span class="badge badge-primary mr-2">Non-CPMK-Based</span> 
-                                Nilai Ujian Skripsi / Sidang Akhir (0 - 100)
-                            </label>
-                            <div class="small text-muted mt-1">Bobot kriteria ini: <strong>100%</strong></div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="input-group">
-                                <input type="number" 
-                                       name="nilai[0]" 
-                                       class="form-control border-primary rubric-score-input" 
-                                       data-id="0" 
-                                       data-bobot="100" 
-                                       min="0" 
-                                       max="100" 
-                                       step="0.01" 
-                                       value="${val}" 
-                                       placeholder="0-100" 
-                                       required>
-                                <div class="input-group-append">
-                                    <span class="input-group-text bg-light font-weight-bold">/ 100</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-2 text-right">
-                            <span class="small text-muted font-weight-bold">Skor Tertimbang:</span>
-                            <div class="font-weight-bold text-dark text-right dynamic-weighted-score" id="weighted_score_0">0.00</div>
-                        </div>
-                    </div>`;
-                } else {
-                    rubrics.forEach(function(r) {
-                        var val = gradesMap[r.id] !== undefined ? gradesMap[r.id] : '';
-                        var cplBadge = r.kode_cpl ? '<span class="badge badge-info-light font-weight-bold ml-2">Mapping CPL: ' + r.kode_cpl + '</span>' : '';
-                        
-                        html += `
-                        <div class="form-group row align-items-center mb-3 py-2 border-bottom">
-                            <div class="col-md-7">
-                                <label class="font-weight-bold text-dark mb-0">
-                                    <span class="badge badge-secondary mr-2">${r.kode_cpmk}</span> 
-                                    ${r.nama_cpmk}
-                                </label>
-                                <div class="small text-muted mt-1">Bobot kriteria ini: <strong>${parseFloat(r.bobot)}%</strong> ${cplBadge}</div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="input-group">
-                                    <input type="number" 
-                                           name="nilai[${r.id}]" 
-                                           class="form-control border-primary rubric-score-input" 
-                                           data-id="${r.id}" 
-                                           data-bobot="${r.bobot}" 
-                                           min="0" 
-                                           max="100" 
-                                           step="0.01" 
-                                           value="${val}" 
-                                           placeholder="0-100" 
-                                           required>
-                                    <div class="input-group-append">
-                                        <span class="input-group-text bg-light font-weight-bold">/ 100</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2 text-right">
-                                <span class="small text-muted font-weight-bold">Skor Tertimbang:</span>
-                                <div class="font-weight-bold text-dark text-right dynamic-weighted-score" id="weighted_score_${r.id}">0.00</div>
-                            </div>
-                        </div>`;
+                var substansiList = rubrics.filter(r => r.aspek === 'substansi');
+                var ujianList = rubrics.filter(r => r.aspek === 'ujian');
+
+                if (rubrics.length === 0) {
+                    html = '<div class="alert alert-warning text-center">Belum ada rubrik indikator penilaian aktif untuk program studi ini.</div>';
+                    $('#rubrik_inputs_container').html(html);
+                    return;
+                }
+
+                // Render Section Substansi
+                if (substansiList.length > 0) {
+                    html += '<div class="aspek-header"><i class="fa fa-book mr-5"></i> Aspek Substansi dan Luaran (Kontribusi: 60%)</div>';
+                    substansiList.forEach(function(r) {
+                        html += renderSingleIndikatorRow(r, gradesMap);
+                    });
+                }
+
+                // Render Section Ujian
+                if (ujianList.length > 0) {
+                    html += '<div class="aspek-header"><i class="fa fa-gavel mr-5"></i> Aspek Ujian / Presentasi (Kontribusi: 40%)</div>';
+                    ujianList.forEach(function(r) {
+                        html += renderSingleIndikatorRow(r, gradesMap);
                     });
                 }
 
@@ -530,33 +465,105 @@
                 });
             }
 
-            // Recalculate Live Score & Letter Grade
+            function renderSingleIndikatorRow(r, gradesMap) {
+                var val = gradesMap[r.id] !== undefined ? gradesMap[r.id] : '';
+                var bobotText = currentTipeBobot === 'tunggal' ? 'Sama Rata (Tunggal Aspek)' : parseFloat(r.bobot) + '%';
+                
+                return `
+                <div class="form-group row align-items-center mb-3 py-2 border-bottom">
+                    <div class="col-md-7">
+                        <label class="font-weight-bold text-dark mb-0">
+                            <span class="badge badge-secondary mr-2">${r.kode_indikator}</span> 
+                            ${r.nama_indikator}
+                        </label>
+                        <div class="small text-muted mt-1">Bobot kriteria ini: <strong>${bobotText}</strong></div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <input type="number" 
+                                   name="nilai[${r.id}]" 
+                                   class="form-control border-primary rubric-score-input" 
+                                   data-id="${r.id}" 
+                                   data-bobot="${r.bobot}" 
+                                   data-aspek="${r.aspek}" 
+                                   min="0" 
+                                   max="100" 
+                                   step="0.01" 
+                                   value="${val}" 
+                                   placeholder="0-100" 
+                                   required>
+                            <div class="input-group-append">
+                                <span class="input-group-text bg-light font-weight-bold">/ 100</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 text-right">
+                        <span class="small text-muted font-weight-bold">Skor:</span>
+                        <div class="font-weight-bold text-dark text-right dynamic-weighted-score" id="weighted_score_${r.id}">0.00</div>
+                    </div>
+                </div>`;
+            }
+
+            // Recalculate Live Score & Letter Grade (Supports Tunggal and Indikator weight methods)
             function recalculateTotalScore() {
                 var total = 0;
-                var totalBobotUsed = 0;
                 var hasEmpty = false;
 
-                $('.rubric-score-input').each(function() {
-                    var id = $(this).data('id');
-                    var bobot = parseFloat($(this).data('bobot'));
-                    var val = parseFloat($(this).val());
+                if (currentTipeBobot === 'tunggal') {
+                    // Calculate averages for Substansi and Ujian separately
+                    var substansiSum = 0;
+                    var substansiCount = 0;
+                    var ujianSum = 0;
+                    var ujianCount = 0;
 
-                    if (!isNaN(val)) {
-                        var weighted = (val * bobot) / 100;
-                        $('#weighted_score_' + id).text(weighted.toFixed(2));
-                        total += weighted;
-                        totalBobotUsed += bobot;
-                    } else {
-                        $('#weighted_score_' + id).text('0.00');
-                        hasEmpty = true;
-                    }
-                });
+                    $('.rubric-score-input').each(function() {
+                        var id = $(this).data('id');
+                        var aspek = $(this).data('aspek');
+                        var val = parseFloat($(this).val());
+
+                        if (!isNaN(val)) {
+                            $('#weighted_score_' + id).text(val.toFixed(2));
+                            if (aspek === 'substansi') {
+                                substansiSum += val;
+                                substansiCount++;
+                            } else {
+                                ujianSum += val;
+                                ujianCount++;
+                            }
+                        } else {
+                            $('#weighted_score_' + id).text('0.00');
+                            hasEmpty = true;
+                        }
+                    });
+
+                    var avgSubstansi = substansiCount > 0 ? (substansiSum / substansiCount) : 0;
+                    var avgUjian = ujianCount > 0 ? (ujianSum / ujianCount) : 0;
+                    total = (avgSubstansi * 0.60) + (avgUjian * 0.40);
+                } else {
+                    // Weighted sum calculation
+                    var totalBobotUsed = 0;
+                    $('.rubric-score-input').each(function() {
+                        var id = $(this).data('id');
+                        var bobot = parseFloat($(this).data('bobot'));
+                        var val = parseFloat($(this).val());
+
+                        if (!isNaN(val)) {
+                            var weighted = (val * bobot) / 100;
+                            $('#weighted_score_' + id).text(val.toFixed(2));
+                            total += weighted;
+                            totalBobotUsed += bobot;
+                        } else {
+                            $('#weighted_score_' + id).text('0.00');
+                            hasEmpty = true;
+                        }
+                    });
+                }
 
                 // Display score
                 $('#lbl_score_total').text(total.toFixed(2));
                 
                 // Live Grade Letter
-                if (totalBobotUsed > 0 && !hasEmpty) {
+                if (!hasEmpty) {
                     var gradeLetter = calculateGradeLetter(total, currentStudentKodePenilaian);
                     $('#lbl_grade_letter').text(gradeLetter);
                 } else {
@@ -571,26 +578,25 @@
                 var id_skripsi_ujian = $('#n_id_skripsi_ujian').val();
                 var catatan = $('#n_catatan').val();
                 
-                // Collect grades as key-value object
                 var nilai = {};
                 var allFilled = true;
                 $('.rubric-score-input').each(function() {
-                    var id_cpmk = $(this).data('id');
+                    var id_rubrik = $(this).data('id');
                     var val = $(this).val();
                     if (val === '' || isNaN(parseFloat(val))) {
                         allFilled = false;
                         return false;
                     }
-                    nilai[id_cpmk] = parseFloat(val);
+                    nilai[id_rubrik] = parseFloat(val);
                 });
 
                 if (!allFilled) {
-                    showToastr('warning', 'Peringatan', 'Harap isi semua nilai kriteria rubrik CPMK.');
+                    showToastr('warning', 'Peringatan', 'Harap isi semua nilai indikator.');
                     return;
                 }
 
                 $.ajax({
-                    url: "{{ $api_url }}dosen/skripsi/simpan-nilai-ujian-cpmk",
+                    url: "{{ $api_url }}dosen/skripsi/simpan-nilai-ujian-indikator",
                     method: "POST",
                     headers: {
                         "Authorization": 'Bearer ' + token,

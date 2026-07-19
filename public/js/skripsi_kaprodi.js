@@ -455,8 +455,8 @@ $(document).ready(function () {
                                 <td><strong>${mk.nama_matakuliah}</strong></td>
                                 <td class="text-center">
                                     <select class="form-control select-change-grading" data-id="${mk.id_matakuliah}">
-                                        <option value="1" ${selectedObe}>CPMK-Based (OBE & Rubrik)</option>
-                                        <option value="0" ${selectedNonObe}>Non-CPMK-Based (Nilai Angka Langsung)</option>
+                                        <option value="1" ${selectedObe}>Rubrik Indikator Penilaian</option>
+                                        <option value="0" ${selectedNonObe}>Nilai Angka Langsung (Tanpa Rubrik)</option>
                                     </select>
                                 </td>
                             </tr>

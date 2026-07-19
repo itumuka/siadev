@@ -29,8 +29,8 @@
                     <a href="{{ route('kpskripsi_cpl') }}" class="btn btn-sm btn-info mr-10 mb-5">
                         <i class="fa fa-book mr-5"></i> Master Data CPL
                     </a>
-                    <a href="{{ route('kpskripsi_cpmk') }}" class="btn btn-sm btn-warning mr-10 mb-5">
-                        <i class="fa fa-sliders mr-5"></i> Konfigurasi Rubrik CPMK
+                    <a href="{{ route('kpskripsi_rubrik') }}" class="btn btn-sm btn-warning mr-10 mb-5">
+                        <i class="fa fa-sliders mr-5"></i> Konfigurasi Rubrik Penilaian
                     </a>
                     <button class="btn btn-sm btn-info mr-10 mb-5" onclick="openConfigModal()">
                         <i class="fa fa-cog mr-5"></i> Konfigurasi Sempro
@@ -274,7 +274,7 @@
                 <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <p class="text-muted">Tentukan metode penilaian (OBE dengan CPMK/CPL vs Non-OBE dengan Nilai Angka Langsung) untuk masing-masing mata kuliah tugas akhir/skripsi aktif prodi Anda.</p>
+                <p class="text-muted">Tentukan metode penilaian (Jalur Rubrik Indikator vs Nilai Angka Langsung) untuk masing-masing mata kuliah tugas akhir/skripsi aktif prodi Anda.</p>
                 <div class="table-responsive text-dark">
                     <table class="table table-bordered table-striped" id="table_config_grading">
                         <thead>

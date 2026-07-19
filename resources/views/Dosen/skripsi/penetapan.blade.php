@@ -136,14 +136,14 @@
                         <div class="col-lg-8">
                             <div class="card border-0 shadow-sm mb-4">
                                 <div class="card-header bg-white font-weight-bold text-dark" id="cpmk_card_title">
-                                    <i class="fa fa-table text-primary"></i> Rincian Nilai CPMK dari Tim Penguji
+                                    <i class="fa fa-table text-primary"></i> Rincian Nilai Indikator dari Tim Penguji
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-sm text-center" id="table_cpmk_breakdown">
                                             <thead class="bg-secondary text-white">
                                                 <tr>
-                                                    <th class="text-left" id="cpmk_th_title">Kriteria Rubrik CPMK</th>
+                                                    <th class="text-left" id="cpmk_th_title">Kriteria Rubrik Penilaian</th>
                                                     <th>Bobot</th>
                                                     <th>Penguji 1</th>
                                                     <th>Penguji 2</th>
@@ -433,8 +433,8 @@
                             $('#ba_catatan').html(ba && ba.catatan ? ba.catatan : '<em class="text-muted">Tidak ada catatan perbaikan.</em>');
 
                              const isCpmkBased = activeUjianData.cpmk_based == 1;
-                             $('#cpmk_card_title').html(isCpmkBased ? '<i class="fa fa-table text-primary"></i> Rincian Nilai CPMK dari Tim Penguji' : '<i class="fa fa-table text-primary"></i> Rincian Nilai dari Tim Penguji');
-                             $('#cpmk_th_title').text(isCpmkBased ? 'Kriteria Rubrik CPMK' : 'Kriteria Penilaian');
+                             $('#cpmk_card_title').html(isCpmkBased ? '<i class="fa fa-table text-primary"></i> Rincian Nilai Indikator dari Tim Penguji' : '<i class="fa fa-table text-primary"></i> Rincian Nilai dari Tim Penguji');
+                             $('#cpmk_th_title').text(isCpmkBased ? 'Kriteria Rubrik Penilaian' : 'Kriteria Penilaian');
 
                              // Rincian CPMK table
                              // Group scores by CPMK ID
