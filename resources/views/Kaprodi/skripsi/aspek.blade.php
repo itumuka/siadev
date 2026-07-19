@@ -25,23 +25,27 @@
             <div class="col-12">
                 <div class="box">
                     <div class="box-header with-border bg-info-light">
-                        <h4 class="box-title text-dark">Daftar Master Aspek Penilaian</h4>
-                        <div class="box-controls pull-right">
-                            <button id="btn-add-aspek" class="btn btn-sm btn-success mr-5">
-                                <i class="fa fa-plus mr-5"></i> Tambah Aspek
-                            </button>
-                            <button id="btn-reset-aspek" class="btn btn-sm btn-danger mr-5">
-                                <i class="fa fa-refresh mr-5"></i> Reset ke Default
-                            </button>
-                            <a href="{{ route('kpskripsi_index') }}" class="btn btn-sm btn-secondary">
-                                <i class="fa fa-arrow-left mr-5"></i> Kembali
-                            </a>
+                        <div class="d-flex flex-wrap justify-content-between align-items-center">
+                            <div>
+                                <h4 class="box-title text-dark mb-0">Daftar Master Aspek Penilaian</h4>
+                                <p class="mb-0 text-muted mt-5">Kelola aspek penilaian utama skripsi secara dinamis. Total bobot seluruh aspek harus tepat 100% agar rubrik dapat digunakan.</p>
+                            </div>
+                            <div class="d-flex flex-wrap align-items-center mt-10 mt-md-0">
+                                <button id="btn-add-aspek" class="btn btn-sm btn-success mr-10 mb-5">
+                                    <i class="fa fa-plus mr-5"></i> Tambah Aspek
+                                </button>
+                                <button id="btn-reset-aspek" class="btn btn-sm btn-danger mr-10 mb-5">
+                                    <i class="fa fa-refresh mr-5"></i> Reset ke Default
+                                </button>
+                                <a href="{{ route('kpskripsi_index') }}" class="btn btn-sm btn-secondary mb-5">
+                                    <i class="fa fa-arrow-left mr-5"></i> Kembali
+                                </a>
+                            </div>
                         </div>
-                        <p class="mb-0 text-muted">Kelola aspek penilaian utama skripsi secara dinamis. Total bobot seluruh aspek harus tepat 100% agar rubrik dapat digunakan.</p>
                     </div>
 
                     <div class="box-body">
-                        <!-- Jalur Selector -->
+                        <!-- Jalur Selector & Akumulasi Bobot -->
                         <div class="row mb-15">
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -52,15 +56,18 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-8 d-flex align-items-center">
-                                <div class="w-100">
+                            <div class="col-md-8">
+                                <div class="form-group">
                                     <label class="font-weight-600 text-dark">Status Akumulasi Bobot Aspek</label>
-                                    <div class="progress progress-lg mb-0" id="progress-bar-container" style="background-color: #e9ecef; border-radius: 4px;">
-                                        <div class="progress-bar bg-success" role="progressbar" id="aspek-progress" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
-                                    </div>
-                                    <div class="mt-5 d-flex justify-content-between">
-                                        <span id="aspek-status-badge" class="badge badge-warning">Menghitung...</span>
-                                        <span class="text-mute font-size-12">Total target: 100.00%</span>
+                                    <div class="d-flex align-items-center" style="height: 40px;">
+                                        <div class="flex-grow-1 mr-15">
+                                            <div class="progress progress-lg mb-0" id="progress-bar-container" style="background-color: #e9ecef; border-radius: 4px; height: 18px;">
+                                                <div class="progress-bar bg-success font-weight-bold" role="progressbar" id="aspek-progress" style="width: 0%; line-height: 18px;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                            </div>
+                                        </div>
+                                        <div class="text-right" style="min-width: 170px;">
+                                            <span id="aspek-status-badge" class="badge badge-warning font-size-12 px-10 py-5">Menghitung...</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
