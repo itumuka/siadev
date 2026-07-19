@@ -459,6 +459,10 @@
                             const nilais = data.nilai_indikator || [];
                             const isObe = u.is_obe == 1;
                             const currentStudentKodePenilaian = u.kode_penilaian || 1;
+                            const aspects = data.aspek && data.aspek.length > 0 ? data.aspek : [
+                                { nama_aspek: 'Substansi dan Luaran', bobot: 60.00 },
+                                { nama_aspek: 'Ujian / Presentasi', bobot: 40.00 }
+                            ];
 
                             // 1. Populate Page 1 Header & Info
                             $('#header_fakultas').text(u.nama_fakultas ? u.nama_fakultas.toUpperCase() : 'FAKULTAS');
@@ -510,11 +514,13 @@
                                 let tipe_bobot = exScores.length > 0 ? (exScores[0].tipe_bobot || 'indikator') : 'indikator';
                                 
                                 if (tipe_bobot === 'tunggal') {
-                                    let substansi = exScores.filter(n => n.aspek === 'substansi');
-                                    let ujian = exScores.filter(n => n.aspek === 'ujian');
-                                    let avgSubstansi = substansi.length > 0 ? (substansi.reduce((a, b) => a + parseFloat(b.nilai), 0) / substansi.length) : 0;
-                                    let avgUjian = ujian.length > 0 ? (ujian.reduce((a, b) => a + parseFloat(b.nilai), 0) / ujian.length) : 0;
-                                    exFinal = (avgSubstansi * 0.60) + (avgUjian * 0.40);
+                                    let sumAspectWeighted = 0;
+                                    aspects.forEach(a => {
+                                        let aspectScores = exScores.filter(n => n.aspek === a.nama_aspek);
+                                        let avg = aspectScores.length > 0 ? (aspectScores.reduce((sum, n) => sum + parseFloat(n.nilai), 0) / aspectScores.length) : 0;
+                                        sumAspectWeighted += avg * (parseFloat(a.bobot) / 100);
+                                    });
+                                    exFinal = sumAspectWeighted;
                                 } else {
                                     let sumWeighted = 0;
                                     let sumBobot = 0;
@@ -599,45 +605,30 @@
                                             <tbody>
                                 `;
 
-                                let listSubstansi = exScores.filter(n => n.aspek === 'substansi');
-                                let listUjian = exScores.filter(n => n.aspek === 'ujian');
                                 let idx_row = 1;
-
-                                if (listSubstansi.length > 0) {
-                                    individualPagesHtml += `<tr style="background-color:#fafafa;"><td colspan="5" class="text-left font-bold">A. Aspek Substansi dan Luaran (Bobot: 60%)</td></tr>`;
-                                    listSubstansi.forEach(n => {
-                                        let bobotVal = tipe_bobot === 'tunggal' ? (60.00 / listSubstansi.length) : parseFloat(n.bobot);
-                                        let val = parseFloat(n.nilai);
-                                        let weighted = (val * bobotVal) / 100;
-                                        individualPagesHtml += `
-                                            <tr>
-                                                <td>${idx_row++}</td>
-                                                <td class="text-left">${n.nama_indikator}</td>
-                                                <td>${bobotVal.toFixed(2)}%</td>
-                                                <td>${val.toFixed(2)}</td>
-                                                <td class="font-bold">${weighted.toFixed(2)}</td>
-                                            </tr>
-                                        `;
-                                    });
-                                }
-
-                                if (listUjian.length > 0) {
-                                    individualPagesHtml += `<tr style="background-color:#fafafa;"><td colspan="5" class="text-left font-bold">B. Aspek Ujian / Sidang (Bobot: 40%)</td></tr>`;
-                                    listUjian.forEach(n => {
-                                        let bobotVal = tipe_bobot === 'tunggal' ? (40.00 / listUjian.length) : parseFloat(n.bobot);
-                                        let val = parseFloat(n.nilai);
-                                        let weighted = (val * bobotVal) / 100;
-                                        individualPagesHtml += `
-                                            <tr>
-                                                <td>${idx_row++}</td>
-                                                <td class="text-left">${n.nama_indikator}</td>
-                                                <td>${bobotVal.toFixed(2)}%</td>
-                                                <td>${val.toFixed(2)}</td>
-                                                <td class="font-bold">${weighted.toFixed(2)}</td>
-                                            </tr>
-                                        `;
-                                    });
-                                }
+                                let alphabet = ['A', 'B', 'C', 'D', 'E', 'F'];
+                                
+                                aspects.forEach((a, aIdx) => {
+                                    let aspectScores = exScores.filter(n => n.aspek === a.nama_aspek);
+                                    if (aspectScores.length > 0) {
+                                        let label = alphabet[aIdx] || String.fromCharCode(65 + aIdx);
+                                        individualPagesHtml += `<tr style="background-color:#fafafa;"><td colspan="5" class="text-left font-bold">${label}. Aspek ${a.nama_aspek} (Bobot: ${parseFloat(a.bobot).toFixed(0)}%)</td></tr>`;
+                                        aspectScores.forEach(n => {
+                                            let bobotVal = tipe_bobot === 'tunggal' ? (parseFloat(a.bobot) / aspectScores.length) : parseFloat(n.bobot);
+                                            let val = parseFloat(n.nilai);
+                                            let weighted = (val * bobotVal) / 100;
+                                            individualPagesHtml += `
+                                                <tr>
+                                                    <td>${idx_row++}</td>
+                                                    <td class="text-left">${n.nama_indikator}</td>
+                                                    <td>${bobotVal.toFixed(2)}%</td>
+                                                    <td>${val.toFixed(2)}</td>
+                                                    <td class="font-bold">${weighted.toFixed(2)}</td>
+                                                </tr>
+                                            `;
+                                        });
+                                    }
+                                });
 
                                 individualPagesHtml += `
                                                 <tr style="background-color:#f2f2f2;">

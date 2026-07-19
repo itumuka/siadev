@@ -72,6 +72,11 @@
                                                 class="path1"></span><span class="path2"></span></i>Manajemen Skripsi <sup
                                             class="text-danger">(Beta)</sup></a>
                                 </li>
+                                <li class="{{ Route::is('kpskripsi_aspek') ? 'active' : '' }}">
+                                    <a href="{{ route('kpskripsi_aspek') }}"><i class="fa fa-book"><span
+                                                class="path1"></span><span class="path2"></span></i>Master Aspek Penilaian <sup
+                                             class="text-danger">(Beta)</sup></a>
+                                </li>
                                 <li class="{{ Route::is('kpskripsi_rubrik') ? 'active' : '' }}">
                                     <a href="{{ route('kpskripsi_rubrik') }}"><i class="fa fa-sliders"><span
                                                 class="path1"></span><span class="path2"></span></i>Konfigurasi Rubrik

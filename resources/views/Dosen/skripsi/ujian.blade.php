@@ -218,6 +218,7 @@
             var gradeRules = {};
             var currentStudentKodePenilaian = 1;
             var currentTipeBobot = 'indikator';
+            var currentAspects = [];
 
             // Format Helper
             function getRoleLabel(role, isObe) {
@@ -371,84 +372,101 @@
                 // Open modal
                 $('#modal_nilai_ujian').modal('show');
 
-                // Load rubrics for the student's program study and pathway
+                // Load aspects for the student's program study and pathway
                 let jalur = isObe ? 'obe' : 'reguler';
                 $.ajax({
-                    url: "{{ $api_url }}dosen/skripsi/get-rubrik-indikator",
+                    url: "{{ $api_url }}kaprodi/skripsi/get-aspek/" + student.kode_prodi,
                     method: "GET",
                     headers: {
                         "Authorization": 'Bearer ' + token,
                         "username": userlogin
                     },
-                    data: { kode_prodi: student.kode_prodi, jalur: jalur },
-                    success: function(rubricRes) {
-                        if (rubricRes.status === 'success') {
-                            currentRubrics = rubricRes.data;
-                            if (currentRubrics.length > 0) {
-                                currentTipeBobot = currentRubrics[0].tipe_bobot || 'indikator';
-                            }
-                            
-                            // Load existing grades
-                            $.ajax({
-                                url: "{{ $api_url }}dosen/skripsi/get-nilai-ujian-indikator",
-                                method: "GET",
-                                headers: {
-                                    "Authorization": 'Bearer ' + token,
-                                    "username": userlogin
-                                },
-                                data: { id_skripsi_ujian: student.id_skripsi_ujian, id_dosen: id_dosen },
-                                success: function(nilaiRes) {
-                                    var gradesMap = {};
-                                    var existingCatatan = '';
-                                    if (nilaiRes.status === 'success') {
-                                        nilaiRes.data.forEach(function(n) {
-                                            gradesMap[n.id_rubrik_indikator] = n.nilai;
-                                        });
-                                        existingCatatan = nilaiRes.catatan || '';
+                    data: { jalur: jalur },
+                    success: function(aspectsRes) {
+                        currentAspects = aspectsRes.data || [];
+                        
+                        // Load rubrics
+                        $.ajax({
+                            url: "{{ $api_url }}dosen/skripsi/get-rubrik-indikator",
+                            method: "GET",
+                            headers: {
+                                "Authorization": 'Bearer ' + token,
+                                "username": userlogin
+                            },
+                            data: { kode_prodi: student.kode_prodi, jalur: jalur },
+                            success: function(rubricRes) {
+                                if (rubricRes.status === 'success') {
+                                    currentRubrics = rubricRes.data;
+                                    if (currentRubrics.length > 0) {
+                                        currentTipeBobot = currentRubrics[0].tipe_bobot || 'indikator';
                                     }
                                     
-                                    $('#n_catatan').val(existingCatatan);
-                                    renderRubricInputs(currentRubrics, gradesMap);
+                                    // Load existing grades
+                                    $.ajax({
+                                        url: "{{ $api_url }}dosen/skripsi/get-nilai-ujian-indikator",
+                                        method: "GET",
+                                        headers: {
+                                            "Authorization": 'Bearer ' + token,
+                                            "username": userlogin
+                                        },
+                                        data: { id_skripsi_ujian: student.id_skripsi_ujian, id_dosen: id_dosen },
+                                        success: function(nilaiRes) {
+                                            var gradesMap = {};
+                                            var existingCatatan = '';
+                                            if (nilaiRes.status === 'success') {
+                                                nilaiRes.data.forEach(function(n) {
+                                                    gradesMap[n.id_rubrik_indikator] = n.nilai;
+                                                });
+                                                existingCatatan = nilaiRes.catatan || '';
+                                            }
+                                            
+                                            $('#n_catatan').val(existingCatatan);
+                                            renderRubricInputs(currentRubrics, gradesMap);
+                                        }
+                                    });
+                                } else {
+                                    $('#rubrik_inputs_container').html('<div class="alert alert-danger">Gagal memuat rubrik penilaian.</div>');
                                 }
-                            });
-                        } else {
-                            $('#rubrik_inputs_container').html('<div class="alert alert-danger">Gagal memuat rubrik penilaian.</div>');
-                        }
+                            },
+                            error: function() {
+                                $('#rubrik_inputs_container').html('<div class="alert alert-danger">Koneksi API bermasalah.</div>');
+                            }
+                        });
                     },
                     error: function() {
-                        $('#rubrik_inputs_container').html('<div class="alert alert-danger">Koneksi API bermasalah.</div>');
+                        $('#rubrik_inputs_container').html('<div class="alert alert-danger">Gagal memuat aspek penilaian.</div>');
                     }
                 });
             });
 
-            // Render Inputs dynamically, split into Substansi (60%) vs Ujian (40%)
+            // Render Inputs dynamically grouped by Aspect
             function renderRubricInputs(rubrics, gradesMap) {
                 var html = '';
                 
-                var substansiList = rubrics.filter(r => r.aspek === 'substansi');
-                var ujianList = rubrics.filter(r => r.aspek === 'ujian');
-
                 if (rubrics.length === 0) {
                     html = '<div class="alert alert-warning text-center">Belum ada rubrik indikator penilaian aktif untuk program studi ini.</div>';
                     $('#rubrik_inputs_container').html(html);
                     return;
                 }
 
-                // Render Section Substansi
-                if (substansiList.length > 0) {
-                    html += '<div class="aspek-header"><i class="fa fa-book mr-5"></i> Aspek Substansi dan Luaran (Kontribusi: 60%)</div>';
-                    substansiList.forEach(function(r) {
-                        html += renderSingleIndikatorRow(r, gradesMap);
-                    });
+                // If aspects is empty, default it
+                var aspects = currentAspects;
+                if (aspects.length === 0) {
+                    aspects = [
+                        { nama_aspek: 'Substansi dan Luaran', bobot: 60.00 },
+                        { nama_aspek: 'Ujian / Presentasi', bobot: 40.00 }
+                    ];
                 }
 
-                // Render Section Ujian
-                if (ujianList.length > 0) {
-                    html += '<div class="aspek-header"><i class="fa fa-gavel mr-5"></i> Aspek Ujian / Presentasi (Kontribusi: 40%)</div>';
-                    ujianList.forEach(function(r) {
-                        html += renderSingleIndikatorRow(r, gradesMap);
-                    });
-                }
+                aspects.forEach(function(a) {
+                    var aspectRubrics = rubrics.filter(r => r.aspek === a.nama_aspek);
+                    if (aspectRubrics.length > 0) {
+                        html += `<div class="aspek-header"><i class="fa fa-book mr-5"></i> Aspek ${a.nama_aspek} (Kontribusi: ${parseFloat(a.bobot).toFixed(0)}%)</div>`;
+                        aspectRubrics.forEach(function(r) {
+                            html += renderSingleIndikatorRow(r, gradesMap);
+                        });
+                    }
+                });
 
                 $('#rubrik_inputs_container').html(html);
                 
@@ -510,11 +528,22 @@
                 var hasEmpty = false;
 
                 if (currentTipeBobot === 'tunggal') {
-                    // Calculate averages for Substansi and Ujian separately
-                    var substansiSum = 0;
-                    var substansiCount = 0;
-                    var ujianSum = 0;
-                    var ujianCount = 0;
+                    // Group scores by aspect and average them
+                    var aspectSums = {};
+                    var aspectCounts = {};
+                    
+                    var aspects = currentAspects;
+                    if (aspects.length === 0) {
+                        aspects = [
+                            { nama_aspek: 'Substansi dan Luaran', bobot: 60.00 },
+                            { nama_aspek: 'Ujian / Presentasi', bobot: 40.00 }
+                        ];
+                    }
+
+                    aspects.forEach(function(a) {
+                        aspectSums[a.nama_aspek] = 0;
+                        aspectCounts[a.nama_aspek] = 0;
+                    });
 
                     $('.rubric-score-input').each(function() {
                         var id = $(this).data('id');
@@ -523,12 +552,9 @@
 
                         if (!isNaN(val)) {
                             $('#weighted_score_' + id).text(val.toFixed(2));
-                            if (aspek === 'substansi') {
-                                substansiSum += val;
-                                substansiCount++;
-                            } else {
-                                ujianSum += val;
-                                ujianCount++;
+                            if (aspectSums[aspek] !== undefined) {
+                                aspectSums[aspek] += val;
+                                aspectCounts[aspek]++;
                             }
                         } else {
                             $('#weighted_score_' + id).text('0.00');
@@ -536,9 +562,12 @@
                         }
                     });
 
-                    var avgSubstansi = substansiCount > 0 ? (substansiSum / substansiCount) : 0;
-                    var avgUjian = ujianCount > 0 ? (ujianSum / ujianCount) : 0;
-                    total = (avgSubstansi * 0.60) + (avgUjian * 0.40);
+                    aspects.forEach(function(a) {
+                        var count = aspectCounts[a.nama_aspek] || 0;
+                        var sum = aspectSums[a.nama_aspek] || 0;
+                        var avg = count > 0 ? (sum / count) : 0;
+                        total += avg * (parseFloat(a.bobot) / 100);
+                    });
                 } else {
                     // Weighted sum calculation
                     var totalBobotUsed = 0;
@@ -559,16 +588,13 @@
                     });
                 }
 
-                // Display score
+                // Limit display to 2 decimals
+                total = Math.round(total * 100) / 100;
                 $('#lbl_score_total').text(total.toFixed(2));
-                
-                // Live Grade Letter
-                if (!hasEmpty) {
-                    var gradeLetter = calculateGradeLetter(total, currentStudentKodePenilaian);
-                    $('#lbl_grade_letter').text(gradeLetter);
-                } else {
-                    $('#lbl_grade_letter').text('-');
-                }
+
+                // Find letter
+                var letter = calculateGradeLetter(total, currentStudentKodePenilaian);
+                $('#lbl_grade_letter').text(letter);
             }
 
             // Form Submit Value

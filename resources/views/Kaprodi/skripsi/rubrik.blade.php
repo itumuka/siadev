@@ -37,7 +37,7 @@
                                 <i class="fa fa-arrow-left mr-5"></i> Kembali
                             </a>
                         </div>
-                        <p class="mb-0 text-muted">Sesuaikan rubrik penilaian tugas akhir berbasis aspek Substansi (60%) & Ujian (40%) untuk program studi Anda.</p>
+                        <p class="mb-0 text-muted">Sesuaikan rubrik penilaian tugas akhir berbasis aspek & indikator secara dinamis untuk program studi Anda.</p>
                     </div>
                     
                     <div class="box-body">
@@ -61,43 +61,22 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-md-4 d-flex align-items-center justify-content-end">
+                                <a href="{{ route('kpskripsi_aspek') }}" class="btn btn-info btn-sm">
+                                    <i class="fa fa-cog mr-5"></i> Kelola Master Aspek Penilaian
+                                </a>
+                            </div>
                         </div>
 
-                        <!-- Live Accumulator Bar -->
+                        <!-- Live Accumulator Bar Container (Dynamic Aspects) -->
+                        <div class="row mb-20" id="accumulator-container">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                        
                         <div class="row mb-20">
-                            <div class="col-md-6">
-                                <div class="card bg-lighter no-shadow border-1" style="border-radius: 8px;">
-                                    <div class="card-body py-15 px-20">
-                                        <div class="d-flex justify-content-between align-items-center mb-10">
-                                            <h5 class="mb-0 font-weight-600 text-dark">
-                                                <i class="fa fa-calculator text-primary mr-10"></i>Bobot Aspek Substansi
-                                            </h5>
-                                            <h3 id="bobot-substansi-text" class="mb-0 font-weight-700 text-danger">0.00% / 60%</h3>
-                                        </div>
-                                        <div class="progress progress-lg mb-10" style="height: 12px; border-radius: 6px; background-color: #e9ecef;">
-                                            <div id="bobot-substansi-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" style="width: 0%; transition: width 0.3s ease;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="60"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card bg-lighter no-shadow border-1" style="border-radius: 8px;">
-                                    <div class="card-body py-15 px-20">
-                                        <div class="d-flex justify-content-between align-items-center mb-10">
-                                            <h5 class="mb-0 font-weight-600 text-dark">
-                                                <i class="fa fa-calculator text-primary mr-10"></i>Bobot Aspek Ujian / Sidang
-                                            </h5>
-                                            <h3 id="bobot-ujian-text" class="mb-0 font-weight-700 text-danger">0.00% / 40%</h3>
-                                        </div>
-                                        <div class="progress progress-lg mb-10" style="height: 12px; border-radius: 6px; background-color: #e9ecef;">
-                                            <div id="bobot-ujian-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" style="width: 0%; transition: width 0.3s ease;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="40"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="col-12">
                                 <div id="validation-status-alert" class="alert alert-danger py-8 px-15 mb-0 font-weight-600 text-dark border-0" style="border-radius: 6px;">
-                                    <i class="fa fa-warning mr-5 text-danger"></i> Akumulasi bobot Substansi harus 60.00% dan Ujian harus 40.00% untuk disimpan.
+                                    Memuat konfigurasi aspek...
                                 </div>
                             </div>
                         </div>
@@ -109,11 +88,10 @@
                                     <thead class="bg-dark text-white">
                                         <tr>
                                             <th style="width: 5%; text-align: center;">No</th>
-                                            <th style="width: 20%;">Aspek Penilaian <span class="text-danger">*</span></th>
+                                            <th style="width: 25%;">Aspek Penilaian <span class="text-danger">*</span></th>
                                             <th style="width: 15%;">Kode Indikator <span class="text-danger">*</span></th>
                                             <th style="width: 40%;">Nama Indikator / Kriteria Penilaian <span class="text-danger">*</span></th>
-                                            <th style="width: 15%;">Bobot Penilaian <span class="text-danger">*</span></th>
-                                            <th style="width: 10%;">Batas KKM <span class="text-danger">*</span></th>
+                                            <th style="width: 10%;">Bobot Penilaian <span class="text-danger">*</span></th>
                                             <th style="width: 5%; text-align: center;">Aksi</th>
                                         </tr>
                                     </thead>
@@ -170,16 +148,17 @@
         token: "{{ $api_token }}",
         username: "{{ $session_nim }}",
         tahun: "{{ $session_tahun }}",
-        semester: "{{ $session_semester }}"
+        semester: "{{ $session_semester }}",
+        aspects: [] // loaded dynamically
     };
 
     $(document).ready(function () {
         // Load initial data
-        loadIndikatorData();
+        loadAspectsAndIndikators();
 
         // On Jalur change
         $('#select-jalur').on('change', function() {
-            loadIndikatorData();
+            loadAspectsAndIndikators();
         });
 
         // On Tipe Bobot change
@@ -188,9 +167,62 @@
             recalculateTotals();
         });
 
+        function loadAspectsAndIndikators() {
+            let jalur = $('#select-jalur').val();
+            // Fetch aspects first
+            $.ajax({
+                url: CONFIG.api_url + "kaprodi/skripsi/get-aspek/" + CONFIG.kode_prodi + "?jalur=" + jalur,
+                type: "GET",
+                headers: {
+                    "Authorization": "Bearer " + CONFIG.token,
+                    "username": CONFIG.username
+                },
+                success: function(res) {
+                    if (res.status === 'success') {
+                        CONFIG.aspects = res.data || [];
+                        renderAspectCards();
+                        loadIndikatorData();
+                    } else {
+                        swal("Gagal!", "Gagal memuat master aspek penilaian.", "error");
+                    }
+                },
+                error: function() {
+                    swal("Gagal!", "Gagal menghubungi server untuk memuat aspek.", "error");
+                }
+            });
+        }
+
+        function renderAspectCards() {
+            let html = '';
+            let colWidth = CONFIG.aspects.length > 0 ? Math.max(4, Math.floor(12 / CONFIG.aspects.length)) : 6;
+            
+            CONFIG.aspects.forEach(function(a) {
+                let cleanId = a.nama_aspek.replace(/[^a-zA-Z0-9]/g, '_');
+                html += `
+                    <div class="col-md-${colWidth}">
+                        <div class="card bg-lighter no-shadow border-1" style="border-radius: 8px;">
+                            <div class="card-body py-15 px-20">
+                                <div class="d-flex justify-content-between align-items-center mb-10">
+                                    <h5 class="mb-0 font-weight-600 text-dark">
+                                        <i class="fa fa-calculator text-primary mr-10"></i>Bobot ${a.nama_aspek}
+                                    </h5>
+                                    <h3 id="bobot-${cleanId}-text" class="mb-0 font-weight-700 text-danger">0.00% / ${parseFloat(a.bobot).toFixed(0)}%</h3>
+                                </div>
+                                <div class="progress progress-lg mb-10" style="height: 12px; border-radius: 6px; background-color: #e9ecef;">
+                                    <div id="bobot-${cleanId}-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" style="width: 0%; transition: width 0.3s ease;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            $('#accumulator-container').html(html);
+        }
+
         // 1. Fetch current Indikator Rubrics
         function loadIndikatorData() {
-            $('#indikator_rows').html('<tr><td colspan="7" class="text-center py-30 text-muted"><i class="fa fa-spinner fa-spin fa-2x text-primary mr-10"></i> Memuat data rubrik penilaian...</td></tr>');
+            $('#indikator_rows').html('<tr><td colspan="6" class="text-center py-30 text-muted"><i class="fa fa-spinner fa-spin fa-2x text-primary mr-10"></i> Memuat data rubrik penilaian...</td></tr>');
             
             let jalur = $('#select-jalur').val();
             $.ajax({
@@ -224,23 +256,25 @@
         function renderRows(data) {
             let html = '';
             if (!data || data.length === 0) {
-                html = '<tr id="no-data-row"><td colspan="7" class="text-center text-muted py-20">Belum ada rubrik penilaian yang diatur. Klik "Tambah Indikator" untuk menambahkan.</td></tr>';
+                html = '<tr id="no-data-row"><td colspan="6" class="text-center text-muted py-20">Belum ada rubrik penilaian yang diatur. Klik "Tambah Indikator" untuk menambahkan.</td></tr>';
                 $('#indikator_rows').html(html);
                 recalculateTotals();
                 return;
             }
             
             data.forEach((item, index) => {
-                let optSubstansi = item.aspek === 'substansi' ? 'selected' : '';
-                let optUjian = item.aspek === 'ujian' ? 'selected' : '';
+                let selectOptions = '';
+                CONFIG.aspects.forEach(function(a) {
+                    let selected = (item.aspek === a.nama_aspek) ? 'selected' : '';
+                    selectOptions += `<option value="${a.nama_aspek}" ${selected}>${a.nama_aspek} (${parseFloat(a.bobot).toFixed(0)}%)</option>`;
+                });
 
                 html += `
                 <tr class="indikator-row">
                     <td class="row-no text-center font-weight-600">${index + 1}</td>
                     <td>
                         <select class="form-control select-aspek" required>
-                            <option value="substansi" ${optSubstansi}>Substansi dan Luaran (60%)</option>
-                            <option value="ujian" ${optUjian}>Ujian / Sidang (40%)</option>
+                            ${selectOptions}
                         </select>
                     </td>
                     <td>
@@ -256,9 +290,6 @@
                                 <span class="input-group-text font-weight-bold bg-secondary-light">%</span>
                             </div>
                         </div>
-                    </td>
-                    <td>
-                        <input type="number" class="form-control text-right txt-kkm" value="${item.kkm || 70.00}" min="0" max="100" step="0.01" placeholder="70.00" required>
                     </td>
                     <td class="text-center">
                         <button type="button" class="btn btn-sm btn-danger btn-delete-row" title="Hapus Indikator">
@@ -294,26 +325,18 @@
         }
 
         function redistributeTunggalWeights() {
-            let substansiRows = $('#indikator_rows tr.indikator-row').filter(function() {
-                return $(this).find('.select-aspek').val() === 'substansi';
-            });
-            let ujianRows = $('#indikator_rows tr.indikator-row').filter(function() {
-                return $(this).find('.select-aspek').val() === 'ujian';
-            });
-
-            if (substansiRows.length > 0) {
-                let share = (60.00 / substansiRows.length).toFixed(2);
-                substansiRows.each(function() {
-                    $(this).find('.txt-bobot').val(share);
+            CONFIG.aspects.forEach(function(a) {
+                let matchingRows = $('#indikator_rows tr.indikator-row').filter(function() {
+                    return $(this).find('.select-aspek').val() === a.nama_aspek;
                 });
-            }
 
-            if (ujianRows.length > 0) {
-                let share = (40.00 / ujianRows.length).toFixed(2);
-                ujianRows.each(function() {
-                    $(this).find('.txt-bobot').val(share);
-                });
-            }
+                if (matchingRows.length > 0) {
+                    let share = (parseFloat(a.bobot) / matchingRows.length).toFixed(2);
+                    matchingRows.each(function() {
+                        $(this).find('.txt-bobot').val(share);
+                    });
+                }
+            });
         }
 
         // 5. Live calculate total weights & state styling
@@ -323,71 +346,71 @@
                 redistributeTunggalWeights();
             }
 
-            let totalSubstansi = 0;
-            let totalUjian = 0;
+            let totals = {};
+            CONFIG.aspects.forEach(function(a) {
+                totals[a.nama_aspek] = 0;
+            });
 
             $('#indikator_rows tr.indikator-row').each(function() {
                 let aspek = $(this).find('.select-aspek').val();
                 let bobot = parseFloat($(this).find('.txt-bobot').val());
                 if (!isNaN(bobot)) {
-                    if (aspek === 'substansi') {
-                        totalSubstansi += bobot;
-                    } else {
-                        totalUjian += bobot;
+                    if (totals[aspek] !== undefined) {
+                        totals[aspek] += bobot;
                     }
                 }
             });
             
-            totalSubstansi = Math.round(totalSubstansi * 100) / 100;
-            totalUjian = Math.round(totalUjian * 100) / 100;
-            
-            $('#bobot-substansi-text').text(totalSubstansi.toFixed(2) + '% / 60%');
-            $('#bobot-ujian-text').text(totalUjian.toFixed(2) + '% / 40%');
-            
-            let barSubstansi = Math.min((totalSubstansi / 60.00) * 100, 100);
-            let barUjian = Math.min((totalUjian / 40.00) * 100, 100);
-            
-            $('#bobot-substansi-bar').css('width', barSubstansi + '%');
-            $('#bobot-ujian-bar').css('width', barUjian + '%');
+            let allValid = true;
+            let missingAspects = [];
 
-            // Substansi styling
-            if (Math.abs(totalSubstansi - 60.00) < 0.1) {
-                $('#bobot-substansi-text').removeClass('text-danger').addClass('text-success');
-                $('#bobot-substansi-bar').removeClass('bg-danger').addClass('bg-success');
-            } else {
-                $('#bobot-substansi-text').removeClass('text-success').addClass('text-danger');
-                $('#bobot-substansi-bar').removeClass('bg-success').addClass('bg-danger');
-            }
+            CONFIG.aspects.forEach(function(a) {
+                let cleanId = a.nama_aspek.replace(/[^a-zA-Z0-9]/g, '_');
+                let subTotal = Math.round(totals[a.nama_aspek] * 100) / 100;
+                let target = parseFloat(a.bobot);
 
-            // Ujian styling
-            if (Math.abs(totalUjian - 40.00) < 0.1) {
-                $('#bobot-ujian-text').removeClass('text-danger').addClass('text-success');
-                $('#bobot-ujian-bar').removeClass('bg-danger').addClass('bg-success');
-            } else {
-                $('#bobot-ujian-text').removeClass('text-success').addClass('text-danger');
-                $('#bobot-ujian-bar').removeClass('bg-success').addClass('bg-danger');
-            }
+                $(`#bobot-${cleanId}-text`).text(subTotal.toFixed(2) + '% / ' + target.toFixed(0) + '%');
+                let barPct = Math.min((subTotal / target) * 100, 100);
+                $(`#bobot-${cleanId}-bar`).css('width', barPct + '%');
 
-            // Global Validation Status Alert
-            let countSubstansi = $('#indikator_rows tr.indikator-row').filter(function() {
-                return $(this).find('.select-aspek').val() === 'substansi';
-            }).length;
-            
-            let countUjian = $('#indikator_rows tr.indikator-row').filter(function() {
-                return $(this).find('.select-aspek').val() === 'ujian';
-            }).length;
+                if (Math.abs(subTotal - target) < 0.1) {
+                    $(`#bobot-${cleanId}-text`).removeClass('text-danger').addClass('text-success');
+                    $(`#bobot-${cleanId}-bar`).removeClass('bg-danger').addClass('bg-success');
+                } else {
+                    $(`#bobot-${cleanId}-text`).removeClass('text-success').addClass('text-danger');
+                    $(`#bobot-${cleanId}-bar`).removeClass('bg-success').addClass('bg-danger');
+                    allValid = false;
+                }
 
-            if (countSubstansi === 0 || countUjian === 0) {
+                // Check count of rows in this aspect
+                let count = $('#indikator_rows tr.indikator-row').filter(function() {
+                    return $(this).find('.select-aspek').val() === a.nama_aspek;
+                }).length;
+                if (count === 0) {
+                    missingAspects.push(a.nama_aspek);
+                }
+            });
+
+            if (CONFIG.aspects.length === 0) {
                 $('#validation-status-alert').removeClass('alert-success alert-warning').addClass('alert-danger')
-                    .html('<i class="fa fa-times-circle mr-5 text-danger"></i> Minimal harus memiliki 1 Indikator untuk masing-masing aspek (Substansi & Ujian).');
+                    .html('<i class="fa fa-times-circle mr-5 text-danger"></i> Silakan atur Master Aspek Penilaian terlebih dahulu.');
                 $('#btn-save-indikator').attr('disabled', 'disabled');
-            } else if (Math.abs(totalSubstansi - 60.00) < 0.1 && Math.abs(totalUjian - 40.00) < 0.1) {
+                return;
+            }
+
+            if (missingAspects.length > 0) {
+                $('#validation-status-alert').removeClass('alert-success alert-warning').addClass('alert-danger')
+                    .html('<i class="fa fa-times-circle mr-5 text-danger"></i> Minimal harus memiliki 1 Indikator untuk aspek: ' + missingAspects.join(', ') + '.');
+                $('#btn-save-indikator').attr('disabled', 'disabled');
+            } else if (allValid) {
+                let infoText = CONFIG.aspects.map(a => `${a.nama_aspek} ${parseFloat(a.bobot).toFixed(0)}%`).join(' & ');
                 $('#validation-status-alert').removeClass('alert-danger alert-warning').addClass('alert-success')
-                    .html('<i class="fa fa-check-circle mr-5 text-success"></i> Akumulasi bobot sudah sesuai (Substansi 60% & Ujian 40%). Konfigurasi siap disimpan.');
+                    .html('<i class="fa fa-check-circle mr-5 text-success"></i> Akumulasi bobot sudah sesuai (' + infoText + '). Konfigurasi siap disimpan.');
                 $('#btn-save-indikator').removeAttr('disabled');
             } else {
+                let infoText = CONFIG.aspects.map(a => `${a.nama_aspek} harus ${parseFloat(a.bobot).toFixed(0)}%`).join(' dan ');
                 $('#validation-status-alert').removeClass('alert-success alert-success').addClass('alert-danger')
-                    .html('<i class="fa fa-warning mr-5 text-danger"></i> Total bobot belum tepat (Substansi harus 60% dan Ujian harus 40%).');
+                    .html('<i class="fa fa-warning mr-5 text-danger"></i> Total bobot belum tepat (' + infoText + ').');
                 $('#btn-save-indikator').attr('disabled', 'disabled');
             }
         }
@@ -408,13 +431,17 @@
             let rowCount = $('#indikator_rows tr.indikator-row').length + 1;
             let suggestedCode = "IND-" + rowCount;
 
+            let selectOptions = '';
+            CONFIG.aspects.forEach(function(a) {
+                selectOptions += `<option value="${a.nama_aspek}">${a.nama_aspek} (${parseFloat(a.bobot).toFixed(0)}%)</option>`;
+            });
+
             let newRow = `
             <tr class="indikator-row animate-fade-in">
                 <td class="row-no text-center font-weight-600">${rowCount}</td>
                 <td>
                     <select class="form-control select-aspek" required>
-                        <option value="substansi" selected>Substansi dan Luaran (60%)</option>
-                        <option value="ujian">Ujian / Sidang (40%)</option>
+                        ${selectOptions}
                     </select>
                 </td>
                 <td>
@@ -430,9 +457,6 @@
                             <span class="input-group-text font-weight-bold bg-secondary-light">%</span>
                         </div>
                     </div>
-                </td>
-                <td>
-                    <input type="number" class="form-control text-right txt-kkm" value="70.00" min="0" max="100" step="0.01" placeholder="70.00" required>
                 </td>
                 <td class="text-center">
                     <button type="button" class="btn btn-sm btn-danger btn-delete-row" title="Hapus Indikator">
@@ -455,7 +479,7 @@
             row.remove();
             
             if ($('#indikator_rows tr.indikator-row').length === 0) {
-                let html = '<tr id="no-data-row"><td colspan="7" class="text-center text-muted py-20">Belum ada rubrik penilaian yang diatur. Klik "Tambah Indikator" untuk menambahkan.</td></tr>';
+                let html = '<tr id="no-data-row"><td colspan="6" class="text-center text-muted py-20">Belum ada rubrik penilaian yang diatur. Klik "Tambah Indikator" untuk menambahkan.</td></tr>';
                 $('#indikator_rows').html(html);
             } else {
                 updateRowNumbers();
@@ -485,8 +509,6 @@
                 let nama_indikator = $(this).find('.txt-nama-indikator').val().trim();
                 let bobotVal = $(this).find('.txt-bobot').val();
                 let bobot = parseFloat(bobotVal);
-                let kkmVal = $(this).find('.txt-kkm').val();
-                let kkm = parseFloat(kkmVal);
                 
                 if (kode_indikator === "") {
                     $(this).find('.txt-kode-indikator').addClass('is-invalid');
@@ -500,17 +522,12 @@
                     $(this).find('.txt-bobot').addClass('is-invalid');
                     isValid = false;
                 }
-                if (isNaN(kkm) || kkm < 0 || kkm > 100) {
-                    $(this).find('.txt-kkm').addClass('is-invalid');
-                    isValid = false;
-                }
                 
                 rubrik.push({
                     aspek: aspek,
                     kode_indikator: kode_indikator,
                     nama_indikator: nama_indikator,
-                    bobot: bobot,
-                    kkm: kkm
+                    bobot: bobot
                 });
             });
             
@@ -550,7 +567,7 @@
                         success: function(res) {
                             btn.removeAttr('disabled').html(oldHtml);
                             swal("Berhasil!", "Konfigurasi rubrik penilaian berhasil disimpan.", "success");
-                            loadIndikatorData();
+                            loadAspectsAndIndikators();
                         },
                         error: function(err) {
                             btn.removeAttr('disabled').html(oldHtml);
@@ -602,7 +619,7 @@
                         success: function(res) {
                             btn.removeAttr('disabled').html(oldHtml);
                             swal("Berhasil!", "Rubrik penilaian berhasil dikembalikan ke default.", "success");
-                            loadIndikatorData();
+                            loadAspectsAndIndikators();
                         },
                         error: function(err) {
                             btn.removeAttr('disabled').html(oldHtml);
