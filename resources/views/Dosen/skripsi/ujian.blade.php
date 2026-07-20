@@ -159,6 +159,18 @@
 
                                         <hr class="my-4">
 
+                                        <!-- Keputusan Ujian Sidang (Khusus Ketua Penguji / Penguji 1) -->
+                                        <div class="form-group mb-4 p-3 bg-light border rounded border-warning" id="group_keputusan" style="display: none;">
+                                            <label class="font-weight-bold text-dark"><i class="fa fa-gavel text-warning mr-1"></i> Keputusan Ujian Sidang (Khusus Ketua Penguji)</label>
+                                            <select name="keputusan" id="n_keputusan" class="form-control font-weight-bold border-warning text-dark">
+                                                <option value="lulus_tanpa_perbaikan">Lulus Tanpa Perbaikan</option>
+                                                <option value="lulus_dengan_perbaikan" selected>Lulus dengan Perbaikan</option>
+                                                <option value="tidak_lulus_ujian_ulang">Tidak Lulus dengan Ujian Ulang</option>
+                                                <option value="tidak_lulus_judul_baru">Tidak Lulus dengan Menulis Skripsi Judul Baru</option>
+                                            </select>
+                                            <small class="form-text text-muted mt-1"><i class="fa fa-info-circle"></i> Ketua Penguji menentukan status keputusan akhir ujian mahasiswa.</small>
+                                        </div>
+
                                         <!-- Catatan -->
                                         <div class="form-group">
                                             <label class="font-weight-bold text-dark" id="lbl_catatan">Catatan / Rekomendasi Ujian</label>
@@ -376,6 +388,12 @@
                     $('#rubrik_panel_title').text('Rubrik Indikator Penilaian Ujian');
                     $('#lbl_catatan').text('Catatan & Masukan Dosen Penguji');
                     $('#n_catatan').attr('placeholder', 'Tuliskan revisi, masukan, atau catatan khusus jalannya ujian sidang...');
+                }
+
+                if (student.role_dosen === 'penguji1') {
+                    $('#group_keputusan').show();
+                } else {
+                    $('#group_keputusan').hide();
                 }
 
                 // Render dynamic grade scale

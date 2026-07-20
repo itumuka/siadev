@@ -794,18 +794,29 @@
                             `);
 
                             // Check dynamic status box
-                            let catatanText = (ba && ba.catatan) ? ba.catatan.toLowerCase() : '';
-                            if (u.status === 'lulus') {
-                                if (catatanText.trim() === '' || catatanText.includes('tidak ada') || catatanText.includes('tanpa revisi') || catatanText.includes('tanpa perbaikan') || catatanText.includes('tanpa revisi')) {
-                                    $('#cb_lulus_tanpa_perbaikan').html('✓');
-                                } else {
-                                    $('#cb_lulus_dengan_perbaikan').html('✓');
-                                }
-                            } else if (u.status === 'tidak_lulus') {
-                                if (catatanText.includes('judul baru') || catatanText.includes('menulis baru') || catatanText.includes('ganti judul')) {
-                                    $('#cb_tidak_lulus_judul_baru').html('✓');
-                                } else {
-                                    $('#cb_tidak_lulus_ujian_ulang').html('✓');
+                            let keputusanVal = (ba && ba.keputusan) ? ba.keputusan : null;
+                            if (keputusanVal === 'lulus_tanpa_perbaikan') {
+                                $('#cb_lulus_tanpa_perbaikan').html('✓');
+                            } else if (keputusanVal === 'lulus_dengan_perbaikan') {
+                                $('#cb_lulus_dengan_perbaikan').html('✓');
+                            } else if (keputusanVal === 'tidak_lulus_ujian_ulang') {
+                                $('#cb_tidak_lulus_ujian_ulang').html('✓');
+                            } else if (keputusanVal === 'tidak_lulus_judul_baru') {
+                                $('#cb_tidak_lulus_judul_baru').html('✓');
+                            } else {
+                                let catatanText = (ba && ba.catatan) ? ba.catatan.toLowerCase() : '';
+                                if (u.status === 'lulus' || u.status === 'ditetapkan') {
+                                    if (catatanText.trim() === '' || catatanText.includes('tidak ada') || catatanText.includes('tanpa revisi') || catatanText.includes('tanpa perbaikan')) {
+                                        $('#cb_lulus_tanpa_perbaikan').html('✓');
+                                    } else {
+                                        $('#cb_lulus_dengan_perbaikan').html('✓');
+                                    }
+                                } else if (u.status === 'tidak_lulus') {
+                                    if (catatanText.includes('judul baru') || catatanText.includes('menulis baru') || catatanText.includes('ganti judul')) {
+                                        $('#cb_tidak_lulus_judul_baru').html('✓');
+                                    } else {
+                                        $('#cb_tidak_lulus_ujian_ulang').html('✓');
+                                    }
                                 }
                             }
 

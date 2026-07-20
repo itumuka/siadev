@@ -549,14 +549,13 @@
                             if (u.status === 'menunggu_penetapan') {
                                 if (allSigned) {
                                     $('#action_button_container').html(`
-                                        <button class="btn btn-success btn-tetapkan" data-id="${u.id}" data-status="lulus"><i class="fa fa-check"></i> Tetapkan Lulus</button>
-                                        <button class="btn btn-danger btn-tetapkan" data-id="${u.id}" data-status="tidak_lulus"><i class="fa fa-times"></i> Tetapkan Tidak Lulus</button>
+                                        <button class="btn btn-success btn-tetapkan" data-id="${u.id}"><i class="fa fa-check"></i> Sahkan & Tanda Tangani Berita Acara</button>
                                     `);
                                 } else {
-                                    $('#action_button_container').html('<button class="btn btn-secondary" disabled title="Semua penguji harus menandatangani digital sebelum penetapan"><i class="fa fa-lock"></i> Menunggu TTD Semua Penguji</button>');
+                                    $('#action_button_container').html('<button class="btn btn-secondary" disabled title="Semua penguji harus menandatangani digital sebelum pengesahan"><i class="fa fa-lock"></i> Menunggu TTD Semua Penguji</button>');
                                 }
                             } else {
-                                $('#action_button_container').html('<span class="text-success font-weight-bold"><i class="fa fa-lock"></i> Nilai Sudah Resmi Ditetapkan & Tersinkron ke Transkrip</span>');
+                                $('#action_button_container').html('<span class="text-success font-weight-bold"><i class="fa fa-lock"></i> Berita Acara Sudah Difinalisasi & Tersinkron ke Transkrip</span>');
                             }
 
                             $('#modal_tetapkan_nilai').modal('show');
@@ -573,18 +572,15 @@
             // Handle Tetapkan Click
             $(document).on('click', '.btn-tetapkan', function() {
                 const id_skripsi_ujian = $(this).data('id');
-                const status = $(this).data('status');
-                const statusLabel = status === 'lulus' ? 'LULUS' : 'TIDAK LULUS';
-                const statusColor = status === 'lulus' ? '#28a745' : '#dc3545';
 
                 swal({
-                    title: "Konfirmasi Penetapan Nilai",
-                    text: `Apakah Anda yakin ingin menetapkan status ujian mahasiswa ini sebagai ${statusLabel}? Nilai akhir akan disinkronisasikan ke transkrip akademik secara resmi.`,
-                    type: "warning",
+                    title: "Konfirmasi Pengesahan Berita Acara",
+                    text: `Apakah Anda menyetujui dan mengesahkan Berita Acara sidang ini secara digital? Nilai akhir akan disinkronisasikan ke transkrip akademik secara resmi.`,
+                    type: "info",
                     showCancelButton: true,
-                    confirmButtonColor: statusColor,
+                    confirmButtonColor: "#28a745",
                     cancelButtonColor: "#6c757d",
-                    confirmButtonText: `Ya, Tetapkan ${statusLabel}`,
+                    confirmButtonText: `Ya, Sahkan & TTD`,
                     cancelButtonText: "Batal"
                 }, function(isConfirm) {
                     if (isConfirm) {
@@ -596,11 +592,10 @@
                                 "username": userlogin
                             },
                             data: {
-                                id_skripsi_ujian: id_skripsi_ujian,
-                                status: status
+                                id_skripsi_ujian: id_skripsi_ujian
                             },
                             success: function(res) {
-                                swal("Berhasil", "Penetapan nilai skripsi berhasil disimpan dan disinkronkan ke transkrip.", "success");
+                                swal("Berhasil", "Berita Acara berhasil disahkan dan disinkronkan ke transkrip.", "success");
                                 $('#modal_tetapkan_nilai').modal('hide');
                                 table.ajax.reload();
                             },
