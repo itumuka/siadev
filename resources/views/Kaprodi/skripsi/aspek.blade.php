@@ -112,7 +112,7 @@
                     
                     <div class="form-group">
                         <label class="font-weight-600 text-dark">Nama Aspek Penilaian</label>
-                        <input type="text" class="form-control" id="aspek-nama" name="nama_aspek" required placeholder="Contoh: Substansi dan Luaran, Ujian/Presentasi">
+                        <input type="text" class="form-control" id="aspek-nama" name="nama_aspek" required maxlength="100" placeholder="Contoh: Substansi dan Luaran, Ujian/Presentasi">
                     </div>
 
                     <div class="form-group">
