@@ -162,13 +162,16 @@
                                         <!-- Keputusan Ujian Sidang (Khusus Ketua Penguji / Penguji 1) -->
                                         <div class="form-group mb-4 p-3 bg-light border rounded border-warning" id="group_keputusan" style="display: none;">
                                             <label class="font-weight-bold text-dark"><i class="fa fa-gavel text-warning mr-1"></i> Keputusan Ujian Sidang (Khusus Ketua Penguji)</label>
-                                            <select name="keputusan" id="n_keputusan" class="form-control font-weight-bold border-warning text-dark">
+                                            <select name="keputusan" id="n_keputusan" class="form-control font-weight-bold border-warning text-dark mb-3">
                                                 <option value="lulus_tanpa_perbaikan">Lulus Tanpa Perbaikan</option>
                                                 <option value="lulus_dengan_perbaikan" selected>Lulus dengan Perbaikan</option>
                                                 <option value="tidak_lulus_ujian_ulang">Tidak Lulus dengan Ujian Ulang</option>
                                                 <option value="tidak_lulus_judul_baru">Tidak Lulus dengan Menulis Skripsi Judul Baru</option>
                                             </select>
-                                            <small class="form-text text-muted mt-1"><i class="fa fa-info-circle"></i> Ketua Penguji menentukan status keputusan akhir ujian mahasiswa.</small>
+
+                                            <label class="font-weight-bold text-dark mt-2"><i class="fa fa-calendar text-danger mr-1"></i> Batas Tanggal Revisi / Perbaikan</label>
+                                            <input type="date" name="batas_revisi" id="n_batas_revisi" class="form-control border-secondary">
+                                            <small class="form-text text-muted mt-1"><i class="fa fa-info-circle"></i> Tentukan batas akhir penyerahan revisi (otomatis 14 hari dari hari ini jika kosong).</small>
                                         </div>
 
                                         <!-- Catatan -->
@@ -474,6 +477,17 @@
                                                     if (nilaiRes.berita_acara.keputusan) {
                                                         $('#n_keputusan').val(nilaiRes.berita_acara.keputusan);
                                                     }
+                                                    if (nilaiRes.berita_acara.batas_revisi) {
+                                                        $('#n_batas_revisi').val(nilaiRes.berita_acara.batas_revisi);
+                                                    } else {
+                                                        let d = new Date();
+                                                        d.setDate(d.getDate() + 14);
+                                                        $('#n_batas_revisi').val(d.toISOString().split('T')[0]);
+                                                    }
+                                                } else {
+                                                    let d = new Date();
+                                                    d.setDate(d.getDate() + 14);
+                                                    $('#n_batas_revisi').val(d.toISOString().split('T')[0]);
                                                 }
                                             }
                                             

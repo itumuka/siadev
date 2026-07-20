@@ -477,7 +477,13 @@
                             ];
 
                             // 1. Populate Page 1 Header & Info
-                            $('#header_fakultas').text(u.nama_fakultas ? u.nama_fakultas.toUpperCase() : 'FAKULTAS');
+                            let namaFakultasDisplay = u.nama_fakultas ? u.nama_fakultas.trim().toUpperCase() : 'FAKULTAS';
+                            if (namaFakultasDisplay && !namaFakultasDisplay.startsWith('FAKULTAS')) {
+                                namaFakultasDisplay = 'FAKULTAS ' + namaFakultasDisplay;
+                            }
+
+                            // 1. Populate Page 1 Header & Info
+                            $('#header_fakultas').text(namaFakultasDisplay);
                             $('#ba_title').text(isObe ? 'BERITA ACARA UJIAN SIDANG SKRIPSI BERBASIS OBE' : 'BERITA ACARA UJIAN SIDANG SKRIPSI');
                             $('#ba_nomor').text(ba && ba.id ? `BA/SKR/${ba.id}/${new Date(u.tanggal_ujian).getFullYear()}` : '___/___/___/2026');
                             $('#ba_hari_tanggal_indo').text(dateToIndonesianText(u.tanggal_ujian));
@@ -571,6 +577,24 @@
                                     </tr>
                                 `;
 
+                                let keputusanTextLabel = '-';
+                                let keputusanVal = (ba && ba.keputusan) ? ba.keputusan : null;
+                                if (keputusanVal === 'lulus_tanpa_perbaikan') keputusanTextLabel = 'Lulus Tanpa Perbaikan';
+                                else if (keputusanVal === 'lulus_dengan_perbaikan') keputusanTextLabel = 'Lulus dengan Perbaikan';
+                                else if (keputusanVal === 'tidak_lulus_ujian_ulang') keputusanTextLabel = 'Tidak Lulus dengan Ujian Ulang';
+                                else if (keputusanVal === 'tidak_lulus_judul_baru') keputusanTextLabel = 'Tidak Lulus dengan Menulis Skripsi Judul Baru';
+                                else if (u.status === 'lulus' || u.status === 'ditetapkan') keputusanTextLabel = 'Lulus';
+                                else if (u.status === 'tidak_lulus') keputusanTextLabel = 'Tidak Lulus';
+
+                                let batasRevisiDisplay = '-';
+                                if (ba && ba.batas_revisi) {
+                                    batasRevisiDisplay = formatLongDate(ba.batas_revisi);
+                                } else if (u.tanggal_ujian) {
+                                    let dt = new Date(u.tanggal_ujian);
+                                    dt.setDate(dt.getDate() + 14);
+                                    batasRevisiDisplay = formatLongDate(dt);
+                                }
+
                                 // Construct individual scoring page (Page 2+)
                                 individualPagesHtml += `
                                     <div class="page-break">
@@ -582,7 +606,7 @@
                                                 </td>
                                                 <td>
                                                     <div class="header-text">UNIVERSITAS MUHAMMADIYAH KARANGANYAR</div>
-                                                    <div class="header-text" style="font-size: 12pt; margin-top: 2px;">${u.nama_fakultas ? u.nama_fakultas.toUpperCase() : 'FAKULTAS'}</div>
+                                                    <div class="header-text" style="font-size: 12pt; margin-top: 2px;">${namaFakultasDisplay}</div>
                                                     <div class="header-subtext">
                                                         Jl. Raya Solo-Tawangmangu Km 12, Papahan, Kec. Tasikmadu, Kabupaten Karanganyar, Jawa Tengah 57722
                                                     </div>
@@ -590,26 +614,65 @@
                                             </tr>
                                         </table>
 
-                                        <div class="title">FORM PENILAIAN UJIAN SKRIPSI</div>
+                                        <div class="title" style="margin-top: 10px;">PENILAIAN UJIAN SKRIPSI</div>
                                         
-                                        <table class="meta-table" style="margin-left: 10px;">
+                                        <!-- A. JUDUL SKRIPSI -->
+                                        <div class="font-bold text-dark" style="margin-top: 10px; margin-bottom: 2px; font-size: 9.5pt;">A. JUDUL SKRIPSI</div>
+                                        <div style="font-style: italic; font-weight: bold; margin-left: 15px; margin-bottom: 8px; font-size: 9.5pt;">
+                                            "${u.judul || '-'}"
+                                        </div>
+
+                                        <!-- B. IDENTITAS MAHASISWA -->
+                                        <div class="font-bold text-dark" style="margin-bottom: 2px; font-size: 9.5pt;">B. IDENTITAS MAHASISWA</div>
+                                        <table class="meta-table" style="margin-left: 15px; margin-bottom: 8px;">
                                             <tr>
-                                                <td class="meta-label">Nama Mahasiswa</td>
-                                                <td class="meta-separator">:</td>
-                                                <td class="meta-value font-bold">${u.nama_mahasiswa}</td>
+                                                <td style="width: 170px;">1. Nama</td>
+                                                <td style="width: 10px;">:</td>
+                                                <td class="font-bold">${u.nama_mahasiswa}</td>
                                             </tr>
                                             <tr>
-                                                <td class="meta-label">NIM</td>
-                                                <td class="meta-separator">:</td>
-                                                <td class="meta-value font-bold">${u.nim}</td>
+                                                <td>2. NIM</td>
+                                                <td>:</td>
+                                                <td class="font-bold">${u.nim}</td>
                                             </tr>
                                             <tr>
-                                                <td class="meta-label">Judul Skripsi</td>
-                                                <td class="meta-separator">:</td>
-                                                <td class="meta-value font-bold" style="font-style: italic;">${u.judul || '-'}</td>
+                                                <td>3. Program Studi</td>
+                                                <td>:</td>
+                                                <td class="font-bold">${u.nama_program_studi || '-'}</td>
                                             </tr>
                                         </table>
 
+                                        <!-- C. HASIL UJIAN -->
+                                        <div class="font-bold text-dark" style="margin-bottom: 2px; font-size: 9.5pt;">C. HASIL UJIAN</div>
+                                        <table class="meta-table" style="margin-left: 15px; margin-bottom: 12px;">
+                                            <tr>
+                                                <td style="width: 170px;">1. Hari, Tanggal</td>
+                                                <td style="width: 10px;">:</td>
+                                                <td class="font-bold">${formatLongDate(u.tanggal_ujian)}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2. Pukul</td>
+                                                <td>:</td>
+                                                <td class="font-bold">${u.jam_ujian || u.jam_mulai ? (u.jam_mulai ? u.jam_mulai.substring(0, 5) : u.jam_ujian) + ' WIB' : '-'}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3. Tempat Ujian</td>
+                                                <td>:</td>
+                                                <td class="font-bold">${u.ruang_ujian || u.ruang || '-'}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>4. Keputusan Hasil Ujian</td>
+                                                <td>:</td>
+                                                <td class="font-bold text-success">${keputusanTextLabel}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>5. Batas Tanggal Revisi</td>
+                                                <td>:</td>
+                                                <td class="font-bold text-danger">${batasRevisiDisplay}</td>
+                                            </tr>
+                                        </table>
+
+                                        <div class="font-bold text-dark" style="margin-bottom: 4px; font-size: 9.5pt;">D. RINCIAN KRITERIA & PENILAIAN</div>
                                         <table class="score-table">
                                             <thead>
                                                 <tr>
