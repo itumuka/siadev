@@ -545,7 +545,7 @@
                             aspectRubrics.forEach(function(r) {
                                 html += `
                                     <li class="mb-5">
-                                        <strong>${r.kode_indikator}</strong> - ${r.nama_indikator}
+                                        ${r.nama_indikator}
                                         <input type="hidden" 
                                                name="nilai[${r.id}]" 
                                                class="rubric-score-input" 
@@ -616,7 +616,6 @@
                 <div class="form-group row align-items-center mb-3 py-2 border-bottom">
                     <div class="col-md-7">
                         <label class="font-weight-bold text-dark mb-0">
-                            <span class="badge badge-secondary mr-2">${r.kode_indikator}</span> 
                             ${r.nama_indikator}
                         </label>
                         <div class="small text-muted mt-1">Bobot kriteria ini: <strong>${bobotText}</strong></div>
