@@ -492,6 +492,8 @@
                     ];
                 }
 
+                var isTunggal = (currentTipeBobot === 'tunggal');
+
                 aspects.forEach(function(a) {
                     var aspectRubrics = rubrics.filter(function(r) {
                         let isMatch = false;
@@ -506,11 +508,66 @@
                         }
                         return isMatch;
                     });
+
                     if (aspectRubrics.length > 0) {
-                        html += `<div class="aspek-header"><i class="fa fa-book mr-5"></i> Aspek ${a.nama_aspek} (Kontribusi: ${parseFloat(a.bobot).toFixed(0)}%)</div>`;
-                        aspectRubrics.forEach(function(r) {
-                            html += renderSingleIndikatorRow(r, gradesMap);
-                        });
+                        if (isTunggal) {
+                            var firstRubricId = aspectRubrics[0].id;
+                            var aspectValue = gradesMap[firstRubricId] !== undefined ? gradesMap[firstRubricId] : '';
+
+                            html += `
+                            <div class="card mb-3 border-primary shadow-none">
+                                <div class="card-header bg-primary-light d-flex justify-content-between align-items-center py-10">
+                                    <h5 class="card-title text-dark mb-0 font-weight-bold">
+                                        <i class="fa fa-book mr-5"></i> Aspek ${a.nama_aspek} (Bobot: ${parseFloat(a.bobot).toFixed(0)}%)
+                                    </h5>
+                                    <div style="width: 150px;">
+                                        <div class="input-group input-group-sm">
+                                            <input type="number" 
+                                                   class="form-control border-primary aspect-score-input font-weight-bold" 
+                                                   data-aspect-name="${a.nama_aspek}"
+                                                   min="0" 
+                                                   max="100" 
+                                                   step="0.01" 
+                                                   value="${aspectValue}" 
+                                                   placeholder="Nilai 0-100" 
+                                                   required>
+                                            <div class="input-group-append">
+                                                <span class="input-group-text bg-light font-weight-bold">/ 100</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body p-10 bg-white">
+                                    <span class="text-muted small d-block mb-10"><i class="fa fa-info-circle"></i> Nilai aspek ini akan otomatis mengisi semua kriteria penilaian berikut:</span>
+                                    <ul class="pl-20 mb-0 text-dark small" style="line-height: 1.5;">
+                            `;
+
+                            aspectRubrics.forEach(function(r) {
+                                html += `
+                                    <li class="mb-5">
+                                        <strong>${r.kode_indikator}</strong> - ${r.nama_indikator}
+                                        <input type="hidden" 
+                                               name="nilai[${r.id}]" 
+                                               class="rubric-score-input" 
+                                               data-id="${r.id}" 
+                                               data-bobot="${r.bobot}" 
+                                               data-aspek="${r.aspek}" 
+                                               value="${aspectValue}">
+                                    </li>
+                                `;
+                            });
+
+                            html += `
+                                    </ul>
+                                </div>
+                            </div>
+                            `;
+                        } else {
+                            html += `<div class="aspek-header"><i class="fa fa-book mr-5"></i> Aspek ${a.nama_aspek} (Kontribusi: ${parseFloat(a.bobot).toFixed(0)}%)</div>`;
+                            aspectRubrics.forEach(function(r) {
+                                html += renderSingleIndikatorRow(r, gradesMap);
+                            });
+                        }
                     }
                 });
 
@@ -519,12 +576,34 @@
                 // Recalculate initially
                 recalculateTotalScore();
 
-                // Bind live update keyup/change
+                // Bind live update keyup/change for standard inputs
                 $('.rubric-score-input').on('input change', function() {
                     var val = parseFloat($(this).val());
                     if (val > 100) $(this).val(100);
                     if (val < 0 || isNaN(val)) $(this).val('');
                     
+                    recalculateTotalScore();
+                });
+
+                // Bind live update keyup/change for aspect-level inputs (tunggal)
+                $('.aspect-score-input').on('input change', function() {
+                    var val = $(this).val();
+                    var valFloat = parseFloat(val);
+                    if (valFloat > 100) {
+                        $(this).val(100);
+                        val = '100';
+                    }
+                    if (valFloat < 0) {
+                        $(this).val(0);
+                        val = '0';
+                    }
+                    var aspectName = $(this).data('aspect-name');
+                    
+                    // Propagate value to hidden rubric-score-inputs
+                    $('#rubrik_inputs_container').find(`.rubric-score-input[data-aspek="${aspectName}"]`).each(function() {
+                        $(this).val(val);
+                    });
+
                     recalculateTotalScore();
                 });
             }
