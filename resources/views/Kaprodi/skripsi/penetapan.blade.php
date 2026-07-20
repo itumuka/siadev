@@ -398,7 +398,7 @@
                             const data = res.data;
                             const u = data.ujian;
                             const ba = data.berita_acara;
-                            const nilais = data.nilai_cpmk || [];
+                            const nilais = data.nilai_indikator || data.nilai_cpmk || [];
 
                             const finalAngka = ba ? parseFloat(ba.nilai_angka).toFixed(2) : '0.00';
                             const finalHuruf = ba ? ba.nilai_huruf : '-';
@@ -420,27 +420,27 @@
                             // Catatan
                             $('#ba_catatan').html(ba && ba.catatan ? ba.catatan : '<em class="text-muted">Tidak ada catatan perbaikan.</em>');
 
-                            const isCpmkBased = activeUjianData.cpmk_based == 1;
-                            $('#cpmk_card_title').html(isCpmkBased ? '<i class="fa fa-table text-primary"></i> Rincian Penilaian Indikator dari Ketiga Penguji' : '<i class="fa fa-table text-primary"></i> Rincian Nilai dari Ketiga Penguji');
-                            $('#cpmk_th_title').text(isCpmkBased ? 'Kriteria Rubrik Penilaian' : 'Kriteria Penilaian');
+                            $('#cpmk_card_title').html('<i class="fa fa-table text-primary"></i> Rincian Penilaian Indikator dari Ketiga Penguji');
+                            $('#cpmk_th_title').text('Kriteria Rubrik Penilaian');
 
-                            // Rincian CPMK table
-                            const cpmkMap = {};
+                            // Rincian Rubrik table
+                            const rubricMap = {};
                             nilais.forEach(function(n) {
-                                if (!cpmkMap[n.id_cpmk]) {
-                                    cpmkMap[n.id_cpmk] = {
-                                        kode_cpmk: n.kode_cpmk || 'Non-CPMK',
-                                        nama_cpmk: n.nama_cpmk || 'Nilai Ujian Skripsi / Sidang Akhir',
+                                const key = n.id_rubrik_indikator || n.id_cpmk || n.id;
+                                if (!rubricMap[key]) {
+                                    rubricMap[key] = {
+                                        aspek: n.aspek || '-',
+                                        nama_indikator: n.nama_indikator || n.nama_cpmk || 'Kriteria Penilaian',
                                         bobot: n.bobot !== null && n.bobot !== undefined ? n.bobot : 100.00,
                                         scores: {}
                                     };
                                 }
-                                cpmkMap[n.id_cpmk].scores[n.id_dosen] = parseFloat(n.nilai);
+                                rubricMap[key].scores[n.id_dosen] = parseFloat(n.nilai);
                             });
 
                             let cpmkHtml = '';
-                            for (let id_cpmk in cpmkMap) {
-                                const item = cpmkMap[id_cpmk];
+                            for (let key in rubricMap) {
+                                const item = rubricMap[key];
                                 const score1 = item.scores[u.id_penguji1] !== undefined ? item.scores[u.id_penguji1].toFixed(2) : '-';
                                 const score2 = item.scores[u.id_penguji2] !== undefined ? item.scores[u.id_penguji2].toFixed(2) : '-';
                                 const score3 = item.scores[u.id_penguji3] !== undefined ? item.scores[u.id_penguji3].toFixed(2) : '-';
@@ -453,7 +453,7 @@
 
                                 cpmkHtml += `<tr>
                                     <td class="text-left font-weight-medium">
-                                        <span class="badge ${isCpmkBased ? 'badge-secondary' : 'badge-primary'} mr-1">${item.kode_cpmk}</span> ${item.nama_cpmk}
+                                        <span class="badge badge-primary mr-1">${item.aspek}</span> ${item.nama_indikator}
                                     </td>
                                     <td>${parseFloat(item.bobot)}%</td>
                                     <td>${score1}</td>
