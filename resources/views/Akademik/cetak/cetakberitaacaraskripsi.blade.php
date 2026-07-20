@@ -626,30 +626,39 @@
                                 let idx_row = 1;
                                 let alphabet = ['A', 'B', 'C', 'D', 'E', 'F'];
                                 
-                                if (tipe_bobot === 'tunggal') {
-                                    aspects.forEach((a) => {
-                                        let aspectScores = exScores.filter(n => isAspectMatch(n.aspek, a.nama_aspek));
-                                        if (aspectScores.length > 0) {
-                                            let val = aspectScores.reduce((sum, n) => sum + parseFloat(n.nilai), 0) / aspectScores.length;
-                                            let bobotVal = parseFloat(a.bobot);
-                                            let weighted = (val * bobotVal) / 100;
+                                aspects.forEach((a, aIdx) => {
+                                    let aspectScores = exScores.filter(n => isAspectMatch(n.aspek, a.nama_aspek));
+                                    if (aspectScores.length > 0) {
+                                        let label = alphabet[aIdx] || String.fromCharCode(65 + aIdx);
+                                        let bobotAspect = parseFloat(a.bobot);
+
+                                        if (tipe_bobot === 'tunggal') {
+                                            let avgVal = aspectScores.reduce((sum, n) => sum + parseFloat(n.nilai), 0) / aspectScores.length;
+                                            let weighted = (avgVal * bobotAspect) / 100;
+
+                                            individualPagesHtml += `<tr style="background-color:#fafafa;"><td colspan="5" class="text-left font-bold">${label}. Aspek ${a.nama_aspek} (Bobot: ${bobotAspect.toFixed(0)}%)</td></tr>`;
+                                            aspectScores.forEach(n => {
+                                                let val = parseFloat(n.nilai);
+                                                individualPagesHtml += `
+                                                    <tr>
+                                                        <td>${idx_row++}</td>
+                                                        <td class="text-left">${n.nama_indikator}</td>
+                                                        <td>-</td>
+                                                        <td>${val.toFixed(2)}</td>
+                                                        <td>-</td>
+                                                    </tr>
+                                                `;
+                                            });
                                             individualPagesHtml += `
-                                                <tr>
-                                                    <td>${idx_row++}</td>
-                                                    <td class="text-left font-bold">Aspek ${a.nama_aspek}</td>
-                                                    <td>${bobotVal.toFixed(2)}%</td>
-                                                    <td>${val.toFixed(2)}</td>
-                                                    <td class="font-bold">${weighted.toFixed(2)}</td>
+                                                <tr style="background-color:#f9f9f9;" class="font-bold">
+                                                    <td colspan="2" class="text-right">Rata-rata & Nilai Terbobot Aspek ${a.nama_aspek}</td>
+                                                    <td>${bobotAspect.toFixed(2)}%</td>
+                                                    <td>${avgVal.toFixed(2)}</td>
+                                                    <td class="text-primary">${weighted.toFixed(2)}</td>
                                                 </tr>
                                             `;
-                                        }
-                                    });
-                                } else {
-                                    aspects.forEach((a, aIdx) => {
-                                        let aspectScores = exScores.filter(n => isAspectMatch(n.aspek, a.nama_aspek));
-                                        if (aspectScores.length > 0) {
-                                            let label = alphabet[aIdx] || String.fromCharCode(65 + aIdx);
-                                            individualPagesHtml += `<tr style="background-color:#fafafa;"><td colspan="5" class="text-left font-bold">${label}. Aspek ${a.nama_aspek} (Bobot: ${parseFloat(a.bobot).toFixed(0)}%)</td></tr>`;
+                                        } else {
+                                            individualPagesHtml += `<tr style="background-color:#fafafa;"><td colspan="5" class="text-left font-bold">${label}. Aspek ${a.nama_aspek} (Bobot: ${bobotAspect.toFixed(0)}%)</td></tr>`;
                                             aspectScores.forEach(n => {
                                                 let bobotVal = parseFloat(n.bobot);
                                                 let val = parseFloat(n.nilai);
@@ -665,8 +674,8 @@
                                                 `;
                                             });
                                         }
-                                    });
-                                }
+                                    }
+                                });
 
                                 individualPagesHtml += `
                                                 <tr style="background-color:#f2f2f2;">
