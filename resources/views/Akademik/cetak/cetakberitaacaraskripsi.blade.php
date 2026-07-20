@@ -602,7 +602,7 @@
                                         <table class="header-table">
                                             <tr>
                                                 <td class="header-logo">
-                                                    <img src="${url('imageup45/logoumuka.png')}" style="width: 75px;" alt="Logo UMUKA">
+                                                    <img src="{{ URL::asset('imageup45/logoumuka.png') }}" style="width: 75px;" alt="Logo UMUKA">
                                                 </td>
                                                 <td>
                                                     <div class="header-text">UNIVERSITAS MUHAMMADIYAH KARANGANYAR</div>
@@ -744,6 +744,7 @@
                                         <table class="signature-table" style="width: 100%; margin-top: 15px;">
                                             <tr>
                                                 <td style="width: 50%;">
+                                                    <div class="font-bold text-dark mb-1" style="font-size: 8.5pt;">Petunjuk Penilaian:</div>
                                                     <table class="scale-table">
                                                         <thead>
                                                             <tr>
