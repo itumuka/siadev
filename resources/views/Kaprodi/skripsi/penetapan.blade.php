@@ -420,23 +420,63 @@
                             // Catatan
                             $('#ba_catatan').html(ba && ba.catatan ? ba.catatan : '<em class="text-muted">Tidak ada catatan perbaikan.</em>');
 
-                            $('#cpmk_card_title').html('<i class="fa fa-table text-primary"></i> Rincian Penilaian Indikator dari Ketiga Penguji');
-                            $('#cpmk_th_title').text('Kriteria Rubrik Penilaian');
+                            const tipeBobot = nilais.length > 0 ? (nilais[0].tipe_bobot || 'indikator') : 'indikator';
+
+                            $('#cpmk_card_title').html(tipeBobot === 'tunggal' ? '<i class="fa fa-table text-primary"></i> Rincian Nilai Aspek Penilaian dari Ketiga Penguji' : '<i class="fa fa-table text-primary"></i> Rincian Nilai Indikator Penilaian dari Ketiga Penguji');
+                            $('#cpmk_th_title').text(tipeBobot === 'tunggal' ? 'Aspek Penilaian' : 'Kriteria Rubrik Penilaian');
+
+                            function isAspectMatch(dbAspek, targetAspek) {
+                                let dbVal = (dbAspek || '').toLowerCase().trim();
+                                let targetVal = (targetAspek || '').toLowerCase().trim();
+                                if (dbVal === targetVal) return true;
+                                if (dbVal === 'substansi' && targetVal.indexOf('substansi') !== -1) return true;
+                                if (dbVal === 'ujian' && targetVal.indexOf('ujian') !== -1) return true;
+                                return false;
+                            }
 
                             // Rincian Rubrik table
                             const rubricMap = {};
-                            nilais.forEach(function(n) {
-                                const key = n.id_rubrik_indikator || n.id_cpmk || n.id;
-                                if (!rubricMap[key]) {
-                                    rubricMap[key] = {
-                                        aspek: n.aspek || '-',
-                                        nama_indikator: n.nama_indikator || n.nama_cpmk || 'Kriteria Penilaian',
-                                        bobot: n.bobot !== null && n.bobot !== undefined ? n.bobot : 100.00,
-                                        scores: {}
-                                    };
+                            if (tipeBobot === 'tunggal') {
+                                nilais.forEach(function(n) {
+                                    const key = n.aspek || 'Lainnya';
+                                    if (!rubricMap[key]) {
+                                        let matchAspek = (data.aspek || []).find(a => isAspectMatch(a.nama_aspek, key));
+                                        let aspectBobot = matchAspek ? parseFloat(matchAspek.bobot) : (n.bobot !== null && n.bobot !== undefined ? parseFloat(n.bobot) : 100.00);
+                                        
+                                        rubricMap[key] = {
+                                            aspek: key,
+                                            label: 'Aspek ' + key,
+                                            bobot: aspectBobot,
+                                            scores_raw: {}
+                                        };
+                                    }
+                                    if (!rubricMap[key].scores_raw[n.id_dosen]) {
+                                        rubricMap[key].scores_raw[n.id_dosen] = [];
+                                    }
+                                    rubricMap[key].scores_raw[n.id_dosen].push(parseFloat(n.nilai));
+                                });
+
+                                for (let key in rubricMap) {
+                                    rubricMap[key].scores = {};
+                                    for (let id_dosen in rubricMap[key].scores_raw) {
+                                        const vals = rubricMap[key].scores_raw[id_dosen];
+                                        rubricMap[key].scores[id_dosen] = vals.reduce((a, b) => a + b, 0) / vals.length;
+                                    }
                                 }
-                                rubricMap[key].scores[n.id_dosen] = parseFloat(n.nilai);
-                            });
+                            } else {
+                                nilais.forEach(function(n) {
+                                    const key = n.id_rubrik_indikator || n.id_cpmk || n.id;
+                                    if (!rubricMap[key]) {
+                                        rubricMap[key] = {
+                                            aspek: n.aspek || '-',
+                                            label: n.nama_indikator || n.nama_cpmk || 'Kriteria Penilaian',
+                                            bobot: n.bobot !== null && n.bobot !== undefined ? n.bobot : 100.00,
+                                            scores: {}
+                                        };
+                                    }
+                                    rubricMap[key].scores[n.id_dosen] = parseFloat(n.nilai);
+                                });
+                            }
 
                             let cpmkHtml = '';
                             for (let key in rubricMap) {
@@ -451,9 +491,11 @@
                                 if (item.scores[u.id_penguji3] !== undefined) valids.push(item.scores[u.id_penguji3]);
                                 const avg = valids.length > 0 ? (valids.reduce((a, b) => a + b, 0) / valids.length).toFixed(2) : '-';
 
+                                const aspectBadge = tipeBobot === 'tunggal' ? '' : `<span class="badge badge-primary mr-1">${item.aspek}</span> `;
+
                                 cpmkHtml += `<tr>
                                     <td class="text-left font-weight-medium">
-                                        <span class="badge badge-primary mr-1">${item.aspek}</span> ${item.nama_indikator}
+                                        ${aspectBadge}${item.label}
                                     </td>
                                     <td>${parseFloat(item.bobot)}%</td>
                                     <td>${score1}</td>
