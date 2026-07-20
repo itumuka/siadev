@@ -469,7 +469,12 @@
                                                 nilaiRes.data.forEach(function(n) {
                                                     gradesMap[n.id_rubrik_indikator] = n.nilai;
                                                 });
-                                                existingCatatan = nilaiRes.catatan || '';
+                                                if (nilaiRes.berita_acara) {
+                                                    existingCatatan = nilaiRes.berita_acara.catatan || '';
+                                                    if (nilaiRes.berita_acara.keputusan) {
+                                                        $('#n_keputusan').val(nilaiRes.berita_acara.keputusan);
+                                                    }
+                                                }
                                             }
                                             
                                             $('#n_catatan').val(existingCatatan);
