@@ -447,8 +447,12 @@
                                             aspek: key,
                                             label: 'Aspek ' + key,
                                             bobot: aspectBobot,
+                                            indicators: [],
                                             scores_raw: {}
                                         };
+                                    }
+                                    if (n.nama_indikator && !rubricMap[key].indicators.includes(n.nama_indikator)) {
+                                        rubricMap[key].indicators.push(n.nama_indikator);
                                     }
                                     if (!rubricMap[key].scores_raw[n.id_dosen]) {
                                         rubricMap[key].scores_raw[n.id_dosen] = [];
@@ -492,10 +496,12 @@
                                 const avg = valids.length > 0 ? (valids.reduce((a, b) => a + b, 0) / valids.length).toFixed(2) : '-';
 
                                 const aspectBadge = tipeBobot === 'tunggal' ? '' : `<span class="badge badge-primary mr-1">${item.aspek}</span> `;
+                                let subIndicators = (item.indicators && item.indicators.length > 0) ? `<small class="text-muted d-block mt-1">Indikator: ${item.indicators.join(', ')}</small>` : '';
 
                                 cpmkHtml += `<tr>
                                     <td class="text-left font-weight-medium">
-                                        ${aspectBadge}${item.label}
+                                        ${aspectBadge}<strong>${item.label}</strong>
+                                        ${subIndicators}
                                     </td>
                                     <td>${parseFloat(item.bobot)}%</td>
                                     <td>${score1}</td>

@@ -635,26 +635,22 @@
                                         if (tipe_bobot === 'tunggal') {
                                             let avgVal = aspectScores.reduce((sum, n) => sum + parseFloat(n.nilai), 0) / aspectScores.length;
                                             let weighted = (avgVal * bobotAspect) / 100;
+                                            let indicatorsListHtml = `<ol style="margin: 0; padding-left: 18px; text-align: left;">` + 
+                                                aspectScores.map(n => `<li style="margin-bottom: 2px;">${n.nama_indikator}</li>`).join('') + 
+                                            `</ol>`;
 
-                                            individualPagesHtml += `<tr style="background-color:#fafafa;"><td colspan="5" class="text-left font-bold">${label}. Aspek ${a.nama_aspek} (Bobot: ${bobotAspect.toFixed(0)}%)</td></tr>`;
-                                            aspectScores.forEach(n => {
-                                                let val = parseFloat(n.nilai);
-                                                individualPagesHtml += `
-                                                    <tr>
-                                                        <td>${idx_row++}</td>
-                                                        <td class="text-left">${n.nama_indikator}</td>
-                                                        <td>-</td>
-                                                        <td>${val.toFixed(2)}</td>
-                                                        <td>-</td>
-                                                    </tr>
-                                                `;
-                                            });
                                             individualPagesHtml += `
-                                                <tr style="background-color:#f9f9f9;" class="font-bold">
-                                                    <td colspan="2" class="text-right">Rata-rata & Nilai Terbobot Aspek ${a.nama_aspek}</td>
-                                                    <td>${bobotAspect.toFixed(2)}%</td>
-                                                    <td>${avgVal.toFixed(2)}</td>
-                                                    <td class="text-primary">${weighted.toFixed(2)}</td>
+                                                <tr style="background-color:#fafafa;">
+                                                    <td colspan="5" class="text-left font-bold">${label}. Aspek ${a.nama_aspek}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="vertical-align: top;">${idx_row++}</td>
+                                                    <td class="text-left" style="vertical-align: top;">
+                                                        ${indicatorsListHtml}
+                                                    </td>
+                                                    <td style="vertical-align: top;" class="font-bold">${bobotAspect.toFixed(2)}%</td>
+                                                    <td style="vertical-align: top;" class="font-bold">${avgVal.toFixed(2)}</td>
+                                                    <td style="vertical-align: top;" class="font-bold text-primary">${weighted.toFixed(2)}</td>
                                                 </tr>
                                             `;
                                         } else {
