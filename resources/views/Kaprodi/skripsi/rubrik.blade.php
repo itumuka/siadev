@@ -25,19 +25,23 @@
             <div class="col-12">
                 <div class="box">
                     <div class="box-header with-border bg-primary-light">
-                        <h4 class="box-title text-dark">Daftar Rubrik Aspek & Indikator Penilaian</h4>
-                        <div class="box-controls pull-right">
-                            <button id="btn-add-indikator" class="btn btn-sm btn-success mr-5">
-                                <i class="fa fa-plus mr-5"></i> Tambah Indikator
-                            </button>
-                            <button id="btn-reset-indikator" class="btn btn-sm btn-danger mr-5">
-                                <i class="fa fa-refresh mr-5"></i> Reset ke Default
-                            </button>
-                            <a href="{{ route('kpskripsi_index') }}" class="btn btn-sm btn-secondary">
-                                <i class="fa fa-arrow-left mr-5"></i> Kembali
-                            </a>
+                        <div class="d-flex flex-wrap justify-content-between align-items-center">
+                            <div>
+                                <h4 class="box-title text-dark mb-0">Daftar Rubrik Aspek & Indikator Penilaian</h4>
+                                <p class="mb-0 text-muted mt-5">Sesuaikan rubrik penilaian tugas akhir berbasis aspek & indikator secara dinamis untuk program studi Anda.</p>
+                            </div>
+                            <div class="d-flex flex-wrap align-items-center mt-10 mt-md-0">
+                                <button id="btn-add-indikator" class="btn btn-sm btn-success mr-10 mb-5">
+                                    <i class="fa fa-plus mr-5"></i> Tambah Indikator
+                                </button>
+                                <button id="btn-reset-indikator" class="btn btn-sm btn-danger mr-10 mb-5">
+                                    <i class="fa fa-refresh mr-5"></i> Reset ke Default
+                                </button>
+                                <a href="{{ route('kpskripsi_index') }}" class="btn btn-sm btn-secondary mb-5">
+                                    <i class="fa fa-arrow-left mr-5"></i> Kembali
+                                </a>
+                            </div>
                         </div>
-                        <p class="mb-0 text-muted">Sesuaikan rubrik penilaian tugas akhir berbasis aspek & indikator secara dinamis untuk program studi Anda.</p>
                     </div>
                     
                     <div class="box-body">
