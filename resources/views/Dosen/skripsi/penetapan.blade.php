@@ -590,17 +590,17 @@
                 const id_skripsi_ujian = $(this).data('id');
                 const btn = $(this);
 
-                Swal.fire({
+                swal({
                     title: 'Pernyataan Persetujuan',
                     text: "Apakah Anda menyetujui rincian penilaian dan nilai akhir Berita Acara ini secara digital? Tindakan ini setara dengan membubuhkan tanda tangan resmi.",
-                    icon: 'question',
+                    type: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Ya, Saya Setujui',
                     cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
+                }, function(isConfirm) {
+                    if (isConfirm) {
                         $.ajax({
                             url: "{{ $api_url }}dosen/skripsi/setuju-berita-acara",
                             method: "POST",
@@ -617,22 +617,18 @@
                             },
                             success: function(res) {
                                 if (res.status === 'success') {
-                                    Swal.fire(
-                                        'Berhasil',
-                                        'Persetujuan Berita Acara berhasil dicatat.',
-                                        'success'
-                                    );
+                                    swal('Berhasil', 'Persetujuan Berita Acara berhasil dicatat.', 'success');
                                     // Refresh modal
                                     loadBeritaAcaraDetails(id_skripsi_ujian);
                                     // Refresh main table
                                     table.ajax.reload();
                                 } else {
-                                    Swal.fire('Gagal', res.message || 'Gagal menyetujui.', 'error');
+                                    swal('Gagal', res.message || 'Gagal menyetujui.', 'error');
                                     btn.prop('disabled', false).html('<i class="fa fa-pencil"></i> Tanda Tangani Berita Acara');
                                 }
                             },
                             error: function(err) {
-                                Swal.fire('Gagal', err.responseJSON?.error || 'Kesalahan Server.', 'error');
+                                swal('Gagal', err.responseJSON?.error || 'Kesalahan Server.', 'error');
                                 btn.prop('disabled', false).html('<i class="fa fa-pencil"></i> Tanda Tangani Berita Acara');
                             }
                         });
