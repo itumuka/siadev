@@ -661,12 +661,7 @@
                                                 <td class="font-bold">${u.ruang_ujian || u.ruang || '-'}</td>
                                             </tr>
                                             <tr>
-                                                <td>4. Keputusan Hasil Ujian</td>
-                                                <td>:</td>
-                                                <td class="font-bold text-success">${keputusanTextLabel}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>5. Batas Tanggal Revisi</td>
+                                                <td>4. Batas Tanggal Revisi</td>
                                                 <td>:</td>
                                                 <td class="font-bold text-danger">${batasRevisiDisplay}</td>
                                             </tr>
