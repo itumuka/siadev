@@ -313,19 +313,21 @@
             </div>
         </div>
 
-        <table class="signature-table" style="width: 100%; margin-top: 30px;">
+        <table class="signature-table" style="width: 100%; margin-top: 20px;">
             <tr>
-                <td style="width: 50%; text-align: center;">
+                <td style="width: 50%; text-align: center; vertical-align: bottom;">
                     Mengetahui,<br>
                     Dekan <span id="sign_nama_fakultas">...</span>
-                    <br><br><br><br>
+                    <div id="qr_dekan" style="display: flex; justify-content: center; margin: 5px 0;"></div>
+                    <small style="font-size:7pt; color:#333; display:block;" id="valid_dekan"></small>
                     <span class="font-bold" id="sign_dekan_nama">...</span><br>
                     NIDN. <span id="sign_dekan_nidn">...</span>
                 </td>
-                <td style="width: 50%; text-align: center;">
+                <td style="width: 50%; text-align: center; vertical-align: bottom;">
                     Karanganyar, <span id="ba_tgl_cetak">...</span><br>
                     Ketua Program Studi,
-                    <br><br><br><br>
+                    <div id="qr_kaprodi" style="display: flex; justify-content: center; margin: 5px 0;"></div>
+                    <small style="font-size:7pt; color:#333; display:block;" id="valid_kaprodi"></small>
                     <span class="font-bold" id="sign_kaprodi_nama">...</span><br>
                     NIDN. <span id="sign_kaprodi_nidn">...</span>
                 </td>
@@ -339,6 +341,7 @@
     </div>
 
     <script src="{{ URL::asset('js/jquery.min.js') }}"></script>
+    <script src="{{ URL::asset('js/qrcode.js') }}"></script>
     <script>
         $(document).ready(function() {
             const token = "{{ Session::get('token') }}";
@@ -545,9 +548,15 @@
 
                                 // Examiner signature status
                                 let ttdStatus = ba ? ba[`setuju_${ex.role}`] : null;
+                                let validId = (ba && ba[`valid_id_${ex.role}`]) ? ba[`valid_id_${ex.role}`] : (ttdStatus ? `BAS-${ex.role.toUpperCase()}-${u.id_skripsi_ujian}-${ex.nidn || ex.id}` : null);
+
                                 let ttdBadge = '';
                                 if (ttdStatus) {
-                                    ttdBadge = `<span style="color:#28a745; font-weight:bold;">✓ Ttd digital<br><span style="font-size:7pt; font-weight:normal;">${formatDateTime(ttdStatus)}</span></span>`;
+                                    ttdBadge = `
+                                        <div id="qr_summary_${ex.role}" style="display: flex; justify-content: center; margin: 2px 0;"></div>
+                                        <small style="font-size: 6.5pt; color: #28a745; font-weight: bold; display: block;">✓ VERIFIKASI ELEKTRONIK</small>
+                                        <small style="font-size: 6pt; color: #555;"><b>valid_id:</b> ${validId}</small>
+                                    `;
                                 } else {
                                     ttdBadge = `<span style="color:#dc3545; font-weight:bold;">Belum Ttd</span>`;
                                 }
@@ -700,8 +709,9 @@
                                                     <span class="font-bold">${getRoleLabel(ex.role, isObe)}</span>
                                                     <br><br>
                                                     ${ttdStatus ? `
-                                                        <div class="qr-placeholder"><i class="fa fa-check"></i></div>
+                                                        <div id="qr_page_${ex.role}" style="display: flex; justify-content: center; margin: 5px 0;"></div>
                                                         <div class="signature-status-signed">✓ VERIFIKASI ELEKTRONIK</div>
+                                                        <small style="font-size: 6.5pt; color: #333; display: block; margin-top: 2px;"><b>valid_id : ${validId}</b></small>
                                                     ` : `
                                                         <div style="height: 50px;"></div>
                                                         <div class="signature-status-pending">Belum Tanda Tangan</div>
@@ -720,6 +730,54 @@
 
                             $('#tbody_penilaian_penguji').html(examinerRowsHtml);
                             $('#individual_scoring_pages').html(individualPagesHtml);
+
+                            // Render QR Codes for Examiners
+                            examiners.forEach(ex => {
+                                let ttdStatus = ba ? ba[`setuju_${ex.role}`] : null;
+                                let validId = (ba && ba[`valid_id_${ex.role}`]) ? ba[`valid_id_${ex.role}`] : (ttdStatus ? `BAS-${ex.role.toUpperCase()}-${u.id_skripsi_ujian}-${ex.nidn || ex.id}` : null);
+                                
+                                if (ttdStatus && validId) {
+                                    let qrText = `VALID ID: ${validId}\nNama: ${ex.name}\nNIDN: ${ex.nidn || '-'}\nPeran: ${getRoleLabel(ex.role, isObe)}\nTgl: ${formatDateTime(ttdStatus)}`;
+                                    
+                                    let sumElem = document.getElementById('qr_summary_' + ex.role);
+                                    if (sumElem) {
+                                        new QRCode(sumElem, { text: qrText, width: 45, height: 45, correctLevel: QRCode.CorrectLevel.M });
+                                    }
+                                    
+                                    let pageElem = document.getElementById('qr_page_' + ex.role);
+                                    if (pageElem) {
+                                        new QRCode(pageElem, { text: qrText, width: 60, height: 60, correctLevel: QRCode.CorrectLevel.M });
+                                    }
+                                }
+                            });
+
+                            // Render QR codes for Kaprodi & Dekan
+                            if (u.status === 'lulus' || u.status === 'ditetapkan' || (ba && ba.status === 'selesai')) {
+                                let validKaprodi = u.valid_id_kaprodi || `BA-KAPRODI-${u.id_skripsi_ujian}-${u.nidn_kaprodi || ''}`;
+                                let validDekan = u.valid_id_dekan || `BA-DEKAN-${u.id_skripsi_ujian}-${u.nidn_dekan || ''}`;
+
+                                $('#valid_kaprodi').html(`<b>valid_id : ${validKaprodi}</b>`);
+                                let kaprodiElem = document.getElementById('qr_kaprodi');
+                                if (kaprodiElem) {
+                                    new QRCode(kaprodiElem, {
+                                        text: `VALID ID: ${validKaprodi}\nKetua Program Studi: ${u.nama_kaprodi || '-'}\nProdi: ${u.nama_program_studi || '-'}`,
+                                        width: 60,
+                                        height: 60,
+                                        correctLevel: QRCode.CorrectLevel.M
+                                    });
+                                }
+
+                                $('#valid_dekan').html(`<b>valid_id : ${validDekan}</b>`);
+                                let dekanElem = document.getElementById('qr_dekan');
+                                if (dekanElem) {
+                                    new QRCode(dekanElem, {
+                                        text: `VALID ID: ${validDekan}\nDekan: ${u.nama_dekan || '-'}\nFakultas: ${u.nama_fakultas || '-'}`,
+                                        width: 60,
+                                        height: 60,
+                                        correctLevel: QRCode.CorrectLevel.M
+                                    });
+                                }
+                            }
 
                             // 4. Calculate Final Cumulative Grade
                             let finalKumulatif = examiners.length > 0 ? (totalFinalAngka / examiners.length) : 0;
