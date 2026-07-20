@@ -187,11 +187,25 @@
                                         <div class="card bg-white border-warning text-left small mb-0 shadow-none">
                                             <div class="card-body p-3">
                                                 <h6 class="font-weight-bold mb-2 text-warning"><i class="fa fa-info-circle"></i> Informasi Penilaian:</h6>
-                                                <ul class="pl-3 mb-0 text-dark" style="line-height: 1.5; white-space: normal;">
+                                                <ul class="pl-3 mb-3 text-dark" style="line-height: 1.5; white-space: normal;">
                                                     <li class="mb-1">Nilai harus diisi dalam rentang <strong>0 - 100</strong>.</li>
-                                                    <li class="mb-1">Nilai akhir aspek Substansi berkontribusi <strong>60%</strong> dan Ujian/Presentasi berkontribusi <strong>40%</strong>.</li>
-                                                    <li>Nilai akhir dihitung secara tertimbang berdasarkan tipe pembobotan rubrik aktif.</li>
+                                                    <li class="mb-1">Nilai akhir dihitung secara tertimbang berdasarkan tipe pembobotan rubrik aktif.</li>
                                                 </ul>
+
+                                                <h6 class="font-weight-bold mb-2 text-primary"><i class="fa fa-table"></i> Rentang Nilai Huruf:</h6>
+                                                <div class="table-responsive" style="max-height: 200px; overflow-y: auto;">
+                                                    <table class="table table-sm table-bordered mb-0 text-center text-dark" style="font-size: 0.8rem;" id="table_grade_scale">
+                                                        <thead>
+                                                            <tr class="bg-light">
+                                                                <th>Rentang</th>
+                                                                <th>Grade</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="tbody_grade_scale">
+                                                            <!-- Populated dynamically based on student's kode_penilaian -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -363,6 +377,26 @@
                     $('#lbl_catatan').text('Catatan & Masukan Dosen Penguji');
                     $('#n_catatan').attr('placeholder', 'Tuliskan revisi, masukan, atau catatan khusus jalannya ujian sidang...');
                 }
+
+                // Render dynamic grade scale
+                var rules = gradeRules[currentStudentKodePenilaian] || gradeRules[1] || [];
+                let scaleHtml = '';
+                if (rules.length > 0) {
+                    for (var i = 0; i < rules.length; i++) {
+                        var min = parseFloat(rules[i].min);
+                        var max = parseFloat(rules[i].max);
+                        var grade = rules[i].grade;
+                        scaleHtml += `
+                            <tr>
+                                <td>${min.toFixed(0)} - ${max.toFixed(0)}</td>
+                                <td class="font-weight-bold text-primary">${grade}</td>
+                            </tr>
+                        `;
+                    }
+                } else {
+                    scaleHtml = '<tr><td colspan="2" class="text-muted">Skala nilai tidak ditemukan</td></tr>';
+                }
+                $('#tbody_grade_scale').html(scaleHtml);
 
                 // Reset summary
                 $('#lbl_score_total').text('0.00');
