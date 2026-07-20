@@ -265,7 +265,19 @@
             data.forEach((item, index) => {
                 let selectOptions = '';
                 CONFIG.aspects.forEach(function(a) {
-                    let selected = (item.aspek === a.nama_aspek) ? 'selected' : '';
+                    let isMatch = false;
+                    let dbAspek = (item.aspek || '').toLowerCase().trim();
+                    let aspectName = (a.nama_aspek || '').toLowerCase().trim();
+                    
+                    if (dbAspek === aspectName) {
+                        isMatch = true;
+                    } else if (dbAspek === 'substansi' && aspectName.indexOf('substansi') !== -1) {
+                        isMatch = true;
+                    } else if (dbAspek === 'ujian' && aspectName.indexOf('ujian') !== -1) {
+                        isMatch = true;
+                    }
+                    
+                    let selected = isMatch ? 'selected' : '';
                     selectOptions += `<option value="${a.nama_aspek}" ${selected}>${a.nama_aspek} (${parseFloat(a.bobot).toFixed(0)}%)</option>`;
                 });
 

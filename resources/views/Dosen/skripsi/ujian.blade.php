@@ -459,7 +459,19 @@
                 }
 
                 aspects.forEach(function(a) {
-                    var aspectRubrics = rubrics.filter(r => r.aspek === a.nama_aspek);
+                    var aspectRubrics = rubrics.filter(function(r) {
+                        let isMatch = false;
+                        let dbAspek = (r.aspek || '').toLowerCase().trim();
+                        let aspectName = (a.nama_aspek || '').toLowerCase().trim();
+                        if (dbAspek === aspectName) {
+                            isMatch = true;
+                        } else if (dbAspek === 'substansi' && aspectName.indexOf('substansi') !== -1) {
+                            isMatch = true;
+                        } else if (dbAspek === 'ujian' && aspectName.indexOf('ujian') !== -1) {
+                            isMatch = true;
+                        }
+                        return isMatch;
+                    });
                     if (aspectRubrics.length > 0) {
                         html += `<div class="aspek-header"><i class="fa fa-book mr-5"></i> Aspek ${a.nama_aspek} (Kontribusi: ${parseFloat(a.bobot).toFixed(0)}%)</div>`;
                         aspectRubrics.forEach(function(r) {
@@ -552,9 +564,26 @@
 
                         if (!isNaN(val)) {
                             $('#weighted_score_' + id).text(val.toFixed(2));
-                            if (aspectSums[aspek] !== undefined) {
-                                aspectSums[aspek] += val;
-                                aspectCounts[aspek]++;
+                            
+                            let targetKey = null;
+                            let dbAspek = (aspek || '').toLowerCase().trim();
+                            for (let key in aspectSums) {
+                                let keyLower = key.toLowerCase().trim();
+                                if (dbAspek === keyLower) {
+                                    targetKey = key;
+                                    break;
+                                } else if (dbAspek === 'substansi' && keyLower.indexOf('substansi') !== -1) {
+                                    targetKey = key;
+                                    break;
+                                } else if (dbAspek === 'ujian' && keyLower.indexOf('ujian') !== -1) {
+                                    targetKey = key;
+                                    break;
+                                }
+                            }
+
+                            if (targetKey !== null) {
+                                aspectSums[targetKey] += val;
+                                aspectCounts[targetKey]++;
                             }
                         } else {
                             $('#weighted_score_' + id).text('0.00');

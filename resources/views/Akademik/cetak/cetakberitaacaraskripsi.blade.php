@@ -426,6 +426,15 @@
                 return 'E';
             }
 
+            function isAspectMatch(dbAspek, targetAspek) {
+                let dbVal = (dbAspek || '').toLowerCase().trim();
+                let targetVal = (targetAspek || '').toLowerCase().trim();
+                if (dbVal === targetVal) return true;
+                if (dbVal === 'substansi' && targetVal.indexOf('substansi') !== -1) return true;
+                if (dbVal === 'ujian' && targetVal.indexOf('ujian') !== -1) return true;
+                return false;
+            }
+
             // Fetch rules
             $.ajax({
                 type: "GET",
@@ -516,7 +525,7 @@
                                 if (tipe_bobot === 'tunggal') {
                                     let sumAspectWeighted = 0;
                                     aspects.forEach(a => {
-                                        let aspectScores = exScores.filter(n => n.aspek === a.nama_aspek);
+                                        let aspectScores = exScores.filter(n => isAspectMatch(n.aspek, a.nama_aspek));
                                         let avg = aspectScores.length > 0 ? (aspectScores.reduce((sum, n) => sum + parseFloat(n.nilai), 0) / aspectScores.length) : 0;
                                         sumAspectWeighted += avg * (parseFloat(a.bobot) / 100);
                                     });
@@ -609,7 +618,7 @@
                                 let alphabet = ['A', 'B', 'C', 'D', 'E', 'F'];
                                 
                                 aspects.forEach((a, aIdx) => {
-                                    let aspectScores = exScores.filter(n => n.aspek === a.nama_aspek);
+                                    let aspectScores = exScores.filter(n => isAspectMatch(n.aspek, a.nama_aspek));
                                     if (aspectScores.length > 0) {
                                         let label = alphabet[aIdx] || String.fromCharCode(65 + aIdx);
                                         individualPagesHtml += `<tr style="background-color:#fafafa;"><td colspan="5" class="text-left font-bold">${label}. Aspek ${a.nama_aspek} (Bobot: ${parseFloat(a.bobot).toFixed(0)}%)</td></tr>`;
