@@ -214,6 +214,32 @@
                                 </a>
                             </li>
                         @endif
+                        
+                        <!-- Notifications Dropdown -->
+                        <li class="dropdown messages-menu" id="notification_dropdown_container">
+                            <a href="#" class="waves-effect waves-light dropdown-toggle" data-toggle="dropdown" title="Notifikasi" id="notification_bell_btn">
+                                <i class="icon-Notifications"><span class="path1"></span><span class="path2"></span></i>
+                                <span class="label label-danger" id="notification_badge" style="display: none; position: absolute; top: 8px; right: 5px; font-size: 9px; padding: 2px 4px; border-radius: 50%;">0</span>
+                            </a>
+                            <ul class="dropdown-menu animated flipInX" style="width: 320px; max-height: 480px; overflow-y: auto;">
+                                <li class="header">
+                                    <div class="d-flex justify-content-between align-items-center p-10 bg-light border-bottom">
+                                        <span class="font-weight-bold text-dark"><i class="fa fa-bell text-primary"></i> Notifikasi</span>
+                                        <a href="javascript:void(0);" id="btn_mark_all_read" style="font-size: 8.5pt; font-weight: 600;" class="text-primary"><i class="fa fa-check-circle"></i> Tandai Semua Dibaca</a>
+                                    </div>
+                                </li>
+                                <li>
+                                    <ul class="menu" id="notification_list_container" style="list-style: none; padding: 0; margin: 0; max-height: 350px; overflow-y: auto;">
+                                        <!-- Will be populated dynamically via JavaScript -->
+                                        <li class="text-center py-4 text-muted" id="notification_empty_state">
+                                            <i class="fa fa-bell-slash-o fa-2x mb-2 d-block"></i>
+                                            Tidak ada notifikasi baru
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+
                         <!-- User Account-->
                         <li class="dropdown user user-menu">
                             <a href="#" class="waves-effect waves-light dropdown-toggle" data-toggle="dropdown"
@@ -474,6 +500,130 @@
 
             })
 
+
+            // ================= SYSTEM NOTIFICATIONS SYSTEM =================
+            var notificationsUrl = "{{ config('setting.second_url') }}notifications";
+
+            function fetchNotifications() {
+                if (!token || !userlogin) return;
+                
+                $.ajax({
+                    url: notificationsUrl,
+                    method: "GET",
+                    headers: {
+                        "Authorization": 'Bearer ' + token,
+                        "username": userlogin
+                    },
+                    success: function(res) {
+                        if (res.status === 'success') {
+                            updateNotificationUI(res.notifications, res.unread_count);
+                        }
+                    },
+                    error: function(err) {
+                        console.error('Gagal mengambil notifikasi', err);
+                    }
+                });
+            }
+
+            function updateNotificationUI(list, unreadCount) {
+                // Update badge
+                if (unreadCount > 0) {
+                    $('#notification_badge').text(unreadCount).show();
+                } else {
+                    $('#notification_badge').hide();
+                }
+
+                // Update list dropdown
+                if (list.length > 0) {
+                    $('#notification_empty_state').hide();
+                    
+                    // Clear old entries but keep empty state if needed
+                    $('.dynamic-notification-item').remove();
+
+                    let itemsHtml = '';
+                    list.forEach(function(item) {
+                        let readStyle = item.is_read ? 'opacity: 0.7;' : 'background-color: rgba(0, 82, 204, 0.05); font-weight: bold; border-left: 3px solid #0052cc;';
+                        let typeIcon = 'fa-info-circle text-info';
+                        if (item.type === 'skripsi') typeIcon = 'fa-graduation-cap text-primary';
+                        else if (item.type === 'krs') typeIcon = 'fa-file-text-o text-success';
+                        else if (item.type === 'nilai') typeIcon = 'fa-calculator text-warning';
+
+                        itemsHtml += `
+                            <li class="dynamic-notification-item" style="border-bottom: 1px solid rgba(0,0,0,0.05); ${readStyle}">
+                                <a href="javascript:void(0);" class="p-10 d-block notification-click-target" data-id="${item.id}" data-url="${item.target_url || ''}">
+                                    <div class="d-flex align-items-start">
+                                        <div class="mr-10 mt-5">
+                                            <i class="fa ${typeIcon} fa-lg"></i>
+                                        </div>
+                                        <div style="flex-grow: 1; white-space: normal;">
+                                            <div class="text-dark font-size-13">${item.title}</div>
+                                            <div class="text-muted font-size-11 my-5">${item.message}</div>
+                                            <div class="text-primary font-size-10 font-italic">${item.time_diff}</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        `;
+                    });
+                    
+                    $('#notification_list_container').prepend(itemsHtml);
+                } else {
+                    $('.dynamic-notification-item').remove();
+                    $('#notification_empty_state').show();
+                }
+            }
+
+            // Click single notification
+            $(document).on('click', '.notification-click-target', function(e) {
+                e.preventDefault();
+                let notifId = $(this).data('id');
+                let redirectUrl = $(this).data('url');
+
+                $.ajax({
+                    url: notificationsUrl + "/read",
+                    method: "POST",
+                    headers: {
+                        "Authorization": 'Bearer ' + token,
+                        "username": userlogin
+                    },
+                    data: { id: notifId },
+                    success: function() {
+                        if (redirectUrl) {
+                            window.location.href = redirectUrl.startsWith('/') ? "{{ url('/') }}" + redirectUrl : redirectUrl;
+                        } else {
+                            fetchNotifications();
+                        }
+                    },
+                    error: function() {
+                        if (redirectUrl) {
+                            window.location.href = redirectUrl.startsWith('/') ? "{{ url('/') }}" + redirectUrl : redirectUrl;
+                        }
+                    }
+                });
+            });
+
+            // Click mark all as read
+            $('#btn_mark_all_read').on('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                $.ajax({
+                    url: notificationsUrl + "/read",
+                    method: "POST",
+                    headers: {
+                        "Authorization": 'Bearer ' + token,
+                        "username": userlogin
+                    },
+                    success: function() {
+                        fetchNotifications();
+                        showToastr('success', 'Berhasil', 'Semua notifikasi telah ditandai dibaca.');
+                    }
+                });
+            });
+
+            // Initial load & Polling (Every 60 seconds)
+            fetchNotifications();
+            setInterval(fetchNotifications, 60000);
 
         });
 
