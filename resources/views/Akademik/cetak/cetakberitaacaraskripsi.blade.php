@@ -327,7 +327,7 @@
                     Mengetahui,<br>
                     Dekan<br>
                     <span id="sign_nama_fakultas" class="font-bold">...</span>
-                    <div id="qr_dekan" style="display: flex; justify-content: center; margin: 5px 0;"></div>
+                    <div id="qr_dekan" style="display: block; margin: 5px auto; width: 95px; height: 95px; text-align: center;"></div>
                     <small style="font-size:8.5pt; color:#333; display:block;" id="valid_dekan"></small>
                     <br>
                     <span class="font-bold" id="sign_dekan_nama">...</span><br>
@@ -336,7 +336,7 @@
                 <td style="width: 50%; text-align: center; vertical-align: bottom;">
                     Karanganyar, <span id="ba_tgl_cetak">...</span><br>
                     Ketua Program Studi,
-                    <div id="qr_kaprodi" style="display: flex; justify-content: center; margin: 5px 0;"></div>
+                    <div id="qr_kaprodi" style="display: block; margin: 5px auto; width: 95px; height: 95px; text-align: center;"></div>
                     <small style="font-size:8.5pt; color:#333; display:block;" id="valid_kaprodi"></small>
                     <br>
                     <span class="font-bold" id="sign_kaprodi_nama">...</span><br>
@@ -506,7 +506,7 @@
                     Mengetahui,<br>
                     Dekan<br>
                     <span id="obe_sign_nama_fakultas" class="font-bold">...</span>
-                    <div id="obe_qr_dekan" style="display: flex; justify-content: center; margin: 3px 0;"></div>
+                    <div id="obe_qr_dekan" style="display: block; margin: 3px auto; width: 95px; height: 95px; text-align: center;"></div>
                     <small style="font-size:8.5pt; color:#333; display:block;" id="obe_valid_dekan"></small>
                     <br>
                     <span class="font-bold" id="obe_sign_dekan_nama">...</span><br>
@@ -515,7 +515,7 @@
                 <td style="width: 50%; text-align: center; vertical-align: bottom;">
                     Karanganyar, <span id="obe_ba_tgl_cetak">...</span><br>
                     Ketua Program Studi,
-                    <div id="obe_qr_kaprodi" style="display: flex; justify-content: center; margin: 3px 0;"></div>
+                    <div id="obe_qr_kaprodi" style="display: block; margin: 3px auto; width: 95px; height: 95px; text-align: center;"></div>
                     <small style="font-size:8.5pt; color:#333; display:block;" id="obe_valid_kaprodi"></small>
                     <br>
                     <span class="font-bold" id="obe_sign_kaprodi_nama">...</span><br>
@@ -743,7 +743,7 @@
                                 let ttdBadge = '';
                                 if (ttdStatus) {
                                     ttdBadge = `
-                                        (<div id="qr_summary_${ex.role}" style="display: inline-block; vertical-align: middle;"></div>)
+                                        <div id="qr_summary_${ex.role}" style="display: inline-block; vertical-align: middle; width: 75px; height: 75px;"></div>
                                         <small style="font-size: 6pt; color: #28a745; font-weight: bold; display: block; margin-top: 2px;">✓ VERIFIKASI ELEKTRONIK</small>
                                         <small style="font-size: 5.5pt; color: #555; display: block;"><b>valid_id:</b> ${validId}</small>
                                     `;
@@ -957,7 +957,7 @@
                                                     <span class="font-bold">${getRoleLabel(ex.role, isObe)}</span>
                                                     <br><br>
                                                     ${ttdStatus ? `
-                                                        <div id="qr_page_${ex.role}" style="display: flex; justify-content: center; margin: 5px 0;"></div>
+                                                        <div id="qr_page_${ex.role}" style="display: block; margin: 5px auto; width: 95px; height: 95px; text-align: center;"></div>
                                                         <div class="signature-status-signed">✓ VERIFIKASI ELEKTRONIK</div>
                                                         <small style="font-size: 8.5pt; color: #333; display: block; margin-top: 2px;"><b>valid_id : ${validId}</b></small>
                                                     ` : `
