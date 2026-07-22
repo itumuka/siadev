@@ -263,7 +263,7 @@
             <tr>
                 <td class="meta-label">Judul Skripsi</td>
                 <td class="meta-separator">:</td>
-                <td class="meta-value font-bold" style="font-style: italic;" id="skripsi_judul">...</td>
+                <td class="meta-value font-bold" style="text-transform: uppercase;" id="skripsi_judul">...</td>
             </tr>
         </table>
 
@@ -385,7 +385,7 @@
             <tr>
                 <td class="meta-label">Judul Luaran/TA</td>
                 <td class="meta-separator">:</td>
-                <td class="meta-value font-bold" style="font-style: italic;" id="obe_skripsi_judul">...</td>
+                <td class="meta-value font-bold" style="text-transform: uppercase;" id="obe_skripsi_judul">...</td>
             </tr>
         </table>
 
@@ -799,8 +799,8 @@
                                         
                                         <!-- A. JUDUL SKRIPSI -->
                                         <div class="font-bold text-dark" style="margin-top: 10px; margin-bottom: 2px; font-size: 9.5pt;">A. JUDUL SKRIPSI</div>
-                                        <div style="font-style: italic; font-weight: bold; margin-left: 15px; margin-bottom: 8px; font-size: 9.5pt;">
-                                            "${u.judul || '-'}"
+                                        <div style="text-transform: uppercase; font-weight: bold; margin-left: 15px; margin-bottom: 8px; font-size: 9.5pt;">
+                                            "${u.judul ? u.judul.toUpperCase() : '-'}"
                                         </div>
 
                                         <!-- B. IDENTITAS MAHASISWA -->
