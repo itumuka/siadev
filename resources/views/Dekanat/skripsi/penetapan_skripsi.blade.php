@@ -317,7 +317,7 @@
                     },
                     { 
                         data: 'nomor_ba', 
-                        className: 'text-center font-weight-bold text-dark',
+                        className: 'text-center font-weight-bold',
                         render: function(data) {
                             return data ? `<span class="text-success">${data}</span>` : '<span class="text-muted font-italic">Belum Diinput</span>';
                         }
