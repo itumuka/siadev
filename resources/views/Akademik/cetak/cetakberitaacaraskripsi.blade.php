@@ -267,7 +267,7 @@
             </tr>
         </table>
 
-        <div class="font-bold" style="margin-top: 15px; margin-bottom: 5px;">TIM PENGUJI</div>
+        <div class="font-bold" style="margin-top: 15px; margin-bottom: 5px;">A. TIM PENGUJI</div>
         <table class="score-table">
             <thead>
                 <tr>
@@ -282,15 +282,18 @@
             </tbody>
         </table>
 
-        <div class="font-bold" style="margin-top: 15px; margin-bottom: 5px;">PENILAIAN Tim Penguji</div>
+        <div class="font-bold" style="margin-top: 15px; margin-bottom: 5px;">B. PENILAIAN</div>
         <table class="score-table">
             <thead>
                 <tr>
-                    <th style="width: 8%;">No.</th>
-                    <th style="width: 47%; text-align: left;">Nama Dosen</th>
-                    <th style="width: 15%;">Nilai Angka</th>
-                    <th style="width: 15%;">Nilai Huruf</th>
-                    <th style="width: 15%;">Tanda Tangan</th>
+                    <th style="width: 8%;" rowspan="2">No.</th>
+                    <th style="width: 47%; text-align: left;" rowspan="2">Tim Penguji :</th>
+                    <th style="width: 30%;" colspan="2">Nilai</th>
+                    <th style="width: 15%;" rowspan="2">Tanda Tangan</th>
+                </tr>
+                <tr>
+                    <th style="width: 15%;">Angka</th>
+                    <th style="width: 15%;">Huruf</th>
                 </tr>
             </thead>
             <tbody id="tbody_penilaian_penguji">
@@ -298,28 +301,32 @@
             </tbody>
         </table>
 
-        <div class="checkbox-container">
-            <div class="checkbox-item">
-                <span class="checkbox-box" id="cb_lulus_tanpa_perbaikan">&nbsp;</span> Lulus Tanpa Perbaikan
+        <div class="font-bold" style="margin-top: 15px; margin-bottom: 5px;">C. REKOMENDASI DAN HASIL KELULUSAN</div>
+        <p style="margin-bottom: 5px;">Berdasarkan nilai rata-rata tim penguji, mahasiswa tersebut dinyatakan:</p>
+        <div style="margin-left: 15px; line-height: 1.8; font-weight: bold;">
+            <div style="margin-bottom: 3px;">
+                [&nbsp;<span id="cb_lulus_tanpa_perbaikan" style="display: inline-block; width: 12px; text-align: center;">&nbsp;</span>&nbsp;] Lulus Tanpa Perbaikan
             </div>
-            <div class="checkbox-item">
-                <span class="checkbox-box" id="cb_lulus_dengan_perbaikan">&nbsp;</span> Lulus dengan Perbaikan
+            <div style="margin-bottom: 3px;">
+                [&nbsp;<span id="cb_lulus_dengan_perbaikan" style="display: inline-block; width: 12px; text-align: center;">&nbsp;</span>&nbsp;] Lulus dengan Perbaikan (Maksimal waktu revisi: <span id="batas_revisi_display">.....</span> hari)
             </div>
-            <div class="checkbox-item">
-                <span class="checkbox-box" id="cb_tidak_lulus_ujian_ulang">&nbsp;</span> Tidak Lulus dengan Ujian Ulang
+            <div style="margin-bottom: 3px;">
+                [&nbsp;<span id="cb_tidak_lulus_ujian_ulang" style="display: inline-block; width: 12px; text-align: center;">&nbsp;</span>&nbsp;] Tidak Lulus dengan Ujian Ulang
             </div>
-            <div class="checkbox-item">
-                <span class="checkbox-box" id="cb_tidak_lulus_judul_baru">&nbsp;</span> Tidak Lulus dengan Menulis Skripsi Judul Baru
+            <div style="margin-bottom: 3px;">
+                [&nbsp;<span id="cb_tidak_lulus_judul_baru" style="display: inline-block; width: 12px; text-align: center;">&nbsp;</span>&nbsp;] Tidak Lulus dengan Menulis Skripsi Judul Baru
             </div>
         </div>
 
-        <table class="signature-table" style="width: 100%; margin-top: 20px;">
+        <table class="signature-table" style="width: 100%; margin-top: 25px;">
             <tr>
                 <td style="width: 50%; text-align: center; vertical-align: bottom;">
                     Mengetahui,<br>
-                    Dekan <span id="sign_nama_fakultas">...</span>
+                    Dekan<br>
+                    <span id="sign_nama_fakultas" class="font-bold">...</span>
                     <div id="qr_dekan" style="display: flex; justify-content: center; margin: 5px 0;"></div>
                     <small style="font-size:7pt; color:#333; display:block;" id="valid_dekan"></small>
+                    <br>
                     <span class="font-bold" id="sign_dekan_nama">...</span><br>
                     NIDN. <span id="sign_dekan_nidn">...</span>
                 </td>
@@ -328,6 +335,7 @@
                     Ketua Program Studi,
                     <div id="qr_kaprodi" style="display: flex; justify-content: center; margin: 5px 0;"></div>
                     <small style="font-size:7pt; color:#333; display:block;" id="valid_kaprodi"></small>
+                    <br>
                     <span class="font-bold" id="sign_kaprodi_nama">...</span><br>
                     NIDN. <span id="sign_kaprodi_nidn">...</span>
                 </td>
@@ -350,17 +358,10 @@
             var gradeRules = {};
 
             function getRoleLabel(role, isObe) {
-                if (isObe) {
-                    if (role === 'penguji1') return 'Ketua Tim Verifikasi';
-                    if (role === 'penguji2') return 'Verifikator 2';
-                    if (role === 'penguji3') return 'Verifikator 3';
-                    return 'Tim Verifikator';
-                } else {
-                    if (role === 'penguji1') return 'Ketua Penguji / Sidang';
-                    if (role === 'penguji2') return 'Dosen Penguji II';
-                    if (role === 'penguji3') return 'Dosen Penguji III';
-                    return 'Dosen Penguji';
-                }
+                if (role === 'penguji1') return 'Ketua Penguji';
+                if (role === 'penguji2') return 'Sekretaris';
+                if (role === 'penguji3') return 'Anggota';
+                return 'Dosen Penguji';
             }
 
             function dateToIndonesianText(dateStr) {
@@ -388,7 +389,7 @@
                     return n;
                 }
                 
-                return `${dayName} tanggal ${terbilang(dateNum)} bulan ${monthName} tahun ${terbilang(year)}`;
+                return `<b>${dayName}</b> tanggal <b>${terbilang(dateNum)}</b> bulan <b>${monthName}</b> tahun <b>${terbilang(year)}</b>`;
             }
 
             function formatLongDate(dateStr) {
@@ -559,17 +560,17 @@
                                 let ttdBadge = '';
                                 if (ttdStatus) {
                                     ttdBadge = `
-                                        <div id="qr_summary_${ex.role}" style="display: flex; justify-content: center; margin: 2px 0;"></div>
-                                        <small style="font-size: 6.5pt; color: #28a745; font-weight: bold; display: block;">✓ VERIFIKASI ELEKTRONIK</small>
-                                        <small style="font-size: 6pt; color: #555;"><b>valid_id:</b> ${validId}</small>
+                                        (<div id="qr_summary_${ex.role}" style="display: inline-block; vertical-align: middle;"></div>)
+                                        <small style="font-size: 6pt; color: #28a745; font-weight: bold; display: block; margin-top: 2px;">✓ VERIFIKASI ELEKTRONIK</small>
+                                        <small style="font-size: 5.5pt; color: #555; display: block;"><b>valid_id:</b> ${validId}</small>
                                     `;
                                 } else {
-                                    ttdBadge = `<span style="color:#dc3545; font-weight:bold;">Belum Ttd</span>`;
+                                    ttdBadge = `(.......................)`;
                                 }
 
                                 examinerRowsHtml += `
                                     <tr>
-                                        <td>${index}.</td>
+                                        <td>${index++}.</td>
                                         <td class="text-left font-bold">${ex.name}</td>
                                         <td class="font-bold">${exFinal.toFixed(2)}</td>
                                         <td class="font-bold text-success">${letter}</td>
@@ -850,12 +851,21 @@
                             // Append Consolidated row to Penilaian Tim Penguji Table
                             $('#tbody_penilaian_penguji').append(`
                                 <tr style="background-color:#f2f2f2;">
-                                    <td colspan="2" class="text-left font-bold">NILAI AKHIR KUMULATIF (RATA-RATA)</td>
-                                    <td class="font-bold" style="font-size:12pt; color:#007bff;">${finalKumulatif.toFixed(2)}</td>
-                                    <td class="font-bold text-success" style="font-size:12pt;">${letterKumulatif}</td>
+                                    <td colspan="2" class="text-left font-bold">NILAI AKHIR KUMULATIF</td>
+                                    <td class="font-bold" style="font-size:11pt; color:#000;">${finalKumulatif.toFixed(2)}</td>
+                                    <td class="font-bold text-success" style="font-size:11pt;">${letterKumulatif}</td>
                                     <td></td>
                                 </tr>
                             `);
+
+                            let diffDays = '.....';
+                            if (ba && ba.batas_revisi && u.tanggal_ujian) {
+                                const dUjian = new Date(u.tanggal_ujian);
+                                const dRevisi = new Date(ba.batas_revisi);
+                                const diffTime = Math.abs(dRevisi - dUjian);
+                                diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                            }
+                            $('#batas_revisi_display').text(diffDays);
 
                             // Check dynamic status box
                             let keputusanVal = (ba && ba.keputusan) ? ba.keputusan : null;
