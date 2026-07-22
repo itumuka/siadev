@@ -5,6 +5,13 @@
         th, td {
             white-space: nowrap;
         }
+        #tb_penetapan_dekanat td:nth-child(3) {
+            white-space: normal !important;
+            word-break: break-word !important;
+            word-wrap: break-word !important;
+            min-width: 250px;
+            max-width: 350px;
+        }
         .glass-card {
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
@@ -296,7 +303,7 @@
                         render: function(data, type, row) {
                             let title = data || '-';
                             let badge = row.is_obe ? ' <span class="badge badge-success-light badge-sm">OBE</span>' : ' <span class="badge badge-primary-light badge-sm">Reguler</span>';
-                            return `<div style="max-width:300px; white-space:normal; font-style:italic;">${title}${badge}</div>`;
+                            return `<div style="max-width:300px; white-space:normal; word-break:break-word; font-style:italic;">${title}${badge}</div>`;
                         }
                     },
                     { 
