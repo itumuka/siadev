@@ -249,7 +249,7 @@
             Nomor: <span id="ba_nomor">___/___/___/2026</span>
         </div>
 
-        <p>Pada hari ini <span id="ba_hari_tanggal_indo">...</span>, telah dilaksanakan Ujian Sidang Skripsi bagi mahasiswa:</p>
+        <p>Pada hari ini, <span id="ba_hari_tanggal_indo">...</span>, telah dilaksanakan Ujian Sidang Skripsi bagi mahasiswa:</p>
 
         <!-- Meta Information -->
         <table class="meta-table" style="margin-left: 15px;">
@@ -371,7 +371,7 @@
             Nomor: <span id="obe_ba_nomor">___/___/___/2026</span>
         </div>
 
-        <p style="font-size: 8.5pt; margin-bottom: 8px;">Pada hari ini <span id="obe_ba_hari_tanggal_indo" class="font-bold">...</span>, Tim Penguji Program Studi telah melakukan verifikasi dan penilaian terhadap luaran akademik (output/outcome) sebagai pengganti Ujian Komprehensif/Sidang Skripsi bagi mahasiswa:</p>
+        <p style="font-size: 8.5pt; margin-bottom: 8px;">Pada hari ini, <span id="obe_ba_hari_tanggal_indo">...</span>, Tim Penguji Program Studi telah melakukan verifikasi dan penilaian terhadap luaran akademik (output/outcome) sebagai pengganti Ujian Komprehensif/Sidang Skripsi bagi mahasiswa:</p>
 
         <!-- Meta Information -->
         <table class="meta-table" style="margin-left: 15px; font-size: 8.5pt; margin-bottom: 8px;">
@@ -571,7 +571,11 @@
                     return n;
                 }
                 
-                return `<b>${dayName}</b> tanggal <b>${terbilang(dateNum)}</b> bulan <b>${monthName}</b> tahun <b>${terbilang(year)}</b>`;
+                const dStr = String(dateNum).padStart(2, '0');
+                const mStr = String(dt.getMonth() + 1).padStart(2, '0');
+                const numericDate = `${dStr}-${mStr}-${year}`;
+                
+                return `${dayName}, tanggal ${terbilang(dateNum)}, bulan ${monthName}, tahun ${terbilang(year)} (${numericDate})`;
             }
 
             function formatLongDate(dateStr) {
