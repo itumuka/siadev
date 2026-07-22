@@ -22,16 +22,70 @@
         href="{{ url('assets/vendor_components/bootstrap-duallistbox-4/dist/bootstrap-duallistbox.css') }}">
 
     <style>
-        .main-sidebar,
-        .main-sidebar .multinav,
-        .main-sidebar .sidebar {
-            border-bottom-right-radius: 24px !important;
+        /* Logo Box Centering & Premium Shadow */
+        .logo-box {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        .logo-box .logo {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            flex-grow: 1;
+            padding: 0 !important;
+        }
+        .logo-lg img {
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.35));
+            transition: all 0.3s ease;
+        }
+        .logo-lg img:hover {
+            filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5));
+            transform: scale(1.04);
         }
 
-        .theme-primary.light-skin .sidebar-menu>li.active {
-            background-color: rgba(0, 82, 204, 0);
-            /* color: #0052cc; */
-            border-left: 5px solid #7C261B;
+        /* Premium Floating Capsule Active Menu */
+        .sidebar-menu > li.active:not(.treeview) > a,
+        .sidebar-menu .treeview-menu > li.active > a {
+            background: linear-gradient(135deg, #7C261B 0%, #a8382a 100%) !important;
+            color: #ffffff !important;
+            border-radius: 12px !important;
+            margin: 4px 14px !important;
+            padding: 12px 18px !important;
+            box-shadow: 0 8px 16px rgba(124, 38, 27, 0.3) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .sidebar-menu > li.active:not(.treeview) > a i,
+        .sidebar-menu .treeview-menu > li.active > a i {
+            color: #ffffff !important;
+        }
+
+        .sidebar-menu > li.active:not(.treeview) > a:hover,
+        .sidebar-menu .treeview-menu > li.active > a:hover {
+            transform: translateY(-1.5px);
+            box-shadow: 0 10px 20px rgba(124, 38, 27, 0.45) !important;
+            filter: brightness(1.05);
+        }
+
+        /* Parent treeview link when sub-item is active */
+        .sidebar-menu > li.treeview.active > a {
+            background: rgba(124, 38, 27, 0.08) !important;
+            color: #7C261B !important;
+            border-radius: 12px !important;
+            margin: 4px 14px !important;
+            padding: 12px 18px !important;
+            border-left: 4px solid #7C261B !important;
+        }
+
+        .sidebar-menu > li.treeview.active > a i {
+            color: #7C261B !important;
+        }
+
+        /* Remove default active styling */
+        .theme-primary.light-skin .sidebar-menu > li.active {
+            background-color: transparent !important;
+            border-left: none !important;
         }
 
         .swal-popup {
