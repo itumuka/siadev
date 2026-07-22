@@ -266,7 +266,7 @@
             <tr>
                 <td class="meta-label">Judul Skripsi</td>
                 <td class="meta-separator">:</td>
-                <td class="meta-value font-bold" style="text-transform: uppercase;" id="skripsi_judul">...</td>
+                <td class="meta-value font-bold" style="text-transform: uppercase; max-width: 550px; line-height: 1.4; font-size: 11.5pt;" id="skripsi_judul">...</td>
             </tr>
         </table>
 
@@ -388,7 +388,7 @@
             <tr>
                 <td class="meta-label">Judul Luaran/TA</td>
                 <td class="meta-separator">:</td>
-                <td class="meta-value font-bold" style="text-transform: uppercase;" id="obe_skripsi_judul">...</td>
+                <td class="meta-value font-bold" style="text-transform: uppercase; max-width: 550px; line-height: 1.4; font-size: 11.5pt;" id="obe_skripsi_judul">...</td>
             </tr>
         </table>
 
@@ -798,11 +798,11 @@
                                             </tr>
                                         </table>
 
-                                        <div class="title" style="margin-top: 10px;">PENILAIAN UJIAN SKRIPSI</div>
+                                        <div class="title" style="margin-top: 10px; font-size: 14pt; line-height: 1.2; max-width: 600px;">PENILAIAN UJIAN SKRIPSI</div>
                                         
                                         <!-- A. JUDUL SKRIPSI -->
                                         <div class="font-bold text-dark" style="margin-top: 10px; margin-bottom: 2px; font-size: 9.5pt;">A. JUDUL SKRIPSI</div>
-                                        <div style="text-transform: uppercase; font-weight: bold; margin-left: 15px; margin-bottom: 8px; font-size: 9.5pt;">
+                                        <div style="text-transform: uppercase; font-weight: bold; margin-left: 15px; margin-bottom: 8px; font-size: 11pt; max-width: 550px; line-height: 1.4;">
                                             "${u.judul ? u.judul.toUpperCase() : '-'}"
                                         </div>
 
