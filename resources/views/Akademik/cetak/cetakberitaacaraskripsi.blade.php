@@ -75,6 +75,9 @@
 
         .meta-value {
             width: 72%;
+            word-wrap: break-word;
+            word-break: break-word;
+            white-space: normal;
         }
 
         .score-table {
@@ -368,7 +371,7 @@
             Nomor: <span id="obe_ba_nomor">___/___/___/2026</span>
         </div>
 
-        <p style="font-size: 8.5pt; margin-bottom: 8px;">Pada hari ini <span id="obe_ba_hari_tanggal_indo" class="font-bold">...</span>, Tim Penilai/Verifikator Program Studi telah melakukan verifikasi dan penilaian terhadap luaran akademik (output/outcome) sebagai pengganti Ujian Komprehensif/Sidang Skripsi bagi mahasiswa:</p>
+        <p style="font-size: 8.5pt; margin-bottom: 8px;">Pada hari ini <span id="obe_ba_hari_tanggal_indo" class="font-bold">...</span>, Tim Penguji Program Studi telah melakukan verifikasi dan penilaian terhadap luaran akademik (output/outcome) sebagai pengganti Ujian Komprehensif/Sidang Skripsi bagi mahasiswa:</p>
 
         <!-- Meta Information -->
         <table class="meta-table" style="margin-left: 15px; font-size: 8.5pt; margin-bottom: 8px;">
@@ -450,7 +453,7 @@
             </div>
         </div>
 
-        <div class="font-bold text-dark" style="margin-top: 6px; margin-bottom: 2px; font-size: 9pt;">B. TIM PENILAI/VERIFIKATOR</div>
+        <div class="font-bold text-dark" style="margin-top: 6px; margin-bottom: 2px; font-size: 9pt;">B. TIM PENGUJI</div>
         <table class="score-table" style="font-size: 8pt; margin-top: 0px;">
             <thead>
                 <tr>
@@ -470,7 +473,7 @@
             <thead>
                 <tr>
                     <th style="width: 8%;" rowspan="2">No.</th>
-                    <th style="width: 47%; text-align: left;" rowspan="2">Tim Verifikator :</th>
+                    <th style="width: 47%; text-align: left;" rowspan="2">Tim Penguji :</th>
                     <th style="width: 30%;" colspan="2">Nilai</th>
                     <th style="width: 15%;" rowspan="2">Tanda Tangan</th>
                 </tr>
