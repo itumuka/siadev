@@ -798,7 +798,7 @@
                                             </tr>
                                         </table>
 
-                                        <div class="title" style="margin-top: 10px; font-size: 14pt; line-height: 1.2; max-width: 600px;">PENILAIAN UJIAN SKRIPSI</div>
+                                        <div class="title" style="margin-top: 10px;">PENILAIAN UJIAN SKRIPSI</div>
                                         
                                         <!-- A. JUDUL SKRIPSI -->
                                         <div class="font-bold text-dark" style="margin-top: 10px; margin-bottom: 2px; font-size: 12pt;">A. JUDUL SKRIPSI</div>
