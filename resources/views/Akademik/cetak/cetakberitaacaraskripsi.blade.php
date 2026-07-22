@@ -1128,12 +1128,12 @@
                                     
                                     let sumElem = document.getElementById('qr_summary_' + ex.role);
                                     if (sumElem) {
-                                        new QRCode(sumElem, { text: qrText, width: 45, height: 45, correctLevel: QRCode.CorrectLevel.M });
+                                        new QRCode(sumElem, { text: qrText, width: 75, height: 75, correctLevel: QRCode.CorrectLevel.L });
                                     }
                                     
                                     let pageElem = document.getElementById('qr_page_' + ex.role);
                                     if (pageElem) {
-                                        new QRCode(pageElem, { text: qrText, width: 60, height: 60, correctLevel: QRCode.CorrectLevel.M });
+                                        new QRCode(pageElem, { text: qrText, width: 95, height: 95, correctLevel: QRCode.CorrectLevel.L });
                                     }
                                 }
                             });
@@ -1149,9 +1149,9 @@
                                 if (kaprodiElem) {
                                     new QRCode(kaprodiElem, {
                                         text: `VALID ID: ${validKaprodi}\nKetua Program Studi: ${u.nama_kaprodi || '-'}\nProdi: ${u.nama_program_studi || '-'}`,
-                                        width: 60,
-                                        height: 60,
-                                        correctLevel: QRCode.CorrectLevel.M
+                                        width: 95,
+                                        height: 95,
+                                        correctLevel: QRCode.CorrectLevel.L
                                     });
                                 }
 
@@ -1165,9 +1165,9 @@
                                     if (dekanElem) {
                                         new QRCode(dekanElem, {
                                             text: `VALID ID: ${validDekan}\nDekan: ${u.nama_dekan || '-'}\nFakultas: ${u.nama_fakultas || '-'}`,
-                                            width: 60,
-                                            height: 60,
-                                            correctLevel: QRCode.CorrectLevel.M
+                                            width: 95,
+                                            height: 95,
+                                            correctLevel: QRCode.CorrectLevel.L
                                         });
                                     }
                                 } else {
