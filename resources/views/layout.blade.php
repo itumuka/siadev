@@ -44,42 +44,82 @@
             transform: scale(1.04);
         }
 
-        /* Premium Floating Capsule Active Menu */
-        .sidebar-menu > li.active:not(.treeview) > a,
-        .sidebar-menu .treeview-menu > li.active > a {
-            background: linear-gradient(135deg, #7C261B 0%, #a8382a 100%) !important;
-            color: #ffffff !important;
-            border-radius: 12px !important;
-            margin: 4px 14px !important;
-            padding: 12px 18px !important;
-            box-shadow: 0 8px 16px rgba(124, 38, 27, 0.3) !important;
-            transition: all 0.3s ease !important;
+        /* Premium Curved Outside Active Menu (Inverse Border Radius) */
+        body:not(.sidebar-collapse) .sidebar-menu > li.active:not(.treeview) > a,
+        body:not(.sidebar-collapse) .sidebar-menu .treeview-menu > li.active > a {
+            background-color: #fafafa !important;
+            color: #7C261B !important;
+            font-weight: 600 !important;
+            border-top-left-radius: 30px !important;
+            border-bottom-left-radius: 30px !important;
+            border-top-right-radius: 0px !important;
+            border-bottom-right-radius: 0px !important;
+            margin-left: 14px !important;
+            padding-left: 24px !important;
+            position: relative !important;
+            display: flex !important;
+            align-items: center !important;
+            z-index: 100 !important;
+            box-shadow: -5px 0 10px rgba(0, 0, 0, 0.05) !important;
         }
 
-        .sidebar-menu > li.active:not(.treeview) > a i,
-        .sidebar-menu .treeview-menu > li.active > a i {
-            color: #ffffff !important;
+        body:not(.sidebar-collapse) .sidebar-menu > li.active:not(.treeview) > a i,
+        body:not(.sidebar-collapse) .sidebar-menu .treeview-menu > li.active > a i {
+            color: #7C261B !important;
         }
 
-        .sidebar-menu > li.active:not(.treeview) > a:hover,
-        .sidebar-menu .treeview-menu > li.active > a:hover {
-            transform: translateY(-1.5px);
-            box-shadow: 0 10px 20px rgba(124, 38, 27, 0.45) !important;
-            filter: brightness(1.05);
+        /* Top Inverse Curve */
+        body:not(.sidebar-collapse) .sidebar-menu > li.active:not(.treeview) > a::before,
+        body:not(.sidebar-collapse) .sidebar-menu .treeview-menu > li.active > a::before {
+            content: '' !important;
+            position: absolute !important;
+            right: 0 !important;
+            top: -30px !important;
+            width: 30px !important;
+            height: 30px !important;
+            background-color: transparent !important;
+            border-bottom-right-radius: 30px !important;
+            box-shadow: 15px 15px 0 0 #fafafa !important;
+            pointer-events: none !important;
+            z-index: 99 !important;
+        }
+
+        /* Bottom Inverse Curve */
+        body:not(.sidebar-collapse) .sidebar-menu > li.active:not(.treeview) > a::after,
+        body:not(.sidebar-collapse) .sidebar-menu .treeview-menu > li.active > a::after {
+            content: '' !important;
+            position: absolute !important;
+            right: 0 !important;
+            bottom: -30px !important;
+            width: 30px !important;
+            height: 30px !important;
+            background-color: transparent !important;
+            border-top-right-radius: 30px !important;
+            box-shadow: 15px -15px 0 0 #fafafa !important;
+            pointer-events: none !important;
+            z-index: 99 !important;
         }
 
         /* Parent treeview link when sub-item is active */
         .sidebar-menu > li.treeview.active > a {
-            background: rgba(124, 38, 27, 0.08) !important;
-            color: #7C261B !important;
-            border-radius: 12px !important;
-            margin: 4px 14px !important;
-            padding: 12px 18px !important;
-            border-left: 4px solid #7C261B !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+            color: #ffffff !important;
+            border-left: 4px solid #eab308 !important;
+            font-weight: 600 !important;
         }
 
         .sidebar-menu > li.treeview.active > a i {
-            color: #7C261B !important;
+            color: #eab308 !important;
+        }
+
+        /* Fallback for collapsed sidebar */
+        body.sidebar-collapse .sidebar-menu > li.active > a {
+            background-color: #7C261B !important;
+            color: #ffffff !important;
+        }
+
+        body.sidebar-collapse .sidebar-menu > li.active > a i {
+            color: #ffffff !important;
         }
 
         /* Remove default active styling */
