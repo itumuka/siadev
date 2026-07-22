@@ -162,6 +162,9 @@
                             <li class="{{ request()->is('akademik/manajemen-ta/pemantauan-sempro') ? 'active' : '' }}">
                                 <a href="{{ url('akademik/manajemen-ta/pemantauan-sempro') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pemantauan Sempro Prodi</a>
                             </li>
+                            <li class="{{ request()->is('akademik/manajemen-ta/penetapan-skripsi') ? 'active' : '' }}">
+                                <a href="{{ url('akademik/manajemen-ta/penetapan-skripsi') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Penetapan & Nomor BA</a>
+                            </li>
                         </ul>
                     </li>
                     <li class="treeview">

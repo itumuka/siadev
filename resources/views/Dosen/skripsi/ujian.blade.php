@@ -393,7 +393,7 @@
                     $('#n_catatan').attr('placeholder', 'Tuliskan revisi, masukan, atau catatan khusus jalannya ujian sidang...');
                 }
 
-                if (student.role_dosen === 'penguji1') {
+                if (student.role_dosen === 'penguji1' || student.role_dosen === 'penguji2') {
                     $('#group_keputusan').show();
                 } else {
                     $('#group_keputusan').hide();
@@ -810,7 +810,9 @@
                         id_skripsi_ujian: id_skripsi_ujian,
                         id_dosen: id_dosen,
                         catatan: catatan,
-                        nilai: nilai
+                        nilai: nilai,
+                        keputusan: $('#group_keputusan').is(':visible') ? $('#n_keputusan').val() : undefined,
+                        batas_revisi: $('#group_keputusan').is(':visible') ? $('#n_batas_revisi').val() : undefined
                     },
                     beforeSend: function() {
                         btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Menyimpan Nilai...');

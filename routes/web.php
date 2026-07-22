@@ -151,6 +151,7 @@ Route::middleware(['ceklogin'])->group(function () {
         Route::get("/akademik/rekap-berita-acara", "Akademik@rekap_berita_acara")->name('rekap_ba_dosen');
         Route::get("/akademik/manajemen-ta/rekap-bimbingan", "Akademik@rekap_bimbingan")->name('akrekap_bimbingan');
         Route::get("/akademik/manajemen-ta/pemantauan-sempro", "Akademik@pemantauan_sempro")->name('akpemantauan_sempro');
+        Route::get("/akademik/manajemen-ta/penetapan-skripsi", "Akademik@skripsi_penetapan")->name('akrekap_penetapan_skripsi');
         Route::get("/akademik/kegiatanakademik", "Akademik@kegiatanakademik")->name('akkegiatanakademik');
         Route::get("/akademik/fakultas", "Akademik@fakultas")->name('akfakultas');
         Route::get("/akademik/programstudi", "Akademik@programstudi")->name('akprogramstudi');

@@ -4,7 +4,7 @@
     <title>{{ $title }}</title>
     <style>
         @page {
-            size: A4 portrait;
+            size: auto;
             margin: 15mm 15mm 15mm 15mm;
         }
 
@@ -246,7 +246,7 @@
             Nomor: <span id="ba_nomor">___/___/___/2026</span>
         </div>
 
-        <p>Pada hari ini <span id="ba_hari_tanggal_indo" class="font-bold">...</span>, telah dilaksanakan Ujian Sidang Skripsi bagi mahasiswa:</p>
+        <p>Pada hari ini <span id="ba_hari_tanggal_indo">...</span>, telah dilaksanakan Ujian Sidang Skripsi bagi mahasiswa:</p>
 
         <!-- Meta Information -->
         <table class="meta-table" style="margin-left: 15px;">
@@ -485,8 +485,8 @@
                             // 1. Populate Page 1 Header & Info
                             $('#header_fakultas').text(namaFakultasDisplay);
                             $('#ba_title').text(isObe ? 'BERITA ACARA UJIAN SIDANG SKRIPSI BERBASIS OBE' : 'BERITA ACARA UJIAN SIDANG SKRIPSI');
-                            $('#ba_nomor').text(ba && ba.id ? `BA/SKR/${ba.id}/${new Date(u.tanggal_ujian).getFullYear()}` : '___/___/___/2026');
-                            $('#ba_hari_tanggal_indo').text(dateToIndonesianText(u.tanggal_ujian));
+                            $('#ba_nomor').text(ba && ba.nomor_ba ? ba.nomor_ba : (ba && ba.id ? `BA/SKR/${ba.id}/${new Date(u.tanggal_ujian).getFullYear()}` : '___/___/___/2026'));
+                            $('#ba_hari_tanggal_indo').html(dateToIndonesianText(u.tanggal_ujian));
                             
                             $('#mhs_nama').text(u.nama_mahasiswa);
                             $('#mhs_nim').text(u.nim);
