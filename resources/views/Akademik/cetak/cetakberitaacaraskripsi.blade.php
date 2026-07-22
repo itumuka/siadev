@@ -571,11 +571,7 @@
                     return n;
                 }
                 
-                const dStr = String(dateNum).padStart(2, '0');
-                const mStr = String(dt.getMonth() + 1).padStart(2, '0');
-                const numericDate = `${dStr}-${mStr}-${year}`;
-                
-                return `${dayName}, tanggal ${terbilang(dateNum)}, bulan ${monthName}, tahun ${terbilang(year)} (${numericDate})`;
+                return `${dayName}, tanggal ${terbilang(dateNum)}, bulan ${monthName}, tahun ${terbilang(year)}`;
             }
 
             function formatLongDate(dateStr) {
