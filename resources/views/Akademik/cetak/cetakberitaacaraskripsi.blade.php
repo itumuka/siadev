@@ -648,6 +648,7 @@
                             const data = res.data;
                             const u = data.ujian;
                             const ba = data.berita_acara;
+                            const luaran = data.luaran;
                             const nilais = data.nilai_indikator || [];
                             const isObe = u.is_obe == 1;
                             const currentStudentKodePenilaian = u.kode_penilaian || 1;
