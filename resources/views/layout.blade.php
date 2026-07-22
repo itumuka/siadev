@@ -22,10 +22,15 @@
         href="{{ url('assets/vendor_components/bootstrap-duallistbox-4/dist/bootstrap-duallistbox.css') }}">
 
     <style>
-        .main-sidebar {
-            border-top-right-radius: 16px !important;
-            border-bottom-right-radius: 16px !important;
-            overflow: hidden;
+        .main-sidebar,
+        .main-sidebar .multinav,
+        .main-sidebar .sidebar {
+            border-top-right-radius: 24px !important;
+            border-bottom-right-radius: 24px !important;
+        }
+
+        .logo-box {
+            border-top-right-radius: 24px !important;
         }
 
         .theme-primary.light-skin .sidebar-menu>li.active {
