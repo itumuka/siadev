@@ -38,10 +38,18 @@
             width: 100%;
         }
 
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         /* Left Panel: Branding / Curves */
         .branding-panel {
             flex: 1.2;
-            background: linear-gradient(135deg, #112240 0%, #172B4C 50%, #1d3d75 100%);
+            background: linear-gradient(135deg, #0b1329 0%, #112240 25%, #172b4d 50%, #1e3a8a 75%, #0b1329 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
             position: relative;
             display: flex;
             flex-direction: column;
@@ -109,6 +117,11 @@
             }
         }
 
+        @keyframes shineDivider {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
         .brand-logo {
             width: 130px;
             height: 130px;
@@ -124,6 +137,29 @@
             justify-content: center;
             animation: brandLogoPulse 3s infinite ease-in-out;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-logo::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.35) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: skewX(-20deg);
+            transition: left 0.8s ease-out;
+        }
+
+        .brand-logo:hover::after {
+            left: 150%;
         }
 
         .brand-logo img {
@@ -144,15 +180,17 @@
             letter-spacing: 0.8px;
             line-height: 1.3;
             color: #ffffff;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 0 10px rgba(234, 179, 8, 0.35);
         }
 
         .brand-divider {
             width: 80px;
             height: 4px;
-            background: #eab308;
+            background: linear-gradient(90deg, #eab308 0%, #fef08a 50%, #eab308 100%);
+            background-size: 200% auto;
             border-radius: 2px;
             margin: 15px auto;
+            animation: shineDivider 4s infinite linear;
         }
 
         .brand-subtitle {
