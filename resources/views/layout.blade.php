@@ -22,6 +22,12 @@
         href="{{ url('assets/vendor_components/bootstrap-duallistbox-4/dist/bootstrap-duallistbox.css') }}">
 
     <style>
+        .main-sidebar {
+            border-top-right-radius: 16px !important;
+            border-bottom-right-radius: 16px !important;
+            overflow: hidden;
+        }
+
         .theme-primary.light-skin .sidebar-menu>li.active {
             background-color: rgba(0, 82, 204, 0);
             /* color: #0052cc; */
