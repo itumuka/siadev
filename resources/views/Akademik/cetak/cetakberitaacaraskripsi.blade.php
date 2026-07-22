@@ -819,7 +819,6 @@
                             // Render QR codes for Kaprodi & Dekan
                             if (u.status === 'lulus' || u.status === 'ditetapkan' || (ba && ba.status === 'selesai')) {
                                 let validKaprodi = u.valid_id_kaprodi || `BA-KAPRODI-${u.id}-${u.nidn_kaprodi || ''}`;
-                                let validDekan = u.valid_id_dekan || `BA-DEKAN-${u.id}-${u.nidn_dekan || ''}`;
 
                                 $('#valid_kaprodi').html(`<b>valid_id : ${validKaprodi}</b>`);
                                 let kaprodiElem = document.getElementById('qr_kaprodi');
@@ -832,15 +831,21 @@
                                     });
                                 }
 
-                                $('#valid_dekan').html(`<b>valid_id : ${validDekan}</b>`);
-                                let dekanElem = document.getElementById('qr_dekan');
-                                if (dekanElem) {
-                                    new QRCode(dekanElem, {
-                                        text: `VALID ID: ${validDekan}\nDekan: ${u.nama_dekan || '-'}\nFakultas: ${u.nama_fakultas || '-'}`,
-                                        width: 60,
-                                        height: 60,
-                                        correctLevel: QRCode.CorrectLevel.M
-                                    });
+                                if (ba && ba.nomor_ba) {
+                                    let validDekan = u.valid_id_dekan || `BA-DEKAN-${u.id}-${u.nidn_dekan || ''}`;
+                                    $('#valid_dekan').html(`<b>valid_id : ${validDekan}</b>`);
+                                    let dekanElem = document.getElementById('qr_dekan');
+                                    if (dekanElem) {
+                                        new QRCode(dekanElem, {
+                                            text: `VALID ID: ${validDekan}\nDekan: ${u.nama_dekan || '-'}\nFakultas: ${u.nama_fakultas || '-'}`,
+                                            width: 60,
+                                            height: 60,
+                                            correctLevel: QRCode.CorrectLevel.M
+                                        });
+                                    }
+                                } else {
+                                    $('#valid_dekan').html('<small style="color:#721c24;font-weight:bold;">BELUM DITANDATANGANI (MENUNGGU VALIDASI FAKULTAS)</small>');
+                                    $('#qr_dekan').html('');
                                 }
                             }
 
