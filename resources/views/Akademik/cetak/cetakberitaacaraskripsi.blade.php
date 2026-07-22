@@ -371,10 +371,10 @@
             Nomor: <span id="obe_ba_nomor">___/___/___/2026</span>
         </div>
 
-        <p style="font-size: 8.5pt; margin-bottom: 8px;">Pada hari ini, <span id="obe_ba_hari_tanggal_indo">...</span>, Tim Penguji Program Studi telah melakukan verifikasi dan penilaian terhadap luaran akademik (output/outcome) sebagai pengganti Ujian Komprehensif/Sidang Skripsi bagi mahasiswa:</p>
+        <p style="margin-bottom: 8px;">Pada hari ini, <span id="obe_ba_hari_tanggal_indo">...</span>, Tim Penguji Program Studi telah melakukan verifikasi dan penilaian terhadap luaran akademik (output/outcome) sebagai pengganti Ujian Komprehensif/Sidang Skripsi bagi mahasiswa:</p>
 
         <!-- Meta Information -->
-        <table class="meta-table" style="margin-left: 15px; font-size: 8.5pt; margin-bottom: 8px;">
+        <table class="meta-table" style="margin-left: 15px; margin-bottom: 8px;">
             <tr>
                 <td class="meta-label">Nama Mahasiswa</td>
                 <td class="meta-separator">:</td>
@@ -488,8 +488,8 @@
         </table>
 
         <div class="font-bold text-dark" style="margin-top: 6px; margin-bottom: 2px; font-size: 12pt;">D. PERNYATAAN DAN KEPUTUSAN TIM PENGUJI</div>
-        <p style="font-size: 11pt; margin-bottom: 2px;">Berdasarkan hasil pemeriksaan validitas dokumen dan penilaian ketercapaian CPL pada luaran yang diajukan, maka mahasiswa tersebut dinyatakan:</p>
-        <div style="margin-left: 15px; line-height: 1.4; font-weight: bold; font-size: 11pt;">
+        <p style="margin-bottom: 2px;">Berdasarkan hasil pemeriksaan validitas dokumen dan penilaian ketercapaian CPL pada luaran yang diajukan, maka mahasiswa tersebut dinyatakan:</p>
+        <div style="margin-left: 15px; line-height: 1.4; font-weight: bold;">
             <div style="margin-bottom: 2px;">
                 [&nbsp;<span id="obe_cb_memenuhi" style="display: inline-block; width: 12px; text-align: center;">&nbsp;</span>&nbsp;] MEMENUHI SYARAT (BEBAS UJIAN SKRIPSI)
                 <span style="font-weight: normal; margin-left: 15px;">Dengan nilai konversi angka: <strong id="obe_decision_angka">...</strong> / Nilai Huruf: <strong id="obe_decision_huruf">...</strong></span>
@@ -500,7 +500,7 @@
             </div>
         </div>
 
-        <table class="signature-table" style="width: 100%; margin-top: 15px; font-size: 11pt;">
+        <table class="signature-table" style="width: 100%; margin-top: 15px;">
             <tr>
                 <td style="width: 50%; text-align: center; vertical-align: bottom;">
                     Mengetahui,<br>
