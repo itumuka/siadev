@@ -128,6 +128,7 @@ Route::middleware(['ceklogin'])->group(function () {
 
         // Skripsi Dekanat
         Route::get("/dekanat/skripsi/validasi-sk", "Dekanat@skripsi_index_sk")->name('dknskripsi_index_sk');
+        Route::get("/dekanat/skripsi/penetapan-skripsi", "Dekanat@skripsi_penetapan")->name('dknrekap_penetapan_skripsi');
         Route::get("/dekanat/skripsi/cetak-sk/{id}", "Dekanat@skripsi_print_sk")->name('dknskripsi_print_sk');
         Route::get("/dekanat/skripsi/cetak-surat-tugas/{id}", "Dekanat@skripsi_print_surat_tugas")->name('dknskripsi_print_st');
         Route::get("/dekanat/skripsi/print-sk/{id}", "Dekanat@skripsi_print_sk")->name('dknskripsi_print_sk_old');
@@ -151,7 +152,6 @@ Route::middleware(['ceklogin'])->group(function () {
         Route::get("/akademik/rekap-berita-acara", "Akademik@rekap_berita_acara")->name('rekap_ba_dosen');
         Route::get("/akademik/manajemen-ta/rekap-bimbingan", "Akademik@rekap_bimbingan")->name('akrekap_bimbingan');
         Route::get("/akademik/manajemen-ta/pemantauan-sempro", "Akademik@pemantauan_sempro")->name('akpemantauan_sempro');
-        Route::get("/akademik/manajemen-ta/penetapan-skripsi", "Akademik@skripsi_penetapan")->name('akrekap_penetapan_skripsi');
         Route::get("/akademik/kegiatanakademik", "Akademik@kegiatanakademik")->name('akkegiatanakademik');
         Route::get("/akademik/fakultas", "Akademik@fakultas")->name('akfakultas');
         Route::get("/akademik/programstudi", "Akademik@programstudi")->name('akprogramstudi');

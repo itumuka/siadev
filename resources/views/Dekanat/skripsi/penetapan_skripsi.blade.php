@@ -62,13 +62,13 @@
         <section class="content">
             <div class="box glass-card">
                 <div class="box-header with-border">
-                    <h4 class="box-title">Penetapan Nilai Akhir & Input Nomor Berita Acara Ujian</h4>
-                    <h6 class="box-subtitle">Berikut adalah daftar ujian sidang skripsi mahasiswa (Reguler & OBE). Akademik/Administrator dapat menginput dan memperbarui nomor resmi Berita Acara serta memantau status ujian.</h6>
+                    <h4 class="box-title">Penetapan Nilai & Nomor Berita Acara Ujian</h4>
+                    <h6 class="box-subtitle">Berikut adalah daftar ujian sidang skripsi mahasiswa di Fakultas Anda (Reguler & OBE). Silakan gunakan tombol <strong>"Atur BA"</strong> untuk memasukkan nomor resmi Berita Acara dan batas revisi.</h6>
                 </div>
 
                 <div class="box-body">
                     <div class="table-responsive">
-                        <table id="tb_penetapan_akademik" class="table table-hover table-bordered table-sm" width="100%">
+                        <table id="tb_penetapan_dekanat" class="table table-hover table-bordered table-sm" width="100%">
                             <thead class="bg-dark">
                                 <tr>
                                     <th>NIM</th>
@@ -229,6 +229,7 @@
         $(document).ready(function() {
             var token = "{{ $api_token }}";
             var userlogin = "{{ $session_username }}";
+            var kode_fakultas = "{{ $session_kode_fakultas }}";
             var activeUjianData = null;
 
             function formatDateTime(dateTimeStr) {
@@ -271,7 +272,7 @@
             }
 
             // Initialize Table
-            var table = $("#tb_penetapan_akademik").DataTable({
+            var table = $("#tb_penetapan_dekanat").DataTable({
                 destroy: true,
                 processing: true,
                 serverSide: false,
@@ -281,6 +282,9 @@
                     headers: {
                         "Authorization": 'Bearer ' + token,
                         "username": userlogin
+                    },
+                    data: {
+                        kode_fakultas: kode_fakultas
                     },
                     dataSrc: ""
                 },

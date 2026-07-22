@@ -97,11 +97,22 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="{{ Route::is('dknskripsi_index_sk') ? 'active' : '' }}">
-                        <a href="{{ route('dknskripsi_index_sk') }}"><i class="fa fa-file-text-o"><span
-                                    class="path1"></span><span class="path2"></span></i>
-                            <span>Validasi SK Pembimbing <sup class="text-danger">(Beta)</sup></span>
+                    <li class="treeview {{ request()->is('dekanat/skripsi/*') || Route::is('dknskripsi_index_sk') ? 'active' : '' }}">
+                        <a href="#">
+                            <i class="fa fa-graduation-cap"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Manajemen Skripsi</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
                         </a>
+                        <ul class="treeview-menu">
+                            <li class="{{ Route::is('dknskripsi_index_sk') ? 'active' : '' }}">
+                                <a href="{{ route('dknskripsi_index_sk') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Validasi SK Pembimbing</a>
+                            </li>
+                            <li class="{{ request()->is('dekanat/skripsi/penetapan-skripsi') ? 'active' : '' }}">
+                                <a href="{{ url('dekanat/skripsi/penetapan-skripsi') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Nomor BA & Penetapan</a>
+                            </li>
+                        </ul>
                     </li>
 
                     <li class="{{ Route::is('dknlap_ipkmahasiswa') ? 'active' : '' }}">

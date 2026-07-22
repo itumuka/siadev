@@ -246,5 +246,24 @@ class Dekanat extends Controller
         $title = "Cetak Surat Tugas Pembimbing";
         return view('Dekanat/skripsi/print_surat_tugas', compact('title', 'id'));
     }
+
+    public function skripsi_penetapan()
+    {
+        $session_username = Session::has('username') ? Session::get('username') : '';
+        $api_token = Session::has('token') ? Session::get('token') : '';
+        $api_url = config('setting.second_url');
+
+        $title = "Penetapan & Nomor Berita Acara";
+        $parent_breadcrumb = "Manajemen Skripsi";
+        $child_breadcrumb = "Nomor BA & Penetapan";
+
+        $session_tahun = Session::has('session_tahun') ? Session::get('session_tahun') : '';
+        $session_semester = Session::has('session_semester') ? Session::get('session_semester') : '';
+        $session_kode_fakultas = Session::has('kode_fakultas') ? Session::get('kode_fakultas') : '';
+
+        return view('Dekanat/skripsi/penetapan_skripsi', compact(
+            'title', 'parent_breadcrumb', 'child_breadcrumb', 'session_username', 'api_token', 'api_url', 'session_tahun', 'session_semester', 'session_kode_fakultas'
+        ));
+    }
 }
 
