@@ -97,17 +97,40 @@
             animation: fadeInUp 1s ease-out;
         }
 
+        @keyframes brandLogoPulse {
+            0% {
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 0px rgba(234, 179, 8, 0.3);
+            }
+            70% {
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 10px rgba(234, 179, 8, 0);
+            }
+            100% {
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 0px rgba(234, 179, 8, 0);
+            }
+        }
+
         .brand-logo {
             width: 130px;
             height: 130px;
             margin-bottom: 25px;
-            filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.4));
+            filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.6));
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
             padding: 8px;
-            border: 2px dashed rgba(234, 179, 8, 0.6);
+            border: 2.5px dashed rgba(234, 179, 8, 0.85);
             transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            animation: brandLogoPulse 3s infinite ease-in-out;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+        }
+
+        .brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: all 0.3s ease;
         }
 
         .brand-logo:hover {

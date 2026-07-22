@@ -25,12 +25,7 @@
         .main-sidebar,
         .main-sidebar .multinav,
         .main-sidebar .sidebar {
-            border-top-right-radius: 24px !important;
             border-bottom-right-radius: 24px !important;
-        }
-
-        .logo-box {
-            border-top-right-radius: 24px !important;
         }
 
         .theme-primary.light-skin .sidebar-menu>li.active {
