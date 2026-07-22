@@ -799,7 +799,7 @@
                             // Render QR Codes for Examiners
                             examiners.forEach(ex => {
                                 let ttdStatus = ba ? ba[`setuju_${ex.role}`] : null;
-                                let validId = (ba && ba[`valid_id_${ex.role}`]) ? ba[`valid_id_${ex.role}`] : (ttdStatus ? `BAS-${ex.role.toUpperCase()}-${u.id_skripsi_ujian}-${ex.nidn || ex.id}` : null);
+                                let validId = (ba && ba[`valid_id_${ex.role}`]) ? ba[`valid_id_${ex.role}`] : (ttdStatus ? `BAS-${ex.role.toUpperCase()}-${u.id}-${ex.nidn || ex.id}` : null);
                                 
                                 if (ttdStatus && validId) {
                                     let qrText = `VALID ID: ${validId}\nNama: ${ex.name}\nNIDN: ${ex.nidn || '-'}\nPeran: ${getRoleLabel(ex.role, isObe)}\nTgl: ${formatDateTime(ttdStatus)}`;
@@ -818,8 +818,8 @@
 
                             // Render QR codes for Kaprodi & Dekan
                             if (u.status === 'lulus' || u.status === 'ditetapkan' || (ba && ba.status === 'selesai')) {
-                                let validKaprodi = u.valid_id_kaprodi || `BA-KAPRODI-${u.id_skripsi_ujian}-${u.nidn_kaprodi || ''}`;
-                                let validDekan = u.valid_id_dekan || `BA-DEKAN-${u.id_skripsi_ujian}-${u.nidn_dekan || ''}`;
+                                let validKaprodi = u.valid_id_kaprodi || `BA-KAPRODI-${u.id}-${u.nidn_kaprodi || ''}`;
+                                let validDekan = u.valid_id_dekan || `BA-DEKAN-${u.id}-${u.nidn_dekan || ''}`;
 
                                 $('#valid_kaprodi').html(`<b>valid_id : ${validKaprodi}</b>`);
                                 let kaprodiElem = document.getElementById('qr_kaprodi');
