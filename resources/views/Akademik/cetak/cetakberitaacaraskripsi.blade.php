@@ -890,13 +890,13 @@
                                                     <td class="text-left" style="vertical-align: top;">
                                                         ${indicatorsListHtml}
                                                     </td>
-                                                    <td style="vertical-align: top;" class="font-bold">${bobotAspect.toFixed(2)}%</td>
+                                                    <td style="vertical-align: top;" class="font-bold">${parseFloat(bobotAspect)}%</td>
                                                     <td style="vertical-align: top;" class="font-bold">${avgVal.toFixed(2)}</td>
                                                     <td style="vertical-align: top;" class="font-bold text-primary">${weighted.toFixed(2)}</td>
                                                 </tr>
                                             `;
                                         } else {
-                                            individualPagesHtml += `<tr style="background-color:#fafafa;"><td colspan="5" class="text-left font-bold">${label}. Aspek ${a.nama_aspek} (Bobot: ${bobotAspect.toFixed(0)}%)</td></tr>`;
+                                            individualPagesHtml += `<tr style="background-color:#fafafa;"><td colspan="5" class="text-left font-bold">${label}. Aspek ${a.nama_aspek} (Bobot: ${parseFloat(bobotAspect)}%)</td></tr>`;
                                             aspectScores.forEach(n => {
                                                 let bobotVal = parseFloat(n.bobot);
                                                 let val = parseFloat(n.nilai);
@@ -905,7 +905,7 @@
                                                     <tr>
                                                         <td>${idx_row++}</td>
                                                         <td class="text-left">${n.nama_indikator}</td>
-                                                        <td>${bobotVal.toFixed(2)}%</td>
+                                                        <td>${parseFloat(bobotVal)}%</td>
                                                         <td>${val.toFixed(2)}</td>
                                                         <td class="font-bold">${weighted.toFixed(2)}</td>
                                                     </tr>
