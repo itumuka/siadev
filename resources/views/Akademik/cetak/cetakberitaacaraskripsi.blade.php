@@ -1124,7 +1124,8 @@
                                 let validId = (ba && ba[`valid_id_${ex.role}`]) ? ba[`valid_id_${ex.role}`] : (ttdStatus ? `BAS-${ex.role.toUpperCase()}-${u.id_skripsi_ujian}-${ex.nidn || ex.id}` : null);
                                 
                                 if (ttdStatus && validId) {
-                                    let qrText = `VALID ID: ${validId}\nNama: ${ex.name}\nNIDN: ${ex.nidn || '-'}\nPeran: ${getRoleLabel(ex.role, isObe)}\nTgl: ${formatDateTime(ttdStatus)}`;
+                                    let examTime = `${formatLongDate(u.tanggal_ujian)} Pukul ${u.jam_ujian || u.jam_mulai ? (u.jam_mulai ? u.jam_mulai.substring(0, 5) : u.jam_ujian) + ' WIB' : '-'}`;
+                                    let qrText = `VALID ID: ${validId}\nNama: ${ex.name}\nNIDN: ${ex.nidn || '-'}\nPeran: ${getRoleLabel(ex.role, isObe)}\nMahasiswa: ${u.nama_mahasiswa} (${u.nim})\nWaktu Ujian: ${examTime}\nWaktu Sign: ${formatDateTime(ttdStatus)}`;
                                     
                                     let sumElem = document.getElementById('qr_summary_' + ex.role);
                                     if (sumElem) {
@@ -1140,6 +1141,9 @@
 
                             // Render QR codes for Kaprodi & Dekan
                             if (u.status === 'lulus' || u.status === 'ditetapkan' || (ba && ba.status === 'selesai')) {
+                                let examTime = `${formatLongDate(u.tanggal_ujian)} Pukul ${u.jam_ujian || u.jam_mulai ? (u.jam_mulai ? u.jam_mulai.substring(0, 5) : u.jam_ujian) + ' WIB' : '-'}`;
+                                let defaultSignTime = formatDateTime(u.updated_at) || formatDateTime(ba ? ba.updated_at : null) || `${formatLongDate(u.tanggal_ujian)}`;
+
                                 let validKaprodi = u.valid_id_kaprodi || `BA-KAPRODI-${u.id}-${u.nidn_kaprodi || ''}`;
                                 let targetKaprodiTextId = isObe ? '#obe_valid_kaprodi' : '#valid_kaprodi';
                                 let targetKaprodiId = isObe ? 'obe_qr_kaprodi' : 'qr_kaprodi';
@@ -1148,7 +1152,7 @@
                                 let kaprodiElem = document.getElementById(targetKaprodiId);
                                 if (kaprodiElem) {
                                     new QRCode(kaprodiElem, {
-                                        text: `VALID ID: ${validKaprodi}\nKetua Program Studi: ${u.nama_kaprodi || '-'}\nProdi: ${u.nama_program_studi || '-'}`,
+                                        text: `VALID ID: ${validKaprodi}\nKetua Program Studi: ${u.nama_kaprodi || '-'}\nProdi: ${u.nama_program_studi || '-'}\nMahasiswa: ${u.nama_mahasiswa} (${u.nim})\nWaktu Ujian: ${examTime}\nWaktu Sign: ${defaultSignTime}`,
                                         width: 95,
                                         height: 95,
                                         correctLevel: QRCode.CorrectLevel.L
@@ -1164,7 +1168,7 @@
                                     let dekanElem = document.getElementById(targetDekanId);
                                     if (dekanElem) {
                                         new QRCode(dekanElem, {
-                                            text: `VALID ID: ${validDekan}\nDekan: ${u.nama_dekan || '-'}\nFakultas: ${u.nama_fakultas || '-'}`,
+                                            text: `VALID ID: ${validDekan}\nDekan: ${u.nama_dekan || '-'}\nFakultas: ${u.nama_fakultas || '-'}\nMahasiswa: ${u.nama_mahasiswa} (${u.nim})\nWaktu Ujian: ${examTime}\nWaktu Sign: ${defaultSignTime}`,
                                             width: 95,
                                             height: 95,
                                             correctLevel: QRCode.CorrectLevel.L
