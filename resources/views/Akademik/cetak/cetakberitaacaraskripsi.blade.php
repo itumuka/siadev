@@ -221,8 +221,8 @@
 <body>
     <input type="hidden" id="id_skripsi_ujian" value="{{ $id_skripsi_ujian }}">
 
-    <!-- ================= PAGE 1: BERITA ACARA ================= -->
-    <div id="page_berita_acara">
+    <!-- ================= PAGE 1: BERITA ACARA (REGULER) ================= -->
+    <div id="page_berita_acara_reguler">
         <!-- Kop Surat -->
         <table class="header-table">
             <tr>
@@ -338,6 +338,185 @@
                     <br>
                     <span class="font-bold" id="sign_kaprodi_nama">...</span><br>
                     NIDN. <span id="sign_kaprodi_nidn">...</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- ================= PAGE 1: BERITA ACARA (OBE JALUR LUARAN) ================= -->
+    <div id="page_berita_acara_obe" style="display: none;">
+        <!-- Kop Surat -->
+        <table class="header-table">
+            <tr>
+                <td class="header-logo">
+                    <img src="{{ url('imageup45/logoumuka.png') }}" style="width: 75px;" alt="Logo UMUKA">
+                </td>
+                <td>
+                    <div class="header-text">UNIVERSITAS MUHAMMADIYAH KARANGANYAR</div>
+                    <div class="header-text" id="header_fakultas_obe" style="font-size: 12pt; margin-top: 2px;">FAKULTAS</div>
+                    <div class="header-subtext">
+                        Jl. Raya Solo-Tawangmangu Km 12, Papahan, Kec. Tasikmadu, Kabupaten Karanganyar, Jawa Tengah 57722
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <div class="title" style="font-size: 11pt; line-height: 1.3; margin-top: 10px; margin-bottom: 5px;">
+            BERITA ACARA REKOGNISI DAN KONVERSI LUARAN SKRIPSI<br>BERBASIS OUTCOME-BASED EDUCATION (OBE)
+        </div>
+        <div class="text-center font-bold" style="margin-top: 0px; margin-bottom: 10px; font-size: 9pt;">
+            Nomor: <span id="obe_ba_nomor">___/___/___/2026</span>
+        </div>
+
+        <p style="font-size: 8.5pt; margin-bottom: 8px;">Pada hari ini <span id="obe_ba_hari_tanggal_indo" class="font-bold">...</span>, Tim Penilai/Verifikator Program Studi telah melakukan verifikasi dan penilaian terhadap luaran akademik (output/outcome) sebagai pengganti Ujian Komprehensif/Sidang Skripsi bagi mahasiswa:</p>
+
+        <!-- Meta Information -->
+        <table class="meta-table" style="margin-left: 15px; font-size: 8.5pt; margin-bottom: 8px;">
+            <tr>
+                <td class="meta-label">Nama Mahasiswa</td>
+                <td class="meta-separator">:</td>
+                <td class="meta-value font-bold" id="obe_mhs_nama">...</td>
+            </tr>
+            <tr>
+                <td class="meta-label">NIM</td>
+                <td class="meta-separator">:</td>
+                <td class="meta-value font-bold" id="obe_mhs_nim">...</td>
+            </tr>
+            <tr>
+                <td class="meta-label">Judul Luaran/TA</td>
+                <td class="meta-separator">:</td>
+                <td class="meta-value font-bold" style="font-style: italic;" id="obe_skripsi_judul">...</td>
+            </tr>
+        </table>
+
+        <div class="font-bold text-dark" style="margin-top: 5px; margin-bottom: 2px; font-size: 9pt;">A. KOMPONEN PENILAIAN</div>
+        <div style="border: 1px solid #000; padding: 6px; border-radius: 4px; background-color: #fafafa;">
+            <div class="font-bold" style="font-size: 8pt; text-decoration: underline; margin-bottom: 2px;">Jenis Luaran (Checklist)</div>
+            <table style="width: 100%; border: none; font-size: 7.5pt; margin-top: 2px; border-collapse: collapse;">
+                <tr>
+                    <td style="width: 50%; vertical-align: top; border: none; padding: 1px; line-height: 1.3;">
+                        <div style="margin-bottom: 2px;">
+                            [<span id="obe_jenis_1" style="display:inline-block; width:12px; text-align:center; font-weight:bold;">&nbsp;</span>] Jurnal Nasional Terindeks Sinta 3, Sinta 4, dan Sinta 5
+                        </div>
+                        <div style="margin-bottom: 2px;">
+                            [<span id="obe_jenis_2" style="display:inline-block; width:12px; text-align:center; font-weight:bold;">&nbsp;</span>] Proceeding terindeks Konferensi Internasional
+                        </div>
+                        <div style="margin-bottom: 2px;">
+                            [<span id="obe_jenis_3" style="display:inline-block; width:12px; text-align:center; font-weight:bold;">&nbsp;</span>] Buku ber-ISBN (buku referensi, monograf, buku ajar)
+                        </div>
+                        <div style="margin-bottom: 2px;">
+                            [<span id="obe_jenis_4" style="display:inline-block; width:12px; text-align:center; font-weight:bold;">&nbsp;</span>] Book Chapter (Internasional, &gt; 2 negara)
+                        </div>
+                        <div style="margin-bottom: 2px;">
+                            [<span id="obe_jenis_5" style="display:inline-block; width:12px; text-align:center; font-weight:bold;">&nbsp;</span>] Kekayaan Intelektual (paten, paten sederhana, hak cipta, dll)
+                        </div>
+                        <div style="margin-bottom: 2px;">
+                            [<span id="obe_jenis_6" style="display:inline-block; width:12px; text-align:center; font-weight:bold;">&nbsp;</span>] Keluaran monumental karya desain/seni/lainnya
+                        </div>
+                        <div style="margin-bottom: 2px;">
+                            [<span id="obe_jenis_7" style="display:inline-block; width:12px; text-align:center; font-weight:bold;">&nbsp;</span>] Dokumen feasibility study
+                        </div>
+                    </td>
+                    <td style="width: 50%; vertical-align: top; border: none; padding: 1px; line-height: 1.3;">
+                        <div style="margin-bottom: 2px;">
+                            [<span id="obe_jenis_8" style="display:inline-block; width:12px; text-align:center; font-weight:bold;">&nbsp;</span>] Business plan
+                        </div>
+                        <div style="margin-bottom: 2px;">
+                            [<span id="obe_jenis_9" style="display:inline-block; width:12px; text-align:center; font-weight:bold;">&nbsp;</span>] Naskah akademik (policy brief/rekomendasi kebijakan)
+                        </div>
+                        <div style="margin-bottom: 2px;">
+                            [<span id="obe_jenis_10" style="display:inline-block; width:12px; text-align:center; font-weight:bold;">&nbsp;</span>] Karya pengembangan talenta inovasi setara lainnya
+                        </div>
+                        <div style="margin-bottom: 2px;">
+                            [<span id="obe_jenis_11" style="display:inline-block; width:12px; text-align:center; font-weight:bold;">&nbsp;</span>] Book Chapter (Nasional, bahasa Indonesia)
+                        </div>
+                        <div style="margin-bottom: 2px;">
+                            [<span id="obe_jenis_12" style="display:inline-block; width:12px; text-align:center; font-weight:bold;">&nbsp;</span>] Jurnal Nasional Terindeks
+                        </div>
+                        <div style="margin-bottom: 2px;">
+                            [<span id="obe_jenis_13" style="display:inline-block; width:12px; text-align:center; font-weight:bold;">&nbsp;</span>] Proceeding Ber-ISBN Konferensi Nasional
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <div style="margin-top: 6px; border-top: 1px dashed #ccc; padding-top: 4px; font-size: 8pt;">
+                <strong>Nama Jurnal / Penerbit:</strong> <span id="obe_nama_media" style="text-decoration: underline; font-weight: bold;">-</span>
+            </div>
+            <div style="margin-top: 3px; font-size: 8pt;">
+                <strong>Status Luaran (Checklist):</strong> &nbsp;&nbsp;&nbsp;&nbsp;
+                [&nbsp;<span id="obe_status_published" style="display: inline-block; width: 12px; text-align: center; font-weight: bold;">&nbsp;</span>&nbsp;] Published (Sudah Terbit) &nbsp;&nbsp;&nbsp;&nbsp;
+                [&nbsp;<span id="obe_status_accepted" style="display: inline-block; width: 12px; text-align: center; font-weight: bold;">&nbsp;</span>&nbsp;] Accepted (LoA)
+            </div>
+        </div>
+
+        <div class="font-bold text-dark" style="margin-top: 6px; margin-bottom: 2px; font-size: 9pt;">B. TIM PENILAI/VERIFIKATOR</div>
+        <table class="score-table" style="font-size: 8pt; margin-top: 0px;">
+            <thead>
+                <tr>
+                    <th style="width: 8%;">No.</th>
+                    <th style="width: 32%;">Kedudukan</th>
+                    <th style="width: 45%; text-align: left;">Nama</th>
+                    <th style="width: 15%;">NIDN/NUPTK</th>
+                </tr>
+            </thead>
+            <tbody id="obe_tbody_tim_penguji">
+                <!-- Dynamic -->
+            </tbody>
+        </table>
+
+        <div class="font-bold text-dark" style="margin-top: 6px; margin-bottom: 2px; font-size: 9pt;">C. PENILAIAN</div>
+        <table class="score-table" style="font-size: 8pt; margin-top: 0px;">
+            <thead>
+                <tr>
+                    <th style="width: 8%;" rowspan="2">No.</th>
+                    <th style="width: 47%; text-align: left;" rowspan="2">Tim Verifikator :</th>
+                    <th style="width: 30%;" colspan="2">Nilai</th>
+                    <th style="width: 15%;" rowspan="2">Tanda Tangan</th>
+                </tr>
+                <tr>
+                    <th style="width: 15%;">Angka</th>
+                    <th style="width: 15%;">Huruf</th>
+                </tr>
+            </thead>
+            <tbody id="obe_tbody_penilaian_penguji">
+                <!-- Dynamic -->
+            </tbody>
+        </table>
+
+        <div class="font-bold text-dark" style="margin-top: 6px; margin-bottom: 2px; font-size: 9pt;">D. PERNYATAAN DAN KEPUTUSAN TIM PENGUJI</div>
+        <p style="font-size: 8.5pt; margin-bottom: 2px;">Berdasarkan hasil pemeriksaan validitas dokumen dan penilaian ketercapaian CPL pada luaran yang diajukan, maka mahasiswa tersebut dinyatakan:</p>
+        <div style="margin-left: 15px; line-height: 1.4; font-weight: bold; font-size: 8.5pt;">
+            <div style="margin-bottom: 2px;">
+                [&nbsp;<span id="obe_cb_memenuhi" style="display: inline-block; width: 12px; text-align: center;">&nbsp;</span>&nbsp;] MEMENUHI SYARAT (BEBAS UJIAN SKRIPSI)
+                <span style="font-weight: normal; margin-left: 15px;">Dengan nilai konversi angka: <strong id="obe_decision_angka">...</strong> / Nilai Huruf: <strong id="obe_decision_huruf">...</strong></span>
+            </div>
+            <div style="margin-bottom: 2px;">
+                [&nbsp;<span id="obe_cb_tidak_memenuhi" style="display: inline-block; width: 12px; text-align: center;">&nbsp;</span>&nbsp;] TIDAK MEMENUHI SYARAT
+                <span style="font-weight: normal; margin-left: 15px; font-style: italic;">(Mahasiswa diwajibkan mengikuti jalur Ujian Skripsi/Sidang Reguler)</span>
+            </div>
+        </div>
+
+        <table class="signature-table" style="width: 100%; margin-top: 15px; font-size: 8.5pt;">
+            <tr>
+                <td style="width: 50%; text-align: center; vertical-align: bottom;">
+                    Mengetahui,<br>
+                    Dekan<br>
+                    <span id="obe_sign_nama_fakultas" class="font-bold">...</span>
+                    <div id="obe_qr_dekan" style="display: flex; justify-content: center; margin: 3px 0;"></div>
+                    <small style="font-size:6.5pt; color:#333; display:block;" id="obe_valid_dekan"></small>
+                    <br>
+                    <span class="font-bold" id="obe_sign_dekan_nama">...</span><br>
+                    NIDN. <span id="obe_sign_dekan_nidn">...</span>
+                </td>
+                <td style="width: 50%; text-align: center; vertical-align: bottom;">
+                    Karanganyar, <span id="obe_ba_tgl_cetak">...</span><br>
+                    Ketua Program Studi,
+                    <div id="obe_qr_kaprodi" style="display: flex; justify-content: center; margin: 3px 0;"></div>
+                    <small style="font-size:6.5pt; color:#333; display:block;" id="obe_valid_kaprodi"></small>
+                    <br>
+                    <span class="font-bold" id="obe_sign_kaprodi_nama">...</span><br>
+                    NIDN. <span id="obe_sign_kaprodi_nidn">...</span>
                 </td>
             </tr>
         </table>
@@ -793,13 +972,152 @@
                                 index++;
                             });
 
-                            $('#tbody_penilaian_penguji').html(examinerRowsHtml);
+                            // 4. Calculate Final Cumulative Grade
+                            let finalKumulatif = examiners.length > 0 ? (totalFinalAngka / examiners.length) : 0;
+                            let letterKumulatif = calculateGradeLetter(finalKumulatif, currentStudentKodePenilaian);
+
+                            // Toggle Layout & Populate Page 1
+                            if (isObe) {
+                                $('#page_berita_acara_reguler').hide();
+                                $('#page_berita_acara_obe').show();
+
+                                $('#header_fakultas_obe').text(namaFakultasDisplay);
+                                $('#obe_ba_nomor').text(ba && ba.nomor_ba ? ba.nomor_ba : (ba && ba.id ? `BA/SKR/${ba.id}/${new Date(u.tanggal_ujian).getFullYear()}` : '___/___/___/2026'));
+                                $('#obe_ba_hari_tanggal_indo').html(dateToIndonesianText(u.tanggal_ujian));
+                                $('#obe_mhs_nama').text(u.nama_mahasiswa);
+                                $('#obe_mhs_nim').text(u.nim);
+                                $('#obe_skripsi_judul').text(u.judul || '-');
+
+                                // Checklist Jenis Luaran
+                                for (let i = 1; i <= 13; i++) {
+                                    $(`#obe_jenis_${i}`).html('&nbsp;');
+                                }
+                                if (luaran) {
+                                    if (luaran.jenis_luaran === 'jurnal_sinta') {
+                                        $('#obe_jenis_1').html('X');
+                                    } else if (luaran.jenis_luaran === 'jurnal_internasional') {
+                                        $('#obe_jenis_12').html('X');
+                                    } else if (luaran.jenis_luaran === 'prosiding') {
+                                        $('#obe_jenis_2').html('X');
+                                    } else if (luaran.jenis_luaran === 'paten' || luaran.jenis_luaran === 'hki') {
+                                        $('#obe_jenis_5').html('X');
+                                    } else {
+                                        $('#obe_jenis_10').html('X');
+                                    }
+                                    $('#obe_nama_media').text(luaran.nama_media || '-');
+
+                                    // Status Luaran
+                                    $('#obe_status_published').html('&nbsp;');
+                                    $('#obe_status_accepted').html('&nbsp;');
+                                    let fileBukti = (luaran.file_bukti || '').toLowerCase();
+                                    let ket = (luaran.keterangan || '').toLowerCase();
+                                    if (fileBukti.indexOf('loa') !== -1 || ket.indexOf('loa') !== -1 || fileBukti.indexOf('accept') !== -1) {
+                                        $('#obe_status_accepted').html('X');
+                                    } else {
+                                        $('#obe_status_published').html('X');
+                                    }
+                                } else {
+                                    $('#obe_nama_media').text('-');
+                                    $('#obe_status_published').html('&nbsp;');
+                                    $('#obe_status_accepted').html('&nbsp;');
+                                }
+
+                                $('#obe_tbody_tim_penguji').html(timHtml);
+                                $('#obe_tbody_penilaian_penguji').html(examinerRowsHtml);
+                                
+                                // Append Consolidated row
+                                $('#obe_tbody_penilaian_penguji').append(`
+                                    <tr style="background-color:#f2f2f2;">
+                                        <td colspan="2" class="text-left font-bold">NILAI AKHIR KUMULATIF</td>
+                                        <td class="font-bold" style="font-size:11pt; color:#000;">${finalKumulatif.toFixed(2)}</td>
+                                        <td class="font-bold text-success" style="font-size:11pt;">${letterKumulatif}</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                `);
+
+                                // Pernyataan & Keputusan
+                                $('#obe_cb_memenuhi').html('&nbsp;');
+                                $('#obe_cb_tidak_memenuhi').html('&nbsp;');
+                                if (u.status === 'lulus' || u.status === 'ditetapkan' || (ba && ba.status === 'selesai')) {
+                                    $('#obe_cb_memenuhi').html('X');
+                                    $('#obe_decision_angka').text(finalKumulatif.toFixed(2));
+                                    $('#obe_decision_huruf').text(letterKumulatif);
+                                } else if (u.status === 'tidak_lulus') {
+                                    $('#obe_cb_tidak_memenuhi').html('X');
+                                    $('#obe_decision_angka').text('...');
+                                    $('#obe_decision_huruf').text('...');
+                                } else {
+                                    $('#obe_decision_angka').text('...');
+                                    $('#obe_decision_huruf').text('...');
+                                }
+
+                                $('#obe_ba_tgl_cetak').text(formatLongDate(u.tanggal_ujian));
+                                $('#obe_sign_nama_fakultas').text(u.nama_fakultas || '...');
+                                $('#obe_sign_dekan_nama').text(u.nama_dekan || '...');
+                                $('#obe_sign_dekan_nidn').text(u.nidn_dekan || '...');
+                                $('#obe_sign_kaprodi_nama').text(u.nama_kaprodi || '...');
+                                $('#obe_sign_kaprodi_nidn').text(u.nidn_kaprodi || '...');
+
+                            } else {
+                                $('#page_berita_acara_reguler').show();
+                                $('#page_berita_acara_obe').hide();
+
+                                $('#tbody_tim_penguji').html(timHtml);
+                                $('#tbody_penilaian_penguji').html(examinerRowsHtml);
+
+                                // Append Consolidated row
+                                $('#tbody_penilaian_penguji').append(`
+                                    <tr style="background-color:#f2f2f2;">
+                                        <td colspan="2" class="text-left font-bold">NILAI AKHIR KUMULATIF</td>
+                                        <td class="font-bold" style="font-size:11pt; color:#000;">${finalKumulatif.toFixed(2)}</td>
+                                        <td class="font-bold text-success" style="font-size:11pt;">${letterKumulatif}</td>
+                                        <td></td>
+                                    </tr>
+                                `);
+
+                                let diffDays = '.....';
+                                if (ba && ba.batas_revisi && u.tanggal_ujian) {
+                                    const dUjian = new Date(u.tanggal_ujian);
+                                    const dRevisi = new Date(ba.batas_revisi);
+                                    const diffTime = Math.abs(dRevisi - dUjian);
+                                    diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                                }
+                                $('#batas_revisi_display').text(diffDays);
+
+                                // Check dynamic status box
+                                let keputusanVal = (ba && ba.keputusan) ? ba.keputusan : null;
+                                if (keputusanVal === 'lulus_tanpa_perbaikan') {
+                                    $('#cb_lulus_tanpa_perbaikan').html('✓');
+                                } else if (keputusanVal === 'lulus_dengan_perbaikan') {
+                                    $('#cb_lulus_dengan_perbaikan').html('✓');
+                                } else if (keputusanVal === 'tidak_lulus_ujian_ulang') {
+                                    $('#cb_tidak_lulus_ujian_ulang').html('✓');
+                                } else if (keputusanVal === 'tidak_lulus_judul_baru') {
+                                    $('#cb_tidak_lulus_judul_baru').html('✓');
+                                } else {
+                                    let catatanText = (ba && ba.catatan) ? ba.catatan.toLowerCase() : '';
+                                    if (u.status === 'lulus' || u.status === 'ditetapkan') {
+                                        if (catatanText.trim() === '' || catatanText.includes('tidak ada') || catatanText.includes('tanpa revisi') || catatanText.includes('tanpa perbaikan')) {
+                                            $('#cb_lulus_tanpa_perbaikan').html('✓');
+                                        } else {
+                                            $('#cb_lulus_dengan_perbaikan').html('✓');
+                                        }
+                                    } else if (u.status === 'tidak_lulus') {
+                                        if (catatanText.includes('judul baru') || catatanText.includes('menulis baru') || catatanText.includes('ganti judul')) {
+                                            $('#cb_tidak_lulus_judul_baru').html('✓');
+                                        } else {
+                                            $('#cb_tidak_lulus_ujian_ulang').html('✓');
+                                        }
+                                    }
+                                }
+                            }
+
                             $('#individual_scoring_pages').html(individualPagesHtml);
 
                             // Render QR Codes for Examiners
                             examiners.forEach(ex => {
                                 let ttdStatus = ba ? ba[`setuju_${ex.role}`] : null;
-                                let validId = (ba && ba[`valid_id_${ex.role}`]) ? ba[`valid_id_${ex.role}`] : (ttdStatus ? `BAS-${ex.role.toUpperCase()}-${u.id}-${ex.nidn || ex.id}` : null);
+                                let validId = (ba && ba[`valid_id_${ex.role}`]) ? ba[`valid_id_${ex.role}`] : (ttdStatus ? `BAS-${ex.role.toUpperCase()}-${u.id_skripsi_ujian}-${ex.nidn || ex.id}` : null);
                                 
                                 if (ttdStatus && validId) {
                                     let qrText = `VALID ID: ${validId}\nNama: ${ex.name}\nNIDN: ${ex.nidn || '-'}\nPeran: ${getRoleLabel(ex.role, isObe)}\nTgl: ${formatDateTime(ttdStatus)}`;
@@ -819,9 +1137,11 @@
                             // Render QR codes for Kaprodi & Dekan
                             if (u.status === 'lulus' || u.status === 'ditetapkan' || (ba && ba.status === 'selesai')) {
                                 let validKaprodi = u.valid_id_kaprodi || `BA-KAPRODI-${u.id}-${u.nidn_kaprodi || ''}`;
+                                let targetKaprodiTextId = isObe ? '#obe_valid_kaprodi' : '#valid_kaprodi';
+                                let targetKaprodiId = isObe ? 'obe_qr_kaprodi' : 'qr_kaprodi';
 
-                                $('#valid_kaprodi').html(`<b>valid_id : ${validKaprodi}</b>`);
-                                let kaprodiElem = document.getElementById('qr_kaprodi');
+                                $(targetKaprodiTextId).html(`<b>valid_id : ${validKaprodi}</b>`);
+                                let kaprodiElem = document.getElementById(targetKaprodiId);
                                 if (kaprodiElem) {
                                     new QRCode(kaprodiElem, {
                                         text: `VALID ID: ${validKaprodi}\nKetua Program Studi: ${u.nama_kaprodi || '-'}\nProdi: ${u.nama_program_studi || '-'}`,
@@ -833,8 +1153,11 @@
 
                                 if (ba && ba.nomor_ba) {
                                     let validDekan = u.valid_id_dekan || `BA-DEKAN-${u.id}-${u.nidn_dekan || ''}`;
-                                    $('#valid_dekan').html(`<b>valid_id : ${validDekan}</b>`);
-                                    let dekanElem = document.getElementById('qr_dekan');
+                                    let targetDekanTextId = isObe ? '#obe_valid_dekan' : '#valid_dekan';
+                                    let targetDekanId = isObe ? 'obe_qr_dekan' : 'qr_dekan';
+
+                                    $(targetDekanTextId).html(`<b>valid_id : ${validDekan}</b>`);
+                                    let dekanElem = document.getElementById(targetDekanId);
                                     if (dekanElem) {
                                         new QRCode(dekanElem, {
                                             text: `VALID ID: ${validDekan}\nDekan: ${u.nama_dekan || '-'}\nFakultas: ${u.nama_fakultas || '-'}`,
@@ -844,58 +1167,10 @@
                                         });
                                     }
                                 } else {
-                                    $('#valid_dekan').html('<small style="color:#721c24;font-weight:bold;">BELUM DITANDATANGANI (MENUNGGU VALIDASI FAKULTAS)</small>');
-                                    $('#qr_dekan').html('');
-                                }
-                            }
-
-                            // 4. Calculate Final Cumulative Grade
-                            let finalKumulatif = examiners.length > 0 ? (totalFinalAngka / examiners.length) : 0;
-                            let letterKumulatif = calculateGradeLetter(finalKumulatif, currentStudentKodePenilaian);
-
-                            // Append Consolidated row to Penilaian Tim Penguji Table
-                            $('#tbody_penilaian_penguji').append(`
-                                <tr style="background-color:#f2f2f2;">
-                                    <td colspan="2" class="text-left font-bold">NILAI AKHIR KUMULATIF</td>
-                                    <td class="font-bold" style="font-size:11pt; color:#000;">${finalKumulatif.toFixed(2)}</td>
-                                    <td class="font-bold text-success" style="font-size:11pt;">${letterKumulatif}</td>
-                                    <td></td>
-                                </tr>
-                            `);
-
-                            let diffDays = '.....';
-                            if (ba && ba.batas_revisi && u.tanggal_ujian) {
-                                const dUjian = new Date(u.tanggal_ujian);
-                                const dRevisi = new Date(ba.batas_revisi);
-                                const diffTime = Math.abs(dRevisi - dUjian);
-                                diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                            }
-                            $('#batas_revisi_display').text(diffDays);
-
-                            // Check dynamic status box
-                            let keputusanVal = (ba && ba.keputusan) ? ba.keputusan : null;
-                            if (keputusanVal === 'lulus_tanpa_perbaikan') {
-                                $('#cb_lulus_tanpa_perbaikan').html('✓');
-                            } else if (keputusanVal === 'lulus_dengan_perbaikan') {
-                                $('#cb_lulus_dengan_perbaikan').html('✓');
-                            } else if (keputusanVal === 'tidak_lulus_ujian_ulang') {
-                                $('#cb_tidak_lulus_ujian_ulang').html('✓');
-                            } else if (keputusanVal === 'tidak_lulus_judul_baru') {
-                                $('#cb_tidak_lulus_judul_baru').html('✓');
-                            } else {
-                                let catatanText = (ba && ba.catatan) ? ba.catatan.toLowerCase() : '';
-                                if (u.status === 'lulus' || u.status === 'ditetapkan') {
-                                    if (catatanText.trim() === '' || catatanText.includes('tidak ada') || catatanText.includes('tanpa revisi') || catatanText.includes('tanpa perbaikan')) {
-                                        $('#cb_lulus_tanpa_perbaikan').html('✓');
-                                    } else {
-                                        $('#cb_lulus_dengan_perbaikan').html('✓');
-                                    }
-                                } else if (u.status === 'tidak_lulus') {
-                                    if (catatanText.includes('judul baru') || catatanText.includes('menulis baru') || catatanText.includes('ganti judul')) {
-                                        $('#cb_tidak_lulus_judul_baru').html('✓');
-                                    } else {
-                                        $('#cb_tidak_lulus_ujian_ulang').html('✓');
-                                    }
+                                    let targetDekanTextId = isObe ? '#obe_valid_dekan' : '#valid_dekan';
+                                    let targetDekanId = isObe ? 'obe_qr_dekan' : 'qr_dekan';
+                                    $(targetDekanTextId).html('<small style="color:#721c24;font-weight:bold;">BELUM DITANDATANGANI (MENUNGGU VALIDASI FAKULTAS)</small>');
+                                    $(`#${targetDekanId}`).html('');
                                 }
                             }
 
