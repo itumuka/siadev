@@ -10,7 +10,7 @@
 
         body {
             font-family: 'Times New Roman', Times, serif;
-            font-size: 11pt;
+            font-size: 12pt;
             color: #000;
             line-height: 1.4;
         }
@@ -33,13 +33,13 @@
         }
 
         .header-text {
-            font-size: 13pt;
+            font-size: 14pt;
             font-weight: bold;
             text-align: center;
         }
 
         .header-subtext {
-            font-size: 9pt;
+            font-size: 10pt;
             font-weight: normal;
             text-align: center;
             margin-top: 5px;
@@ -47,7 +47,7 @@
         }
 
         .title {
-            font-size: 13pt;
+            font-size: 14pt;
             font-weight: bold;
             text-align: center;
             margin-top: 15px;
@@ -205,7 +205,7 @@
         .scale-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 8pt;
+            font-size: 9.5pt;
             margin-top: 10px;
         }
 
@@ -328,7 +328,7 @@
                     Dekan<br>
                     <span id="sign_nama_fakultas" class="font-bold">...</span>
                     <div id="qr_dekan" style="display: flex; justify-content: center; margin: 5px 0;"></div>
-                    <small style="font-size:7pt; color:#333; display:block;" id="valid_dekan"></small>
+                    <small style="font-size:8.5pt; color:#333; display:block;" id="valid_dekan"></small>
                     <br>
                     <span class="font-bold" id="sign_dekan_nama">...</span><br>
                     NIDN. <span id="sign_dekan_nidn">...</span>
@@ -337,7 +337,7 @@
                     Karanganyar, <span id="ba_tgl_cetak">...</span><br>
                     Ketua Program Studi,
                     <div id="qr_kaprodi" style="display: flex; justify-content: center; margin: 5px 0;"></div>
-                    <small style="font-size:7pt; color:#333; display:block;" id="valid_kaprodi"></small>
+                    <small style="font-size:8.5pt; color:#333; display:block;" id="valid_kaprodi"></small>
                     <br>
                     <span class="font-bold" id="sign_kaprodi_nama">...</span><br>
                     NIDN. <span id="sign_kaprodi_nidn">...</span>
@@ -392,10 +392,10 @@
             </tr>
         </table>
 
-        <div class="font-bold text-dark" style="margin-top: 5px; margin-bottom: 2px; font-size: 9pt;">A. KOMPONEN PENILAIAN</div>
+        <div class="font-bold text-dark" style="margin-top: 5px; margin-bottom: 2px; font-size: 12pt;">A. KOMPONEN PENILAIAN</div>
         <div style="border: 1px solid #000; padding: 6px; border-radius: 4px; background-color: #fafafa;">
-            <div class="font-bold" style="font-size: 8pt; text-decoration: underline; margin-bottom: 2px;">Jenis Luaran (Checklist)</div>
-            <table style="width: 100%; border: none; font-size: 7.5pt; margin-top: 2px; border-collapse: collapse;">
+            <div class="font-bold" style="font-size: 10.5pt; text-decoration: underline; margin-bottom: 2px;">Jenis Luaran (Checklist)</div>
+            <table style="width: 100%; border: none; font-size: 9.5pt; margin-top: 2px; border-collapse: collapse;">
                 <tr>
                     <td style="width: 50%; vertical-align: top; border: none; padding: 1px; line-height: 1.3;">
                         <div style="margin-bottom: 2px;">
@@ -443,18 +443,18 @@
                 </tr>
             </table>
 
-            <div style="margin-top: 6px; border-top: 1px dashed #ccc; padding-top: 4px; font-size: 8pt;">
+            <div style="margin-top: 6px; border-top: 1px dashed #ccc; padding-top: 4px; font-size: 10.5pt;">
                 <strong>Nama Jurnal / Penerbit:</strong> <span id="obe_nama_media" style="text-decoration: underline; font-weight: bold;">-</span>
             </div>
-            <div style="margin-top: 3px; font-size: 8pt;">
+            <div style="margin-top: 3px; font-size: 10.5pt;">
                 <strong>Status Luaran (Checklist):</strong> &nbsp;&nbsp;&nbsp;&nbsp;
                 [&nbsp;<span id="obe_status_published" style="display: inline-block; width: 12px; text-align: center; font-weight: bold;">&nbsp;</span>&nbsp;] Published (Sudah Terbit) &nbsp;&nbsp;&nbsp;&nbsp;
                 [&nbsp;<span id="obe_status_accepted" style="display: inline-block; width: 12px; text-align: center; font-weight: bold;">&nbsp;</span>&nbsp;] Accepted (LoA)
             </div>
         </div>
 
-        <div class="font-bold text-dark" style="margin-top: 6px; margin-bottom: 2px; font-size: 9pt;">B. TIM PENGUJI</div>
-        <table class="score-table" style="font-size: 8pt; margin-top: 0px;">
+        <div class="font-bold text-dark" style="margin-top: 6px; margin-bottom: 2px; font-size: 12pt;">B. TIM PENGUJI</div>
+        <table class="score-table" style="font-size: 10.5pt; margin-top: 0px;">
             <thead>
                 <tr>
                     <th style="width: 8%;">No.</th>
@@ -468,8 +468,8 @@
             </tbody>
         </table>
 
-        <div class="font-bold text-dark" style="margin-top: 6px; margin-bottom: 2px; font-size: 9pt;">C. PENILAIAN</div>
-        <table class="score-table" style="font-size: 8pt; margin-top: 0px;">
+        <div class="font-bold text-dark" style="margin-top: 6px; margin-bottom: 2px; font-size: 12pt;">C. PENILAIAN</div>
+        <table class="score-table" style="font-size: 10.5pt; margin-top: 0px;">
             <thead>
                 <tr>
                     <th style="width: 8%;" rowspan="2">No.</th>
@@ -487,9 +487,9 @@
             </tbody>
         </table>
 
-        <div class="font-bold text-dark" style="margin-top: 6px; margin-bottom: 2px; font-size: 9pt;">D. PERNYATAAN DAN KEPUTUSAN TIM PENGUJI</div>
-        <p style="font-size: 8.5pt; margin-bottom: 2px;">Berdasarkan hasil pemeriksaan validitas dokumen dan penilaian ketercapaian CPL pada luaran yang diajukan, maka mahasiswa tersebut dinyatakan:</p>
-        <div style="margin-left: 15px; line-height: 1.4; font-weight: bold; font-size: 8.5pt;">
+        <div class="font-bold text-dark" style="margin-top: 6px; margin-bottom: 2px; font-size: 12pt;">D. PERNYATAAN DAN KEPUTUSAN TIM PENGUJI</div>
+        <p style="font-size: 11pt; margin-bottom: 2px;">Berdasarkan hasil pemeriksaan validitas dokumen dan penilaian ketercapaian CPL pada luaran yang diajukan, maka mahasiswa tersebut dinyatakan:</p>
+        <div style="margin-left: 15px; line-height: 1.4; font-weight: bold; font-size: 11pt;">
             <div style="margin-bottom: 2px;">
                 [&nbsp;<span id="obe_cb_memenuhi" style="display: inline-block; width: 12px; text-align: center;">&nbsp;</span>&nbsp;] MEMENUHI SYARAT (BEBAS UJIAN SKRIPSI)
                 <span style="font-weight: normal; margin-left: 15px;">Dengan nilai konversi angka: <strong id="obe_decision_angka">...</strong> / Nilai Huruf: <strong id="obe_decision_huruf">...</strong></span>
@@ -500,14 +500,14 @@
             </div>
         </div>
 
-        <table class="signature-table" style="width: 100%; margin-top: 15px; font-size: 8.5pt;">
+        <table class="signature-table" style="width: 100%; margin-top: 15px; font-size: 11pt;">
             <tr>
                 <td style="width: 50%; text-align: center; vertical-align: bottom;">
                     Mengetahui,<br>
                     Dekan<br>
                     <span id="obe_sign_nama_fakultas" class="font-bold">...</span>
                     <div id="obe_qr_dekan" style="display: flex; justify-content: center; margin: 3px 0;"></div>
-                    <small style="font-size:6.5pt; color:#333; display:block;" id="obe_valid_dekan"></small>
+                    <small style="font-size:8.5pt; color:#333; display:block;" id="obe_valid_dekan"></small>
                     <br>
                     <span class="font-bold" id="obe_sign_dekan_nama">...</span><br>
                     NIDN. <span id="obe_sign_dekan_nidn">...</span>
@@ -516,7 +516,7 @@
                     Karanganyar, <span id="obe_ba_tgl_cetak">...</span><br>
                     Ketua Program Studi,
                     <div id="obe_qr_kaprodi" style="display: flex; justify-content: center; margin: 3px 0;"></div>
-                    <small style="font-size:6.5pt; color:#333; display:block;" id="obe_valid_kaprodi"></small>
+                    <small style="font-size:8.5pt; color:#333; display:block;" id="obe_valid_kaprodi"></small>
                     <br>
                     <span class="font-bold" id="obe_sign_kaprodi_nama">...</span><br>
                     NIDN. <span id="obe_sign_kaprodi_nidn">...</span>
@@ -801,13 +801,13 @@
                                         <div class="title" style="margin-top: 10px; font-size: 14pt; line-height: 1.2; max-width: 600px;">PENILAIAN UJIAN SKRIPSI</div>
                                         
                                         <!-- A. JUDUL SKRIPSI -->
-                                        <div class="font-bold text-dark" style="margin-top: 10px; margin-bottom: 2px; font-size: 9.5pt;">A. JUDUL SKRIPSI</div>
-                                        <div style="text-transform: uppercase; font-weight: bold; margin-left: 15px; margin-bottom: 8px; font-size: 11pt; max-width: 550px; line-height: 1.4;">
+                                        <div class="font-bold text-dark" style="margin-top: 10px; margin-bottom: 2px; font-size: 12pt;">A. JUDUL SKRIPSI</div>
+                                        <div style="text-transform: uppercase; font-weight: bold; margin-left: 15px; margin-bottom: 8px; font-size: 11.5pt; max-width: 550px; line-height: 1.4;">
                                             "${u.judul ? u.judul.toUpperCase() : '-'}"
                                         </div>
 
                                         <!-- B. IDENTITAS MAHASISWA -->
-                                        <div class="font-bold text-dark" style="margin-bottom: 2px; font-size: 9.5pt;">B. IDENTITAS MAHASISWA</div>
+                                        <div class="font-bold text-dark" style="margin-bottom: 2px; font-size: 12pt;">B. IDENTITAS MAHASISWA</div>
                                         <table class="meta-table" style="margin-left: 15px; margin-bottom: 8px;">
                                             <tr>
                                                 <td style="width: 170px;">1. Nama</td>
@@ -827,7 +827,7 @@
                                         </table>
 
                                         <!-- C. HASIL UJIAN -->
-                                        <div class="font-bold text-dark" style="margin-bottom: 2px; font-size: 9.5pt;">C. HASIL UJIAN</div>
+                                        <div class="font-bold text-dark" style="margin-bottom: 2px; font-size: 12pt;">C. HASIL UJIAN</div>
                                         <table class="meta-table" style="margin-left: 15px; margin-bottom: 12px;">
                                             <tr>
                                                 <td style="width: 170px;">1. Hari, Tanggal</td>
@@ -851,7 +851,7 @@
                                             </tr>
                                         </table>
 
-                                        <div class="font-bold text-dark" style="margin-bottom: 4px; font-size: 9.5pt;">D. RINCIAN KRITERIA & PENILAIAN</div>
+                                        <div class="font-bold text-dark" style="margin-bottom: 4px; font-size: 12pt;">D. RINCIAN KRITERIA & PENILAIAN</div>
                                         <table class="score-table">
                                             <thead>
                                                 <tr>
@@ -925,10 +925,10 @@
                                             </tbody>
                                         </table>
 
-                                        <table class="signature-table" style="width: 100%; margin-top: 15px;">
+                                        <table class="signature-table" style="width: 100%; margin-top: 15px; font-size: 11pt;">
                                             <tr>
                                                 <td style="width: 50%;">
-                                                    <div class="font-bold text-dark mb-1" style="font-size: 8.5pt;">Petunjuk Penilaian:</div>
+                                                    <div class="font-bold text-dark mb-1" style="font-size: 10.5pt;">Petunjuk Penilaian:</div>
                                                     <table class="scale-table">
                                                         <thead>
                                                             <tr>
@@ -959,7 +959,7 @@
                                                     ${ttdStatus ? `
                                                         <div id="qr_page_${ex.role}" style="display: flex; justify-content: center; margin: 5px 0;"></div>
                                                         <div class="signature-status-signed">✓ VERIFIKASI ELEKTRONIK</div>
-                                                        <small style="font-size: 6.5pt; color: #333; display: block; margin-top: 2px;"><b>valid_id : ${validId}</b></small>
+                                                        <small style="font-size: 8.5pt; color: #333; display: block; margin-top: 2px;"><b>valid_id : ${validId}</b></small>
                                                     ` : `
                                                         <div style="height: 50px;"></div>
                                                         <div class="signature-status-pending">Belum Tanda Tangan</div>
