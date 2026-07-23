@@ -2,12 +2,6 @@
 
 @section('css')
     <style>
-        /* table.dataTable td {
-                                                                                                                                                                                                        font-size: 0.75em;
-                                                                                                                                                                                                    }
-                                                                                                                                                                                                    table.dataTable tr.dtrg-level-0 td {
-                                                                                                                                                                                                        font-size: 0.75em;
-                                                                                                                                                                                                    } */
         .dataTables_wrapper {
             font-family: tahoma;
             font-size: 0.75em;
@@ -19,6 +13,105 @@
 
         .sembunyi {
             display: none;
+        }
+
+        /* Modern Aesthetic KRS Alerts */
+        .krs-alert-card {
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: flex-start;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            animation: krsAlertFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        
+        .krs-alert-card:hover {
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+            transform: translateY(-1px);
+        }
+
+        .krs-alert-warning {
+            background: linear-gradient(135deg, #fffcf4 0%, #fff8e7 100%);
+            border-left: 5px solid #ffb300;
+        }
+
+        .krs-alert-danger {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+            border-left: 5px solid #e53935;
+        }
+
+        .krs-alert-icon-wrapper {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            margin-right: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .krs-alert-warning .krs-alert-icon-wrapper {
+            background-color: #ffe082;
+            color: #b78103;
+        }
+
+        .krs-alert-danger .krs-alert-icon-wrapper {
+            background-color: #ffcdd2;
+            color: #b71c1c;
+        }
+
+        .krs-alert-content {
+            flex: 1;
+        }
+
+        .krs-alert-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 6px;
+            letter-spacing: 0.2px;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        .krs-alert-warning .krs-alert-title {
+            color: #8d6200;
+        }
+
+        .krs-alert-danger .krs-alert-title {
+            color: #a81c1c;
+        }
+
+        .krs-alert-message {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0;
+            font-weight: 500;
+            color: #555;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        .krs-alert-warning .krs-alert-message {
+            color: #6d4b00;
+        }
+
+        .krs-alert-danger .krs-alert-message {
+            color: #7f1d1d;
+        }
+
+        @keyframes krsAlertFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 
@@ -45,35 +138,39 @@
         </div>
         <!-- Main content -->
         <section class="content">
-            <div class="box box-solid bg-primary sembunyi" id="blm_her">
-                <div class="box-header">
-                    <h4 class="box-title"><i class="fa fa-exclamation-triangle"></i> Belum Heregistrasi</h4>
+            <div class="krs-alert-card krs-alert-warning sembunyi" id="blm_her">
+                <div class="krs-alert-icon-wrapper">
+                    <i class="fa fa-exclamation-triangle" style="font-size: 20px;"></i>
                 </div>
-                <div class="box-body text-danger">
-                    Anda tidak dapat melakukan pengambilan KRS. Silahkan lakukan pembayaran SPP Tetap dan Heregistrasi
-                    terlebih dahulu.
-                </div>
-            </div>
-
-            <div class="box box-solid bg-primary sembunyi" id="not_yet">
-                <div class="box-header">
-                    <h4 class="box-title"><i class="fa fa-exclamation-triangle"></i> Jadwal Belum ditentukan</h4>
-                </div>
-                <div class="box-body text-danger">
-                    Pengambilan KRS {{ $session_nama_tahunakademik }} belum bisa dimulai sampai batas yang sudah
-                    ditentukan
-                    oleh fakultas.
+                <div class="krs-alert-content">
+                    <h4 class="krs-alert-title">Belum Heregistrasi</h4>
+                    <p class="krs-alert-message">
+                        Anda tidak dapat melakukan pengambilan KRS. Silakan lakukan pembayaran SPP Tetap dan Heregistrasi terlebih dahulu.
+                    </p>
                 </div>
             </div>
 
-            <div class="box box-solid bg-danger sembunyi" id="lewat">
-                <div class="box-header">
-                    <h4 class="box-title"><i class="fa fa-exclamation-triangle"></i> Batas KRS telah berakhir</h4>
+            <div class="krs-alert-card krs-alert-warning sembunyi" id="not_yet">
+                <div class="krs-alert-icon-wrapper">
+                    <i class="fa fa-exclamation-triangle" style="font-size: 20px;"></i>
                 </div>
-                <div class="box-body text-danger">
-                    Pengambilan KRS {{ $session_nama_tahunakademik }} sudah tidak bisa dilakukan karena sudah melebihi
-                    batas
-                    akhir tanggal pengisian KRS.
+                <div class="krs-alert-content">
+                    <h4 class="krs-alert-title">Jadwal Belum Ditentukan</h4>
+                    <p class="krs-alert-message">
+                        Pengambilan KRS {{ $session_nama_tahunakademik }} belum bisa dimulai sampai batas waktu yang sudah ditentukan oleh fakultas.
+                    </p>
+                </div>
+            </div>
+
+            <div class="krs-alert-card krs-alert-danger sembunyi" id="lewat">
+                <div class="krs-alert-icon-wrapper">
+                    <i class="fa fa-exclamation-triangle" style="font-size: 20px;"></i>
+                </div>
+                <div class="krs-alert-content">
+                    <h4 class="krs-alert-title">Batas KRS Telah Berakhir</h4>
+                    <p class="krs-alert-message">
+                        Pengambilan KRS {{ $session_nama_tahunakademik }} sudah tidak bisa dilakukan karena sudah melebihi batas akhir tanggal pengisian KRS.
+                    </p>
                 </div>
             </div>
 
