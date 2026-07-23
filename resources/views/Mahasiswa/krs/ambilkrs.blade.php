@@ -143,9 +143,9 @@
                     <i class="fa fa-exclamation-triangle" style="font-size: 20px;"></i>
                 </div>
                 <div class="krs-alert-content">
-                    <h4 class="krs-alert-title">Belum Heregistrasi</h4>
+                    <h4 class="krs-alert-title">Status Registrasi Belum Aktif</h4>
                     <p class="krs-alert-message">
-                        Anda tidak dapat melakukan pengambilan KRS. Silakan lakukan pembayaran SPP Tetap dan Heregistrasi terlebih dahulu.
+                        Anda belum dapat melakukan pengisian Kartu Rencana Studi (KRS). Silakan lakukan pembayaran SPP Tetap dan selesaikan proses registrasi administratif (heregistrasi) terlebih dahulu.
                     </p>
                 </div>
             </div>
@@ -155,9 +155,9 @@
                     <i class="fa fa-exclamation-triangle" style="font-size: 20px;"></i>
                 </div>
                 <div class="krs-alert-content">
-                    <h4 class="krs-alert-title">Jadwal Belum Ditentukan</h4>
+                    <h4 class="krs-alert-title">Jadwal Pengisian Belum Dimulai</h4>
                     <p class="krs-alert-message">
-                        Pengambilan KRS {{ $session_nama_tahunakademik }} belum bisa dimulai sampai batas waktu yang sudah ditentukan oleh fakultas.
+                        Pengisian Kartu Rencana Studi (KRS) untuk Semester {{ $session_nama_tahunakademik }} belum dimulai. Jadwal pengisian akan dibuka sesuai dengan ketentuan waktu yang telah ditetapkan oleh fakultas.
                     </p>
                 </div>
             </div>
@@ -167,9 +167,9 @@
                     <i class="fa fa-exclamation-triangle" style="font-size: 20px;"></i>
                 </div>
                 <div class="krs-alert-content">
-                    <h4 class="krs-alert-title">Batas KRS Telah Berakhir</h4>
+                    <h4 class="krs-alert-title">Batas Waktu Pengisian Telah Berakhir</h4>
                     <p class="krs-alert-message">
-                        Pengambilan KRS {{ $session_nama_tahunakademik }} sudah tidak bisa dilakukan karena sudah melebihi batas akhir tanggal pengisian KRS.
+                        Batas akhir pengisian Kartu Rencana Studi (KRS) untuk Semester {{ $session_nama_tahunakademik }} telah terlampaui. Pengisian KRS secara mandiri sudah tidak dapat dilakukan.
                     </p>
                 </div>
             </div>
