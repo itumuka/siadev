@@ -12,7 +12,7 @@
         }
 
         .sembunyi {
-            display: none;
+            display: none !important;
         }
 
         /* Modern Aesthetic KRS Alerts */
