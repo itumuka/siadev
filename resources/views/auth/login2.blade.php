@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Sistem Informasi Akademik Universitas Muhammadiyah Karanganyar - Gen Z Dark Mode">
+    <meta name="description" content="Sistem Informasi Akademik Universitas Muhammadiyah Karanganyar - Fresh Electric Blue Mode">
     <meta name="author" content="UMUKA">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="{{ url('imageup45/logoumuka.png') }}">
@@ -19,13 +19,13 @@
     <link rel="stylesheet" href="{{ url('css/style.css') }}">
     <link rel="stylesheet" href="{{ url('css/skin_color.css') }}">
     
-    <!-- Google Fonts Outfit & Plus Jakarta Sans -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         body {
-            font-family: 'Plus Jakarta Sans', 'Outfit', sans-serif !important;
-            background-color: #030712; /* Very deep charcoal/black base */
+            font-family: 'Outfit', sans-serif !important;
+            background-color: #0b1329;
             margin: 0;
             padding: 0;
             overflow: hidden;
@@ -36,133 +36,178 @@
             display: flex;
             height: 100vh;
             width: 100%;
-            position: relative;
-            background-color: #030712;
-            overflow: hidden;
         }
 
-        /* Subtle glowing warm amber/gold and deep navy orbs in background */
-        .glow-orb-1 {
-            position: absolute;
-            top: -10%;
-            left: 20%;
-            width: 500px;
-            height: 500px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(245, 158, 11, 0.08) 0%, rgba(245, 158, 11, 0) 70%); /* Warm gold glow */
-            filter: blur(65px);
-            pointer-events: none;
-            z-index: 1;
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        .glow-orb-2 {
-            position: absolute;
-            bottom: -10%;
-            right: 10%;
-            width: 600px;
-            height: 600px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(30, 41, 59, 0.12) 0%, rgba(30, 41, 59, 0) 70%); /* Deep cool gray/blue */
-            filter: blur(80px);
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        /* Left Panel: Branding Section (Rich Navy to deep charcoal gradient) */
+        /* Left Panel: Branding / Curves (Fresh Blue Theme) */
         .branding-panel {
-            flex: 1.1;
-            background: linear-gradient(135deg, #0b132b 0%, #1c2541 50%, #030712 100%); /* Premium Rich Navy to dark base */
+            flex: 1.2;
+            background: linear-gradient(135deg, #0b1329 0%, #0d3b66 25%, #0077b6 50%, #00b4d8 75%, #0b1329 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
             position: relative;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 60px 40px;
+            padding: 40px;
             color: #ffffff;
             overflow: hidden;
-            z-index: 2;
         }
 
-        /* Warm glowing lights in branding panel */
+        /* Glowing accents (Electric Blue / Cyan) */
         .branding-panel::before {
             content: '';
             position: absolute;
-            width: 350px;
-            height: 350px;
-            background: radial-gradient(circle, rgba(234, 179, 8, 0.05) 0%, rgba(234, 179, 8, 0) 70%);
-            top: 15%;
-            left: 10%;
+            top: -20%;
+            right: -20%;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.12) 0%, rgba(0, 242, 254, 0) 70%);
             z-index: 1;
             pointer-events: none;
         }
 
-        .branding-content {
-            position: relative;
-            z-index: 3;
-            text-align: center;
-            max-width: 500px;
-            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        .branding-panel::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 90%;
+            height: 90%;
+            background: radial-gradient(circle, rgba(0, 180, 216, 0.18) 0%, rgba(0, 180, 216, 0) 70%);
+            z-index: 1;
+            pointer-events: none;
         }
 
-        /* Elegant branding logo with warm gold border accent & glow */
+        /* Background organic curved SVG (Cyan & Blue strokes) */
+        .branding-bg-curves {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.35;
+        }
+
+        .branding-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 520px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes brandLogoPulse {
+            0% {
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 0px rgba(0, 242, 254, 0.3);
+            }
+            70% {
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 10px rgba(0, 242, 254, 0);
+            }
+            100% {
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 0px rgba(0, 242, 254, 0);
+            }
+        }
+
+        @keyframes shineDivider {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        /* Logo: Border updated to electric blue/cyan */
         .brand-logo {
-            width: 120px;
-            height: 120px;
-            margin-bottom: 30px;
-            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.45));
+            width: 130px;
+            height: 130px;
+            margin-bottom: 25px;
+            filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.6));
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.08);
-            padding: 7px;
-            border: 1.5px solid rgba(234, 179, 8, 0.65); /* Warm yellow gold border */
-            box-shadow: 0 0 15px rgba(234, 179, 8, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px;
+            border: 2.5px dashed rgba(0, 242, 254, 0.85); /* Electric Blue */
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.4s ease;
+            animation: brandLogoPulse 3s infinite ease-in-out;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-logo::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.35) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: skewX(-20deg);
+            transition: left 0.8s ease-out;
+        }
+
+        .brand-logo:hover::after {
+            left: 150%;
         }
 
         .brand-logo img {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            background: #ffffff;
+            transition: all 0.3s ease;
+            background: white;
             border-radius: 50%;
         }
 
         .brand-logo:hover {
-            transform: scale(1.05) rotate(5deg);
-            box-shadow: 0 0 25px rgba(234, 179, 8, 0.35);
+            transform: rotate(15deg) scale(1.08);
         }
 
         .brand-title {
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             font-weight: 700;
             margin-bottom: 12px;
-            letter-spacing: 0.5px;
-            line-height: 1.4;
-            color: #f8fafc;
-            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+            letter-spacing: 0.8px;
+            line-height: 1.3;
+            color: #ffffff;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 242, 254, 0.35);
         }
 
+        /* Divider: Glowing electric blue gradient */
         .brand-divider {
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, #eab308 0%, #fef08a 50%, #eab308 100%); /* Warm gold gradient */
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #00f2fe 0%, #4facfe 50%, #00f2fe 100%);
+            background-size: 200% auto;
             border-radius: 2px;
-            margin: 18px auto;
+            margin: 15px auto;
+            animation: shineDivider 4s infinite linear;
         }
 
         .brand-subtitle {
-            font-size: 0.98rem;
+            font-size: 1.15rem;
             font-weight: 400;
-            color: #94a3b8;
-            line-height: 1.6;
+            color: #93c5fd; /* Soft light blue */
+            line-height: 1.5;
         }
 
-        /* Right Panel: Form (Deep Rich Navy/Dark base) */
+        /* Right Panel: Form */
         .form-panel {
             flex: 1;
-            background-color: #030712; /* Seamless blend */
+            background-color: #0b1329;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -171,29 +216,30 @@
             z-index: 2;
         }
 
-        /* Modern Glassmorphic Login Card in Slate/Navy tones */
-        .login-card {
-            width: 100%;
-            max-width: 410px;
-            background: rgba(15, 23, 42, 0.45); /* Deep slate navy translucent */
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 24px;
-            padding: 45px 35px;
-            box-shadow: 
-                0 25px 50px -12px rgba(0, 0, 0, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05);
-            animation: fadeInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            position: relative;
+        /* Wave Divider between panels */
+        .wave-divider {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 120px;
+            fill: #0b1329;
+            transform: translateX(-99%);
+            z-index: 10;
+            pointer-events: none;
         }
 
-        .login-card:hover {
-            border-color: rgba(234, 179, 8, 0.15); /* Subtle warm highlight on hover */
-            box-shadow: 
-                0 30px 60px -15px rgba(0, 0, 0, 0.6),
-                inset 0 1px 0 rgba(255, 255, 255, 0.08);
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        .login-card {
+            width: 100%;
+            max-width: 430px;
+            background: rgba(23, 43, 76, 0.25);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 30px;
+            padding: 45px 35px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeInRight 1s ease-out;
         }
 
         .login-header {
@@ -202,16 +248,16 @@
         }
 
         .login-header h3 {
-            font-weight: 700;
-            font-size: 1.65rem;
-            color: #f8fafc !important; 
+            font-weight: 600;
+            font-size: 1.8rem;
+            color: #ffffff !important;
             margin-bottom: 8px;
-            letter-spacing: -0.3px;
+            letter-spacing: -0.5px;
         }
 
         .login-header p {
-            color: #64748b; 
-            font-size: 0.92rem;
+            color: #94a3b8;
+            font-size: 0.95rem;
         }
 
         /* Custom Input Groups */
@@ -225,38 +271,38 @@
             left: 20px;
             top: 50%;
             transform: translateY(-50%);
-            color: #475569;
-            font-size: 1rem;
+            color: #64748b;
+            font-size: 1.1rem;
             transition: color 0.3s;
             z-index: 5;
         }
 
-        /* Modern styled input fields */
         .custom-input-group .form-control {
-            background: rgba(3, 7, 18, 0.5) !important;
-            border: 1px solid rgba(255, 255, 255, 0.08) !important; 
-            color: #f8fafc !important; 
-            border-radius: 14px !important;
-            padding: 15px 20px 15px 50px !important;
-            height: 52px !important;
-            font-size: 0.95rem !important;
+            background: rgba(15, 23, 42, 0.65) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.1) !important;
+            color: #ffffff !important;
+            border-radius: 18px !important;
+            padding: 15px 20px 15px 52px !important;
+            height: 56px !important;
+            font-size: 0.98rem !important;
             transition: all 0.3s ease !important;
             box-shadow: none !important;
-            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            font-family: 'Outfit', sans-serif !important;
         }
 
         .custom-input-group .form-control::placeholder {
-            color: #475569;
+            color: #64748b;
         }
 
+        /* Input focus: glowing electric blue/cyan */
         .custom-input-group .form-control:focus {
-            border-color: #eab308 !important; /* Warm gold/yellow focus border */
-            background: rgba(3, 7, 18, 0.7) !important;
-            box-shadow: 0 0 12px rgba(234, 179, 8, 0.2) !important; /* Warm light focus glow */
+            border-color: #00f2fe !important; 
+            background: rgba(15, 23, 42, 0.8) !important;
+            box-shadow: 0 0 14px rgba(0, 242, 254, 0.25) !important;
         }
 
         .custom-input-group .form-control:focus ~ i.input-icon {
-            color: #facc15;
+            color: #00f2fe;
         }
 
         /* Password Toggle Eye Icon */
@@ -265,40 +311,42 @@
             right: 20px;
             top: 50%;
             transform: translateY(-50%);
-            color: #475569;
+            color: #64748b;
             cursor: pointer;
             transition: color 0.3s;
             z-index: 10;
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
 
         .password-toggle:hover {
-            color: #facc15;
+            color: #00f2fe;
         }
 
-        /* Primary Action 'Login' Button: deep warm yellow-gold background with lamp-like glow */
+        /* Login Button: glowing electric blue to cyan gradient */
         .btn-login {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important; /* Rich warm yellow-gold */
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%) !important;
             border: none !important;
-            color: #030712 !important; /* Dark text for contrast */
+            color: #0f172a !important;
             font-weight: 700 !important;
-            font-size: 0.98rem !important;
-            height: 52px !important;
-            border-radius: 14px !important;
+            font-size: 1.05rem !important;
+            height: 56px !important;
+            border-radius: 18px !important;
             width: 100% !important;
             cursor: pointer;
-            box-shadow: 0 0 20px rgba(245, 158, 11, 0.35) !important; /* Lamp-like warm light glow */
+            box-shadow: 0 8px 20px rgba(0, 242, 254, 0.3) !important;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            position: relative;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            font-family: 'Outfit', sans-serif !important;
         }
 
         .btn-login:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 0 35px rgba(245, 158, 11, 0.6) !important; /* Intensely glowing warm lamp effect */
-            filter: brightness(1.08);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(0, 242, 254, 0.45) !important;
+            filter: brightness(1.05);
         }
 
         .btn-login:active {
@@ -307,12 +355,12 @@
 
         /* Alert styling override */
         .notiferror .alert {
-            border-radius: 14px;
-            background-color: rgba(239, 68, 68, 0.1) !important;
-            border: 1px solid rgba(239, 68, 68, 0.2) !important;
+            border-radius: 16px;
+            background-color: rgba(239, 68, 68, 0.15) !important;
+            border: 1px solid rgba(239, 68, 68, 0.3) !important;
             color: #fca5a5 !important;
-            padding: 12px 15px;
-            font-size: 0.88rem;
+            padding: 15px;
+            font-size: 0.9rem;
             margin-bottom: 20px;
         }
 
@@ -322,23 +370,27 @@
             text-shadow: none;
         }
 
-        /* Copyright footer text: styled clean with gold accent */
+        .notiferror .close:hover {
+            opacity: 1;
+        }
+
+        /* Copyright text: styled clean with electric blue links */
         .login-footer {
             text-align: center;
             margin-top: 35px;
-            font-size: 0.85rem;
-            color: #475569; 
+            font-size: 0.88rem;
+            color: #64748b;
         }
 
         .login-footer a {
-            color: #eab308; 
+            color: #00f2fe;
             text-decoration: none;
             transition: color 0.3s;
             font-weight: 500;
         }
 
         .login-footer a:hover {
-            color: #fef08a;
+            color: #4facfe;
             text-decoration: underline;
         }
 
@@ -346,7 +398,7 @@
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
@@ -357,7 +409,7 @@
         @keyframes fadeInRight {
             from {
                 opacity: 0;
-                transform: translateX(30px);
+                transform: translateX(45px);
             }
             to {
                 opacity: 1;
@@ -377,21 +429,23 @@
             }
             .branding-panel {
                 flex: none;
-                padding: 50px 20px;
-                background: linear-gradient(135deg, #0b132b 0%, #1c2541 100%);
+                padding: 60px 20px;
             }
             .brand-logo {
-                width: 90px;
-                height: 90px;
+                width: 100px;
+                height: 100px;
                 margin-bottom: 15px;
             }
             .brand-title {
-                font-size: 1.35rem;
+                font-size: 1.5rem;
             }
             .form-panel {
                 flex: 1;
                 padding: 40px 20px;
-                background-color: #030712;
+                background-color: #0b1329;
+            }
+            .wave-divider {
+                display: none;
             }
             .login-card {
                 padding: 35px 25px;
@@ -406,12 +460,15 @@
 <body>
 
     <div class="login-wrapper">
-        <!-- Background Glowing Blobs -->
-        <div class="glow-orb-1"></div>
-        <div class="glow-orb-2"></div>
-
-        <!-- Left Column: Branding Section (Seamless gradient transition) -->
+        <!-- Left Column: Branding Section with Curved Elements -->
         <div class="branding-panel">
+            <!-- Organic elegant curves background (Electric Blue & Cyan) -->
+            <svg class="branding-bg-curves" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M-100,200 C100,300 200,100 400,300 C600,500 700,300 900,400" stroke="rgba(0, 242, 254, 0.15)" stroke-width="4" stroke-dasharray="10 15" />
+                <path d="M-50,300 C150,450 300,250 500,450 C700,650 650,400 850,550" stroke="rgba(0, 180, 216, 0.2)" stroke-width="6" />
+                <path d="M-200,450 C50,600 150,400 350,600 C550,800 600,550 800,700" stroke="rgba(0, 119, 182, 0.12)" stroke-width="8" />
+            </svg>
+
             <div class="branding-content">
                 <div class="brand-logo">
                     <img src="{{ url('imageup45/logoumuka.png') }}" alt="Logo UMUKA" class="img-fluid rounded-circle">
@@ -422,8 +479,13 @@
             </div>
         </div>
 
-        <!-- Right Column: Login Form Section (Seamless background blend) -->
+        <!-- Right Column: Login Form Section with Wave Divider -->
         <div class="form-panel">
+            <!-- Wave Divider cutting into left column -->
+            <svg class="wave-divider" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M100,0 C30,30 0,70 100,100 Z" />
+            </svg>
+
             <div class="login-card">
                 <div class="login-header">
                     <h3>Selamat Datang</h3>
