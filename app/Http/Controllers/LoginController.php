@@ -17,6 +17,12 @@ class LoginController extends Controller
         return view('auth/login', compact('title'));
     }
 
+    public function index2()
+    {
+        $title = "Akademik SIAKAD UMUKA - Gen Z Dark Mode";
+        return view('auth/login2', compact('title'));
+    }
+
     public function make_session_pegawai(Request $request)
     {
 

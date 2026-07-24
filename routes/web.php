@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get("/", "LoginController@index")->name('login');
+Route::get("/login2", "LoginController@index2")->name('login2');
 Route::get("/logout", "LoginController@logout")->name('logout');
 Route::get("/makesession-pegawai", "LoginController@make_session_pegawai")->name('makesession_pegawai');
 Route::get("/makesession-mahasiswa", "LoginController@make_session_mahasiswa")->name('make_session_mahasiswa');
