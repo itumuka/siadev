@@ -200,7 +200,7 @@
         .brand-subtitle {
             font-size: 1.15rem;
             font-weight: 400;
-            color: #93c5fd; /* Soft light blue */
+            color: #eab308; /* Aligned with login.blade.php button gold/yellow */
             line-height: 1.5;
         }
 
@@ -322,9 +322,9 @@
             color: #00f2fe;
         }
 
-        /* Login Button: glowing electric blue to cyan gradient */
+        /* Login Button: aligned with login.blade.php (gold/yellow) */
         .btn-login {
-            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%) !important;
+            background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%) !important;
             border: none !important;
             color: #0f172a !important;
             font-weight: 700 !important;
@@ -333,7 +333,7 @@
             border-radius: 18px !important;
             width: 100% !important;
             cursor: pointer;
-            box-shadow: 0 8px 20px rgba(0, 242, 254, 0.3) !important;
+            box-shadow: 0 8px 20px rgba(234, 179, 8, 0.3) !important;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
             position: relative;
             overflow: hidden;
@@ -345,7 +345,7 @@
 
         .btn-login:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 28px rgba(0, 242, 254, 0.45) !important;
+            box-shadow: 0 12px 28px rgba(234, 179, 8, 0.45) !important;
             filter: brightness(1.05);
         }
 
