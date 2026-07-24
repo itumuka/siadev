@@ -383,14 +383,14 @@
         }
 
         .login-footer a {
-            color: #00f2fe;
+            color: #eab308; /* Aligned with gold/yellow login button */
             text-decoration: none;
             transition: color 0.3s;
             font-weight: 500;
         }
 
         .login-footer a:hover {
-            color: #4facfe;
+            color: #ca8a04;
             text-decoration: underline;
         }
 
@@ -462,11 +462,11 @@
     <div class="login-wrapper">
         <!-- Left Column: Branding Section with Curved Elements -->
         <div class="branding-panel">
-            <!-- Organic elegant curves background (Electric Blue & Cyan) -->
+            <!-- Organic elegant curves background (Electric Blue & Cyan) with high contrast -->
             <svg class="branding-bg-curves" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M-100,200 C100,300 200,100 400,300 C600,500 700,300 900,400" stroke="rgba(0, 242, 254, 0.15)" stroke-width="4" stroke-dasharray="10 15" />
-                <path d="M-50,300 C150,450 300,250 500,450 C700,650 650,400 850,550" stroke="rgba(0, 180, 216, 0.2)" stroke-width="6" />
-                <path d="M-200,450 C50,600 150,400 350,600 C550,800 600,550 800,700" stroke="rgba(0, 119, 182, 0.12)" stroke-width="8" />
+                <path d="M-100,200 C100,300 200,100 400,300 C600,500 700,300 900,400" stroke="rgba(0, 242, 254, 0.35)" stroke-width="4.5" stroke-dasharray="10 15" />
+                <path d="M-50,300 C150,450 300,250 500,450 C700,650 650,400 850,550" stroke="rgba(255, 255, 255, 0.25)" stroke-width="6.5" />
+                <path d="M-200,450 C50,600 150,400 350,600 C550,800 600,550 800,700" stroke="rgba(0, 180, 216, 0.32)" stroke-width="8.5" />
             </svg>
 
             <div class="branding-content">
