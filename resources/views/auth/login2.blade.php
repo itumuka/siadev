@@ -25,7 +25,7 @@
     <style>
         body {
             font-family: 'Plus Jakarta Sans', 'Outfit', sans-serif !important;
-            background-color: #0b0f19; /* Deep dark slate base */
+            background-color: #030712; /* Very deep charcoal/black base */
             margin: 0;
             padding: 0;
             overflow: hidden;
@@ -37,11 +37,11 @@
             height: 100vh;
             width: 100%;
             position: relative;
-            background-color: #0b0f19;
+            background-color: #030712;
             overflow: hidden;
         }
 
-        /* Subtle glowing mesh orbs in background to make it look premium and deep */
+        /* Subtle glowing warm amber/gold and deep navy orbs in background */
         .glow-orb-1 {
             position: absolute;
             top: -10%;
@@ -49,8 +49,8 @@
             width: 500px;
             height: 500px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, rgba(139, 92, 246, 0) 70%);
-            filter: blur(60px);
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.08) 0%, rgba(245, 158, 11, 0) 70%); /* Warm gold glow */
+            filter: blur(65px);
             pointer-events: none;
             z-index: 1;
         }
@@ -62,16 +62,16 @@
             width: 600px;
             height: 600px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(20, 184, 166, 0.06) 0%, rgba(20, 184, 166, 0) 70%);
+            background: radial-gradient(circle, rgba(30, 41, 59, 0.12) 0%, rgba(30, 41, 59, 0) 70%); /* Deep cool gray/blue */
             filter: blur(80px);
             pointer-events: none;
             z-index: 1;
         }
 
-        /* Left Panel: Branding Section (Seamless gradient transition) */
+        /* Left Panel: Branding Section (Rich Navy to deep charcoal gradient) */
         .branding-panel {
             flex: 1.1;
-            background: linear-gradient(135deg, #1e1b4b 0%, #311054 45%, #0b0f19 100%);
+            background: linear-gradient(135deg, #0b132b 0%, #1c2541 50%, #030712 100%); /* Premium Rich Navy to dark base */
             position: relative;
             display: flex;
             flex-direction: column;
@@ -83,14 +83,14 @@
             z-index: 2;
         }
 
-        /* Abstract glowing lines or shapes inside branding */
+        /* Warm glowing lights in branding panel */
         .branding-panel::before {
             content: '';
             position: absolute;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, rgba(212, 175, 55, 0) 70%);
-            top: 10%;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(234, 179, 8, 0.05) 0%, rgba(234, 179, 8, 0) 70%);
+            top: 15%;
             left: 10%;
             z-index: 1;
             pointer-events: none;
@@ -104,7 +104,7 @@
             animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        /* Elegant branding logo with golden border accent */
+        /* Elegant branding logo with warm gold border accent & glow */
         .brand-logo {
             width: 120px;
             height: 120px;
@@ -113,7 +113,8 @@
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.08);
             padding: 7px;
-            border: 1.5px solid rgba(212, 175, 55, 0.45);
+            border: 1.5px solid rgba(234, 179, 8, 0.65); /* Warm yellow gold border */
+            box-shadow: 0 0 15px rgba(234, 179, 8, 0.2);
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -130,6 +131,7 @@
 
         .brand-logo:hover {
             transform: scale(1.05) rotate(5deg);
+            box-shadow: 0 0 25px rgba(234, 179, 8, 0.35);
         }
 
         .brand-title {
@@ -139,13 +141,13 @@
             letter-spacing: 0.5px;
             line-height: 1.4;
             color: #f8fafc;
-            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
         }
 
         .brand-divider {
             width: 60px;
             height: 3px;
-            background: linear-gradient(90deg, #d4af37 0%, #fef08a 50%, #d4af37 100%);
+            background: linear-gradient(90deg, #eab308 0%, #fef08a 50%, #eab308 100%); /* Warm gold gradient */
             border-radius: 2px;
             margin: 18px auto;
         }
@@ -157,10 +159,10 @@
             line-height: 1.6;
         }
 
-        /* Right Panel: Form (Seamless background blend) */
+        /* Right Panel: Form (Deep Rich Navy/Dark base) */
         .form-panel {
             flex: 1;
-            background-color: #0b0f19; /* Seamless blend with branding panel */
+            background-color: #030712; /* Seamless blend */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -169,29 +171,29 @@
             z-index: 2;
         }
 
-        /* Modern Glassmorphic Login Card */
+        /* Modern Glassmorphic Login Card in Slate/Navy tones */
         .login-card {
             width: 100%;
             max-width: 410px;
-            background: rgba(30, 41, 59, 0.35); 
+            background: rgba(15, 23, 42, 0.45); /* Deep slate navy translucent */
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 24px;
             padding: 45px 35px;
             box-shadow: 
-                0 25px 50px -12px rgba(0, 0, 0, 0.4),
+                0 25px 50px -12px rgba(0, 0, 0, 0.5),
                 inset 0 1px 0 rgba(255, 255, 255, 0.05);
             animation: fadeInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             position: relative;
         }
 
         .login-card:hover {
-            border-color: rgba(255, 255, 255, 0.08);
+            border-color: rgba(234, 179, 8, 0.15); /* Subtle warm highlight on hover */
             box-shadow: 
-                0 30px 60px -15px rgba(0, 0, 0, 0.5),
+                0 30px 60px -15px rgba(0, 0, 0, 0.6),
                 inset 0 1px 0 rgba(255, 255, 255, 0.08);
-            transition: all 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .login-header {
@@ -231,7 +233,7 @@
 
         /* Modern styled input fields */
         .custom-input-group .form-control {
-            background: rgba(15, 23, 42, 0.4) !important;
+            background: rgba(3, 7, 18, 0.5) !important;
             border: 1px solid rgba(255, 255, 255, 0.08) !important; 
             color: #f8fafc !important; 
             border-radius: 14px !important;
@@ -248,13 +250,13 @@
         }
 
         .custom-input-group .form-control:focus {
-            border-color: #8b5cf6 !important; /* Soft violet focus */
-            background: rgba(15, 23, 42, 0.6) !important;
-            box-shadow: 0 0 12px rgba(139, 92, 246, 0.25) !important;
+            border-color: #eab308 !important; /* Warm gold/yellow focus border */
+            background: rgba(3, 7, 18, 0.7) !important;
+            box-shadow: 0 0 12px rgba(234, 179, 8, 0.2) !important; /* Warm light focus glow */
         }
 
         .custom-input-group .form-control:focus ~ i.input-icon {
-            color: #a78bfa;
+            color: #facc15;
         }
 
         /* Password Toggle Eye Icon */
@@ -271,21 +273,21 @@
         }
 
         .password-toggle:hover {
-            color: #a78bfa;
+            color: #facc15;
         }
 
-        /* Primary Action 'Login' Button: smooth violet-teal gradient with scale effect */
+        /* Primary Action 'Login' Button: deep warm yellow-gold background with lamp-like glow */
         .btn-login {
-            background: linear-gradient(135deg, #7c3aed 0%, #14b8a6 100%) !important; 
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important; /* Rich warm yellow-gold */
             border: none !important;
-            color: #ffffff !important;
-            font-weight: 600 !important;
+            color: #030712 !important; /* Dark text for contrast */
+            font-weight: 700 !important;
             font-size: 0.98rem !important;
             height: 52px !important;
             border-radius: 14px !important;
             width: 100% !important;
             cursor: pointer;
-            box-shadow: 0 8px 24px rgba(124, 58, 237, 0.2) !important; 
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.35) !important; /* Lamp-like warm light glow */
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
             display: flex;
             align-items: center;
@@ -295,7 +297,7 @@
 
         .btn-login:hover {
             transform: translateY(-1px);
-            box-shadow: 0 12px 32px rgba(124, 58, 237, 0.35) !important; 
+            box-shadow: 0 0 35px rgba(245, 158, 11, 0.6) !important; /* Intensely glowing warm lamp effect */
             filter: brightness(1.08);
         }
 
@@ -329,7 +331,7 @@
         }
 
         .login-footer a {
-            color: #d4af37; 
+            color: #eab308; 
             text-decoration: none;
             transition: color 0.3s;
             font-weight: 500;
@@ -376,7 +378,7 @@
             .branding-panel {
                 flex: none;
                 padding: 50px 20px;
-                background: linear-gradient(135deg, #1e1b4b 0%, #311054 100%);
+                background: linear-gradient(135deg, #0b132b 0%, #1c2541 100%);
             }
             .brand-logo {
                 width: 90px;
@@ -389,7 +391,7 @@
             .form-panel {
                 flex: 1;
                 padding: 40px 20px;
-                background-color: #0b0f19;
+                background-color: #030712;
             }
             .login-card {
                 padding: 35px 25px;
