@@ -489,8 +489,13 @@
                                             if (nilaiRes.status === 'success') {
                                                 nilaiRes.data.forEach(function(n) {
                                                     gradesMap[n.id_rubrik_indikator] = n.nilai;
+                                                    if (n.nama_indikator_snapshot) {
+                                                        var normName = n.nama_indikator_snapshot.toLowerCase().trim();
+                                                        gradesMap[normName] = n.nilai;
+                                                    }
                                                 });
-                                                if (nilaiRes.berita_acara) {
+                                            }
+                                            if (nilaiRes.berita_acara) {
                                                     existingCatatan = nilaiRes.berita_acara.catatan || '';
                                                     if (nilaiRes.berita_acara.keputusan) {
                                                         $('#n_keputusan').val(nilaiRes.berita_acara.keputusan);
@@ -516,7 +521,6 @@
                                                     d.setDate(d.getDate() + 14);
                                                     $('#n_batas_revisi').val(d.toISOString().split('T')[0]);
                                                 }
-                                            }
                                             // Toggle date field display based on loaded value
                                             toggleBatasRevisi();
                                             
@@ -578,7 +582,13 @@
                     if (aspectRubrics.length > 0) {
                         if (isTunggal) {
                             var firstRubricId = aspectRubrics[0].id;
-                            var aspectValue = gradesMap[firstRubricId] !== undefined ? gradesMap[firstRubricId] : '';
+                            var firstRubricName = (aspectRubrics[0].nama_indikator || '').toLowerCase().trim();
+                            var aspectValue = '';
+                            if (gradesMap[firstRubricId] !== undefined) {
+                                aspectValue = gradesMap[firstRubricId];
+                            } else if (gradesMap[firstRubricName] !== undefined) {
+                                aspectValue = gradesMap[firstRubricName];
+                            }
 
                             html += `
                             <div class="card mb-3 border-primary shadow-none">
@@ -675,7 +685,13 @@
             }
 
             function renderSingleIndikatorRow(r, gradesMap) {
-                var val = gradesMap[r.id] !== undefined ? gradesMap[r.id] : '';
+                var normName = (r.nama_indikator || '').toLowerCase().trim();
+                var val = '';
+                if (gradesMap[r.id] !== undefined) {
+                    val = gradesMap[r.id];
+                } else if (gradesMap[normName] !== undefined) {
+                    val = gradesMap[normName];
+                }
                 var bobotText = currentTipeBobot === 'tunggal' ? 'Sama Rata (Tunggal Aspek)' : parseFloat(r.bobot) + '%';
                 
                 return `
