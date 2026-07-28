@@ -79,9 +79,9 @@
             <div class="col-xl-5 col-12">
                 <!-- Proposal Detail -->
                 <div id="card_proposal" class="box" style="border-radius: 12px;">
-                    <div class="box-header with-border bg-white">
-                        <h4 class="box-title">Detail Riset</h4>
-                        <div class="box-controls pull-right">
+                    <div class="box-header with-border bg-white d-flex justify-content-between align-items-center flex-wrap" style="gap: 10px; display: flex !important;">
+                        <h4 class="box-title mb-0">Detail Riset</h4>
+                        <div class="d-flex align-items-center flex-wrap" style="gap: 8px; display: flex !important;">
                            <span id="btn_edit_container"></span>
                            <span class="badge" id="status_skripsi_badge">Draft</span>
                         </div>
@@ -188,5 +188,5 @@
         token: "{{ $api_token }}"
     };
 </script>
-<script src="{{ url('js/skripsi_dashboard.js') }}"></script>
+<script src="{{ url('js/skripsi_dashboard.js?v=' . time()) }}"></script>
 @endsection
