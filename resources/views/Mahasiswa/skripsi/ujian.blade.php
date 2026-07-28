@@ -552,13 +552,22 @@
                                 <div class="d-flex align-items-start">
                                     <i class="fa ${ujianLocked ? 'fa-info-circle' : 'fa-exclamation-triangle'} mr-10 mt-1"></i>
                                     <div>
-                                        <strong>${ujianLocked ? 'Data Anda Sudah Tercatat' : 'Data Tersimpan Sebelumnya'}</strong>
+                                        <strong>${ujianLocked ? 'Data Anda Sudah Tercatat & Dikunci' : 'Data Tersimpan (Fase Revisi / Uji)'}</strong>
                                         <div class="mt-1">${res.data.notice_message}</div>
                                         ${cancelBtn}
                                     </div>
                                 </div>
                             </div>
                         `).show();
+
+                        if (res.data.ujian_status && res.data.ujian_status !== 'pending') {
+                            $('#btn-submit-final').text('Simpan Pembaruan Data Ujian');
+                        }
+
+                        if (ujianLocked) {
+                            $('input, select, textarea, button').not('#btn-cancel-ujian, .close, .prev-step').attr('disabled', true);
+                            $('#btn-submit-final').hide();
+                        }
                     }
 
                     const target = res.data.target_luaran || 'buku_skripsi';

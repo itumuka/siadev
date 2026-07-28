@@ -169,9 +169,11 @@
                                                 <option value="tidak_lulus_judul_baru">Tidak Lulus dengan Menulis Skripsi Judul Baru</option>
                                             </select>
 
-                                            <label class="font-weight-bold text-dark mt-2"><i class="fa fa-calendar text-danger mr-1"></i> Batas Tanggal Revisi / Perbaikan</label>
-                                            <input type="date" name="batas_revisi" id="n_batas_revisi" class="form-control border-secondary">
-                                            <small class="form-text text-muted mt-1"><i class="fa fa-info-circle"></i> Tentukan batas akhir penyerahan revisi (otomatis 14 hari dari hari ini jika kosong).</small>
+                                            <div id="wrapper_batas_revisi" style="display: none;">
+                                                <label class="font-weight-bold text-dark mt-2"><i class="fa fa-calendar text-danger mr-1"></i> Batas Tanggal Revisi / Perbaikan</label>
+                                                <input type="date" name="batas_revisi" id="n_batas_revisi" class="form-control border-secondary">
+                                                <small class="form-text text-muted mt-1"><i class="fa fa-info-circle"></i> Tentukan batas akhir penyerahan revisi (otomatis 14 hari dari hari ini jika kosong).</small>
+                                            </div>
                                         </div>
 
                                         <!-- Catatan -->
@@ -350,6 +352,17 @@
             });
 
             // Handle Input Click & Load Modal
+            // Toggle batas_revisi display based on keputusan choice
+            function toggleBatasRevisi() {
+                if ($('#n_keputusan').val() === 'lulus_dengan_perbaikan') {
+                    $('#wrapper_batas_revisi').show();
+                } else {
+                    $('#wrapper_batas_revisi').hide();
+                    $('#n_batas_revisi').val('');
+                }
+            }
+            $('#n_keputusan').on('change', toggleBatasRevisi);
+
             var currentRubrics = [];
             $('#tb_mahasiswa_diuji').on('click', '.btn-grade', function() {
                 var student = JSON.parse(decodeURIComponent(escape(atob($(this).data('row')))));
@@ -424,6 +437,11 @@
                 $('#lbl_grade_letter').text('-');
                 $('#rubrik_inputs_container').html('<div class="text-center py-4"><div class="spinner-border text-primary" role="status"></div><p class="mt-2 text-muted">Memuat rubrik dan nilai...</p></div>');
 
+                // Reset inputs and disabled attributes
+                $('#n_keputusan').val('lulus_dengan_perbaikan').removeAttr('disabled');
+                $('#n_batas_revisi').val('').removeAttr('disabled');
+                $('#wrapper_batas_revisi').hide();
+
                 // Open modal
                 $('#modal_nilai_ujian').modal('show');
 
@@ -484,12 +502,23 @@
                                                         d.setDate(d.getDate() + 14);
                                                         $('#n_batas_revisi').val(d.toISOString().split('T')[0]);
                                                     }
+                                                    
+                                                    // Read-only Lock logic:
+                                                    // If another examiner has graded, and keputusan is already set in DB
+                                                    var otherGraded = (nilaiRes.graded_dosen_ids || []).filter(id => id != id_dosen).length > 0;
+                                                    var myGradesExist = gradesMap && Object.keys(gradesMap).length > 0;
+                                                    if (otherGraded && (!myGradesExist || nilaiRes.berita_acara.keputusan)) {
+                                                        $('#n_keputusan').attr('disabled', true);
+                                                        $('#n_batas_revisi').attr('disabled', true);
+                                                    }
                                                 } else {
                                                     let d = new Date();
                                                     d.setDate(d.getDate() + 14);
                                                     $('#n_batas_revisi').val(d.toISOString().split('T')[0]);
                                                 }
                                             }
+                                            // Toggle date field display based on loaded value
+                                            toggleBatasRevisi();
                                             
                                             $('#n_catatan').val(existingCatatan);
                                             renderRubricInputs(currentRubrics, gradesMap);

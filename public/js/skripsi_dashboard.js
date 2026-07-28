@@ -155,6 +155,7 @@ function renderDashboard(data) {
     // 5. Lifecycle
     renderTimeline(data);
     renderCTA(data.cta);
+    renderRevisionCard(data);
 
     // 6. Portfolio CPL (OBE) - Removed/Disabled per leadership request
     // if (data.skripsi && data.skripsi.is_obe == 1) {
@@ -465,4 +466,62 @@ function showError(msg) {
             </div>
         </div>
     `).show();
+}
+
+function renderRevisionCard(data) {
+    const container = $('#revision_card_container');
+    if (!data.ujian || data.ujian.keputusan !== 'lulus_dengan_perbaikan') {
+        container.hide().empty();
+        return;
+    }
+
+    const u = data.ujian;
+    const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const dateFormatted = u.batas_revisi ? new Date(u.batas_revisi).toLocaleDateString('id-ID', dateOptions) : 'Tidak ditentukan';
+
+    let luaranInfoHtml = '';
+    if (data.luaran) {
+        luaranInfoHtml = `
+            <div class="mt-15 bg-light p-15 rounded border">
+                <h6 class="font-weight-600 mb-10 text-dark">Informasi Jurnal/Luaran Saat Ini:</h6>
+                <div class="font-size-13 text-dark">
+                    <strong>Link Jurnal/Luaran:</strong> 
+                    ${data.luaran.url_link ? `<a href="${data.luaran.url_link}" target="_blank" class="text-primary font-weight-bold" style="text-decoration: underline; word-break: break-all;">${data.luaran.url_link}</a>` : '<span class="text-danger">Belum diisi / belum valid</span>'}
+                    <br><strong>Judul Publikasi:</strong> ${data.luaran.judul_luaran || '-'}
+                    <br><strong>Publisher/Media:</strong> ${data.luaran.nama_media || '-'}
+                </div>
+            </div>
+        `;
+    }
+
+    const html = `
+        <div class="box-header with-border bg-warning-light" style="background-color: #fff3cd; border-bottom: 1px solid #ffeeba;">
+            <h4 class="box-title font-weight-bold" style="color: #856404;">
+                <i class="fa fa-exclamation-triangle mr-10"></i> Ujian Akhir: Lulus dengan Perbaikan
+            </h4>
+        </div>
+        <div class="box-body">
+            <div class="mb-15">
+                <span class="text-muted font-size-12 d-block">Tenggat Waktu Perbaikan / Revisi:</span>
+                <strong class="text-danger font-size-15"><i class="fa fa-calendar"></i> ${dateFormatted}</strong>
+            </div>
+            
+            <div class="mb-15">
+                <span class="text-muted font-size-12 d-block">Catatan / Rekomendasi Perbaikan:</span>
+                <div class="p-10 border rounded bg-gray-50 text-dark font-italic font-size-13" style="max-height: 120px; overflow-y: auto; background-color: #fafafa;">
+                    ${u.catatan_revisi || 'Tidak ada catatan tertulis.'}
+                </div>
+            </div>
+
+            ${luaranInfoHtml}
+
+            <div class="mt-20">
+                <a href="${CONFIG.app_url}/mahasiswa/skripsi/ujian" class="btn btn-warning btn-block shadow font-weight-bold" style="background-color: #ffb700; border-color: #ffb700; color: #fff;">
+                    <i class="fa fa-pencil mr-5"></i> Perbarui Revisi & Link Jurnal / Luaran
+                </a>
+            </div>
+        </div>
+    `;
+
+    container.html(html).fadeIn();
 }

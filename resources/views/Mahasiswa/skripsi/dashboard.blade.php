@@ -124,6 +124,10 @@
                     </div>
                 </div>
 
+                <!-- Revision Card Container -->
+                <div id="revision_card_container" class="box" style="display: none; border-radius: 12px; border-left: 4px solid #f39c12; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                </div>
+
                 <!-- Exam Schedule Card -->
                 <div id="exam_schedule_container" class="box" style="display: none; border-radius: 12px; border-left: 4px solid #0052cc; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
                 </div>
