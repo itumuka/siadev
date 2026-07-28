@@ -96,18 +96,18 @@ function renderDashboard(data) {
         let buttons = '';
         if (status === 'draft' || status === 'menunggu_pembimbing') {
             buttons += `
-                <button class="btn btn-xs btn-outline btn-warning mr-5" data-toggle="modal" data-target="#modal-proposal">
+                <button class="btn btn-warning btn-sm font-weight-bold shadow-sm px-15 py-5 mr-5" data-toggle="modal" data-target="#modal-proposal">
                     <i class="fa fa-pencil mr-5"></i> Edit Proposal
                 </button>
-                <button class="btn btn-xs btn-outline btn-success mr-10" onclick="$('#form_upload_naskah').attr('data-fase', 'sempro')" data-toggle="modal" data-target="#modal-upload-naskah">
-                    <i class="fa fa-upload mr-5"></i> Unggah PDF
+                <button class="btn btn-success btn-sm font-weight-bold shadow-sm px-15 py-5 mr-10" onclick="$('#form_upload_naskah').attr('data-fase', 'sempro')" data-toggle="modal" data-target="#modal-upload-naskah">
+                    <i class="fa fa-upload mr-5"></i> Unggah Naskah
                 </button>
             `;
         } else if (status === 'aktif' || status === 'sidang') {
             const fase = status === 'sidang' ? 'ujian' : 'sempro';
             buttons += `
-                <button class="btn btn-xs btn-outline btn-success mr-10" onclick="$('#form_upload_naskah').attr('data-fase', '${fase}')" data-toggle="modal" data-target="#modal-upload-naskah">
-                    <i class="fa fa-upload mr-5"></i> Unggah Naskah (${fase.toUpperCase()})
+                <button class="btn btn-success btn-sm font-weight-bold shadow-sm px-15 py-5 mr-10" onclick="$('#form_upload_naskah').attr('data-fase', '${fase}')" data-toggle="modal" data-target="#modal-upload-naskah">
+                    <i class="fa fa-upload mr-5"></i> Unggah Naskah
                 </button>
             `;
         }
