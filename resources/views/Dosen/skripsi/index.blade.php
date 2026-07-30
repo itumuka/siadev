@@ -57,7 +57,7 @@
                                     <th>Prodi</th>
                                     <th>Judul Skripsi</th>
                                     <th>Status/Fase</th>
-                                    <th>Total Bimbingan (ACC)</th>
+                                    <th>Total Bimbingan</th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -144,8 +144,15 @@
                         data: 'total_bimbingan_acc',
                         className: 'text-center',
                         render: function(data, type, row) {
-                            // Can add total requirement logic if needed later
-                            return '<strong>' + data + '</strong> kali';
+                            var acc = parseInt(row.total_bimbingan_acc) || 0;
+                            var submitted = parseInt(row.total_bimbingan_submitted) || 0;
+                            var pending = parseInt(row.total_bimbingan_pending) || 0;
+                            
+                            var html = '<strong>' + acc + '</strong> disetujui / <strong>' + submitted + '</strong> diajukan';
+                            if (pending > 0) {
+                                html += '<br><span class="badge badge-warning font-weight-bold mt-5" style="font-size: 10px; padding: 3px 6px;" title="Ada log bimbingan belum divalidasi"><i class="fa fa-exclamation-triangle mr-5"></i>' + pending + ' pending</span>';
+                            }
+                            return html;
                         }
                     },
                     {
