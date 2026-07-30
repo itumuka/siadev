@@ -211,46 +211,53 @@
             var id_skripsi = $('#id_skripsi').val();
 
             // 1. Fetch data mahasiswa (using dashboard endpoint and filtering)
-            $.ajax({
-                url: "{{ $api_url }}dosen/skripsi/dashboard",
-                method: "GET",
-                headers: { 
-                    "Authorization": 'Bearer ' + token,
-                    "username": userlogin
-                },
-                data: { id_dosen: id_dosen },
-                success: function(res) {
-                    if(res.status == 'success') {
-                        var mhs = res.data.find(m => m.id_skripsi == id_skripsi);
-                        if(mhs) {
-                            $('#mhs_nama').text(mhs.nama_mahasiswa);
-                            $('#mhs_nim').text(mhs.nim + ' - ' + mhs.nama_program_studi);
-                            $('#mhs_judul').text(mhs.judul || 'Belum ada judul');
-                            
-                            $('#mhs_info_placeholder').hide();
-                            $('#mhs_info_content').fadeIn();
+            function loadStudentDashboard() {
+                $.ajax({
+                    url: "{{ $api_url }}dosen/skripsi/dashboard",
+                    method: "GET",
+                    headers: { 
+                        "Authorization": 'Bearer ' + token,
+                        "username": userlogin
+                    },
+                    data: { id_dosen: id_dosen },
+                    success: function(res) {
+                        if(res.status == 'success') {
+                            var mhs = res.data.find(m => m.id_skripsi == id_skripsi);
+                            if(mhs) {
+                                $('#mhs_nama').text(mhs.nama_mahasiswa);
+                                $('#mhs_nim').text(mhs.nim + ' - ' + mhs.nama_program_studi);
+                                $('#mhs_judul').text(mhs.judul || 'Belum ada judul');
+                                
+                                $('#mhs_info_placeholder').hide();
+                                $('#mhs_info_content').fadeIn();
 
-                            // Gunakan nilai minimal bimbingan dari backend jika tersedia
-                            var minBimbingan = mhs.ta_minimal_bimbingan || 8;
-                            if(mhs.total_bimbingan_acc >= minBimbingan) {
-                                $('#btn_acc_ujian').show();
-                            }
-                            $('#btn_cetak_bimbingan').data('nim', mhs.nim).show();
+                                // Gunakan nilai minimal bimbingan dari backend jika tersedia
+                                var minBimbingan = mhs.ta_minimal_bimbingan || 8;
+                                if(mhs.total_bimbingan_acc >= minBimbingan) {
+                                    $('#btn_acc_ujian').show();
+                                } else {
+                                    $('#btn_acc_ujian').hide();
+                                }
+                                $('#btn_cetak_bimbingan').data('nim', mhs.nim).show();
 
-                            // Update opsi fase ujian berdasarkan konfigurasi prodi
-                            var selectFase = $('#acc_fase');
-                            selectFase.empty();
-                            selectFase.append('<option value="">-- Pilih Fase --</option>');
-                            if (mhs.ta_ada_sempro == 1 && mhs.ta_sempro_skema !== 'matakuliah') {
-                                selectFase.append('<option value="sempro">Seminar Proposal (Sempro)</option>');
-                                selectFase.append('<option value="ujian">Ujian Skripsi (Pendadaran)</option>');
-                            } else {
-                                selectFase.append('<option value="ujian" selected>Ujian Skripsi (Pendadaran)</option>');
+                                // Update opsi fase ujian berdasarkan konfigurasi prodi
+                                var selectFase = $('#acc_fase');
+                                selectFase.empty();
+                                selectFase.append('<option value="">-- Pilih Fase --</option>');
+                                if (mhs.ta_ada_sempro == 1 && mhs.ta_sempro_skema !== 'matakuliah') {
+                                    selectFase.append('<option value="sempro">Seminar Proposal (Sempro)</option>');
+                                    selectFase.append('<option value="ujian">Ujian Skripsi (Pendadaran)</option>');
+                                } else {
+                                    selectFase.append('<option value="ujian" selected>Ujian Skripsi (Pendadaran)</option>');
+                                }
                             }
                         }
                     }
-                }
-            });
+                });
+            }
+
+            // Call initially
+            loadStudentDashboard();
 
             // 2. Load Table Log Bimbingan
             var table = $("#tb_log_bimbingan").DataTable({
@@ -357,6 +364,7 @@
                             showToastr('success', 'Berhasil', res.success);
                             $('#modal_validasi').modal('hide');
                             table.ajax.reload();
+                            loadStudentDashboard(); // Auto-reload student info to show ACC button if count reaches min
                         } else {
                             showToastr('error', 'Gagal', 'Terjadi kesalahan');
                         }
