@@ -89,6 +89,7 @@
                 <li><a href="#ayah" data-toggle="tab">Ayah</a></li>
                 <li><a href="#ibu" data-toggle="tab">Ibu</a></li>
                 <li><a href="#uploadavatar" data-toggle="tab">Upload Foto</a></li>
+                <li><a href="#skpi" data-toggle="tab"><i class="fa fa-certificate mr-1"></i> SKPI & Verifikasi</a></li>
             </ul>
 
             <div class="tab-content">
@@ -529,6 +530,174 @@
                 </form>
                 </div>
                 <!-- /.tab-pane -->
+                <div class="tab-pane" id="skpi">
+                    <!-- Section 1: Verifikasi Semester -->
+                    <div class="box p-15">
+                        <div class="box-header no-border px-0">
+                            <h4 class="box-title text-primary"><i class="fa fa-check-square-o mr-1"></i> Verifikasi Data Semester Berjalan</h4>
+                        </div>
+                        <div class="box-body px-0">
+                            <div class="alert alert-info" style="border-radius: 12px; margin-bottom: 20px;">
+                                <i class="fa fa-info-circle mr-1"></i> Anda diwajibkan untuk memverifikasi kevalidan data profil, orang tua, dan portofolio SKPI Anda setiap awal semester.
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 col-12">
+                                    <div class="card p-15" style="border-radius: 12px; border: 1px solid rgba(0,0,0,0.08); background: #f8fafc;">
+                                        <h5 class="font-weight-600 mb-15">Daftar Kelengkapan Syarat:</h5>
+                                        <ul class="list-unstyled mb-0">
+                                            <li class="d-flex justify-content-between align-items-center mb-10 pb-10 border-bottom-dashed" style="border-bottom: 1px dashed rgba(0,0,0,0.08);">
+                                                <span><i class="fa fa-user text-muted mr-2"></i> Profil Pribadi (NIK, TTL, Alamat)</span>
+                                                <span id="syarat-profil-badge" class="badge badge-secondary">Memuat...</span>
+                                            </li>
+                                            <li class="d-flex justify-content-between align-items-center mb-10 pb-10 border-bottom-dashed" style="border-bottom: 1px dashed rgba(0,0,0,0.08);">
+                                                <span><i class="fa fa-male text-muted mr-2"></i> Profil Orang Tua (Ayah)</span>
+                                                <span id="syarat-ayah-badge" class="badge badge-secondary">Memuat...</span>
+                                            </li>
+                                            <li class="d-flex justify-content-between align-items-center mb-0">
+                                                <span><i class="fa fa-female text-muted mr-2"></i> Profil Orang Tua (Ibu)</span>
+                                                <span id="syarat-ibu-badge" class="badge badge-secondary">Memuat...</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="card p-15 text-center d-flex flex-column justify-content-center align-items-center" style="border-radius: 12px; border: 1px solid rgba(0,0,0,0.08); min-height: 155px; background: #ffffff;">
+                                        <h5 class="font-weight-600 mb-5">Status Verifikasi Semester Ini:</h5>
+                                        <p class="text-muted font-size-13 mb-10">Tahun Akademik: <strong><span id="verif-tahun-text">{{ Session::get('nama_tahunakademik') }}</span></strong></p>
+                                        <div id="verif-status-badge-container" class="mb-15">
+                                            <span class="badge badge-lg badge-secondary font-size-14 py-2 px-3" style="border-radius: 8px;">Memuat...</span>
+                                        </div>
+                                        <button id="btn-verifikasi-semester" class="btn btn-success btn-md" style="border-radius: 8px; font-weight: 600; padding: 6px 20px; display: none;">
+                                            <i class="fa fa-check-circle mr-1"></i> Konfirmasi & Verifikasi Data Saya
+                                        </button>
+                                        <p id="verif-disabled-text" class="text-danger font-size-12 mt-10 mb-0" style="display: none; font-weight: 500;">
+                                            * Harap lengkapi semua syarat profil pribadi & orang tua di tab sebelah terlebih dahulu.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Portofolio SKPI -->
+                    <div class="box p-15 mt-15">
+                        <div class="box-header no-border px-0 d-flex justify-content-between align-items-center">
+                            <h4 class="box-title text-primary"><i class="fa fa-certificate mr-1"></i> Dokumen Pendukung SKPI (Sertifikat & Prestasi)</h4>
+                            <button class="btn btn-primary btn-sm" id="btn-toggle-skpi-form" style="border-radius: 8px;">
+                                <i class="fa fa-plus mr-1"></i> Tambah Portofolio
+                            </button>
+                        </div>
+                        
+                        <!-- Slide down Form SKPI -->
+                        <div id="form-skpi-container" class="card p-15 mb-20" style="display: none; border-radius: 12px; border: 1px solid rgba(0,0,0,0.08); background: #f8fafc;">
+                            <h5 class="font-weight-600 mb-15">Form Tambah Portofolio SKPI</h5>
+                            <form id="form-add-skpi" method="POST" enctype="multipart/form-data">
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label for="skpi_kategori">Kategori Kegiatan <span class="text-danger">*</span></label>
+                                            <select class="form-control" name="kategori" id="skpi_kategori" required style="border-radius: 8px;">
+                                                <option value="">-- Pilih Kategori --</option>
+                                                <option value="sertifikasi">Sertifikasi Kompetensi / Keahlian / Bahasa</option>
+                                                <option value="prestasi">Prestasi & Penghargaan Lomba</option>
+                                                <option value="organisasi">Pengalaman Kepengurusan Organisasi</option>
+                                                <option value="magang">Magang / Kerja Praktik</option>
+                                                <option value="pengabdian">Pengabdian Masyarakat / Kerja Sosial</option>
+                                                <option value="publikasi">Publikasi Ilmiah / Pemakalah / HKI</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label for="skpi_tanggal">Tanggal Perolehan <span class="text-danger">*</span></label>
+                                            <input type="date" class="form-control" name="tanggal_perolehan" id="skpi_tanggal" required style="border-radius: 8px;">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label for="skpi_nama_id">Nama Kegiatan / Sertifikat (Bahasa Indonesia) <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="nama_kegiatan_id" id="skpi_nama_id" placeholder="Contoh: Sertifikasi Cisco CCNA" required style="border-radius: 8px;">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label for="skpi_nama_en">Nama Kegiatan / Sertifikat (Bahasa Inggris) <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="nama_kegiatan_en" id="skpi_nama_en" placeholder="Contoh: Cisco CCNA Certification" required style="border-radius: 8px;">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label for="skpi_peran_id">Peran / Posisi / Penghargaan (Bahasa Indonesia) <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="peran_id" id="skpi_peran_id" placeholder="Contoh: Juara 1 / Peserta / Ketua Umum" required style="border-radius: 8px;">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label for="skpi_peran_en">Peran / Posisi / Penghargaan (Bahasa Inggris) <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="peran_en" id="skpi_peran_en" placeholder="Contoh: 1st Winner / Participant / President" required style="border-radius: 8px;">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label for="skpi_penyelenggara_id">Penyelenggara / Penerbit (Bahasa Indonesia) <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="penyelenggara_id" id="skpi_penyelenggara_id" placeholder="Contoh: Universitas Muhammadiyah Karanganyar" required style="border-radius: 8px;">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label for="skpi_penyelenggara_en">Penyelenggara / Penerbit (Bahasa Inggris) <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="penyelenggara_en" id="skpi_penyelenggara_en" placeholder="Contoh: Muhammadiyah University of Karanganyar" required style="border-radius: 8px;">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="skpi_file">File Bukti Pendukung (PDF/PNG/JPG/JPEG, Maks 5MB) <span class="text-danger">*</span></label>
+                                    <input type="file" class="form-control" name="file_bukti" id="skpi_file" accept=".pdf,.png,.jpg,.jpeg" required style="border-radius: 8px; padding: 4px 10px;">
+                                    <small class="text-muted mt-5 d-block">* Pastikan berkas pindaian (scan) jelas dan terbaca dengan baik.</small>
+                                </div>
+
+                                <div class="d-flex justify-content-end gap-10 mt-15" style="gap: 10px;">
+                                    <button type="button" class="btn btn-secondary btn-sm" id="btn-cancel-skpi" style="border-radius: 8px; padding: 6px 16px;">Batal</button>
+                                    <button type="submit" class="btn btn-info btn-sm" id="btn-save-skpi" style="border-radius: 8px; padding: 6px 16px;">
+                                        <i class="fa fa-save mr-1"></i> Simpan Portofolio
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Portofolio List Table -->
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="table-skpi-prestasi" style="width: 100%;">
+                                <thead>
+                                    <tr class="bg-primary-light">
+                                        <th style="width: 5%;">No</th>
+                                        <th style="width: 15%;">Kategori</th>
+                                        <th style="width: 35%;">Nama Kegiatan / Sertifikat (ID / EN)</th>
+                                        <th style="width: 15%;">Peran</th>
+                                        <th style="width: 15%;">Status</th>
+                                        <th style="width: 15%;" class="text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="skpi-list-body">
+                                    <tr>
+                                        <td colspan="6" class="text-center py-20 text-muted">Memuat data portofolio...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- /.tab-content -->
             </div>
@@ -1520,6 +1689,302 @@ function startSpinner4() {
                     }
                 })
             })
+
+        // ==========================================
+        // SKPI & Semester Verification Javascript
+        // ==========================================
+        var session_tahun = "{{ Session::get('tahun') }}";
+        var session_semester = "{{ Session::get('semester') }}";
+
+        $('#verif-tahun-text').text("{{ Session::get('nama_tahunakademik') }} (" + (session_semester == 1 ? "Ganjil" : "Genap") + ")");
+
+        // Toggle Form SKPI Container
+        $('#btn-toggle-skpi-form').on('click', function() {
+            $('#form-skpi-container').slideToggle();
+        });
+        $('#btn-cancel-skpi').on('click', function() {
+            $('#form-skpi-container').slideUp();
+            $('#form-add-skpi')[0].reset();
+        });
+
+        // Load Semester Verification status and kelengkapan syarat
+        function loadVerifikasiSemester() {
+            $.ajax({
+                type: 'GET',
+                url: "{{ config('setting.second_url') }}mahasiswa/check-verifikasi-semester",
+                headers: {
+                    "Authorization": 'Bearer ' + token,
+                    "username": userlogin
+                },
+                data: {
+                    nim: userlogin,
+                    tahun: session_tahun,
+                    semester: session_semester
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        // 1. Syarat badges
+                        if (response.is_profile_complete === 1) {
+                            $('#syarat-profil-badge').removeClass().addClass('badge badge-success').html('<i class="fa fa-check"></i> Lengkap');
+                            $('#syarat-ayah-badge').removeClass().addClass('badge badge-success').html('<i class="fa fa-check"></i> Lengkap');
+                            $('#syarat-ibu-badge').removeClass().addClass('badge badge-success').html('<i class="fa fa-check"></i> Lengkap');
+                            
+                            $('#verif-disabled-text').hide();
+                        } else {
+                            var nik = $('#nik_mhs').val();
+                            var tl = $('#tempat_lahir').val();
+                            var alamat = $('#alamat_lengkap').val();
+                            var pdd = $('#pendidikan_terakhir').val();
+                            var ayah = $('#nama_ayah').val();
+                            var ibu = $('#nama_ibu').val();
+
+                            if (nik && tl && alamat && pdd) {
+                                $('#syarat-profil-badge').removeClass().addClass('badge badge-success').html('<i class="fa fa-check"></i> Lengkap');
+                            } else {
+                                $('#syarat-profil-badge').removeClass().addClass('badge badge-danger').html('<i class="fa fa-times"></i> Belum Lengkap');
+                            }
+
+                            if (ayah) {
+                                $('#syarat-ayah-badge').removeClass().addClass('badge badge-success').html('<i class="fa fa-check"></i> Lengkap');
+                            } else {
+                                $('#syarat-ayah-badge').removeClass().addClass('badge badge-danger').html('<i class="fa fa-times"></i> Belum Lengkap');
+                            }
+
+                            if (ibu) {
+                                $('#syarat-ibu-badge').removeClass().addClass('badge badge-success').html('<i class="fa fa-check"></i> Lengkap');
+                            } else {
+                                $('#syarat-ibu-badge').removeClass().addClass('badge badge-danger').html('<i class="fa fa-times"></i> Belum Lengkap');
+                            }
+
+                            $('#verif-disabled-text').show();
+                        }
+
+                        // 2. Verification status
+                        if (response.is_verified === 1) {
+                            $('#verif-status-badge-container').html('<span class="badge badge-success font-size-14 py-2 px-3" style="border-radius: 8px;"><i class="fa fa-check-circle"></i> Terverifikasi</span>');
+                            $('#btn-verifikasi-semester').hide();
+                            $('#verif-disabled-text').hide();
+                        } else {
+                            $('#verif-status-badge-container').html('<span class="badge badge-danger font-size-14 py-2 px-3" style="border-radius: 8px;"><i class="fa fa-warning"></i> Belum Verifikasi</span>');
+                            if (response.is_profile_complete === 1) {
+                                $('#btn-verifikasi-semester').show();
+                                $('#verif-disabled-text').hide();
+                            } else {
+                                $('#btn-verifikasi-semester').hide();
+                                $('#verif-disabled-text').show();
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Trigger verification
+        $('#btn-verifikasi-semester').on('click', function() {
+            Swal.fire({
+                title: 'Konfirmasi Verifikasi',
+                text: "Apakah Anda yakin data profil, orang tua, dan portofolio SKPI Anda sudah valid dan benar untuk semester berjalan ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Verifikasi!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "{{ config('setting.second_url') }}mahasiswa/submit-verifikasi-semester",
+                        headers: {
+                            "Authorization": 'Bearer ' + token,
+                            "username": userlogin
+                        },
+                        data: {
+                            nim: userlogin,
+                            tahun: session_tahun,
+                            semester: session_semester
+                        },
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                Swal.fire('Berhasil!', response.message, 'success');
+                                loadVerifikasiSemester();
+                                // Hide dashboard banner if exists
+                                $('#notif-lengkapi-profil').fadeOut();
+                            } else {
+                                Swal.fire('Gagal!', 'Terjadi kesalahan saat verifikasi.', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        // Load SKPI Prestasi list
+        function loadSkpiList() {
+            $.ajax({
+                type: 'GET',
+                url: "{{ config('setting.second_url') }}mahasiswa/get-skpi-prestasi",
+                headers: {
+                    "Authorization": 'Bearer ' + token,
+                    "username": userlogin
+                },
+                data: {
+                    nim: userlogin
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        var list = response.data || [];
+                        var html = '';
+                        if (list.length > 0) {
+                            list.forEach(function(item, index) {
+                                var statusClass = 'badge-secondary';
+                                var statusText = item.status_verifikasi;
+                                if (item.status_verifikasi === 'disetujui') {
+                                    statusClass = 'badge-success';
+                                    statusText = 'Disetujui';
+                                } else if (item.status_verifikasi === 'ditolak') {
+                                    statusClass = 'badge-danger';
+                                    statusText = 'Ditolak';
+                                } else {
+                                    statusClass = 'badge-warning';
+                                    statusText = 'Pending';
+                                }
+
+                                var fileUrl = item.path_bukti ? "{{ config('setting.second_url') }}" + item.path_bukti.replace('public/', 'storage/') : '#';
+                                fileUrl = fileUrl.replace('/public/storage/', '/storage/');
+
+                                var deleteBtn = '';
+                                if (item.status_verifikasi !== 'disetujui') {
+                                    deleteBtn = `<button class="btn btn-danger btn-xs btn-delete-skpi" data-id="${item.id}" style="border-radius: 6px;"><i class="fa fa-trash"></i></button>`;
+                                } else {
+                                    deleteBtn = `<button class="btn btn-danger btn-xs" disabled style="border-radius: 6px; opacity: 0.5; cursor: not-allowed;"><i class="fa fa-trash"></i></button>`;
+                                }
+
+                                var katText = item.kategori.charAt(0).toUpperCase() + item.kategori.slice(1);
+                                if (item.kategori === 'pengabdian') katText = 'Pengabdian';
+
+                                html += `
+                                    <tr>
+                                        <td>${index + 1}</td>
+                                        <td><span class="badge badge-info">${katText}</span></td>
+                                        <td>
+                                            <div class="font-weight-600 text-dark">${item.nama_kegiatan_id}</div>
+                                            <div class="text-muted font-size-11 font-italic">${item.nama_kegiatan_en}</div>
+                                            <div class="mt-5 font-size-12 text-warning"><i class="fa fa-calendar-o mr-5"></i>${item.tanggal_perolehan} | ${item.penyelenggara_id}</div>
+                                        </td>
+                                        <td>
+                                            <div class="font-weight-500">${item.peran_id}</div>
+                                            <div class="text-muted font-size-11 font-italic">${item.peran_en}</div>
+                                        </td>
+                                        <td><span class="badge ${statusClass}">${statusText}</span></td>
+                                        <td class="text-center">
+                                            <a href="${fileUrl}" target="_blank" class="btn btn-info btn-xs mr-5" style="border-radius: 6px;"><i class="fa fa-download"></i> Bukti</a>
+                                            ${deleteBtn}
+                                        </td>
+                                    </tr>
+                                `;
+                            });
+                        } else {
+                            html = `<tr><td colspan="6" class="text-center py-20 text-muted">Belum ada portofolio SKPI yang diajukan.</td></tr>`;
+                        }
+                        $('#skpi-list-body').html(html);
+                    }
+                }
+            });
+        }
+
+        // Save SKPI Prestasi
+        $('#form-add-skpi').on('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            formData.append('nim', userlogin);
+
+            $.ajax({
+                type: 'POST',
+                url: "{{ config('setting.second_url') }}mahasiswa/add-skpi-prestasi",
+                headers: {
+                    "Authorization": 'Bearer ' + token,
+                    "username": userlogin
+                },
+                data: formData,
+                processData: false,
+                contentType: false,
+                cache: false,
+                beforeSend: function() {
+                    $('#btn-save-skpi').prop('disabled', true).html('<i class="spinner-border spinner-border-sm" role="status"></i> Menyimpan...');
+                },
+                success: function(response) {
+                    $('#btn-save-skpi').prop('disabled', false).html('<i class="fa fa-save mr-1"></i> Simpan Portofolio');
+                    if (response.status === 'success') {
+                        showToastr('success', 'Berhasil!', response.message);
+                        $('#form-skpi-container').slideUp();
+                        $('#form-add-skpi')[0].reset();
+                        loadSkpiList();
+                    } else {
+                        showToastr('error', 'Gagal!', 'Terjadi kesalahan saat menyimpan data.');
+                    }
+                },
+                error: function(xhr) {
+                    $('#btn-save-skpi').prop('disabled', false).html('<i class="fa fa-save mr-1"></i> Simpan Portofolio');
+                    var errorMsg = 'Terjadi kesalahan pada server.';
+                    if (xhr.responseJSON && xhr.responseJSON.error) {
+                        errorMsg = Array.isArray(xhr.responseJSON.error) ? xhr.responseJSON.error.join('<br>') : xhr.responseJSON.error;
+                    }
+                    showToastr('error', 'Gagal!', errorMsg);
+                }
+            });
+        });
+
+        // Delete SKPI
+        $(document).on('click', '.btn-delete-skpi', function() {
+            var id = $(this).data('id');
+            Swal.fire({
+                title: 'Hapus Portofolio?',
+                text: "Data portofolio yang dihapus tidak dapat dikembalikan.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "{{ config('setting.second_url') }}mahasiswa/delete-skpi-prestasi",
+                        headers: {
+                            "Authorization": 'Bearer ' + token,
+                            "username": userlogin
+                        },
+                        data: {
+                            id: id,
+                            nim: userlogin
+                        },
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                showToastr('success', 'Berhasil!', response.message);
+                                loadSkpiList();
+                            } else {
+                                showToastr('error', 'Gagal!', response.error || 'Gagal menghapus data.');
+                            }
+                        },
+                        error: function(xhr) {
+                            showToastr('error', 'Gagal!', xhr.responseText || 'Gagal menghapus data.');
+                        }
+                    });
+                }
+            });
+        });
+
+        // Initialize lists
+        loadVerifikasiSemester();
+        loadSkpiList();
+
+        // Also check url query params to auto-switch to SKPI tab if tab=verifikasi
+        var urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('tab') === 'verifikasi') {
+            $('.nav-tabs a[href="#skpi"]').tab('show');
+        }
 
         });
     </script>

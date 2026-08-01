@@ -302,14 +302,14 @@
                                                 class="text-warning">{{ $session_nama }}</strong> (NIM: {{ Session::get('username') }})
                                         </p>
 
-                                        <!-- Awal Notifikasi Lengkapi Profil -->
-                                        <div id="notif-lengkapi-profil" style="display: none; max-width: 450px;">
-                                            <div class="alert alert-warning d-flex justify-content-between align-items-center py-2 px-3 mt-3 mb-0" style="border-radius: 12px;">
-                                              <small class="mb-0 text-dark"><i class="fa fa-info-circle mr-1"></i> Data profil Anda belum lengkap.</small>
-                                              <a href="{{ url('/mahasiswa/profil') }}" class="btn btn-danger btn-xs ml-3" style="border-radius: 8px;">Lengkapi</a>
-                                            </div>
-                                        </div>
-                                        <!-- Akhir Notifikasi Lengkapi Profil -->
+                                         <!-- Awal Notifikasi Kelengkapan Data & Verifikasi -->
+                                         <div id="notif-lengkapi-profil" style="display: none; max-width: 550px;">
+                                             <div class="alert alert-warning d-flex justify-content-between align-items-center py-2 px-3 mt-3 mb-0" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.2);">
+                                               <small class="mb-0 text-dark" id="notif-profil-text"><i class="fa fa-info-circle mr-1"></i> Data profil Anda belum lengkap.</small>
+                                               <a href="{{ url('/mahasiswa/profil') }}" id="notif-profil-btn" class="btn btn-danger btn-xs ml-3" style="border-radius: 8px; font-weight: 500; padding: 4px 12px;">Lengkapi</a>
+                                             </div>
+                                         </div>
+                                         <!-- Akhir Notifikasi Kelengkapan Data & Verifikasi -->
                                     </div>
                                 </div>
                             </div>
@@ -933,57 +933,36 @@
             });
         });
 
-        // Profile completion checking
+        // Profile & Semester Verification checking
         $(document).ready(function() {
             var token = "{{ Session::get('token') }}";
             var userlogin = "{{ Session::get('username') }}";
+            var session_tahun = $('#session_tahun').val();
+            var session_semester = $('#session_semester').val();
 
-            // 1. Cek Profil Personal & Pendidikan
             $.ajax({
-                type: 'POST',
-                url: "{{ config('setting.second_url') }}mahasiswa/profil-personal",
+                type: 'GET',
+                url: "{{ config('setting.second_url') }}mahasiswa/check-verifikasi-semester",
                 headers: {
                     "Authorization": 'Bearer ' + token,
                     "username": userlogin
                 },
                 data: {
-                    nim: userlogin
+                    nim: userlogin,
+                    tahun: session_tahun,
+                    semester: session_semester
                 },
-                success: function(result) {
-                    if (!result.nik_mhs || !result.tempat_lahir || !result.alamat_asal || !result.pendidikan_terakhir) {
-                        $('#notif-lengkapi-profil').fadeIn();
-                    }
-                }
-            });
-
-            // 2. Cek Profil Ayah
-            $.ajax({
-                type: 'POST',
-                url: "{{ config('setting.second_url') }}mahasiswa/profil-ayah",
-                headers: {
-                    "Authorization": 'Bearer ' + token,
-                    "username": userlogin
-                },
-                data: { nim: userlogin },
-                success: function(result) {
-                    if (!result.nama || !result.nik_ayah) {
-                        $('#notif-lengkapi-profil').fadeIn();
-                    }
-                }
-            });
-
-            // 3. Cek Profil Ibu
-            $.ajax({
-                type: 'POST',
-                url: "{{ config('setting.second_url') }}mahasiswa/profil-ibu",
-                headers: {
-                    "Authorization": 'Bearer ' + token,
-                    "username": userlogin
-                },
-                data: { nim: userlogin },
-                success: function(result) {
-                    if (!result.nama || !result.nik_ibu) {
-                        $('#notif-lengkapi-profil').fadeIn();
+                success: function(response) {
+                    if (response.status === 'success') {
+                        if (response.is_profile_complete === 0) {
+                            $('#notif-profil-text').html('<i class="fa fa-exclamation-triangle text-danger mr-1"></i> Data profil atau data orang tua Anda belum lengkap.');
+                            $('#notif-profil-btn').text('Lengkapi').attr('href', "{{ url('/mahasiswa/profil') }}");
+                            $('#notif-lengkapi-profil').fadeIn();
+                        } else if (response.is_verified === 0) {
+                            $('#notif-profil-text').html('<i class="fa fa-info-circle text-primary mr-1"></i> Harap verifikasi data profil & portofolio SKPI Anda untuk semester ini.');
+                            $('#notif-profil-btn').text('Verifikasi').attr('href', "{{ url('/mahasiswa/profil') }}?tab=verifikasi");
+                            $('#notif-lengkapi-profil').fadeIn();
+                        }
                     }
                 }
             });
