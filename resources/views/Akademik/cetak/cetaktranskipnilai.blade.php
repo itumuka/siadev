@@ -33,91 +33,102 @@
         </div>
         <input class="form-control" type="hidden" name="nim" id="nim" value="{{ $row }}">
 
-        <div style='font-family:Courier New;height:850px;'>
-            <div style='margin-top:10px;text-align:center;'>
-                <span style='font-size:20px;font-weight:bold;'>TRANSKRIP NILAI</span>
-            </div>
-            <div style='margin-top:-7px;text-align:center;'>
-                <span style='font-size:14px;font-weight:bold;'>Nomor :</span>
+        <div style='font-family:Arial, sans-serif;height:850px;'>
+            <div style='margin-top:15px;text-align:center;'>
+                <div style='font-size:18px;font-weight:bold;text-transform:uppercase;'>TRANSKRIP AKADEMIK</div>
+                <div style='font-size:13px;font-style:italic;margin-top:1px;color:#333;'>Academic Transcript</div>
+                <div style='font-size:11px;margin-top:3px;font-weight:bold;'>Nomor (Number) : <span class="no_transkrip_val{{ $row }}"></span></div>
             </div>
 
-            <div style='margin-top:20px;'>
-                <table border='0' rules='all0' width='100%' style='font-size:12px;line-height:10px'>
+            <div style='margin-top:15px;'>
+                <table border='0' width='100%' style='font-size:11px;line-height:14px;border-collapse:collapse;'>
                     <tr>
-                        <td style='width:95px;'>Nama</td>
-                        <td style='width:10px;'>:</td>
-                        <td><span class="nama_mhs{{ $row }}"></span></td>
-                        <td style='width:130px;'>Jenjang Pendidikan</td>
-                        <td>:</td>
-                        <td>Strata 1</td>
+                        <td style='width:180px;vertical-align:top;'>
+                            Nama Mahasiswa<br><span style="font-style:italic;font-size:9px;color:#555;">Full Name</span>
+                        </td>
+                        <td style='width:10px;vertical-align:top;'>:</td>
+                        <td style='vertical-align:top;font-weight:bold;'><span class="nama_mhs{{ $row }}"></span></td>
+                        
+                        <td style='width:180px;vertical-align:top;padding-left:20px;'>
+                            Program Pendidikan<br><span style="font-style:italic;font-size:9px;color:#555;">Education Program</span>
+                        </td>
+                        <td style='width:10px;vertical-align:top;'>:</td>
+                        <td style='vertical-align:top;'><span class="jenjang_val{{ $row }}"></span><br><span class="jenjang_en_val{{ $row }}" style="font-style:italic;font-size:10px;color:#555;"></span></td>
                     </tr>
+                    <tr style="height:6px;"><td colspan="6"></td></tr>
                     <tr>
-                        <td>NIM</td>
-                        <td>:</td>
-                        <td><span class="nim{{ $row }}">{{ $row }}</span></td>
-                        <td>Program Studi</td>
-                        <td>:</td>
-                        <td><span class="program_studi{{ $row }}"></span></td>
+                        <td style='vertical-align:top;'>
+                            Nomor Induk Mahasiswa<br><span style="font-style:italic;font-size:9px;color:#555;">Student Number</span>
+                        </td>
+                        <td style='vertical-align:top;'>:</td>
+                        <td style='vertical-align:top;font-weight:bold;'><span class="nim{{ $row }}">{{ $row }}</span></td>
+                        
+                        <td style='vertical-align:top;padding-left:20px;'>
+                            Program Studi<br><span style="font-style:italic;font-size:9px;color:#555;">Study Program</span>
+                        </td>
+                        <td style='vertical-align:top;'>:</td>
+                        <td style='vertical-align:top;'><span class="program_studi{{ $row }}"></span><br><span class="program_studi_en_val{{ $row }}" style="font-style:italic;font-size:10px;color:#555;"></span></td>
                     </tr>
+                    <tr style="height:6px;"><td colspan="6"></td></tr>
                     <tr>
-                        <td>Tempat Lahir</td>
-                        <td>:</td>
-                        <td><span class="tempat_lahir{{ $row }}"></span></td>
-                        <td>Akreditasi</td>
-                        <td style='width:10px;'>:</td>
-                        <td><span class="status_akreditasi{{ $row }}"></span></td>
+                        <td style='vertical-align:top;'>
+                            Tempat dan Tanggal Lahir<br><span style="font-style:italic;font-size:9px;color:#555;">Place and Date of Birth</span>
+                        </td>
+                        <td style='vertical-align:top;'>:</td>
+                        <td style='vertical-align:top;'><span class="tempat_tgl_lahir_val{{ $row }}"></span><br><span class="tempat_tgl_lahir_en_val{{ $row }}" style="font-style:italic;font-size:10px;color:#555;"></span></td>
+                        
+                        <td style='vertical-align:top;padding-left:20px;'>
+                            Gelar Akademik<br><span style="font-style:italic;font-size:9px;color:#555;">Academic Degree Awarded</span>
+                        </td>
+                        <td style='vertical-align:top;'>:</td>
+                        <td style='vertical-align:top;font-weight:bold;'><span class="gelar_val{{ $row }}"></span><br><span class="gelar_en_val{{ $row }}" style="font-style:italic;font-size:10px;color:#555;font-weight:normal;"></span></td>
                     </tr>
+                    <tr style="height:6px;"><td colspan="6"></td></tr>
                     <tr>
-                        <td>Tanggal Lahir</td>
-                        <td>:</td>
-                        <td><span class="tgl_lahir{{ $row }}"></span></td>
-                        <td>Nomor SK BAN PT</td>
-                        <td>:</td>
-                        <td style='width:220px;'><span class="no_sk{{ $row }}"></span></td>
+                        <td style='vertical-align:top;'>
+                            &nbsp;
+                        </td>
+                        <td style='vertical-align:top;'>&nbsp;</td>
+                        <td style='vertical-align:top;'>&nbsp;</td>
+                        
+                        <td style='vertical-align:top;padding-left:20px;'>
+                            Tanggal Kelulusan<br><span style="font-style:italic;font-size:9px;color:#555;">Date of Graduation</span>
+                        </td>
+                        <td style='vertical-align:top;'>:</td>
+                        <td style='vertical-align:top;'><span class="tgl_lulus_val{{ $row }}"></span><br><span class="tgl_lulus_en_val{{ $row }}" style="font-style:italic;font-size:10px;color:#555;"></span></td>
                     </tr>
                 </table>
             </div>
 
-            <div style='font-size:10px;padding-top:2px;'>
-                <table border='0' rules='all1' width='100%'>
+            <div style='font-size:9px;padding-top:10px;'>
+                <table border='0' width='100%' style='border-collapse:collapse;'>
                     <tr>
-                        <td colspan='2' style='border-top:2px solid black;'></td>
-                    </tr>
-                    <tr>
-                        <td style='width:50%;padding-right:2px;vertical-align:top;'>
-                            <table border='0' rules='all0' width='100%' style='line-height:10px;'>
+                        <td style='width:50%;padding-right:8px;vertical-align:top;'>
+                            <table border='0' width='100%' style='line-height:12px;border-collapse:collapse;'>
                                 <thead>
-                                    <tr style='font-size:11px;'>
-                                        <td
-                                            style='width:50px;padding-left:5px;padding-top:7px;padding-bottom:7px;text-align:center;'>
-                                            NO
-                                        </td>
-                                        <td style='width:130px;padding-left:5px;'>Nama Matakuliah</td>
-                                        <td style='padding-left:5px;text-align:center;'>SKS</td>
-                                        <td style='width:80px;text-align:center;'>Nilai</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan='5' style='border-top:1px solid black;'></td>
+                                    <tr style='font-size:8px;font-weight:bold;background-color:#f5f7fa;text-align:center;'>
+                                        <td style='width:25px;border:1px solid #000;padding:5px 2px;'>NO</td>
+                                        <td style='width:125px;border:1px solid #000;padding:5px 2px;'>MATA KULIAH<br><span style="font-size:7px;font-style:italic;font-weight:normal;color:#555;">COURSE</span></td>
+                                        <td style='width:125px;border:1px solid #000;padding:5px 2px;'>COURSE<br><span style="font-size:7px;font-style:italic;font-weight:normal;color:#555;">(Translation)</span></td>
+                                        <td style='width:30px;border:1px solid #000;padding:5px 2px;'>KREDIT<br><span style="font-size:7px;font-style:italic;font-weight:normal;color:#555;">Credit</span></td>
+                                        <td style='width:35px;border:1px solid #000;padding:5px 2px;'>NILAI ANGKA<br><span style="font-size:7px;font-style:italic;font-weight:normal;color:#555;">Score</span></td>
+                                        <td style='width:35px;border:1px solid #000;padding:5px 2px;'>NILAI HURUF<br><span style="font-size:7px;font-style:italic;font-weight:normal;color:#555;">Grade</span></td>
                                     </tr>
                                 </thead>
                                 <tbody id="transkipnilai{{ $row }}">
                                 </tbody>
                             </table>
                         </td>
-                        <td style='width:50%;padding-right:2px;vertical-align:top;'>
-                            <table border='0' rules='all0' width='100%' style='line-height:10px;'>
+                        <td style='width:50%;padding-left:8px;vertical-align:top;'>
+                            <table border='0' width='100%' style='line-height:12px;border-collapse:collapse;'>
                                 <thead>
-                                    <tr style='font-size:11px;'>
-                                        <td
-                                            style='width:50px;padding-left:5px;padding-top:7px;padding-bottom:7px;text-align:center;'>
-                                            NO
-                                        </td>
-                                        <td style='width:130px;padding-left:5px;'>Nama Matakuliah</td>
-                                        <td style='padding-left:5px;text-align:center;'>SKS</td>
-                                        <td style='width:80px;text-align:center;'>Nilai</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan='5' style='border-top:1px solid black;'></td>
+                                    <tr style='font-size:8px;font-weight:bold;background-color:#f5f7fa;text-align:center;'>
+                                        <td style='width:25px;border:1px solid #000;padding:5px 2px;'>NO</td>
+                                        <td style='width:125px;border:1px solid #000;padding:5px 2px;'>MATA KULIAH<br><span style="font-size:7px;font-style:italic;font-weight:normal;color:#555;">COURSE</span></td>
+                                        <td style='width:125px;border:1px solid #000;padding:5px 2px;'>COURSE<br><span style="font-size:7px;font-style:italic;font-weight:normal;color:#555;">(Translation)</span></td>
+                                        <td style='width:30px;border:1px solid #000;padding:5px 2px;'>KREDIT<br><span style="font-size:7px;font-style:italic;font-weight:normal;color:#555;">Credit</span></td>
+                                        <td style='width:35px;border:1px solid #000;padding:5px 2px;'>NILAI ANGKA<br><span style="font-size:7px;font-style:italic;font-weight:normal;color:#555;">Score</span></td>
+                                        <td style='width:35px;border:1px solid #000;padding:5px 2px;'>NILAI HURUF<br><span style="font-size:7px;font-style:italic;font-weight:normal;color:#555;">Grade</span></td>
                                     </tr>
                                 </thead>
                                 <tbody id="transkipnilai1{{ $row }}">
@@ -127,59 +138,47 @@
                     </tr>
                 </table>
             </div>
-            <div style='font-size:10px;padding-top:2px;'>
-                <table border='0' rules='all0' width='100%' style='line-height:10px;'>
+
+            <div style='font-size:11px;padding-top:15px;font-family:Arial, sans-serif;'>
+                <table border='0' width='100%' style='line-height:14px;border-collapse:collapse;'>
+                    <tr style='border-top:2px solid black;border-bottom:2px solid black;'>
+                        <td style='width:50%;font-style:italic;color:#555;padding:8px 0;vertical-align:top;'>
+                            Transkrip ini dibuat dengan sebenarnya.<br>
+                            <span style="font-size:10px;font-weight:normal;color:#666;">All information on this transcript is true and accurate.</span>
+                        </td>
+                        <td style='width:50%;padding:8px 0 8px 20px;vertical-align:top;'>
+                            <div style="font-weight:bold;font-size:11px;">
+                                Jumlah Seluruh Kredit = <span class="totalsks_val{{ $row }}"></span> &nbsp;&nbsp;&nbsp;&nbsp; IPK : <span class="totalipk_val{{ $row }}"></span> (<span class="predikat_val{{ $row }}"></span>)
+                            </div>
+                            <div style="font-style:italic;font-size:10px;color:#555;margin-top:2px;">
+                                Total number of credit attempted = <span class="totalsks_val{{ $row }}"></span> &nbsp;&nbsp;&nbsp;&nbsp; GPA (Grade Point Average) : <span class="totalipk_val{{ $row }}"></span> (<span class="predikat_en_val{{ $row }}"></span>)
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div style='float:right;margin-top:15px;font-family:Arial, sans-serif;'>
+                <table border='0' style='line-height:14px;font-size:11px;'>
                     <tr>
-                        <td style='border-top:1px solid black;'></td>
+                        <td>Karanganyar, <span class="tgl_cetak_val{{ $row }}"></span></td>
                     </tr>
-                </table>
-                <table border='0' rules='all0' width='100%' style='line-height:10px;font-size:10px;'>
-                    <tr style='border-top:1px solid black;'>
-                        <td style='width:80px;'>Jumlah SKS</td>
-                        <td style='width:10px;'>:</td>
-                        <td style='width:50px;'><span id="totalsks{{ $row }}"></span></td>
-                        <td style='width:140px;'>Jumlah SKS x Nilai</td>
-                        <td style='width:10px;'>:</td>
-                        <td style='width:70px;'><span id="totalbobot{{ $row }}"></span></td>
-                        <td style='width:20px;'>IP</td>
-                        <td style='width:10px;'>:</td>
-                        <td style='width:10px;'><span id="totalipk{{ $row }}"></span></td>
-                        <td style='width:50px;'>&nbsp;</td>
-                        <td style='width:200px;'>( Nilai D = <span id="nilaid{{ $row }}"></span>, E = <span
-                                id="nilaie{{ $row }}"></span> )</td>
-                        <td style='width:50px;'>&nbsp;</td>
-                    </tr>
-                </table>
-                <table border='0' rules='all0' width='100%' style='line-height:10px;'>
                     <tr>
-                        <td style='border-top:1px solid black;'></td>
+                        <td style="font-weight:bold;">Dekan,<br><span style="font-style:italic;font-size:10px;font-weight:normal;color:#555;">Dean,</span></td>
+                    </tr>
+                    <tr>
+                        <td style='height:45px;'>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:bold;text-decoration:underline;"><span class="dekan_name_val{{ $row }}"></span></td>
+                    </tr>
+                    <tr>
+                        <td>NIP. <span class="dekan_nip_val{{ $row }}"></span></td>
                     </tr>
                 </table>
-                <div style='float:right;margin-top:10px;'>
-                    <table border='0' rules='all0' style='line-height:10px;font-size:12px;'>
-                        <tr>
-                            <td style='width:50px;'>&nbsp;</td>
-                            <td>Karanganyar, <span id="tanggalwaktu{{ $row }}"></span></td>
-                        </tr>
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td>Kepala Program Studi</td>
-                        </tr>
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td><span id="prodi{{ $row }}"></span></td>
-                        </tr>
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td style='height:60px;'>&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td><span id="kaprodi{{ $row }}"></span></td>
-                        </tr>
-                    </table>
-                </div>
-                <div style='page-break-after:always'></div>
+            </div>
+            <div style='page-break-after:always'></div>
+        </div>
     @endforeach
 </body>
 
@@ -199,15 +198,180 @@
             var tahun = tw.getFullYear();
             var bulan = tw.getMonth();
             var tanggal = tw.getDate();
-            var bulanarray = new Array("Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus",
-                "September", "Oktober", "November", "Desember");
-            document.getElementById("tanggalwaktu{{ $row }}").innerHTML = tanggal + " " + bulanarray[
-                bulan] + " " + tahun;
+
+            // Prodi Bilingual Mapping
+            function getProdiDetails(kode_prodi, nama_indo) {
+                var details = {
+                    nama_en: nama_indo,
+                    jenjang_id: 'Sarjana',
+                    jenjang_en: "Bachelor's Degree",
+                    gelar_id: 'S.Kom.',
+                    gelar_en: 'Bachelor of Computer Science'
+                };
+
+                switch(kode_prodi) {
+                    case 'IK04':
+                        details.nama_en = 'Communication Science';
+                        details.jenjang_id = 'Sarjana';
+                        details.jenjang_en = "Bachelor's Degree";
+                        details.gelar_id = 'S.I.Kom.';
+                        details.gelar_en = 'Bachelor of Communication Science';
+                        break;
+                    case 'PT10':
+                        details.nama_en = 'Livestock Production';
+                        details.jenjang_id = 'Diploma Tiga';
+                        details.jenjang_en = "Associate's Degree";
+                        details.gelar_id = 'A.Md.Pt.';
+                        details.gelar_en = 'Associate of Livestock';
+                        break;
+                    case 'TK01':
+                        details.nama_en = 'Computer Engineering';
+                        details.jenjang_id = 'Sarjana';
+                        details.jenjang_en = "Bachelor's Degree";
+                        details.gelar_id = 'S.T.';
+                        details.gelar_en = 'Bachelor of Engineering';
+                        break;
+                    case 'FT06':
+                        details.nama_en = 'Physiotherapy';
+                        details.jenjang_id = 'Sarjana';
+                        details.jenjang_en = "Bachelor's Degree";
+                        details.gelar_id = 'S.Ft.';
+                        details.gelar_en = 'Bachelor of Physiotherapy';
+                        break;
+                    case 'IF02':
+                        details.nama_en = 'Informatics';
+                        details.jenjang_id = 'Sarjana';
+                        details.jenjang_en = "Bachelor's Degree";
+                        details.gelar_id = 'S.Kom.';
+                        details.gelar_en = 'Bachelor of Computer Science';
+                        break;
+                    case 'PH07':
+                        details.nama_en = 'Hospitality';
+                        details.jenjang_id = 'Diploma Tiga';
+                        details.jenjang_en = "Associate's Degree";
+                        details.gelar_id = 'A.Md.Par.';
+                        details.gelar_en = 'Associate of Hospitality';
+                        break;
+                    case 'BD03':
+                        details.nama_en = 'Digital Business';
+                        details.jenjang_id = 'Sarjana';
+                        details.jenjang_en = "Bachelor's Degree";
+                        details.gelar_id = 'S.B.D.';
+                        details.gelar_en = 'Bachelor of Digital Business';
+                        break;
+                    case 'AK05':
+                        details.nama_en = 'Accounting';
+                        details.jenjang_id = 'Sarjana';
+                        details.jenjang_en = "Bachelor's Degree";
+                        details.gelar_id = 'S.Ak.';
+                        details.gelar_en = 'Bachelor of Accounting';
+                        break;
+                    case 'PN11':
+                        details.nama_en = 'Animal Husbandry';
+                        details.jenjang_id = 'Sarjana';
+                        details.jenjang_en = "Bachelor's Degree";
+                        details.gelar_id = 'S.Pt.';
+                        details.gelar_en = 'Bachelor of Animal Science';
+                        break;
+                    case 'BW08':
+                        details.nama_en = 'Tourism Development';
+                        details.jenjang_id = 'Diploma Tiga';
+                        details.jenjang_en = "Associate's Degree";
+                        details.gelar_id = 'A.Md.Par.';
+                        details.gelar_en = 'Associate of Tourism';
+                        break;
+                    case 'APH12':
+                        details.nama_en = 'Acupuncture and Herbal Medicine';
+                        details.jenjang_id = 'Sarjana Terapan';
+                        details.jenjang_en = "Bachelor of Applied Science";
+                        details.gelar_id = 'S.Tr.Kes.';
+                        details.gelar_en = 'Bachelor of Applied Health';
+                        break;
+                    case 'PKO14':
+                        details.nama_en = 'Physical Education, Health and Recreation';
+                        details.jenjang_id = 'Sarjana';
+                        details.jenjang_en = "Bachelor's Degree";
+                        details.gelar_id = 'S.Pd.';
+                        details.gelar_en = 'Bachelor of Education';
+                        break;
+                    case 'PBA15':
+                        details.nama_en = 'Arabic Language Education';
+                        details.jenjang_id = 'Sarjana';
+                        details.jenjang_en = "Bachelor's Degree";
+                        details.gelar_id = 'S.Pd.';
+                        details.gelar_en = 'Bachelor of Education';
+                        break;
+                    case 'HB13':
+                        details.nama_en = 'Business Law';
+                        details.jenjang_id = 'Sarjana';
+                        details.jenjang_en = "Bachelor's Degree";
+                        details.gelar_id = 'S.H.';
+                        details.gelar_en = 'Bachelor of Laws';
+                        break;
+                    case 'KA16':
+                        details.nama_en = 'Anesthesiology Nursing';
+                        details.jenjang_id = 'Sarjana Terapan';
+                        details.jenjang_en = "Bachelor of Applied Science";
+                        details.gelar_id = 'S.Tr.Kep.';
+                        details.gelar_en = 'Bachelor of Applied Nursing';
+                        break;
+                    case 'TRP17':
+                        details.nama_en = 'Radiology Technology and Imaging';
+                        details.jenjang_id = 'Sarjana Terapan';
+                        details.jenjang_en = "Bachelor of Applied Science";
+                        details.gelar_id = 'S.Tr.Kes.';
+                        details.gelar_en = 'Bachelor of Applied Science in Radiology';
+                        break;
+                    case 'KEB18':
+                        details.nama_en = 'Midwifery';
+                        details.jenjang_id = 'Diploma Tiga';
+                        details.jenjang_en = "Associate's Degree";
+                        details.gelar_id = 'A.Md.Keb.';
+                        details.gelar_en = 'Associate of Midwifery';
+                        break;
+                }
+                return details;
+            }
+
+            // Date Conversion
+            function formatBilingualDate(dateStr) {
+                if (!dateStr) return { id: '-', en: '-' };
+                var parts = dateStr.split('-');
+                var day, month, year;
+                if (parts[0].length === 4) {
+                    year = parseInt(parts[0], 10);
+                    month = parseInt(parts[1], 10) - 1;
+                    day = parseInt(parts[2], 10);
+                } else {
+                    day = parseInt(parts[0], 10);
+                    month = parseInt(parts[1], 10) - 1;
+                    year = parseInt(parts[2], 10);
+                }
+                var date = new Date(year, month, day);
+                if (isNaN(date.getTime())) return { id: dateStr, en: dateStr };
+                var idMonths = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+                var enMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                var idStr = day + " " + idMonths[month] + " " + year;
+                var suffix = "th";
+                if (day === 1 || day === 21 || day === 31) suffix = "st";
+                else if (day === 2 || day === 22) suffix = "nd";
+                else if (day === 3 || day === 23) suffix = "rd";
+                var enStr = enMonths[month] + " " + day + suffix + ", " + year;
+                return { id: idStr, en: enStr };
+            }
+
+            // GPA Predicate
+            function getGpaPredicate(gpa) {
+                var val = parseFloat(gpa);
+                if (isNaN(val)) return { id: '-', en: '-' };
+                if (val >= 3.51) return { id: 'Dengan Pujian (Cum Laude)', en: 'Cum Laude' };
+                else if (val >= 3.00) return { id: 'Sangat Memuaskan', en: 'Very Satisfactory' };
+                else if (val >= 2.76) return { id: 'Memuaskan', en: 'Satisfactory' };
+                else return { id: 'Cukup', en: 'Sufficient' };
+            }
 
 
             var nim = $('#nim{{ $row }}').val();
-            // var tahun = $('#tahun').val();
-            // var semester = $('#semester').val();
 
             $.ajax({
                 type: 'POST',
@@ -219,9 +383,6 @@
                 },
                 data: {
                     nim: nim
-                    // tahun: tahun,
-                    // semester: semester
-
                 },
                 success: function(data) {
                     var jml = data.length;
@@ -233,10 +394,8 @@
                     var limit_1_f = 0;
                     var limit_2_f = 0;
                     if (cek == 0) {
-                        //genap
                         limit_1_f = limit_1;
                     } else {
-                        //ganjil
                         limit_1_f = Math.ceil(limit_1);
                     }
 
@@ -246,16 +405,17 @@
                     var totalsks = 0;
                     var totalbobot = 0;
                     var totalipk = 0;
-                    var jml_ipk_f = 0;
                     var nilaid = 0;
                     var nilaie = 0;
-                    // var totalsks = 0;
+
                     for (var i = 0; i < limit_1_f; i++) {
                         var nilai = "";
                         if (data[i].nilai_huruf_akhir == null) {
-
+                            nilai = "-";
                         } else {
                             nilai = data[i].nilai_huruf_akhir;
+                            var scoreVal = parseFloat(data[i].mutu);
+                            var scoreText = isNaN(scoreVal) ? '-' : scoreVal.toFixed(2);
                             var bobot = data[i].sks_matakuliah * data[i].mutu;
                             totalsks += data[i].sks_matakuliah;
                             totalbobot += bobot;
@@ -266,20 +426,25 @@
                         } else if (data[i].nilai_huruf_akhir == "E") {
                             nilaie = nilaie + 1;
                         }
-                        tampil = tampil + '<tr style="font-size:9px;"><td style="text-align:center;">' +
-                            no + '</td><td style="padding-left:5px;">' + data[i].nama_matakuliah +
-                            '</td><td style="padding-left:5px;text-align:center;">' + data[i]
-                            .sks_matakuliah +
-                            '</td><td style="padding-left:5px;text-align:center;">' + nilai +
+                        var courseEn = data[i].nama_matakuliah_inggris ? data[i].nama_matakuliah_inggris : '';
+                        tampil = tampil + '<tr style="font-size:9px; height:18px;">' +
+                            '<td style="text-align:center; border:1px solid #000; padding:2px 4px;">' + no + '</td>' +
+                            '<td style="padding-left:5px; border:1px solid #000; padding:2px 4px;">' + data[i].nama_matakuliah + '</td>' +
+                            '<td style="padding-left:5px; font-style:italic; color:#555; border:1px solid #000; padding:2px 4px;">' + courseEn + '</td>' +
+                            '<td style="text-align:center; border:1px solid #000; padding:2px 4px;">' + data[i].sks_matakuliah + '</td>' +
+                            '<td style="text-align:center; border:1px solid #000; padding:2px 4px;">' + scoreText + '</td>' +
+                            '<td style="text-align:center; font-weight:bold; border:1px solid #000; padding:2px 4px;">' + nilai + '</td>' +
                             '</tr>';
                         no++;
                     }
                     for (var i = limit_1_f; i < jml; i++) {
                         var nilai = "";
                         if (data[i].nilai_huruf_akhir == null) {
-
+                            nilai = "-";
                         } else {
                             nilai = data[i].nilai_huruf_akhir;
+                            var scoreVal = parseFloat(data[i].mutu);
+                            var scoreText = isNaN(scoreVal) ? '-' : scoreVal.toFixed(2);
                             var bobot = data[i].sks_matakuliah * data[i].mutu;
                             totalsks += data[i].sks_matakuliah;
                             totalbobot += bobot;
@@ -290,25 +455,21 @@
                         } else if (data[i].nilai_huruf_akhir == "E") {
                             nilaie = nilaie + 1;
                         }
-                        tampil2 = tampil2 +
-                            '<tr style="font-size:9px;"><td style="text-align:center;">' +
-                            no + '</td><td style="padding-left:5px;">' + data[i].nama_matakuliah +
-                            '</td><td style="padding-left:5px;text-align:center;">' + data[i]
-                            .sks_matakuliah +
-                            '</td><td style="padding-left:5px;text-align:center;">' + nilai +
+                        var courseEn = data[i].nama_matakuliah_inggris ? data[i].nama_matakuliah_inggris : '';
+                        tampil2 = tampil2 + '<tr style="font-size:9px; height:18px;">' +
+                            '<td style="text-align:center; border:1px solid #000; padding:2px 4px;">' + no + '</td>' +
+                            '<td style="padding-left:5px; border:1px solid #000; padding:2px 4px;">' + data[i].nama_matakuliah + '</td>' +
+                            '<td style="padding-left:5px; font-style:italic; color:#555; border:1px solid #000; padding:2px 4px;">' + courseEn + '</td>' +
+                            '<td style="text-align:center; border:1px solid #000; padding:2px 4px;">' + data[i].sks_matakuliah + '</td>' +
+                            '<td style="text-align:center; border:1px solid #000; padding:2px 4px;">' + scoreText + '</td>' +
+                            '<td style="text-align:center; font-weight:bold; border:1px solid #000; padding:2px 4px;">' + nilai + '</td>' +
                             '</tr>';
                         no++;
                     }
-                    $('#totalsks{{ $row }}').html(totalsks);
-                    $('#totalbobot{{ $row }}').html(Math.round(totalbobot));
-                    $('#totalipk{{ $row }}').html(totalipk.toFixed(2));
+                    
                     $('#transkipnilai{{ $row }}').html(tampil);
                     $('#transkipnilai1{{ $row }}').html(tampil2);
-                    $('#nilaid{{ $row }}').html(nilaid);
-                    $('#nilaie{{ $row }}').html(nilaie);
 
-                    // $('#totalsks').html(totalsks);
-                    console.log(tampil);
                     $.ajax({
                         type: 'POST',
                         dataType: "json",
@@ -322,32 +483,44 @@
                         },
                         success: function(result) {
                             console.log(result);
-                            // $('.nim_').html(result[0].nim);
-                            $('.nama_mhs{{ $row }}').html(result[0]
-                                .nama_mahasiswa);
+                            
+                            var prodi = getProdiDetails(result[0].kode_program_studi, result[0].nama_program_studi);
+                            
+                            $('.nama_mhs{{ $row }}').html(result[0].nama_mahasiswa);
                             $('.nim{{ $row }}').html(nim);
-                            $('.program_studi{{ $row }}').html(result[0]
-                                .nama_program_studi);
-                            $('.tgl_lahir{{ $row }}').html(result[0]
-                                .tanggal_lahir);
-                            $('.tempat_lahir{{ $row }}').html(result[0]
-                                .tempat_lahir);
-                            $('.no_sk{{ $row }}').html(result[0].no_sk);
-                            $('.gabungan{{ $row }}').html(result[0].gelar_depan +
-                                ' ' + result[0].nama + ' ' + result[0].gelar_belakang);
-                            $('.status_akreditasi{{ $row }}').html(result[0]
-                                .status_akreditasi);
-                            $('.nama_fakultas{{ $row }}').html('FAKULTAS ' +
-                                result[0].nama_fakultas
-                                .toUpperCase());
-                            $('#prodi{{ $row }}').html('' + result[0]
-                                .nama_program_studi);
-                            $('#kaprodi{{ $row }}').html('' + result[0]
-                                .namakaprodi);
-                            // if ($('#nim{{ $row }}').val() == $('#patokan')
-                            //     .val()) {
-                            //     window.print();
-                            // }
+                            $('.program_studi{{ $row }}').html(result[0].nama_program_studi);
+                            $('.program_studi_en_val{{ $row }}').html(prodi.nama_en);
+                            
+                            $('.jenjang_val{{ $row }}').html(prodi.jenjang_id);
+                            $('.jenjang_en_val{{ $row }}').html(prodi.jenjang_en);
+                            
+                            $('.gelar_val{{ $row }}').html(prodi.gelar_id);
+                            $('.gelar_en_val{{ $row }}').html(prodi.gelar_en);
+                            
+                            var birthDate = formatBilingualDate(result[0].tanggal_lahir);
+                            $('.tempat_tgl_lahir_val{{ $row }}').html(result[0].tempat_lahir + ", " + birthDate.id);
+                            $('.tempat_tgl_lahir_en_val{{ $row }}').html(result[0].tempat_lahir + ", " + birthDate.en);
+                            
+                            var gradDate = formatBilingualDate(result[0].tanggal_lulus);
+                            $('.tgl_lulus_val{{ $row }}').html(gradDate.id);
+                            $('.tgl_lulus_en_val{{ $row }}').html(gradDate.en);
+                            
+                            $('.totalsks_val{{ $row }}').html(totalsks);
+                            $('.totalipk_val{{ $row }}').html(totalipk.toFixed(2));
+                            
+                            var pred = getGpaPredicate(totalipk);
+                            $('.predikat_val{{ $row }}').html(pred.id);
+                            $('.predikat_en_val{{ $row }}').html(pred.en);
+                            
+                            $('.dekan_name_val{{ $row }}').html(result[0].namadekan || 'Ir. Puji Astuti, M.P.');
+                            $('.dekan_nip_val{{ $row }}').html(result[0].nipdekan || '19610524 198803 2 001');
+                            
+                            var printDate = formatBilingualDate(tanggal + "-" + (bulan + 1) + "-" + tahun);
+                            $('.tgl_cetak_val{{ $row }}').html(printDate.id + " / " + printDate.en);
+                            
+                            var noTrans = result[0].no_transkrip ? result[0].no_transkrip : '-';
+                            $('.no_transkrip_val{{ $row }}').html(noTrans);
+
                             var ambil = $('#lutane').val();
                             var hasil = parseInt(ambil) + 1;
                             $('#lutane').val(hasil);
@@ -356,14 +529,9 @@
                             }
                         }
                     });
-
-
                 }
             });
-
-
-
-
         });
     </script>
 @endforeach
+
