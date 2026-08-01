@@ -61,6 +61,14 @@
                             
                             <hr class="my-15">
                             
+                            <div class="form-group text-left">
+                                <label class="font-weight-bold" for="tipe_pengajuan text-dark">Tipe Dokumen <span class="text-danger">*</span></label>
+                                <select class="form-control" id="tipe_pengajuan" style="color: #000; font-weight: 500;">
+                                    <option value="transkrip">Transkrip Nilai (Resmi Kelulusan)</option>
+                                    <option value="rekap">Rekap Nilai (Sementara / Sebelum Lulus)</option>
+                                </select>
+                            </div>
+
                             <div class="text-center py-10">
                                 <button type="button" id="btn-ajukan" class="btn btn-primary btn-block btn-lg" onclick="ajukanTranskrip();">
                                     <i class="fa fa-paper-plane mr-2"></i> Kirim Ajuan Baru
@@ -85,6 +93,7 @@
                                         <tr class="bg-dark">
                                             <th style="width: 50px;">No</th>
                                             <th>Tanggal Ajuan</th>
+                                            <th>Tipe</th>
                                             <th>Nomor Transkrip</th>
                                             <th class="text-center">Status</th>
                                             <th>Tanggal Approve</th>
@@ -142,10 +151,12 @@
                             
                             var noTrans = row.no_transkrip ? row.no_transkrip : '-';
                             var tglApprove = row.approved_at ? row.approved_at.substring(0, 10) : '-';
+                            var tipeText = row.tipe === 'rekap' ? 'Rekap Nilai' : 'Transkrip Nilai';
                             
                             html += '<tr>' +
                                 '<td>' + (index + 1) + '</td>' +
                                 '<td>' + row.tanggal_ajuan + '</td>' +
+                                '<td><span class="badge badge-info">' + tipeText + '</span></td>' +
                                 '<td><strong>' + noTrans + '</strong></td>' +
                                 '<td class="text-center">' + statusBadge + '</td>' +
                                 '<td>' + tglApprove + '</td>' +
@@ -153,7 +164,7 @@
                                 '</tr>';
                         });
                     } else {
-                        html = '<tr><td colspan="6" class="text-center">Belum ada riwayat pengajuan.</td></tr>';
+                        html = '<tr><td colspan="7" class="text-center">Belum ada riwayat pengajuan.</td></tr>';
                     }
                     
                     $('#tb_riwayat tbody').html(html);
@@ -173,9 +184,12 @@
         }
 
         function ajukanTranskrip() {
+            var tipe = $('#tipe_pengajuan').val();
+            var tipeLabel = tipe === 'rekap' ? 'Rekap Nilai (Sementara)' : 'Transkrip Nilai (Resmi Kelulusan)';
+            
             swal({
                 title: "Konfirmasi Pengajuan",
-                text: "Apakah Anda yakin ingin mengajukan penerbitan Transkrip Nilai Resmi?",
+                text: "Apakah Anda yakin ingin mengajukan permohonan " + tipeLabel + "?",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -193,7 +207,8 @@
                             "username": userlogin
                         },
                         data: {
-                            nim: nim
+                            nim: nim,
+                            tipe: tipe
                         },
                         beforeSend: function() {
                             $('#btn-ajukan').prop('disabled', true);

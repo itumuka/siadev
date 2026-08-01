@@ -169,16 +169,16 @@
                         <td style='vertical-align:middle;text-align:center;'>:</td>
                         <td style='vertical-align:middle;'><span class="program_studi{{ $row }}"></span> / <span class="program_studi_en_val{{ $row }}" style="font-style:italic;color:#555;"></span></td>
                     </tr>
-                    <tr style="height:3px;"><td colspan="3"></td></tr>
-                    <tr>
+                    <tr class="gelar-row{{ $row }}" style="height:3px;"><td colspan="3"></td></tr>
+                    <tr class="gelar-row{{ $row }}">
                         <td style='vertical-align:top;padding:3px 0;'>
                             <strong>Gelar Akademik</strong><br><span style="font-style:italic;font-size:9px;color:#555;">Academic Degree Awarded</span>
                         </td>
                         <td style='vertical-align:middle;text-align:center;'>:</td>
                         <td style='vertical-align:middle;font-weight:bold;'><span class="gelar_val{{ $row }}"></span> / <span class="gelar_en_val{{ $row }}" style="font-style:italic;font-weight:normal;color:#555;"></span></td>
                     </tr>
-                    <tr style="height:3px;"><td colspan="3"></td></tr>
-                    <tr>
+                    <tr class="lulus-row{{ $row }}" style="height:3px;"><td colspan="3"></td></tr>
+                    <tr class="lulus-row{{ $row }}">
                         <td style='vertical-align:top;padding:3px 0;'>
                             <strong>Tanggal Kelulusan</strong><br><span style="font-style:italic;font-size:9px;color:#555;">Date of Graduation</span>
                         </td>
@@ -566,6 +566,18 @@
                             
                             var noTrans = result[0].no_transkrip ? result[0].no_transkrip : '-';
                             $('.no_transkrip_val{{ $row }}').html(noTrans);
+
+                            if (result[0].tipe_ajuan === 'rekap') {
+                                $('.transkrip-title').html('REKAP NILAI');
+                                $('.transkrip-subtitle').html('Academic Record Summary');
+                                $('.gelar-row{{ $row }}').hide();
+                                $('.lulus-row{{ $row }}').hide();
+                            } else {
+                                $('.transkrip-title').html('TRANSKRIP NILAI');
+                                $('.transkrip-subtitle').html('Transcript of Grades');
+                                $('.gelar-row{{ $row }}').show();
+                                $('.lulus-row{{ $row }}').show();
+                            }
 
                             var ambil = $('#lutane').val();
                             var hasil = parseInt(ambil) + 1;

@@ -81,6 +81,7 @@
                                     <th>NIM</th>
                                     <th>Nama Mahasiswa</th>
                                     <th>Program Studi</th>
+                                    <th>Tipe</th>
                                     <th>Tanggal Ajuan</th>
                                     <th>Nomor Transkrip</th>
                                     <th class="text-center">Status</th>
@@ -117,7 +118,7 @@
                                 <div id="approve-nim" class="form-control-static"></div>
                             </div>
                             <div class="form-group">
-                                <label class="font-weight-bold" for="no_transkrip">Nomor Transkrip Nilai <span class="text-danger">*</span></label>
+                                <label class="font-weight-bold" for="no_transkrip">Nomor Transkrip Nilai / Rekap Nilai <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="no_transkrip" name="no_transkrip" placeholder="Contoh: 421.001/III.3.AU.III.1/C/2026" required>
                                 <small class="form-text text-muted">Masukkan format nomor surat transkrip resmi secara lengkap.</small>
                             </div>
@@ -182,12 +183,14 @@
                     }
                     
                     var noTrans = row.no_transkrip ? row.no_transkrip : '-';
+                    var tipeText = row.tipe === 'rekap' ? 'Rekap Nilai' : 'Transkrip Nilai';
                     
                     html += '<tr>' +
                         '<td>' + (index + 1) + '</td>' +
                         '<td>' + row.nim + '</td>' +
                         '<td>' + row.nama_mahasiswa + '</td>' +
                         '<td>' + row.nama_program_studi + '</td>' +
+                        '<td><span class="badge badge-info">' + tipeText + '</span></td>' +
                         '<td>' + row.tanggal_ajuan + '</td>' +
                         '<td><strong>' + noTrans + '</strong></td>' +
                         '<td class="text-center">' + statusBadge + '</td>' +
@@ -195,7 +198,7 @@
                         '</tr>';
                 });
             } else {
-                html = '<tr><td colspan="8" class="text-center">Tidak ada data pengajuan transkrip.</td></tr>';
+                html = '<tr><td colspan="9" class="text-center">Tidak ada data pengajuan transkrip.</td></tr>';
             }
             
             $('#tb_persetujuan tbody').html(html);
