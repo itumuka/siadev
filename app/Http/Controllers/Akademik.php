@@ -668,6 +668,33 @@ class Akademik extends Controller
         return view('Akademik/printout/transkipnilai', compact('title', 'parent_breadcrumb', 'child_breadcrumb', 'session_tahun', 'session_semester', 'session_nama_tahunakademik'));
     }
 
+    public function persetujuan_transkrip()
+    {
+        if (Session::has('session_tahun')) {
+            $session_tahun = Session::get('session_tahun');
+        } else {
+            $session_tahun = '';
+        }
+        if (Session::has('session_semester')) {
+            $session_semester = Session::get('session_semester');
+        } else {
+            $session_semester = '';
+        }
+        if (Session::has('session_nama_tahunakademik')) {
+            $session_nama_tahunakademik = Session::get('session_nama_tahunakademik');
+        } else {
+            $session_nama_tahunakademik = '';
+        }
+        $session_kode_fakultas = (Session::has('kode_fakultas')) ? Session::get('kode_fakultas') : '';
+
+        $title = "Persetujuan Transkrip Nilai";
+        $parent_breadcrumb = "Akademik";
+        $child_breadcrumb = "Persetujuan Transkrip";
+
+        return view('Akademik/printout/persetujuan_transkrip', compact('title', 'parent_breadcrumb', 'child_breadcrumb', 'session_tahun', 'session_semester', 'session_nama_tahunakademik', 'session_kode_fakultas'));
+    }
+
+
     public function transkipakademik()
     {
 

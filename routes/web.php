@@ -78,6 +78,8 @@ Route::middleware(['ceklogin'])->group(function () {
         Route::get("/mahasiswa/statuspembayaran", "Mahasiswa@statuspembayaran")->name('statuspembayaran');
         Route::get("/mahasiswa/ganti-password", "Mahasiswa@ganti_password")->name('mhsgantipassword');
         Route::get("/mahasiswa/profil", "Mahasiswa@profil")->name('mhsprofil');
+        Route::get("/mahasiswa/ajuan-transkrip", "Mahasiswa@ajuan_transkrip")->name('mhs_ajuan_transkrip');
+
 
         // Skripsi Routes
         Route::get("/mahasiswa/skripsi", "SkripsiMahasiswaController@index")->name('skripsi.dashboard');
@@ -182,6 +184,8 @@ Route::middleware(['ceklogin'])->group(function () {
         Route::get("/akademik/calonmhsbaru/form-input-camaba/{id}", "Akademik@forminputcamaba")->name('forminputcamaba');
         Route::get("/akademik/transkipnilai", "Akademik@transkipnilai")->name('aktranskipnilai');
         Route::get("/akademik/transkipakademik", "Akademik@transkipakademik")->name('aktranskipakademik');
+        Route::get("/akademik/persetujuan-transkrip", "Akademik@persetujuan_transkrip")->name('ak_persetujuan_transkrip');
+
 
         Route::get("/akademik/cetak/cetaktranskipakademikinggris/{a}/{b}/{c}", "Akademik@cetaktranskipakademikinggris")->name('cetaktranskipakademikinggris');
         Route::get("/akademik/cetak/cetakdaftarhadirkuliah/{id_tawar}", "Akademik@cetakdaftarhadirkuliah")->name('cetakdaftarhadirkuliah');

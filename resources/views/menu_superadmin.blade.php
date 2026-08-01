@@ -314,6 +314,11 @@
                                 <a href="{{ url('akademik/transkipnilai') }}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Transkip Nilai</a>
                             </li>
+                            <li class="{{ Route::is('ak_persetujuan_transkrip') ? 'active' : '' }}">
+                                <a href="{{ route('ak_persetujuan_transkrip') }}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Persetujuan Transkrip</a>
+                            </li>
+
                             <li class="{{ request()->is('akademik/transkipakademik') ? 'active' : '' }}">
                                 <a href="{{ url('akademik/transkipakademik') }}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Transkip

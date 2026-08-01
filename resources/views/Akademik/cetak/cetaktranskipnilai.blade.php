@@ -101,8 +101,8 @@
             <div class='col-xs-12'>
                 <table border='0' style='width:100%; border-collapse:collapse;'>
                     <tr>
-                        <td style='padding-right:15px; width:95px; vertical-align:middle; text-align:center;'>
-                            <img src='{{ url('imageup45/logoumuka.png') }}' style='width:95px;'>
+                        <td style='padding-right:15px; width:125px; vertical-align:middle; text-align:center;'>
+                            <img src='{{ url('imageup45/logoumuka.png') }}' style='height:3cm; width:auto;'>
                         </td>
                         <td style='text-align:center; font-family:Arial, sans-serif; padding-left: 10px; line-height: 18px;'>
                             <div class="universitas-title">UNIVERSITAS MUHAMMADIYAH KARANGANYAR</div>
@@ -121,8 +121,8 @@
 
         <div style='font-family:Arial, sans-serif; min-height:850px; margin-bottom: 20px;'>
             <div style='text-align:center;'>
-                <div class="transkrip-title">TRANSKRIP AKADEMIK</div>
-                <div class="transkrip-subtitle">Academic Transcript</div>
+                <div class="transkrip-title">TRANSKRIP NILAI</div>
+                <div class="transkrip-subtitle">Transcript of Grades</div>
                 <div class="transkrip-number" style="margin-top:3px;">Nomor (Number) : <span class="no_transkrip_val{{ $row }}"></span></div>
             </div>
 

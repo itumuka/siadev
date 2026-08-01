@@ -174,6 +174,20 @@ class Mahasiswa extends Controller
         return view('Mahasiswa/transkripnilai/transkripnilai', compact('title', 'parent_breadcrumb', 'session_tahun', 'session_semester', 'session_nama_tahunakademik', 'session_nim', 'session_kode_prodi'));
     }
 
+    public function ajuan_transkrip(Request $request)
+    {
+        $session_tahun = (Session::has('session_tahun')) ? Session::get('session_tahun') : '';
+        $session_semester = (Session::has('session_semester')) ? Session::get('session_semester') : '';
+        $session_nama_tahunakademik = (Session::has('session_nama_tahunakademik')) ? Session::get('session_nama_tahunakademik') : '';
+        $session_nim = (Session::has('username')) ? Session::get('username') : '';
+        $session_kode_prodi = (Session::has('kode_program_studi')) ? Session::get('kode_program_studi') : '';
+
+        $title = "Pengajuan Transkrip Nilai";
+        $parent_breadcrumb = "Ajuan Transkrip";
+        return view('Mahasiswa/transkripnilai/ajuan_transkrip', compact('title', 'parent_breadcrumb', 'session_tahun', 'session_semester', 'session_nama_tahunakademik', 'session_nim', 'session_kode_prodi'));
+    }
+
+
     public function kartuujian(Request $request)
     {
 

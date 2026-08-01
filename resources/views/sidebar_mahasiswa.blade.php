@@ -71,6 +71,13 @@
                             <span>Transkrip</span>
                         </a>
                     </li>
+                    <li class="{{ Route::is('mhs_ajuan_transkrip') ? 'active' : '' }}">
+                        <a href="{{ route('mhs_ajuan_transkrip') }}"><i class="fa fa-paper-plane-o"><span
+                                    class="path1"></span><span class="path2"></span></i>
+                            <span>Ajuan Transkrip</span>
+                        </a>
+                    </li>
+
                     <li class="{{ Route::is('statuspembayaran') ? 'active' : '' }}">
                         <a href="{{ route('statuspembayaran') }}"><i class="fa fa-money"><span
                                     class="path1"></span><span class="path2"></span></i>
