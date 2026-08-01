@@ -5,6 +5,90 @@
 
 @php $top=count($pecah); @endphp
 
+<head>
+    <style>
+        @media print {
+            body {
+                font-family: Arial, sans-serif !important;
+                font-size: 10pt !important;
+                margin: 0;
+                padding: 0;
+            }
+            .universitas-title {
+                font-size: 16pt !important;
+                font-family: Arial, sans-serif !important;
+                font-weight: bold !important;
+            }
+            .fakultas-title {
+                font-size: 14pt !important;
+                font-family: Arial, sans-serif !important;
+                font-weight: bold !important;
+            }
+            .address-line {
+                font-size: 11pt !important;
+                font-family: Arial, sans-serif !important;
+            }
+            .transkrip-title {
+                font-size: 14pt !important;
+                font-family: Arial, sans-serif !important;
+                font-weight: bold !important;
+            }
+            .transkrip-subtitle {
+                font-size: 11pt !important;
+                font-family: Arial, sans-serif !important;
+                font-style: italic !important;
+            }
+            .transkrip-number {
+                font-size: 10pt !important;
+                font-family: Arial, sans-serif !important;
+                font-weight: bold !important;
+            }
+            .biodata-table, .course-table, .summary-table, .signature-table {
+                font-size: 10pt !important;
+                font-family: Arial, sans-serif !important;
+            }
+            .course-table td, .course-table th {
+                font-size: 10pt !important;
+                font-family: Arial, sans-serif !important;
+            }
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 10pt;
+        }
+        .universitas-title {
+            font-size: 16pt;
+            font-weight: bold;
+        }
+        .fakultas-title {
+            font-size: 14pt;
+            font-weight: bold;
+        }
+        .address-line {
+            font-size: 11pt;
+        }
+        .transkrip-title {
+            font-size: 14pt;
+            font-weight: bold;
+        }
+        .transkrip-subtitle {
+            font-size: 11pt;
+            font-style: italic;
+        }
+        .transkrip-number {
+            font-size: 10pt;
+            font-weight: bold;
+        }
+        .biodata-table, .course-table, .summary-table, .signature-table {
+            font-size: 10pt;
+        }
+        .course-table td, .course-table th {
+            font-size: 10pt;
+        }
+    </style>
+</head>
+
 <body>
     <input class="form-control" type="hidden" name="nimjamak" id="nimjamak" value="{{ $nim }}">
     <input type="hidden" name="lutane" id="lutane" value="0">
@@ -20,13 +104,13 @@
                         <td style='padding-right:15px; width:95px; vertical-align:middle; text-align:center;'>
                             <img src='{{ url('imageup45/logoumuka.png') }}' style='width:95px;'>
                         </td>
-                        <td style='text-align:center; font-family:Arial, sans-serif; padding-left: 10px; line-height: 14px;'>
-                            <div style="font-size:20px; font-weight:bold; color:#000; letter-spacing: 0.5px;">UNIVERSITAS MUHAMMADIYAH KARANGANYAR</div>
-                            <div style="font-size:15px; font-weight:bold; color:#000; margin-top:3px; text-transform: uppercase;">FAKULTAS <span class="nama_fakultas_val{{ $row }}"></span></div>
-                            <div style="font-size:13px; font-weight:bold; font-style:italic; color:#555; margin-top:1px;"><span class="nama_fakultas_en_val{{ $row }}"></span></div>
-                            <div style="font-size:9px; color:#333; margin-top:3px; font-weight: normal;">Jalan Raya Solo-Tawangmangu KM 12 Papahan Tasikmadu Karanganyar</div>
-                            <div style="font-size:9px; color:#333; margin-top:1px; font-weight: normal;">website : www.umuka.ac.id, email: umuka@umuka.ac.id</div>
-                            <div style="font-size:9px; color:#333; margin-top:1px; font-weight: normal;">Telepon (0271)6498851, 4993819, Admin 08112801912 (57761)</div>
+                        <td style='text-align:center; font-family:Arial, sans-serif; padding-left: 10px; line-height: 18px;'>
+                            <div class="universitas-title">UNIVERSITAS MUHAMMADIYAH KARANGANYAR</div>
+                            <div class="fakultas-title" style="margin-top:3px; text-transform: uppercase;">FAKULTAS <span class="nama_fakultas_val{{ $row }}"></span></div>
+                            <div class="fakultas-title" style="font-style:italic; color:#555; margin-top:1px;"><span class="nama_fakultas_en_val{{ $row }}"></span></div>
+                            <div class="address-line" style="margin-top:4px;">Jalan Raya Solo-Tawangmangu KM 12 Papahan Tasikmadu Karanganyar</div>
+                            <div class="address-line" style="margin-top:1px;">website : www.umuka.ac.id, email: umuka@umuka.ac.id</div>
+                            <div class="address-line" style="margin-top:1px;">Telepon (0271)6498851, 4993819, Admin 08112801912 (57761)</div>
                         </td>
                     </tr>
                 </table>
@@ -37,19 +121,19 @@
 
         <div style='font-family:Arial, sans-serif; min-height:850px; margin-bottom: 20px;'>
             <div style='text-align:center;'>
-                <div style='font-size:18px;font-weight:bold;text-transform:uppercase;font-family:Arial, sans-serif;'>TRANSKRIP AKADEMIK</div>
-                <div style='font-size:13px;font-style:italic;margin-top:1px;color:#333;font-family:Arial, sans-serif;'>Academic Transcript</div>
-                <div style='font-size:11px;margin-top:3px;font-weight:bold;'>Nomor (Number) : <span class="no_transkrip_val{{ $row }}"></span></div>
+                <div class="transkrip-title">TRANSKRIP AKADEMIK</div>
+                <div class="transkrip-subtitle">Academic Transcript</div>
+                <div class="transkrip-number" style="margin-top:3px;">Nomor (Number) : <span class="no_transkrip_val{{ $row }}"></span></div>
             </div>
 
             <div style='margin-top:15px; margin-left: 5px; margin-right: 5px;'>
-                <table border='0' width='100%' style='font-size:11px;line-height:14px;border-collapse:collapse;'>
+                <table class="biodata-table" border='0' width='100%' style='line-height:14px;border-collapse:collapse;'>
                     <tr>
                         <td style='width:220px;vertical-align:top;padding:3px 0;'>
                             <strong>Nama Mahasiswa</strong><br><span style="font-style:italic;font-size:9px;color:#555;">Full Name</span>
                         </td>
                         <td style='width:15px;vertical-align:middle;text-align:center;'>:</td>
-                        <td style='vertical-align:middle;font-weight:bold;text-transform:uppercase;font-size:12px;'><span class="nama_mhs{{ $row }}"></span></td>
+                        <td style='vertical-align:middle;font-weight:bold;text-transform:uppercase;'><span class="nama_mhs{{ $row }}"></span></td>
                     </tr>
                     <tr style="height:3px;"><td colspan="3"></td></tr>
                     <tr>
@@ -57,7 +141,7 @@
                             <strong>Nomor Induk Mahasiswa</strong><br><span style="font-style:italic;font-size:9px;color:#555;">Student Number</span>
                         </td>
                         <td style='vertical-align:middle;text-align:center;'>:</td>
-                        <td style='vertical-align:middle;font-weight:bold;font-size:12px;'><span class="nim{{ $row }}">{{ $row }}</span></td>
+                        <td style='vertical-align:middle;font-weight:bold;'><span class="nim{{ $row }}">{{ $row }}</span></td>
                     </tr>
                     <tr style="height:3px;"><td colspan="3"></td></tr>
                     <tr>
@@ -104,10 +188,10 @@
                 </table>
             </div>
 
-            <div style='font-size:10px;padding-top:15px; margin-left: 5px; margin-right: 5px;'>
-                <table border='0' width='100%' style='border-collapse:collapse;'>
+            <div style='padding-top:15px; margin-left: 5px; margin-right: 5px;'>
+                <table class="course-table" border='0' width='100%' style='border-collapse:collapse;'>
                     <thead>
-                        <tr style='font-size:9px;font-weight:bold;background-color:#f5f7fa;text-align:center;'>
+                        <tr style='font-weight:bold;background-color:#f5f7fa;text-align:center;'>
                             <td style='width:40px;border:1px solid #000;padding:6px 4px;font-weight:bold;'>NO</td>
                             <td style='border:1px solid #000;padding:6px 4px;font-weight:bold;text-align:left;'>MATA KULIAH</td>
                             <td style='border:1px solid #000;padding:6px 4px;font-weight:bold;text-align:left;font-style:italic;'>COURSE</td>
@@ -129,15 +213,15 @@
                 </table>
             </div>
 
-            <div style='font-size:11px;padding-top:20px;font-family:Arial, sans-serif; margin-left: 5px; margin-right: 5px;'>
-                <table border='0' width='100%' style='line-height:15px;border-collapse:collapse;'>
+            <div style='padding-top:20px;font-family:Arial, sans-serif; margin-left: 5px; margin-right: 5px;'>
+                <table class="summary-table" border='0' width='100%' style='line-height:15px;border-collapse:collapse;'>
                     <tr style='border-top:2px solid black;border-bottom:2px solid black;'>
                         <td style='width:50%;font-style:italic;color:#555;padding:8px 0;vertical-align:top;'>
                             Transkrip ini dibuat dengan sebenarnya.<br>
                             <span style="font-size:10px;font-weight:normal;color:#666;">All information on this transcript is true and accurate.</span>
                         </td>
                         <td style='width:50%;padding:8px 0 8px 20px;vertical-align:top;'>
-                            <div style="font-weight:bold;font-size:11px;">
+                            <div style="font-weight:bold;">
                                 Jumlah Seluruh Kredit = <span class="totalsks_val{{ $row }}"></span> &nbsp;&nbsp;&nbsp;&nbsp; IPK : <span class="totalipk_val_id{{ $row }}"></span> (<span class="predikat_val{{ $row }}"></span>)
                             </div>
                             <div style="font-style:italic;font-size:10px;color:#555;margin-top:2px;">
@@ -149,7 +233,7 @@
             </div>
 
             <div style='float:right;margin-top:20px;font-family:Arial, sans-serif;margin-right:15px;'>
-                <table border='0' style='line-height:14px;font-size:11px;'>
+                <table class="signature-table" border='0' style='line-height:14px;'>
                     <tr>
                         <td>Karanganyar, <span class="tgl_cetak_val{{ $row }}"></span></td>
                     </tr>
@@ -403,7 +487,7 @@
                             nilaie = nilaie + 1;
                         }
                         var courseEn = data[i].nama_matakuliah_inggris ? data[i].nama_matakuliah_inggris : '';
-                        tampil = tampil + '<tr style="font-size:10px; height:20px;">' +
+                        tampil = tampil + '<tr style="height:22px;">' +
                             '<td style="text-align:center; border:1px solid #000; padding:4px;">' + no + '</td>' +
                             '<td style="padding-left:8px; border:1px solid #000; padding:4px;">' + data[i].nama_matakuliah + '</td>' +
                             '<td style="padding-left:8px; font-style:italic; color:#333; border:1px solid #000; padding:4px;">' + courseEn + '</td>' +
