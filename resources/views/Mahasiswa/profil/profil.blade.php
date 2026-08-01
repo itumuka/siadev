@@ -564,7 +564,7 @@
                                 <div class="col-md-6 col-12">
                                     <div class="card p-15 text-center d-flex flex-column justify-content-center align-items-center" style="border-radius: 12px; border: 1px solid rgba(0,0,0,0.08); min-height: 155px; background: #ffffff;">
                                         <h5 class="font-weight-600 mb-5">Status Verifikasi Semester Ini:</h5>
-                                        <p class="text-muted font-size-13 mb-10">Tahun Akademik: <strong><span id="verif-tahun-text">{{ Session::get('nama_tahunakademik') }}</span></strong></p>
+                                        <p class="text-muted font-size-13 mb-10">Tahun Akademik: <strong><span id="verif-tahun-text">{{ Session::get('session_nama_tahunakademik') }}</span></strong></p>
                                         <div id="verif-status-badge-container" class="mb-15">
                                             <span class="badge badge-lg badge-secondary font-size-14 py-2 px-3" style="border-radius: 8px;">Memuat...</span>
                                         </div>
@@ -1693,10 +1693,10 @@ function startSpinner4() {
         // ==========================================
         // SKPI & Semester Verification Javascript
         // ==========================================
-        var session_tahun = "{{ Session::get('tahun') }}";
-        var session_semester = "{{ Session::get('semester') }}";
+        var session_tahun = "{{ $session_tahun }}";
+        var session_semester = "{{ $session_semester }}";
 
-        $('#verif-tahun-text').text("{{ Session::get('nama_tahunakademik') }} (" + (session_semester == 1 ? "Ganjil" : "Genap") + ")");
+        $('#verif-tahun-text').text("{{ Session::get('session_nama_tahunakademik') }} (" + (session_semester == 1 ? "Ganjil" : "Genap") + ")");
 
         // Toggle Form SKPI Container
         $('#btn-toggle-skpi-form').on('click', function() {
