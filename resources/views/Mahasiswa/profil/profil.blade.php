@@ -625,7 +625,7 @@
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <label for="skpi_nama_en">Nama Kegiatan / Sertifikat (Bahasa Inggris) <span class="text-danger">*</span></label>
+                                            <label for="skpi_nama_en">Nama Kegiatan / Sertifikat (Bahasa Inggris) <span class="text-danger">*</span> <i class="fa fa-spinner fa-spin text-primary" id="spinner_nama_en" style="display: none; margin-left: 5px;"></i></label>
                                             <input type="text" class="form-control" name="nama_kegiatan_en" id="skpi_nama_en" placeholder="Contoh: Cisco CCNA Certification" required style="border-radius: 8px;">
                                         </div>
                                     </div>
@@ -640,7 +640,7 @@
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <label for="skpi_peran_en">Peran / Posisi / Penghargaan (Bahasa Inggris) <span class="text-danger">*</span></label>
+                                            <label for="skpi_peran_en">Peran / Posisi / Penghargaan (Bahasa Inggris) <span class="text-danger">*</span> <i class="fa fa-spinner fa-spin text-primary" id="spinner_peran_en" style="display: none; margin-left: 5px;"></i></label>
                                             <input type="text" class="form-control" name="peran_en" id="skpi_peran_en" placeholder="Contoh: 1st Winner / Participant / President" required style="border-radius: 8px;">
                                         </div>
                                     </div>
@@ -655,7 +655,7 @@
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <label for="skpi_penyelenggara_en">Penyelenggara / Penerbit (Bahasa Inggris) <span class="text-danger">*</span></label>
+                                            <label for="skpi_penyelenggara_en">Penyelenggara / Penerbit (Bahasa Inggris) <span class="text-danger">*</span> <i class="fa fa-spinner fa-spin text-primary" id="spinner_penyelenggara_en" style="display: none; margin-left: 5px;"></i></label>
                                             <input type="text" class="form-control" name="penyelenggara_en" id="skpi_penyelenggara_en" placeholder="Contoh: Muhammadiyah University of Karanganyar" required style="border-radius: 8px;">
                                         </div>
                                     </div>
@@ -1979,6 +1979,61 @@ function startSpinner4() {
         // Initialize lists
         loadVerifikasiSemester();
         loadSkpiList();
+
+        // Auto-translation helper functions
+        function debounce(func, wait) {
+            var timeout;
+            return function() {
+                var context = this, args = arguments;
+                clearTimeout(timeout);
+                timeout = setTimeout(function() {
+                    func.apply(context, args);
+                }, wait);
+            };
+        }
+
+        function autoTranslate(text, targetInputSelector, loadingSpinnerId) {
+            if (!text.trim()) {
+                $(targetInputSelector).val('');
+                return;
+            }
+            
+            $(loadingSpinnerId).show();
+            
+            $.ajax({
+                type: 'POST',
+                url: "{{ config('setting.second_url') }}mahasiswa/translate",
+                headers: {
+                    "Authorization": 'Bearer ' + token,
+                    "username": userlogin
+                },
+                data: {
+                    text: text
+                },
+                success: function(response) {
+                    $(loadingSpinnerId).hide();
+                    if (response.status === 'success') {
+                        $(targetInputSelector).val(response.translated_text);
+                    }
+                },
+                error: function() {
+                    $(loadingSpinnerId).hide();
+                }
+            });
+        }
+
+        // Event listeners with 800ms debounce
+        $('#skpi_nama_id').on('input', debounce(function() {
+            autoTranslate($(this).val(), '#skpi_nama_en', '#spinner_nama_en');
+        }, 800));
+
+        $('#skpi_peran_id').on('input', debounce(function() {
+            autoTranslate($(this).val(), '#skpi_peran_en', '#spinner_peran_en');
+        }, 800));
+
+        $('#skpi_penyelenggara_id').on('input', debounce(function() {
+            autoTranslate($(this).val(), '#skpi_penyelenggara_en', '#spinner_penyelenggara_en');
+        }, 800));
 
         // Also check url query params to auto-switch to SKPI tab if tab=verifikasi
         var urlParams = new URLSearchParams(window.location.search);
