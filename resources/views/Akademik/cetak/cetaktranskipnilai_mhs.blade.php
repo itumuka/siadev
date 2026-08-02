@@ -202,14 +202,6 @@
                     </thead>
                     <tbody id="transkipnilai{{ $row }}">
                     </tbody>
-                    <tfoot>
-                        <tr style="font-weight:bold;background-color:#f5f7fa;">
-                            <td colspan="3" style="border:1px solid #000;padding:6px;text-align:right;font-weight:bold;">Total / Jumlah</td>
-                            <td style="border:1px solid #000;padding:6px;text-align:center;"><span class="totalsks_val{{ $row }}"></span></td>
-                            <td style="border:1px solid #000;padding:6px;text-align:center;"><span class="totalbobot_val{{ $row }}"></span></td>
-                            <td style="border:1px solid #000;padding:6px;text-align:center;">&nbsp;</td>
-                        </tr>
-                    </tfoot>
                 </table>
             </div>
 
@@ -434,6 +426,65 @@
                 return { id: idStr, en: enStr };
             }
 
+            // Smart Birth Date / Place Formatter
+            function formatBirthInfo(tempatLahir, tanggalLahir) {
+                var tempat = tempatLahir ? tempatLahir.trim() : '';
+                var tglStr = tanggalLahir ? tanggalLahir.trim() : '';
+                
+                if (tempat.match(/(,\s*|\s+)\d{1,2}\s+[a-zA-Z]+\s+\d{4}/)) {
+                    var parts = tempat.split(/,\s*|\s+(?=\d)/);
+                    var parsedPlace = parts[0];
+                    var parsedDateStr = parts[1] || '';
+                    
+                    var monthsIndo = ["januari", "februari", "maret", "april", "mei", "juni", "juli", "agustus", "september", "oktober", "november", "desember"];
+                    var monthsEng = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                    
+                    var dateEngStr = parsedDateStr;
+                    var dateIndoStr = parsedDateStr;
+                    
+                    var dateParts = parsedDateStr.match(/(\d{1,2})\s+([a-zA-Z]+)\s+(\d{4})/);
+                    if (dateParts) {
+                        var day = parseInt(dateParts[1], 10);
+                        var monthName = dateParts[2].toLowerCase();
+                        var year = dateParts[3];
+                        
+                        var monthIdx = monthsIndo.indexOf(monthName);
+                        if (monthIdx === -1) {
+                            var enMonthsLower = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+                            monthIdx = enMonthsLower.indexOf(monthName);
+                        }
+                        
+                        if (monthIdx !== -1) {
+                            var suffix = "th";
+                            if (day === 1 || day === 21 || day === 31) suffix = "st";
+                            else if (day === 2 || day === 22) suffix = "nd";
+                            else if (day === 3 || day === 23) suffix = "rd";
+                            
+                            dateIndoStr = day + " " + monthsIndo[monthIdx].charAt(0).toUpperCase() + monthsIndo[monthIdx].slice(1) + " " + year;
+                            dateEngStr = monthsEng[monthIdx] + " " + day + suffix + ", " + year;
+                        }
+                    }
+                    
+                    return {
+                        id: parsedPlace + ", " + dateIndoStr,
+                        en: parsedPlace + ", " + dateEngStr
+                    };
+                }
+                
+                if (tempat && tglStr && tglStr !== '0000-00-00') {
+                    var birthDate = formatBilingualDate(tglStr);
+                    return {
+                        id: tempat + ", " + birthDate.id,
+                        en: tempat + ", " + birthDate.en
+                    };
+                }
+                
+                return {
+                    id: tempat || '-',
+                    en: tempat || '-'
+                };
+            }
+
             // GPA Predicate
             function getGpaPredicate(gpa) {
                 var val = parseFloat(gpa);
@@ -499,6 +550,13 @@
                     }
                     totalipk = totalsks > 0 ? (totalbobot / totalsks) : 0;
                     
+                    tampil += '<tr style="font-weight:bold; background-color:#f5f7fa; height:22px;">' +
+                        '<td colspan="3" style="border:1px solid #000; padding:6px; text-align:right; font-weight:bold;">Total / Jumlah</td>' +
+                        '<td style="border:1px solid #000; padding:6px; text-align:center;">' + totalsks + '</td>' +
+                        '<td style="border:1px solid #000; padding:6px; text-align:center;">' + totalbobot.toFixed(2).replace('.', ',') + '</td>' +
+                        '<td style="border:1px solid #000; padding:6px; text-align:center;">&nbsp;</td>' +
+                        '</tr>';
+                    
                     $('#transkipnilai{{ $row }}').html(tampil);
 
                     $.ajax({
@@ -542,8 +600,8 @@
                             $('.gelar_val{{ $row }}').html(prodi.gelar_id);
                             $('.gelar_en_val{{ $row }}').html(prodi.gelar_en);
                             
-                            var birthDate = formatBilingualDate(result[0].tanggal_lahir);
-                            $('.tempat_tgl_lahir_val{{ $row }}').html(result[0].tempat_lahir + ", " + birthDate.id + " / " + result[0].tempat_lahir + ", " + birthDate.en);
+                            var birthInfo = formatBirthInfo(result[0].tempat_lahir, result[0].tanggal_lahir);
+                            $('.tempat_tgl_lahir_val{{ $row }}').html(birthInfo.id + " / " + birthInfo.en);
                             
                             var gradDate = formatBilingualDate(result[0].tanggal_lulus);
                             $('.tgl_lulus_val{{ $row }}').html(gradDate.id + " / " + gradDate.en);
