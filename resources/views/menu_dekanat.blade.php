@@ -81,6 +81,11 @@
                                 <a href="{{ route('dkntranskrip_nilai') }}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Transkrip Nilai</a>
                             </li>
+                            <li class="{{ Route::is('ak_persetujuan_transkrip') ? 'active' : '' }}">
+                                <a href="{{ route('ak_persetujuan_transkrip') }}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Persetujuan Transkrip</a>
+                            </li>
+
                             <li class="{{ Route::is('dkndaftarhadirkuliah') ? 'active' : '' }}">
                                 <a href="{{ route('dkndaftarhadirkuliah') }}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Daftar
