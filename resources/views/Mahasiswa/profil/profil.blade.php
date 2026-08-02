@@ -117,11 +117,11 @@
                             </div>
 
                             <div class="form-group row">
-                            <label for="tempat_lahir" class="col-sm-3 control-label">Tempat/tgl lahir<span class="text-danger">*</span></label>
-                                <div class="col-sm-3">
-                                    <input type="text" class="form-control" name="tempat_lahir" id="tempat_lahir">
-                                </div>
+                            <label for="tempat_lahir" class="col-sm-3 control-label">Tempat & Tgl Lahir<span class="text-danger">*</span></label>
                                 <div class="col-sm-4">
+                                    <input type="text" class="form-control" name="tempat_lahir" id="tempat_lahir" placeholder="Tempat Lahir (misal: Karanganyar)">
+                                </div>
+                                <div class="col-sm-5">
                                     <input type="date" class="form-control" name="tanggal_lahir" id="tanggal_lahir">
                                 </div>
                             </div>
@@ -715,6 +715,51 @@
     <script type="text/javascript">
         var token = "{{ Session::get('token') }}";
         var userlogin = "{{ Session::get('username') }}";
+
+        function parseBirthPlaceAndDateJS(tempatRaw, tanggalRaw) {
+            var tempat = tempatRaw ? tempatRaw.trim() : '';
+            var tanggal = tanggalRaw ? tanggalRaw.trim() : '';
+            if (tanggal === '0000-00-00') tanggal = '';
+
+            if (tempat.match(/^(.*?)(?:,\s*|\s*\/\s*|\s+)(\d{1,2}\s+[a-zA-Z]+\s+\d{4})$/i)) {
+                var m = tempat.match(/^(.*?)(?:,\s*|\s*\/\s*|\s+)(\d{1,2}\s+[a-zA-Z]+\s+\d{4})$/i);
+                var cleanPlace = m[1].replace(/[,/]+$/, '').trim();
+                var dateStr = m[2].trim();
+                var months = {
+                    'januari': '01', 'january': '01', 'jan': '01',
+                    'februari': '02', 'febuari': '02', 'february': '02', 'feb': '02',
+                    'maret': '03', 'march': '03', 'mar': '03',
+                    'april': '04', 'apr': '04',
+                    'mei': '05', 'may': '05',
+                    'juni': '06', 'june': '06', 'jun': '06',
+                    'juli': '07', 'july': '07', 'jul': '07',
+                    'agustus': '08', 'august': '08', 'agu': '08', 'aug': '08',
+                    'september': '09', 'sep': '09',
+                    'oktober': '10', 'october': '10', 'okt': '10', 'oct': '10',
+                    'november': '11', 'nov': '11',
+                    'desember': '12', 'december': '12', 'des': '12', 'dec': '12'
+                };
+                var dm = dateStr.match(/(\d{1,2})\s+([a-zA-Z]+)\s+(\d{4})/);
+                if (dm) {
+                    var day = dm[1].length === 1 ? '0' + dm[1] : dm[1];
+                    var mName = dm[2].toLowerCase();
+                    var year = dm[3];
+                    if (months[mName]) {
+                        tempat = cleanPlace;
+                        if (!tanggal) tanggal = year + '-' + months[mName] + '-' + day;
+                    }
+                }
+            } else if (tempat.match(/^(.*?)(?:,\s*|\s*\/\s*|\s+)(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})$/)) {
+                var m = tempat.match(/^(.*?)(?:,\s*|\s*\/\s*|\s+)(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})$/);
+                var cleanPlace = m[1].replace(/[,/]+$/, '').trim();
+                var day = m[2].length === 1 ? '0' + m[2] : m[2];
+                var month = m[3].length === 1 ? '0' + m[3] : m[3];
+                var year = m[4];
+                tempat = cleanPlace;
+                if (!tanggal) tanggal = year + '-' + month + '-' + day;
+            }
+            return { tempat: tempat, tanggal: tanggal };
+        }
         
         function editagama() {
             $.ajax({
@@ -1348,8 +1393,9 @@ function tampilkabupatenibu(kd_provinsi) {
                     $('#kwg').val(result.kode_kewarganegaraan);
                     $('#kelurahan').val(result.kelurahan);
                     $('#editagama').val(result.kode_agama);
-                    $('#tempat_lahir').val(result.tempat_lahir);
-                    $('#tanggal_lahir').val(result.tanggal_lahir);
+                    var parseBirth = parseBirthPlaceAndDateJS(result.tempat_lahir, result.tanggal_lahir);
+                    $('#tempat_lahir').val(parseBirth.tempat);
+                    $('#tanggal_lahir').val(parseBirth.tanggal);
                     $('#rt').val(result.rt);
                     $('#rw').val(result.rw);
                     $('#kode_pos').val(result.kode_pos);
@@ -1608,7 +1654,11 @@ function startSpinner4() {
         }
         $('#form_add').on('submit', function(event) {
             event.preventDefault();
-            var form_data = $(this).serialize();
+            var parseBirth = parseBirthPlaceAndDateJS($('#tempat_lahir').val(), $('#tanggal_lahir').val());
+            $('#tempat_lahir').val(parseBirth.tempat);
+            if (parseBirth.tanggal) {
+                $('#tanggal_lahir').val(parseBirth.tanggal);
+            }
             $.ajax({
                 url: "{{ config('setting.second_url') }}mahasiswa/simpan-profil-mahasiswa",
                 method: "POST",
