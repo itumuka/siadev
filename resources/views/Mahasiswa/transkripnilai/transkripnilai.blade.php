@@ -96,16 +96,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row no-print">
-                        <div class="col-12 text-right">
-                            <button type="button" class="btn btn-sm btn-success" onclick="cetak(`{{ $session_nim }}`);"><i
-                                    class="fa fa-print"></i> Print
-                            </button>
-                        </div>
-                    </div>
+                    
                 </div>
                 <!-- /.box-body -->
-                <iframe id="printff" name="printff" style="display: none;"></iframe>
             </div>
         </section>
         <!-- /.content -->
@@ -113,15 +106,6 @@
 @endsection
 @section('script-master')
     <script type="text/javascript">
-        function cetak(nim) {
-            // var nim = $('#nimjamak').val();
-            var link = ""
-            $("#printff")
-
-                .attr("src", "{{ url('mahasiswa/cetak/cetaktranskipnilai-mhs') }}/" + nim)
-                .appendTo("body");
-        }
-
         $(document).ready(function() {
             var token = "{{ Session::get('token') }}";
             var userlogin = "{{ Session::get('username') }}";

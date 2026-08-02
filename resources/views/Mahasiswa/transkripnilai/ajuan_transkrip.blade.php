@@ -97,7 +97,6 @@
                                             <th>Nomor Transkrip</th>
                                             <th class="text-center">Status</th>
                                             <th>Tanggal Approve</th>
-                                            <th class="text-center" style="width: 100px;">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -109,7 +108,6 @@
                 </div>
             </div>
         </section>
-        <iframe id="printff" name="printff" style="display: none;"></iframe>
     </div>
 @endsection
 
@@ -137,14 +135,12 @@
                     if (response.data && response.data.length > 0) {
                         $.each(response.data, function(index, row) {
                             var statusBadge = '';
-                            var btnAksi = '-';
                             
                             if (row.status === 'pending') {
                                 statusBadge = '<span class="badge-pending">Menunggu</span>';
                                 hasPending = true;
                             } else if (row.status === 'approved') {
                                 statusBadge = '<span class="badge-approved">Disetujui</span>';
-                                btnAksi = '<button class="btn btn-sm btn-success btn-block" onclick="cetak(\'' + row.nim + '\')"><i class="fa fa-print"></i> Cetak</button>';
                             } else {
                                 statusBadge = '<span class="badge-rejected">Ditolak</span>';
                             }
@@ -160,11 +156,10 @@
                                 '<td><strong>' + noTrans + '</strong></td>' +
                                 '<td class="text-center">' + statusBadge + '</td>' +
                                 '<td>' + tglApprove + '</td>' +
-                                '<td class="text-center">' + btnAksi + '</td>' +
                                 '</tr>';
                         });
                     } else {
-                        html = '<tr><td colspan="7" class="text-center">Belum ada riwayat pengajuan.</td></tr>';
+                        html = '<tr><td colspan="6" class="text-center">Belum ada riwayat pengajuan.</td></tr>';
                     }
                     
                     $('#tb_riwayat tbody').html(html);
@@ -233,12 +228,6 @@
                     });
                 }
             });
-        }
-
-        function cetak(nim) {
-            $("#printff")
-                .attr("src", "{{ url('mahasiswa/cetak/cetaktranskipnilai-mhs') }}/" + nim)
-                .appendTo("body");
         }
 
         $(document).ready(function() {
