@@ -59,6 +59,10 @@
                                     <a href="{{ route('kplihat_penilaian') }}"><i class="fa fa-list-alt"><span
                                                 class="path1"></span><span class="path2"></span></i>Penilaian Semester</a>
                                 </li>
+                                <li class="{{ Route::is('kpkurikulum') ? 'active' : '' }}">
+                                    <a href="{{ route('kpkurikulum') }}"><i class="fa fa-book"><span
+                                                class="path1"></span><span class="path2"></span></i>Kurikulum Prodi</a>
+                                </li>
                                 <li class="{{ Route::is('kpdaftar_mhs') ? 'active' : '' }}">
                                     <a href="{{ route('kpdaftar_mhs') }}"><i class="fa fa-users"><span
                                                 class="path1"></span><span class="path2"></span></i>Daftar Mahasiswa</a>

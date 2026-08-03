@@ -2,10 +2,32 @@
 
 @section('css')
     <style>
-        th,
-        td {
+        th, td {
             white-space: nowrap;
         }
+        td.col-nama-matakuliah {
+            white-space: normal;
+            min-width: 210px;
+        }
+        .nama-id {
+            display: block;
+            font-weight: 500;
+        }
+        .nama-en {
+            display: block;
+            font-style: italic;
+            color: #6c757d;
+            font-size: 0.82em;
+            margin-top: 2px;
+        }
+        .nama-en-empty {
+            display: block;
+            font-style: italic;
+            color: #adb5bd;
+            font-size: 0.80em;
+            margin-top: 2px;
+        }
+        .sync-progress { font-size: 0.84em; color: #6c757d; }
     </style>
 @endsection
 
@@ -45,14 +67,20 @@
                         </div> <!-- end box-body-->
 
                     </div>
-                    <div class="text-right">
-                        <div class="btn-group mb-5">
+                    <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
+                        <div class="btn-group mb-2">
                             <button type="button" class="waves-effect waves-light btn btn-sm btn-dark dropdown-toggle"
                                 data-toggle="dropdown"><i class="ti-plus"></i> Tambah</button>
                             <div class="dropdown-menu dataprodi">
                             </div>
                         </div>
-                        {{-- <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_add"><i class="ti-plus"></i> Tambah</button> --}}
+                        <div class="mb-2">
+                            <button id="btn-sync-translate" type="button" class="btn btn-sm btn-info" style="display:none;">
+                                <i class="fa fa-language"></i> Auto-Translate
+                                <span class="badge badge-light ml-1" id="count-untranslated">0</span> mata kuliah
+                            </button>
+                            <span id="sync-progress-text" class="sync-progress ml-2" style="display:none;"></span>
+                        </div>
                     </div>
                     <div class="table-responsive">
                         <table id="tbkurikulum" class="table table-hover table-striped">
@@ -489,8 +517,16 @@
                         orderable: true
                     },
                     {
-                        data: 'nama_matakuliah',
-                        orderable: true
+                        data: null,
+                        className: 'col-nama-matakuliah',
+                        orderable: true,
+                        render: function(data, type, row) {
+                            if (type === 'sort' || type === 'filter') return row.nama_matakuliah;
+                            var namaEN = row.nama_matakuliah_inggris
+                                ? '<span class="nama-en">' + row.nama_matakuliah_inggris + '</span>'
+                                : '<span class="nama-en-empty" data-id="' + row.id_matakuliah + '" data-src="' + encodeURIComponent(row.nama_matakuliah) + '">(belum tersedia)</span>';
+                            return '<span class="nama-id">' + row.nama_matakuliah + '</span>' + namaEN;
+                        }
                     },
                     {
                         data: 'sks_matakuliah',
@@ -515,9 +551,69 @@
                     },
 
                 ],
-                order: []
+                order: [],
+                drawCallback: function() {
+                    var count = $('.nama-en-empty[data-id]').length;
+                    if (count > 0) {
+                        $('#count-untranslated').text(count);
+                        $('#btn-sync-translate').show();
+                    } else {
+                        $('#btn-sync-translate').hide();
+                    }
+                }
             });
 
+            // ─── Sync Translate Button (Akademik) ──────────────────────────────
+            var isSyncing = false;
+            $('#btn-sync-translate').on('click', function() {
+                if (isSyncing) return;
+                isSyncing = true;
+                $(this).prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Mentranslasi...');
+                $('#sync-progress-text').show();
+                var apiUrl = "{{ config('setting.second_url') }}";
+                var $pending = $('.nama-en-empty[data-id]').toArray();
+                var total = $pending.length;
+                var done = 0;
+                function processNext() {
+                    if (done >= total) {
+                        isSyncing = false;
+                        $('#btn-sync-translate').prop('disabled', false);
+                        if ($('.nama-en-empty[data-id]').length === 0) {
+                            $('#btn-sync-translate').hide();
+                            $('#sync-progress-text').hide();
+                            toastr.success('Semua mata kuliah berhasil ditranslasi!', '', { timeOut: 3000 });
+                        } else {
+                            $('#count-untranslated').text($('.nama-en-empty[data-id]').length);
+                            $('#btn-sync-translate').html('<i class="fa fa-language"></i> Auto-Translate <span class="badge badge-light ml-1" id="count-untranslated">' + $('.nama-en-empty[data-id]').length + '</span> mata kuliah').prop('disabled', false);
+                        }
+                        return;
+                    }
+                    var $el = $($pending[done]);
+                    var idMk = $el.data('id');
+                    var namaSrc = decodeURIComponent($el.attr('data-src') || '');
+                    done++;
+                    $('#sync-progress-text').text('(' + done + '/' + total + ') ' + namaSrc.substring(0, 40));
+                    $.ajax({
+                        type: 'POST', url: apiUrl + 'tools/translate',
+                        headers: { "Authorization": 'Bearer ' + token, "username": userlogin },
+                        data: { text: namaSrc },
+                        success: function(res) {
+                            if (res.status === 'success' && res.translated_text) {
+                                var translated = res.translated_text;
+                                $el.replaceWith('<span class="nama-en">' + translated + '</span>');
+                                $.ajax({
+                                    type: 'POST', url: apiUrl + 'akademik/update-translate-matakuliah',
+                                    headers: { "Authorization": 'Bearer ' + token, "username": userlogin },
+                                    data: { id_matakuliah: idMk, nama_matakuliah_inggris: translated }
+                                });
+                            }
+                            setTimeout(processNext, 350);
+                        },
+                        error: function() { setTimeout(processNext, 350); }
+                    });
+                }
+                processNext();
+            });
 
             var tdetail = $('#blanktable').DataTable({
                 bInfo: false,

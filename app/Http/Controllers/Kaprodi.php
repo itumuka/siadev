@@ -188,4 +188,17 @@ class Kaprodi extends Controller
             'session_jabatan'
         ));
     }
-}
+
+    public function kurikulum()
+    {
+        $session_kode_program_studi = (Session::has('kode_program_studi')) ? Session::get('kode_program_studi') : '';
+
+        $title = "Kurikulum Program Studi";
+        $parent_breadcrumb = "Kaprodi";
+        $child_breadcrumb = "Kurikulum Prodi";
+
+        return view('Kaprodi/kurikulum/index', compact(
+            'title', 'parent_breadcrumb', 'child_breadcrumb', 'session_kode_program_studi'
+        ));
+    }
+}

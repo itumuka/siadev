@@ -2,9 +2,30 @@
 
 @section('css')
     <style>
-        th,
-        td {
+        th, td {
             white-space: nowrap;
+        }
+        td.col-nama-matakuliah {
+            white-space: normal;
+            min-width: 200px;
+        }
+        .nama-id {
+            display: block;
+            font-weight: 500;
+        }
+        .nama-en {
+            display: block;
+            font-style: italic;
+            color: #6c757d;
+            font-size: 0.82em;
+            margin-top: 2px;
+        }
+        .nama-en-empty {
+            display: block;
+            font-style: italic;
+            color: #adb5bd;
+            font-size: 0.80em;
+            margin-top: 2px;
         }
     </style>
 @endsection
@@ -39,7 +60,7 @@
                     <div class="box">
                         <div class="box-body ribbon-box bg-primary-light">
                             <div class="ribbon ribbon-info">informasi</div>
-                            <p class="mb-0">Menampilkan mata kuliah berdasarkan kurikulum program studi yang terdaftar.</p>
+                            <p class="mb-0">Menampilkan mata kuliah berdasarkan kurikulum program studi yang terdaftar. Nama dalam Bahasa Inggris ditampilkan dari data kurikulum.</p>
                         </div>
                     </div>
 
@@ -88,7 +109,6 @@
             var userlogin = "{{ Session::get('username') }}";
             var kode_prodi = $('#kode_prodi').val();
 
-            // Load curriculum years filter dropdown
             $.ajax({
                 type: 'GET',
                 url: "{{ config('setting.second_url') }}akademik/select-kurikulum",
@@ -96,12 +116,9 @@
                     "Authorization": 'Bearer ' + token,
                     "username": userlogin
                 },
-                data: {
-                    kode_prodi: kode_prodi
-                },
+                data: { kode_prodi: kode_prodi },
                 success: function(response) {
                     var s = '<option value="">- Semua Tahun Kurikulum -</option>';
-                    // API returns under 'data' or directly array
                     var data = response.data || response;
                     if (data && data.length > 0) {
                         data.forEach(function(val) {
@@ -109,7 +126,6 @@
                         });
                     }
                     $('#filter_tahun_kurikulum').html(s);
-                    // Load DataTable
                     loadDataTable();
                 },
                 error: function() {
@@ -118,7 +134,6 @@
                 }
             });
 
-            // Reload DataTable when filter changes
             $('#filter_tahun_kurikulum').on('change', function() {
                 loadDataTable();
             });
@@ -129,9 +144,7 @@
                 $("#tbkurikulumprodi").DataTable({
                     destroy: true,
                     dom: 'lBfrtip',
-                    buttons: [
-                        'copy', 'csv', 'excel'
-                    ],
+                    buttons: ['copy', 'csv', 'excel'],
                     pageLength: 10,
                     processing: true,
                     lengthChange: true,
@@ -146,9 +159,7 @@
                             kode_prodi: kode_prodi,
                             tahun_kurikulum: tahun_kurikulum
                         },
-                        dataSrc: function(json) {
-                            return json;
-                        }
+                        dataSrc: function(json) { return json; }
                     },
                     columns: [
                         {
@@ -157,27 +168,24 @@
                                 return meta.row + meta.settings._iDisplayStart + 1;
                             }
                         },
+                        { data: 'tahun_kurikulum', className: 'text-center' },
+                        { data: 'kode_matakuliah' },
                         {
-                            data: 'tahun_kurikulum',
-                            className: 'text-center'
+                            data: null,
+                            className: 'col-nama-matakuliah',
+                            render: function(data, type, row) {
+                                if (type === 'export' || type === 'sort' || type === 'filter') {
+                                    return row.nama_matakuliah;
+                                }
+                                var namaEN = row.nama_matakuliah_inggris
+                                    ? '<span class="nama-en">' + row.nama_matakuliah_inggris + '</span>'
+                                    : '<span class="nama-en-empty">(belum tersedia)</span>';
+                                return '<span class="nama-id">' + row.nama_matakuliah + '</span>' + namaEN;
+                            }
                         },
-                        {
-                            data: 'kode_matakuliah'
-                        },
-                        {
-                            data: 'nama_matakuliah'
-                        },
-                        {
-                            data: 'sks_matakuliah',
-                            className: 'text-center'
-                        },
-                        {
-                            data: 'smt_matakuliah',
-                            className: 'text-center'
-                        },
-                        {
-                            data: 'nama_program_studi'
-                        }
+                        { data: 'sks_matakuliah', className: 'text-center' },
+                        { data: 'smt_matakuliah', className: 'text-center' },
+                        { data: 'nama_program_studi' }
                     ],
                     order: []
                 });
