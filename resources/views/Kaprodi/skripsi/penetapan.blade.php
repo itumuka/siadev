@@ -334,11 +334,18 @@
                     { 
                         data: 'status_ujian',
                         className: 'text-center',
-                        render: function(data) {
-                            if (data === 'menunggu_penetapan') return '<span class="badge badge-warning">Menunggu Penetapan</span>';
-                            if (data === 'ditetapkan' || data === 'lulus') return '<span class="badge badge-success">Lulus / Ditetapkan</span>';
-                            if (data === 'tidak_lulus') return '<span class="badge badge-danger">Tidak Lulus</span>';
-                            return '<span class="badge badge-secondary">' + data + '</span>';
+                        render: function(data, type, row) {
+                            if (!row.tanggal_ujian) return '<span class="badge badge-secondary">Belum Dijadwalkan</span>';
+                            if (data === 'ditetapkan' || data === 'lulus') return '<span class="badge badge-success"><i class="fa fa-check-circle"></i> Lulus / Ditetapkan</span>';
+                            if (data === 'tidak_lulus') return '<span class="badge badge-danger"><i class="fa fa-times-circle"></i> Tidak Lulus</span>';
+                            // Cek TTD status dari data row
+                            var allSig = row.setuju_penguji1 && row.setuju_penguji2 && row.setuju_penguji3;
+                            var anySig = row.setuju_penguji1 || row.setuju_penguji2 || row.setuju_penguji3;
+                            var hasBa = row.nilai_angka !== null && row.nilai_angka !== undefined;
+                            if (!hasBa) return '<span class="badge badge-secondary"><i class="fa fa-clock-o"></i> Menunggu Penilaian</span>';
+                            if (allSig) return '<span class="badge badge-primary"><i class="fa fa-check"></i> Siap Ditetapkan</span>';
+                            if (data === 'menunggu_penetapan') return '<span class="badge badge-warning"><i class="fa fa-clock-o"></i> Menunggu TTD Penguji</span>';
+                            return '<span class="badge badge-secondary">' + (data || 'Diplot') + '</span>';
                         }
                     },
                     {
@@ -346,7 +353,13 @@
                         className: 'text-center',
                         render: function(data, type, row) {
                             let b64 = btoa(unescape(encodeURIComponent(JSON.stringify(row))));
-                            let buttons = `<button class="btn btn-sm btn-info btn-tinjau mr-1" data-row="${b64}"><i class="fa fa-eye"></i> Tinjau</button>`;
+                            if (!row.tanggal_ujian) {
+                                return `<button class="btn btn-sm btn-secondary" disabled title="Ujian belum dijadwalkan"><i class="fa fa-eye"></i> Tinjau</button>`;
+                            }
+                            let tinjauLabel = (row.status_ujian === 'ditetapkan' || row.status_ujian === 'lulus' || row.status_ujian === 'tidak_lulus')
+                                ? '<i class="fa fa-eye"></i> Lihat BA'
+                                : '<i class="fa fa-eye"></i> Tinjau';
+                            let buttons = `<button class="btn btn-sm btn-info btn-tinjau mr-1" data-row="${b64}">${tinjauLabel}</button>`;
                             buttons += `<button class="btn btn-sm btn-secondary btn-print" data-id="${row.id_skripsi_ujian}"><i class="fa fa-print"></i> Cetak</button>`;
                             return buttons;
                         }
@@ -399,6 +412,19 @@
                             const u = data.ujian;
                             const ba = data.berita_acara;
                             const nilais = data.nilai_indikator || data.nilai_cpmk || [];
+
+                            // Jika belum ada Berita Acara (penilaian belum lengkap dari semua penguji)
+                            if (!ba) {
+                                $('#tbody_cpmk_breakdown').html('<tr><td colspan="6" class="text-center text-muted py-4"><i class="fa fa-info-circle text-warning"></i> Berita Acara belum tersedia. Pastikan semua penguji telah menginput nilai terlebih dahulu.</td></tr>');
+                                $('#ba_nilai_angka').text('-');
+                                $('#ba_nilai_huruf').text('-');
+                                $('#ba_kelulusan_badge').removeClass().addClass('badge px-3 py-2 font-weight-bold text-uppercase badge-secondary').text('Belum Ada BA');
+                                $('#ba_catatan').html('<em class="text-muted">Belum ada catatan penilaian.</em>');
+                                $('#list_signature_status').html('<p class="text-center py-3 text-muted"><i class="fa fa-clock-o"></i> Belum ada data TTD.</p>');
+                                $('#action_button_container').html('<span class="text-muted font-italic"><i class="fa fa-info-circle"></i> Penguji belum selesai menginput nilai.</span>');
+                                $('#modal_tetapkan_nilai').modal('show');
+                                return;
+                            }
 
                             const finalAngka = ba ? parseFloat(ba.nilai_angka).toFixed(2) : '0.00';
                             const finalHuruf = ba ? ba.nilai_huruf : '-';

@@ -289,12 +289,8 @@
                         if (json.grade_rules) {
                             gradeRules = json.grade_rules;
                         }
-                        
-                        // Filter only waiting for penetapan or already decided
-                        const allData = json.data || [];
-                        return allData.filter(function(row) {
-                            return ['menunggu_penetapan', 'ditetapkan', 'lulus', 'tidak_lulus'].indexOf(row.status_ujian) !== -1;
-                        });
+                        // Tampilkan semua yang sudah diploting — filter hanya yang ada penguji
+                        return json.data || [];
                     }
                 },
                 columns: [
@@ -324,12 +320,25 @@
                         }
                     },
                     { 
-                        data: 'status_ujian',
+                        data: null,
                         className: 'text-center',
                         render: function(data, type, row) {
-                            // We need to fetch details to know, but let's check basic check first
-                            // Alternatively, we can let user see inside modal. Here let's show status of sign
-                            return '<span class="text-muted font-weight-bold"><i class="fa fa-info-circle"></i> Klik Tinjau</span>';
+                            // Cek status BA dan TTD
+                            var tgl = row.tgl_ujian;
+                            var status = row.status_ujian;
+                            if (!tgl) return '<span class="badge badge-secondary">Belum Dijadwalkan</span>';
+                            if (status === 'ditetapkan' || status === 'lulus') return '<span class="badge badge-success"><i class="fa fa-check-circle"></i> Selesai</span>';
+                            if (status === 'tidak_lulus') return '<span class="badge badge-danger"><i class="fa fa-times-circle"></i> Tidak Lulus</span>';
+                            // Cek apakah BA sudah ada
+                            var hasBa = row.ba_nilai_angka !== null && row.ba_nilai_angka !== undefined;
+                            if (!hasBa) return '<span class="badge badge-secondary border"><i class="fa fa-clock-o"></i> Menunggu Penilaian Lengkap</span>';
+                            // Ada BA, cek apakah saya sudah TTD
+                            var myTtd = null;
+                            if (row.role_dosen === 'penguji1') myTtd = row.setuju_penguji1;
+                            else if (row.role_dosen === 'penguji2') myTtd = row.setuju_penguji2;
+                            else if (row.role_dosen === 'penguji3') myTtd = row.setuju_penguji3;
+                            if (myTtd) return '<span class="badge badge-success"><i class="fa fa-check"></i> Sudah TTD</span>';
+                            return '<span class="badge badge-warning"><i class="fa fa-pencil"></i> Perlu TTD</span>';
                         }
                     },
                     { 
@@ -339,7 +348,8 @@
                             if (data === 'menunggu_penetapan') return '<span class="badge badge-warning">Menunggu Penetapan</span>';
                             if (data === 'ditetapkan' || data === 'lulus') return '<span class="badge badge-success">Lulus / Ditetapkan</span>';
                             if (data === 'tidak_lulus') return '<span class="badge badge-danger">Tidak Lulus</span>';
-                            return '<span class="badge badge-secondary">' + data + '</span>';
+                            if (data === 'dijadwalkan' || data === 'baru') return '<span class="badge badge-info">Dijadwalkan</span>';
+                            return '<span class="badge badge-secondary">' + (data || 'Diplot') + '</span>';
                         }
                     },
                     {
@@ -347,7 +357,17 @@
                         className: 'text-center',
                         render: function(data, type, row) {
                             let b64 = btoa(unescape(encodeURIComponent(JSON.stringify(row))));
-                            let buttons = '<button class="btn btn-sm btn-info btn-tinjau mr-1" data-row="' + b64 + '"><i class="fa fa-eye"></i> Tinjau & TTD</button>';
+                            // Tombol Tinjau & TTD: aktif untuk semua yang sudah diplot
+                            // Jika belum ada jadwal, disable
+                            if (!row.tgl_ujian) {
+                                return '<button class="btn btn-sm btn-secondary" disabled title="Ujian belum dijadwalkan"><i class="fa fa-eye"></i> Tinjau</button>';
+                            }
+                            let tinjauLabel = (row.status_ujian === 'ditetapkan' || row.status_ujian === 'lulus' || row.status_ujian === 'tidak_lulus')
+                                ? '<i class="fa fa-eye"></i> Lihat BA'
+                                : '<i class="fa fa-eye"></i> Tinjau & TTD';
+                            let tinjauClass = (row.status_ujian === 'ditetapkan' || row.status_ujian === 'lulus' || row.status_ujian === 'tidak_lulus')
+                                ? 'btn-secondary' : 'btn-info';
+                            let buttons = '<button class="btn btn-sm ' + tinjauClass + ' btn-tinjau mr-1" data-row="' + b64 + '">' + tinjauLabel + '</button>';
                             buttons += '<button class="btn btn-sm btn-secondary btn-print" data-id="' + row.id_skripsi_ujian + '"><i class="fa fa-print"></i> Cetak</button>';
                             return buttons;
                         }

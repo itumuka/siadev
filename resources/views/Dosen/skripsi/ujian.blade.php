@@ -83,6 +83,7 @@
                                     <th class="text-center">Jalur</th>
                                     <th>Peran Anda</th>
                                     <th class="text-center">Nilai Ujian</th>
+                                    <th class="text-center">Status</th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -325,14 +326,34 @@
                         }
                     },
                     { 
-                        data: 'nilai_angka',
+                        data: null,
                         className: 'text-center',
                         render: function(data, type, row) {
-                            if (data === null || data === undefined || data === '') {
-                                return '<span class="text-danger font-weight-bold"><i class="fa fa-warning"></i> Belum Dinilai</span>';
+                            // Jika sudah ditetapkan/lulus tampilkan nilai final BA
+                            if (['ditetapkan', 'lulus', 'tidak_lulus'].indexOf(row.status_ujian) !== -1 && row.ba_nilai_angka) {
+                                let letter = row.ba_nilai_huruf || calculateGradeLetter(parseFloat(row.ba_nilai_angka), row.kode_penilaian);
+                                return '<span class="badge badge-success px-2 py-1 font-weight-bold" style="font-size:0.9rem;"><i class="fa fa-check"></i> ' + parseFloat(row.ba_nilai_angka).toFixed(2) + ' (' + letter + ')</span>';
                             }
-                            let letter = calculateGradeLetter(parseFloat(data), row.kode_penilaian);
-                            return '<span class="badge badge-success px-2 py-1 font-weight-bold" style="font-size:0.95rem;">' + parseFloat(data).toFixed(2) + ' (' + letter + ')</span>';
+                            // graded_by_me: dosen ini sudah input nilai?
+                            if (row.graded_by_me && row.nilai_angka_dosen !== null && row.nilai_angka_dosen !== undefined) {
+                                let letter = calculateGradeLetter(parseFloat(row.nilai_angka_dosen), row.kode_penilaian);
+                                return '<span class="badge badge-info px-2 py-1 font-weight-bold" style="font-size:0.9rem;" title="Nilai personal Anda. Nilai final dihitung setelah semua penguji selesai."><i class="fa fa-pencil"></i> ' + parseFloat(row.nilai_angka_dosen).toFixed(2) + ' (' + letter + ')</span>';
+                            }
+                            return '<span class="text-danger font-weight-bold"><i class="fa fa-warning"></i> Belum Dinilai</span>';
+                        }
+                    },
+                    {
+                        data: null,
+                        className: 'text-center',
+                        render: function(data, type, row) {
+                            var status = row.status_ujian;
+                            var tgl = row.tgl_ujian;
+                            if (!tgl) return '<span class="badge badge-secondary">Belum Dijadwalkan</span>';
+                            if (status === 'ditetapkan' || status === 'lulus') return '<span class="badge badge-success"><i class="fa fa-check-circle"></i> Selesai</span>';
+                            if (status === 'tidak_lulus') return '<span class="badge badge-danger"><i class="fa fa-times-circle"></i> Tidak Lulus</span>';
+                            if (status === 'menunggu_penetapan') return '<span class="badge badge-warning"><i class="fa fa-clock-o"></i> Menunggu Penetapan</span>';
+                            if (row.graded_by_me) return '<span class="badge badge-info"><i class="fa fa-check"></i> Sudah Dinilai</span>';
+                            return '<span class="badge badge-light border"><i class="fa fa-clock-o"></i> Belum Dinilai</span>';
                         }
                     },
                     { 
@@ -340,9 +361,12 @@
                         className: 'text-center',
                         render: function(data, type, row) {
                             let isObe = row.is_obe == 1;
-                            let btnText = isObe ? '<i class="fa fa-check-square-o"></i> Verifikasi Luaran' : '<i class="fa fa-pencil"></i> Input Nilai Sidang';
+                            // Jika sudah ditetapkan/lulus, hanya tombol cetak
+                            if (['ditetapkan', 'lulus', 'tidak_lulus'].indexOf(row.status_ujian) !== -1) {
+                                return '<button class="btn btn-sm btn-secondary btn-grade" data-row="' + btoa(unescape(encodeURIComponent(JSON.stringify(row)))) + '"><i class="fa fa-eye"></i> Lihat</button>';
+                            }
+                            let btnText = isObe ? '<i class="fa fa-check-square-o"></i> Verifikasi Luaran' : (row.graded_by_me ? '<i class="fa fa-pencil"></i> Edit Nilai' : '<i class="fa fa-pencil"></i> Input Nilai Sidang');
                             let btnClass = isObe ? 'btn-success' : 'btn-primary';
-                            
                             let b64 = btoa(unescape(encodeURIComponent(JSON.stringify(row))));
                             return '<button class="btn btn-sm ' + btnClass + ' btn-grade" data-row="' + b64 + '">' + btnText + '</button>';
                         }

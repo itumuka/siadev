@@ -354,11 +354,17 @@
                     { 
                         data: 'status_ujian',
                         className: 'text-center',
-                        render: function(data) {
-                            if (data === 'menunggu_penetapan') return '<span class="badge badge-warning">Menunggu Penetapan</span>';
-                            if (data === 'ditetapkan' || data === 'lulus') return '<span class="badge badge-success">Lulus / Ditetapkan</span>';
-                            if (data === 'tidak_lulus') return '<span class="badge badge-danger">Tidak Lulus</span>';
-                            return '<span class="badge badge-secondary">' + data + '</span>';
+                        render: function(data, type, row) {
+                            if (!row.tanggal_ujian) return '<span class="badge badge-secondary">Belum Dijadwalkan</span>';
+                            if (data === 'ditetapkan' || data === 'lulus') return '<span class="badge badge-success"><i class="fa fa-check-circle"></i> Lulus / Ditetapkan</span>';
+                            if (data === 'tidak_lulus') return '<span class="badge badge-danger"><i class="fa fa-times-circle"></i> Tidak Lulus</span>';
+                            // Cek TTD status dari data row
+                            var allSig = row.setuju_penguji1 && row.setuju_penguji2 && row.setuju_penguji3;
+                            var hasBa = row.nilai_angka !== null && row.nilai_angka !== undefined;
+                            if (!hasBa) return '<span class="badge badge-secondary"><i class="fa fa-clock-o"></i> Menunggu Penilaian</span>';
+                            if (allSig) return '<span class="badge badge-info"><i class="fa fa-check"></i> Menunggu Kaprodi</span>';
+                            if (data === 'menunggu_penetapan') return '<span class="badge badge-warning"><i class="fa fa-clock-o"></i> Menunggu TTD Penguji</span>';
+                            return '<span class="badge badge-secondary">' + (data || 'Diplot') + '</span>';
                         }
                     },
                     {
@@ -366,9 +372,13 @@
                         className: 'text-center',
                         render: function(data, type, row) {
                             let b64 = btoa(unescape(encodeURIComponent(JSON.stringify(row))));
-                            let buttons = `<button class="btn btn-sm btn-primary btn-tinjau mr-1" data-row="${b64}"><i class="fa fa-pencil"></i> Atur BA</button>`;
-                            buttons += `<button class="btn btn-sm btn-secondary btn-print" data-id="${row.id_skripsi_ujian}"><i class="fa fa-print"></i> Cetak</button>`;
-                            return buttons;
+                            let isFinalized = (row.status_ujian === 'ditetapkan' || row.status_ujian === 'lulus' || row.status_ujian === 'tidak_lulus');
+                            // Tombol Atur BA hanya aktif jika sudah ditetapkan Kaprodi
+                            let aturBtn = isFinalized
+                                ? `<button class="btn btn-sm btn-primary btn-tinjau mr-1" data-row="${b64}"><i class="fa fa-pencil"></i> Atur BA</button>`
+                                : `<button class="btn btn-sm btn-secondary mr-1" disabled title="Menunggu Kaprodi menetapkan terlebih dahulu"><i class="fa fa-lock"></i> Atur BA</button>`;
+                            let printBtn = `<button class="btn btn-sm btn-secondary btn-print" data-id="${row.id_skripsi_ujian}"><i class="fa fa-print"></i> Cetak</button>`;
+                            return aturBtn + printBtn;
                         }
                     }
                 ]
