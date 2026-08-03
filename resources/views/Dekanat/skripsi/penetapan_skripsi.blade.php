@@ -269,7 +269,7 @@
                 if (isObe) {
                     if (role === 'penguji1') return 'Verifikator 1 (Utama)';
                     if (role === 'penguji2') return 'Verifikator 2';
-                    if (role === 'ketua' || role === 'penguji3') return 'Ketua Tim Verifikasi';
+                    if (role === 'penguji3' || role === 'ketua') return 'Verifikator 3';
                     return 'Tim Verifikator';
                 } else {
                     if (role === 'penguji1') return 'Dosen Penguji 1';

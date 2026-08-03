@@ -257,12 +257,12 @@
                 if (isObe) {
                     if (role === 'penguji1') return 'Verifikator 1 (Utama)';
                     if (role === 'penguji2') return 'Verifikator 2';
-                    if (role === 'ketua') return 'Ketua Tim Verifikasi';
+                    if (role === 'penguji3' || role === 'ketua') return 'Verifikator 3';
                     return 'Tim Verifikator';
                 } else {
                     if (role === 'penguji1') return 'Dosen Penguji 1';
                     if (role === 'penguji2') return 'Dosen Penguji 2';
-                    if (role === 'ketua') return 'Ketua Penguji / Sidang';
+                    if (role === 'penguji3' || role === 'ketua') return 'Dosen Penguji 3 / Ketua Sidang';
                     return 'Dosen Penguji';
                 }
             }
@@ -351,9 +351,18 @@
                             if (!tgl) return '<span class="badge badge-secondary">Belum Dijadwalkan</span>';
                             if (status === 'ditetapkan' || status === 'lulus') return '<span class="badge badge-success"><i class="fa fa-check-circle"></i> Selesai</span>';
                             if (status === 'tidak_lulus') return '<span class="badge badge-danger"><i class="fa fa-times-circle"></i> Tidak Lulus</span>';
-                            if (status === 'menunggu_penetapan') return '<span class="badge badge-warning"><i class="fa fa-clock-o"></i> Menunggu Penetapan</span>';
-                            if (row.graded_by_me) return '<span class="badge badge-info"><i class="fa fa-check"></i> Sudah Dinilai</span>';
-                            return '<span class="badge badge-light border"><i class="fa fa-clock-o"></i> Belum Dinilai</span>';
+                            
+                            // Badge status saya
+                            var myBadge = row.graded_by_me
+                                ? '<span class="badge badge-info"><i class="fa fa-check"></i> Sudah Dinilai</span>'
+                                : (status === 'menunggu_penetapan' ? '<span class="badge badge-warning"><i class="fa fa-clock-o"></i> Menunggu Penetapan</span>' : '<span class="badge badge-light border"><i class="fa fa-clock-o"></i> Belum Dinilai</span>');
+                            
+                            // Progress penilaian semua penguji
+                            var g1 = row.graded_penguji1 ? '<span class="badge badge-success badge-sm" title="Penguji 1 sudah input nilai">P1 ✓</span>' : '<span class="badge badge-secondary badge-sm" title="Penguji 1 belum input nilai">P1 ✗</span>';
+                            var g2 = row.graded_penguji2 ? '<span class="badge badge-success badge-sm" title="Penguji 2 sudah input nilai">P2 ✓</span>' : '<span class="badge badge-secondary badge-sm" title="Penguji 2 belum input nilai">P2 ✗</span>';
+                            var g3 = row.graded_penguji3 ? '<span class="badge badge-success badge-sm" title="Penguji 3 sudah input nilai">P3 ✓</span>' : '<span class="badge badge-secondary badge-sm" title="Penguji 3 belum input nilai">P3 ✗</span>';
+                            
+                            return myBadge + '<br><small class="d-block mt-1" style="gap:3px;display:flex;flex-wrap:wrap;">' + g1 + ' ' + g2 + ' ' + g3 + '</small>';
                         }
                     },
                     { 
