@@ -128,7 +128,7 @@
             margin-bottom: 25px;
             filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.6));
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.15);
+            background: transparent;
             padding: 8px;
             border: 2.5px dashed rgba(234, 179, 8, 0.85);
             transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -465,7 +465,7 @@
 
             <div class="branding-content">
                 <div class="brand-logo">
-                    <img src="{{ url('imageup45/logoumuka.png') }}" alt="Logo UMUKA" class="img-fluid rounded-circle" style="background: white;">
+                    <img src="{{ url('imageup45/logoumuka.png') }}" alt="Logo UMUKA" class="img-fluid rounded-circle">
                 </div>
                 <h1 class="brand-title">UNIVERSITAS MUHAMMADIYAH KARANGANYAR</h1>
                 <div class="brand-divider"></div>
