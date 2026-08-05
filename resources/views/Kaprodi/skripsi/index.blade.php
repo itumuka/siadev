@@ -55,13 +55,12 @@
                             <table id="table_kaprodi_skripsi" class="table table-hover table-striped">
                                 <thead class="bg-dark">
                                     <tr>
-                                        <th>No</th>
-                                        <th>NIM</th>
-                                        <th>Nama Mahasiswa</th>
-                                        <th>Judul / Topik</th>
+                                        <th width="4%">No</th>
+                                        <th>Mahasiswa & Judul / Topik</th>
                                         <th>Pembimbing 1 & 2</th>
-                                        <th>Status</th>
-                                        <th>Aksi</th>
+                                        <th>Penguji / Verifikator</th>
+                                        <th width="10%" class="text-center">Status</th>
+                                        <th width="12%" class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>

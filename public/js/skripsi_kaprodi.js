@@ -37,16 +37,25 @@ $(document).ready(function () {
             },
             columns: [
                 { data: null, render: (data, type, row, meta) => meta.row + 1 },
-                { data: 'nim' },
-                { data: 'nama_mhs' },
                 {
                     data: null,
                     render: function (data) {
+                        const nim = data.nim || '-';
+                        const nama = data.nama_mhs || '-';
                         const topik = data.topik || '-';
                         const judul = data.judul || '-';
                         const topikDisplay = truncateText(topik, 200);
                         const judulDisplay = truncateText(judul, 200);
-                        return `<strong title="${escapeAttr(topik)}">${topikDisplay}</strong><br><small title="${escapeAttr(judul)}">${judulDisplay}</small>`;
+                        return `
+                            <div class="mb-5">
+                                <span class="badge badge-secondary font-weight-bold mr-5">${escapeAttr(nim)}</span>
+                                <strong class="text-dark font-size-14">${escapeAttr(nama)}</strong>
+                            </div>
+                            <div class="font-size-12">
+                                <span class="font-weight-600 text-info" title="${escapeAttr(topik)}"><i class="fa fa-tag mr-5"></i>Topik: ${topikDisplay}</span><br>
+                                <span class="text-dark" title="${escapeAttr(judul)}"><strong>Judul:</strong> ${judulDisplay}</span>
+                            </div>
+                        `;
                     }
                 },
                 {
@@ -56,7 +65,22 @@ $(document).ready(function () {
                     }
                 },
                 {
+                    data: null,
+                    render: function (data) {
+                        let p1 = data.nama_penguji1 ? `1. ${data.nama_penguji1}` : '<span class="text-muted">1. -</span>';
+                        let p2 = data.nama_penguji2 ? `2. ${data.nama_penguji2}` : '<span class="text-muted">2. -</span>';
+                        let p3 = data.nama_penguji3 ? `3. ${data.nama_penguji3}` : '<span class="text-muted">3. -</span>';
+                        
+                        if (!data.nama_penguji1 && !data.nama_penguji2 && !data.nama_penguji3) {
+                            return '<span class="text-danger">Belum Dijadwalkan</span>';
+                        }
+                        
+                        return `${p1}<br>${p2}<br>${p3}`;
+                    }
+                },
+                {
                     data: 'status',
+                    className: 'text-center',
                     render: function (status) {
                         const badges = {
                             'pengajuan': '<span class="badge badge-warning">Pengajuan</span>',
