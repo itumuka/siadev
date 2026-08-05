@@ -475,6 +475,13 @@ function renderRevisionCard(data) {
         return;
     }
 
+    // Tampilkan kartu revisi HANYA jika ujian sudah selesai/dinilai penuh oleh penguji (status: 'menunggu_penetapan', 'ditetapkan', 'lulus', atau BA 'selesai')
+    const validRevisionStatuses = ['menunggu_penetapan', 'ditetapkan', 'lulus'];
+    if (!validRevisionStatuses.includes(data.ujian.status) && data.ujian.ba_status !== 'selesai' && data.ujian.all_signed != 1) {
+        container.hide().empty();
+        return;
+    }
+
     const u = data.ujian;
     const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const dateFormatted = u.batas_revisi ? new Date(u.batas_revisi).toLocaleDateString('id-ID', dateOptions) : 'Tidak ditentukan';
