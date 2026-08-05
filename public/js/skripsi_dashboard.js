@@ -219,12 +219,13 @@ function renderExamScheduleCard(schedule) {
 
     let pengujiHtml = '';
     if (schedule.penguji && schedule.penguji.length > 0) {
-        pengujiHtml = '<div class="mt-15"><h6 class="font-weight-600 mb-10 text-dark">Dosen Penguji:</h6><div class="row">';
+        const titleText = schedule.is_obe ? 'Dosen Verifikator (OBE):' : 'Dosen Penguji:';
+        pengujiHtml = `<div class="mt-15"><h6 class="font-weight-600 mb-10 text-dark">${titleText}</h6><div class="row">`;
         schedule.penguji.forEach(p => {
             let roleBadge = 'badge-primary';
-            if (p.peran === 'Ketua Penguji') roleBadge = 'badge-info';
-            else if (p.peran === 'Penguji 2') roleBadge = 'badge-secondary';
-            else if (p.peran === 'Penguji 3') roleBadge = 'badge-dark';
+            if (p.peran.includes('Verifikator 1') || p.peran.includes('Ketua') || p.peran.includes('Penguji 1')) roleBadge = 'badge-info';
+            else if (p.peran.includes('Verifikator 2') || p.peran.includes('Penguji 2')) roleBadge = 'badge-secondary';
+            else if (p.peran.includes('Verifikator 3') || p.peran.includes('Penguji 3')) roleBadge = 'badge-dark';
             
             pengujiHtml += `
                 <div class="col-12 mb-5">
