@@ -607,7 +607,10 @@
                             $('#list_signature_status').html(sigHtml);
 
                             // Action button logic
-                            if (u.status === 'menunggu_penetapan') {
+                            const isFinal = ['ditetapkan', 'lulus', 'tidak_lulus'].indexOf(u.status) !== -1;
+                            if (isFinal) {
+                                $('#action_button_container').html('<span class="text-success font-weight-bold"><i class="fa fa-lock"></i> Berita Acara Sudah Difinalisasi & Ditetapkan</span>');
+                            } else {
                                 if (alreadySigned) {
                                     $('#action_button_container').html('<button class="btn btn-success" disabled><i class="fa fa-check"></i> Anda Sudah Menyetujui Berita Acara</button>');
                                 } else if (myRoleKey) {
@@ -615,8 +618,6 @@
                                 } else {
                                     $('#action_button_container').html('<button class="btn btn-secondary" disabled>Anda tidak berhak memberi persetujuan</button>');
                                 }
-                            } else {
-                                $('#action_button_container').html('<span class="text-success font-weight-bold"><i class="fa fa-lock"></i> Berita Acara Sudah Difinalisasi & Ditetapkan</span>');
                             }
 
                             $('#modal_ttd_ba').modal('show');

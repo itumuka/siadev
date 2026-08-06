@@ -578,7 +578,10 @@
                             $('#list_signature_status').html(sigHtml);
 
                             // Action button logic for Kaprodi
-                            if (u.status === 'menunggu_penetapan') {
+                            const isFinal = ['ditetapkan', 'lulus', 'tidak_lulus'].indexOf(u.status) !== -1;
+                            if (isFinal) {
+                                $('#action_button_container').html('<span class="text-success font-weight-bold"><i class="fa fa-lock"></i> Berita Acara Sudah Difinalisasi & Tersinkron ke Transkrip</span>');
+                            } else if (u.status === 'menunggu_penetapan') {
                                 if (allSigned) {
                                     $('#action_button_container').html(`
                                         <button class="btn btn-success btn-tetapkan" data-id="${u.id}"><i class="fa fa-check"></i> Sahkan & Tanda Tangani Berita Acara</button>
@@ -587,7 +590,7 @@
                                     $('#action_button_container').html('<button class="btn btn-secondary" disabled title="Semua penguji harus menandatangani digital sebelum pengesahan"><i class="fa fa-lock"></i> Menunggu TTD Semua Penguji</button>');
                                 }
                             } else {
-                                $('#action_button_container').html('<span class="text-success font-weight-bold"><i class="fa fa-lock"></i> Berita Acara Sudah Difinalisasi & Tersinkron ke Transkrip</span>');
+                                $('#action_button_container').html('<button class="btn btn-secondary" disabled><i class="fa fa-clock-o"></i> Menunggu Penilaian Lengkap Dosen Penguji</button>');
                             }
 
                             $('#modal_tetapkan_nilai').modal('show');
