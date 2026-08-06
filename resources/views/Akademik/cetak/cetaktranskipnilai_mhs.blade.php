@@ -616,8 +616,8 @@
                             $('.predikat_val{{ $row }}').html(pred.id);
                             $('.predikat_en_val{{ $row }}').html(pred.en);
                             
-                            $('.dekan_name_val{{ $row }}').html(result[0].namadekan || 'Ir. Puji Astuti, M.P.');
-                            $('.dekan_nip_val{{ $row }}').html(result[0].nipdekan || '19610524 198803 2 001');
+                            $('.dekan_name_val{{ $row }}').html(result[0].namadekan || '-');
+                            $('.dekan_nip_val{{ $row }}').html(result[0].nipdekan || '-');
                             
                             var printDate = formatBilingualDate(tanggal + "-" + (bulan + 1) + "-" + tahun);
                             $('.tgl_cetak_val{{ $row }}').html(printDate.id);

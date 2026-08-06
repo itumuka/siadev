@@ -18,7 +18,7 @@
     <!-- Style-->
     <link rel="stylesheet" href="{{ url('css/style.css') }}">
     <link rel="stylesheet" href="{{ url('css/skin_color.css') }}">
-    
+
     <!-- Google Fonts Outfit -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -39,9 +39,17 @@
         }
 
         @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         /* Left Panel: Branding / Curves */
@@ -109,17 +117,24 @@
             0% {
                 box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 0px rgba(234, 179, 8, 0.3);
             }
+
             70% {
                 box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 10px rgba(234, 179, 8, 0);
             }
+
             100% {
                 box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 0px rgba(234, 179, 8, 0);
             }
         }
 
         @keyframes shineDivider {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 200% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            100% {
+                background-position: 200% 50%;
+            }
         }
 
         .brand-logo {
@@ -148,12 +163,10 @@
             left: -150%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(
-                90deg,
-                rgba(255, 255, 255, 0) 0%,
-                rgba(255, 255, 255, 0.35) 50%,
-                rgba(255, 255, 255, 0) 100%
-            );
+            background: linear-gradient(90deg,
+                    rgba(255, 255, 255, 0) 0%,
+                    rgba(255, 255, 255, 0.35) 50%,
+                    rgba(255, 255, 255, 0) 100%);
             transform: skewX(-20deg);
             transition: left 0.8s ease-out;
         }
@@ -291,12 +304,13 @@
         }
 
         .custom-input-group .form-control:focus {
-            border-color: #eab308 !important; /* Gold focus glow */
+            border-color: #eab308 !important;
+            /* Gold focus glow */
             background: rgba(15, 23, 42, 0.8) !important;
             box-shadow: 0 0 14px rgba(234, 179, 8, 0.25) !important;
         }
 
-        .custom-input-group .form-control:focus ~ i.input-icon {
+        .custom-input-group .form-control:focus~i.input-icon {
             color: #eab308;
         }
 
@@ -394,6 +408,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -405,6 +420,7 @@
                 opacity: 0;
                 transform: translateX(45px);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0);
@@ -416,31 +432,38 @@
             body {
                 overflow: auto;
             }
+
             .login-wrapper {
                 flex-direction: column;
                 height: auto;
                 min-height: 100vh;
             }
+
             .branding-panel {
                 flex: none;
                 padding: 60px 20px;
             }
+
             .brand-logo {
                 width: 100px;
                 height: 100px;
                 margin-bottom: 15px;
             }
+
             .brand-title {
                 font-size: 1.5rem;
             }
+
             .form-panel {
                 flex: 1;
                 padding: 40px 20px;
                 background-color: #0b1329;
             }
+
             .wave-divider {
                 display: none;
             }
+
             .login-card {
                 padding: 35px 25px;
                 box-shadow: none;
@@ -458,25 +481,30 @@
         <div class="branding-panel">
             <!-- Organic elegant curves background -->
             <svg class="branding-bg-curves" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M-100,200 C100,300 200,100 400,300 C600,500 700,300 900,400" stroke="rgba(234, 179, 8, 0.12)" stroke-width="4" stroke-dasharray="10 15" />
-                <path d="M-50,300 C150,450 300,250 500,450 C700,650 650,400 850,550" stroke="rgba(0, 180, 216, 0.16)" stroke-width="6" />
-                <path d="M-200,450 C50,600 150,400 350,600 C550,800 600,550 800,700" stroke="rgba(234, 179, 8, 0.08)" stroke-width="8" />
+                <path d="M-100,200 C100,300 200,100 400,300 C600,500 700,300 900,400" stroke="rgba(234, 179, 8, 0.12)"
+                    stroke-width="4" stroke-dasharray="10 15" />
+                <path d="M-50,300 C150,450 300,250 500,450 C700,650 650,400 850,550" stroke="rgba(0, 180, 216, 0.16)"
+                    stroke-width="6" />
+                <path d="M-200,450 C50,600 150,400 350,600 C550,800 600,550 800,700" stroke="rgba(234, 179, 8, 0.08)"
+                    stroke-width="8" />
             </svg>
 
             <div class="branding-content">
                 <div class="brand-logo">
-                    <img src="{{ url('imageup45/logoumuka.png') }}" alt="Logo UMUKA" class="img-fluid rounded-circle">
+                    <img src="{{ url('imageup45/logoputih.png') }}" alt="Logo UMUKA" class="img-fluid rounded-circle">
                 </div>
                 <h1 class="brand-title">UNIVERSITAS MUHAMMADIYAH KARANGANYAR</h1>
                 <div class="brand-divider"></div>
-                <p class="brand-subtitle">Sistem Informasi Akademik (SIAKAD) terintegrasi untuk mahasiswa, dosen, dan staf universitas.</p>
+                <p class="brand-subtitle">Sistem Informasi Akademik (SIAKAD) terintegrasi untuk mahasiswa, dosen, dan
+                    staf universitas.</p>
             </div>
         </div>
 
         <!-- Right Column: Login Form Section with Wave Divider -->
         <div class="form-panel">
             <!-- Wave Divider cutting into left column -->
-            <svg class="wave-divider" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <svg class="wave-divider" viewBox="0 0 100 100" preserveAspectRatio="none"
+                xmlns="http://www.w3.org/2000/svg">
                 <path d="M100,0 C30,30 0,70 100,100 Z" />
             </svg>
 
@@ -491,14 +519,17 @@
                 <!-- Input Username -->
                 <div class="custom-input-group">
                     <i class="fa fa-user input-icon"></i>
-                    <input type="text" class="form-control" name="username" id="username" placeholder="Email / NIM" autocomplete="username">
+                    <input type="text" class="form-control" name="username" id="username" placeholder="Email / NIM"
+                        autocomplete="username">
                 </div>
 
                 <!-- Input Password -->
                 <div class="custom-input-group">
                     <i class="fa fa-lock input-icon"></i>
-                    <input type="password" class="form-control" name="password" id="password" placeholder="Password" autocomplete="current-password">
-                    <i class="fa fa-eye password-toggle" id="toggle-password-icon" onclick="togglePasswordVisibility()"></i>
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Password"
+                        autocomplete="current-password">
+                    <i class="fa fa-eye password-toggle" id="toggle-password-icon"
+                        onclick="togglePasswordVisibility()"></i>
                 </div>
 
                 <!-- Submit Button -->
@@ -507,7 +538,8 @@
                 </button>
 
                 <div class="login-footer">
-                    <p>UMUKA &copy; 2026 | <a href="http://sia.umuka.ac.id" target="_blank">Bagian Sistem Informasi</a></p>
+                    <p>UMUKA &copy; 2026 | <a href="http://sia.umuka.ac.id" target="_blank">Bagian Sistem Informasi</a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -536,7 +568,7 @@
         }
 
         // Enter keypress handler to trigger login
-        $(document).keypress(function(event) {
+        $(document).keypress(function (event) {
             var keycode = (event.keyCode ? event.keyCode : event.which);
             if (keycode == '13') {
                 $("#login_enter").click();
@@ -571,12 +603,12 @@
         function aksilogin() {
             var username = $("input[name=username]").val();
             var password = $("input[name=password]").val();
-            
+
             if (!username || !password) {
                 showToastr('warning', 'Peringatan', 'Username dan Password wajib diisi.');
                 return;
             }
-            
+
             startSpinner();
             $.ajax({
                 type: 'POST',
@@ -585,7 +617,7 @@
                     username: username,
                     password: password
                 },
-                success: function(result) {
+                success: function (result) {
                     if (result.success == 'Pegawai') {
                         $.ajax({
                             type: 'GET',
@@ -601,7 +633,7 @@
                                 tahun_ajaran: result.smtta[0].tahun_ajaran,
                                 token: result.token
                             },
-                            success: function(result) {
+                            success: function (result) {
                                 document.location.href = "{{ url('home') }}";
                             }
                         })
@@ -625,7 +657,7 @@
                                 id_mreg: result.smtta[0].id_mreg,
                                 token: result.token
                             },
-                            success: function(result) {
+                            success: function (result) {
                                 document.location.href = "{{ route('home') }}";
                             }
                         })
@@ -646,7 +678,7 @@
                                 tahun_ajaran: result.smtta[0].tahun_ajaran,
                                 token: result.token
                             },
-                            success: function(result) {
+                            success: function (result) {
                                 document.location.href = "{{ route('home') }}";
                             }
                         })
@@ -659,14 +691,14 @@
                     }
                     stopSpinner();
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     showToastr('error', 'Error', 'Terjadi kesalahan sistem. Silakan coba beberapa saat lagi.');
                     stopSpinner();
                 }
             })
         }
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
