@@ -540,10 +540,17 @@
             var gradeRules = {};
 
             function getRoleLabel(role, isObe) {
-                if (role === 'penguji1') return 'Ketua Penguji';
-                if (role === 'penguji2') return 'Sekretaris';
-                if (role === 'penguji3') return 'Anggota';
-                return 'Dosen Penguji';
+                if (isObe) {
+                    if (role === 'penguji1') return 'Verifikator 1 (Utama)';
+                    if (role === 'penguji2') return 'Verifikator 2';
+                    if (role === 'penguji3' || role === 'ketua') return 'Verifikator 3';
+                    return 'Tim Verifikator';
+                } else {
+                    if (role === 'penguji1') return 'Dosen Penguji 1 (Ketua)';
+                    if (role === 'penguji2') return 'Dosen Penguji 2';
+                    if (role === 'penguji3' || role === 'ketua') return 'Dosen Penguji 3';
+                    return 'Dosen Penguji';
+                }
             }
 
             function dateToIndonesianText(dateStr) {

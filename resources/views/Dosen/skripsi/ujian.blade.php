@@ -260,9 +260,9 @@
                     if (role === 'penguji3' || role === 'ketua') return 'Verifikator 3';
                     return 'Tim Verifikator';
                 } else {
-                    if (role === 'penguji1') return 'Dosen Penguji 1';
+                    if (role === 'penguji1') return 'Dosen Penguji 1 (Ketua)';
                     if (role === 'penguji2') return 'Dosen Penguji 2';
-                    if (role === 'penguji3' || role === 'ketua') return 'Dosen Penguji 3 / Ketua Sidang';
+                    if (role === 'penguji3' || role === 'ketua') return 'Dosen Penguji 3';
                     return 'Dosen Penguji';
                 }
             }
