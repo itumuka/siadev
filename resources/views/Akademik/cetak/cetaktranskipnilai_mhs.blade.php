@@ -521,22 +521,24 @@
                     var nilaie = 0;
 
                     for (var i = 0; i < jml; i++) {
-                        var nilai = "";
-                        if (data[i].nilai_huruf_akhir == null) {
-                            nilai = "-";
-                        } else {
-                            nilai = data[i].nilai_huruf_akhir;
-                            var scoreVal = parseFloat(data[i].mutu);
-                            var scoreText = isNaN(scoreVal) ? '-' : scoreVal.toFixed(2);
-                            var bobot = data[i].sks_matakuliah * data[i].mutu;
-                            totalsks += data[i].sks_matakuliah;
-                            totalbobot += bobot;
+                        if (!data[i].nilai_huruf_akhir || data[i].nilai_huruf_akhir === '-' || data[i].nilai_huruf_akhir === 'null') {
+                            continue;
                         }
+
+                        var nilai = data[i].nilai_huruf_akhir;
+                        var scoreVal = parseFloat(data[i].mutu);
+                        var scoreText = isNaN(scoreVal) ? '-' : scoreVal.toFixed(2);
+                        var bobot = data[i].sks_matakuliah * (isNaN(scoreVal) ? 0 : scoreVal);
+
+                        totalsks += data[i].sks_matakuliah;
+                        totalbobot += bobot;
+
                         if (data[i].nilai_huruf_akhir == "D") {
                             nilaid = nilaid + 1;
                         } else if (data[i].nilai_huruf_akhir == "E") {
                             nilaie = nilaie + 1;
                         }
+
                         var courseEn = data[i].nama_matakuliah_inggris ? data[i].nama_matakuliah_inggris : '';
                         tampil = tampil + '<tr style="height:22px;">' +
                             '<td style="text-align:center; border:1px solid #000; padding:4px;">' + no + '</td>' +
