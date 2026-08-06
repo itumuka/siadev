@@ -76,15 +76,13 @@
                         <table id="tb_mahasiswa_diuji" class="table table-hover table-bordered table-sm" width="100%">
                             <thead class="bg-dark">
                                 <tr>
-                                    <th>NIM</th>
-                                    <th>Nama Mahasiswa</th>
-                                    <th>Program Studi</th>
-                                    <th>Judul Skripsi / Luaran</th>
-                                    <th class="text-center">Jalur</th>
+                                    <th width="4%">No</th>
+                                    <th>Mahasiswa & Judul Skripsi/Luaran</th>
+                                    <th class="text-center" width="10%">Jalur</th>
                                     <th>Peran Anda</th>
                                     <th class="text-center">Nilai Ujian</th>
                                     <th class="text-center">Status</th>
-                                    <th class="text-center">Aksi</th>
+                                    <th class="text-center" width="10%">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -252,6 +250,16 @@
             var currentTipeBobot = 'indikator';
             var currentAspects = [];
 
+            function escapeAttr(text) {
+                if (text === null || text === undefined) return '';
+                return String(text)
+                    .replace(/&/g, '&amp;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+            }
+
             // Format Helper
             function getRoleLabel(role, isObe) {
                 if (isObe) {
@@ -300,15 +308,26 @@
                     }
                 },
                 columns: [
-                    { data: 'nim' },
-                    { data: 'nama_mahasiswa' },
-                    { data: 'nama_program_studi' },
+                    { data: null, render: (data, type, row, meta) => meta.row + 1 },
                     { 
-                        data: 'judul',
+                        data: null,
                         render: function(data, type, row) {
-                            return '<strong title="' + (data || '') + '">' + 
-                                   (data && data.length > 80 ? data.substring(0, 80) + '...' : (data || '-')) + 
-                                   '</strong>';
+                            const nim = row.nim || '-';
+                            const nama = row.nama_mahasiswa || '-';
+                            const prodi = row.nama_program_studi || '-';
+                            const judul = row.judul || '-';
+                            const judulDisplay = (judul && judul.length > 90) ? judul.substring(0, 90) + '...' : judul;
+
+                            return `
+                                <div class="mb-5">
+                                    <span class="badge badge-secondary font-weight-bold mr-5">${escapeAttr(nim)}</span>
+                                    <strong class="text-dark font-size-14">${escapeAttr(nama)}</strong>
+                                    <small class="text-muted d-block font-weight-500 mt-1"><i class="fa fa-university mr-5"></i>${escapeAttr(prodi)}</small>
+                                </div>
+                                <div class="font-size-12">
+                                    <span class="text-dark" title="${escapeAttr(judul)}"><strong>Judul:</strong> ${escapeAttr(judulDisplay)}</span>
+                                </div>
+                            `;
                         }
                     },
                     { 
@@ -381,7 +400,7 @@
                         }
                     }
                 ],
-                order: [[6, 'asc']]
+                order: [[4, 'asc']]
             });
 
             // Handle Input Click & Load Modal
