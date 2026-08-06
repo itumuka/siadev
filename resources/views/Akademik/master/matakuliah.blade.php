@@ -67,6 +67,62 @@
                         </div> <!-- end box-body-->
 
                     </div>
+
+                    <!-- Responsive Filter Bar (Mobile & Desktop) -->
+                    <div class="box box-solid bg-light mb-3 border">
+                        <div class="box-body py-3 px-3">
+                            <div class="row align-items-end">
+                                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-2">
+                                    <label class="form-label font-weight-bold text-dark mb-1" style="font-size: 0.88rem;">
+                                        <i class="fa fa-university text-primary mr-1"></i> Program Studi:
+                                    </label>
+                                    <select id="filter_prodi" class="form-control form-control-sm border-secondary">
+                                        <option value="">-- Semua Program Studi --</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-2 col-lg-2 mb-2">
+                                    <label class="form-label font-weight-bold text-dark mb-1" style="font-size: 0.88rem;">
+                                        <i class="fa fa-calendar text-info mr-1"></i> Kurikulum:
+                                    </label>
+                                    <select id="filter_kurikulum" class="form-control form-control-sm border-secondary">
+                                        <option value="">-- Semua --</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-2 col-lg-2 mb-2">
+                                    <label class="form-label font-weight-bold text-dark mb-1" style="font-size: 0.88rem;">
+                                        <i class="fa fa-list-ol text-warning mr-1"></i> Semester:
+                                    </label>
+                                    <select id="filter_semester" class="form-control form-control-sm border-secondary">
+                                        <option value="">-- Semua --</option>
+                                        <option value="1">Semester 1</option>
+                                        <option value="2">Semester 2</option>
+                                        <option value="3">Semester 3</option>
+                                        <option value="4">Semester 4</option>
+                                        <option value="5">Semester 5</option>
+                                        <option value="6">Semester 6</option>
+                                        <option value="7">Semester 7</option>
+                                        <option value="8">Semester 8</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-2">
+                                    <label class="form-label font-weight-bold text-dark mb-1" style="font-size: 0.88rem;">
+                                        <i class="fa fa-language text-success mr-1"></i> Status Translasi:
+                                    </label>
+                                    <select id="filter_translate" class="form-control form-control-sm border-secondary">
+                                        <option value="">-- Semua Status --</option>
+                                        <option value="translated">Sudah Ditranslasi (Inggris Ada)</option>
+                                        <option value="untranslated">Belum Ditranslasi (Butuh Auto-Translate)</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-2 mb-2">
+                                    <button type="button" id="btn_reset_filter" class="btn btn-sm btn-secondary btn-block">
+                                        <i class="fa fa-refresh mr-1"></i> Reset Filter
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
                         <div class="btn-group mb-2">
                             <button type="button" class="waves-effect waves-light btn btn-sm btn-dark dropdown-toggle"
@@ -430,7 +486,9 @@
                     dataType: "json",
                     success: function(data) {
                         // $('.test').fadeOut();
-                        let target = $(".dataprodi")
+                        let target = $(".dataprodi");
+                        let selectProdi = $("#filter_prodi");
+                        selectProdi.find('option:not(:first)').remove();
                         $.each(data, function(index, value) {
                             var el = data[index];
                             var flag = 0;
@@ -441,7 +499,8 @@
                                 .nama_program_studi + ' data-fakultas=' + el
                                 .nama_fakultas +
                                 ' data-toggle="modal" data-target="#modal_add">' + el
-                                .nama_program_studi + '</a>')
+                                .nama_program_studi + '</a>');
+                            selectProdi.append('<option value="' + el.nama_program_studi + '">' + el.nama_program_studi + '</option>');
                         });
                     },
                     error: function(error) {
@@ -494,10 +553,21 @@
                         "Authorization": 'Bearer ' + token,
                         "username": userlogin
                     },
-                    // data: {
-                    //     nim: nim,
-                    // },
                     dataSrc: function(json) {
+                        var years = [];
+                        $.each(json, function(i, item) {
+                            if (item.tahun_kurikulum && $.inArray(String(item.tahun_kurikulum), years) === -1) {
+                                years.push(String(item.tahun_kurikulum));
+                            }
+                        });
+                        years.sort().reverse();
+                        var $kSelect = $('#filter_kurikulum');
+                        var currentVal = $kSelect.val();
+                        $kSelect.find('option:not(:first)').remove();
+                        $.each(years, function(i, y) {
+                            $kSelect.append('<option value="' + y + '">' + y + '</option>');
+                        });
+                        if (currentVal) $kSelect.val(currentVal);
                         return json;
                     }
                 },
@@ -561,6 +631,48 @@
                         $('#btn-sync-translate').hide();
                     }
                 }
+            });
+
+            // ─── Custom Filtering Logic ───────────────────────────────────────
+            $.fn.dataTable.ext.search.push(
+                function(settings, data, dataIndex, rowData) {
+                    if (settings.nTable.id !== 'tbkurikulum') return true;
+
+                    var prodiFilter = $('#filter_prodi').val();
+                    var kurikulumFilter = $('#filter_kurikulum').val();
+                    var semesterFilter = $('#filter_semester').val();
+                    var translateFilter = $('#filter_translate').val();
+
+                    if (prodiFilter && rowData.nama_program_studi !== prodiFilter) {
+                        return false;
+                    }
+                    if (kurikulumFilter && String(rowData.tahun_kurikulum) !== String(kurikulumFilter)) {
+                        return false;
+                    }
+                    if (semesterFilter && String(rowData.smt_matakuliah) !== String(semesterFilter)) {
+                        return false;
+                    }
+                    if (translateFilter === 'translated' && (!rowData.nama_matakuliah_inggris || rowData.nama_matakuliah_inggris.trim() === '')) {
+                        return false;
+                    }
+                    if (translateFilter === 'untranslated' && (rowData.nama_matakuliah_inggris && rowData.nama_matakuliah_inggris.trim() !== '')) {
+                        return false;
+                    }
+
+                    return true;
+                }
+            );
+
+            $('#filter_prodi, #filter_kurikulum, #filter_semester, #filter_translate').on('change', function() {
+                table.draw();
+            });
+
+            $('#btn_reset_filter').on('click', function() {
+                $('#filter_prodi').val('');
+                $('#filter_kurikulum').val('');
+                $('#filter_semester').val('');
+                $('#filter_translate').val('');
+                table.draw();
             });
 
             // ─── Sync Translate Button (Akademik) ──────────────────────────────
