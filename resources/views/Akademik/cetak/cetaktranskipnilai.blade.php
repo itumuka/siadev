@@ -102,7 +102,7 @@
                 <table border='0' style='width:100%; border-collapse:collapse;'>
                     <tr>
                         <td style='padding-right:15px; width:125px; vertical-align:middle; text-align:center;'>
-                            <img src='{{ url('imageup45/logoumuka.png') }}' style='height:3cm; width:auto;'>
+                            <img src="{{ url('imageup45/logoumuka.png') }}?v={{ filemtime(public_path('imageup45/logoumuka.png')) ?? time() }}" style='height:3cm; width:auto;'>
                         </td>
                         <td style='text-align:center; font-family:Arial, sans-serif; padding-left: 10px; line-height: 18px;'>
                             <div class="universitas-title">UNIVERSITAS MUHAMMADIYAH KARANGANYAR</div>

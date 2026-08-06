@@ -8,7 +8,7 @@
     <meta name="description" content="SIA UMUKA">
     <meta name="author" content="Labkom UMUKA">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" href="{{ url('imageup45/logoumuka.png') }}">
+    <link rel="icon" href="{{ url('imageup45/logoumuka.png') }}?v={{ filemtime(public_path('imageup45/logoumuka.png')) ?? time() }}">
 
     <title>{{ $title }}</title>
 

@@ -8,7 +8,7 @@
     <meta name="description" content="Sistem Informasi Akademik Universitas Muhammadiyah Karanganyar">
     <meta name="author" content="UMUKA">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" href="{{ url('imageup45/logoumuka.png') }}">
+    <link rel="icon" href="{{ url('imageup45/logoumuka.png') }}?v={{ filemtime(public_path('imageup45/logoumuka.png')) ?? time() }}">
 
     <title>SIAKAD UMUKA - Log in</title>
 
@@ -491,7 +491,7 @@
 
             <div class="branding-content">
                 <div class="brand-logo">
-                    <img src="{{ url('imageup45/logoputih.png') }}" alt="Logo UMUKA" class="img-fluid rounded-circle">
+                    <img src="{{ url('imageup45/logoputih.png') }}?v={{ filemtime(public_path('imageup45/logoputih.png')) ?? time() }}" alt="Logo UMUKA" class="img-fluid rounded-circle">
                 </div>
                 <h1 class="brand-title">UNIVERSITAS MUHAMMADIYAH KARANGANYAR</h1>
                 <div class="brand-divider"></div>
