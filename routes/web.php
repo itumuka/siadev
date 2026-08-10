@@ -210,5 +210,5 @@ Route::middleware(['ceklogin'])->group(function () {
     Route::get("/akademik/cetak/jamakcetakdaftarhadirujian/{id_tawar}/{jenisujian}", "Akademik@jamakcetakdaftarhadirujian")->name('jamakcetakdaftarhadirujian');
     Route::get("/akademik/cetak/jamakcetakkartuujian/{nim}/{tahun}/{semester}/{jenisujian}", "Akademik@jamakcetakkartuujian")->name('jamakcetakkartuujian');
     Route::get("/akademik/cetak/jamakcetakkrsmahasiswa/{nim}/{tahun}/{semester}", "Akademik@jamakcetakkrsmahasiswa")->name('jamakcetakkrsmahasiswa');
-    Route::get("/akademik/cetak/jamakcetakkartuhasilstudi/{nim}/{tahun}/{semester}/{kodenilai}", "Akademik@jamakcetakkartuhasilstudi")->name('jamakcetakkartuhasilstudi');
+    Route::get("/akademik/cetak/jamakcetakkartuhasilstudi/{nim}/{tahun}/{semester}/{kodenilai?}", "Akademik@jamakcetakkartuhasilstudi")->name('jamakcetakkartuhasilstudi');
 });

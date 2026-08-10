@@ -83,9 +83,19 @@
             var tahun = $('#tahun').val();
             var semester = $('#semester').val();
             var kode_nilai = $('#kode_nilai').val();
-            var link = ""
+
+            if (!nim || nim.trim() === "") {
+                alert("Silakan pilih mahasiswa terlebih dahulu!");
+                return;
+            }
+
+            var urlTarget = "{{ url('akademik/cetak/jamakcetakkartuhasilstudi') }}/" + nim + "/" + tahun + "/" + semester;
+            if (kode_nilai && kode_nilai.trim() !== "") {
+                urlTarget += "/" + kode_nilai;
+            }
+
             $("#printff")
-                .attr("src", "{{ url('akademik/cetak/jamakcetakkartuhasilstudi') }}/" + nim + "/" + tahun + "/" + semester +"/" + kode_nilai +"")
+                .attr("src", urlTarget)
                 .appendTo("body");
         }
 

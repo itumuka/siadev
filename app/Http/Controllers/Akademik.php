@@ -989,7 +989,7 @@ class Akademik extends Controller
         $title = "Cetak KRS";
         return view('Akademik/cetak/cetakkrsmahasiswa', compact('title', 'nim', 'session_tahun', 'session_semester', 'session_nama_tahunakademik'));
     }
-    public function jamakcetakkartuhasilstudi($nim, $tahun, $semester, $kodenilai)
+    public function jamakcetakkartuhasilstudi($nim, $tahun, $semester, $kodenilai = '-')
     {
         $nim = $nim;
         $tahun = $tahun;
