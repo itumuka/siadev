@@ -75,7 +75,7 @@
                 </div>
                 <!-- /.box-body -->
 
-                <iframe id="printff" name="printff" style="display: none;"></iframe>
+                <iframe id="printff" name="printff" style="position: absolute; width: 0px; height: 0px; border: none; visibility: hidden;"></iframe>
 
             </div>
 
@@ -318,11 +318,36 @@
         var token = "{{ Session::get('token') }}";
         var userlogin = "{{ Session::get('username') }}";
 
-        function cetakdhmd(id_kelas) {
-            var link = ""
-            $("#printff")
-                .attr("src", "{{ url('akademik/cetak/cetakberitaacara') }}/" + id_kelas + "")
-                .appendTo("body");
+        function cetakdhmd(id_kelas, btn) {
+            var $btn = $(btn);
+            if (!$btn.is('a')) {
+                $btn = $btn.closest('a');
+            }
+            if ($btn.hasClass('disabled')) return;
+
+            var originalHtml = $btn.html();
+
+            // Ganti ikon tombol cetak ini menjadi spinner loading FontAwesome
+            $btn.html('<i class="fa fa-spin fa-spinner"></i>')
+                .addClass('disabled')
+                .css('pointer-events', 'none');
+
+            $('#printff').attr('src', "{{ url('akademik/cetak/cetakberitaacara') }}/" + id_kelas);
+
+            var timer = setTimeout(function () {
+                $btn.html(originalHtml).removeClass('disabled').css('pointer-events', 'auto');
+            }, 6000);
+
+            var handleMsg = function (event) {
+                if (event.data === 'print_ready') {
+                    clearTimeout(timer);
+                    setTimeout(function () {
+                        $btn.html(originalHtml).removeClass('disabled').css('pointer-events', 'auto');
+                    }, 500);
+                    window.removeEventListener('message', handleMsg);
+                }
+            };
+            window.addEventListener('message', handleMsg);
         }
 
         $(document).ready(function() {
@@ -384,10 +409,10 @@
                             //     '" data-original-title="Tambah BA" data-toggle="tooltip" title="Tambah BA"><i class="fa fa-plus"></i></a> | <a href="javascript:void(0)" class="text-success" id="bt_modal_presensi" data-id="' + full.id_kelas + '" data-nama="' + full.nama_matakuliah + '" data-original-title="Presensi Mahasiswa" data-toggle="tooltip" title="Presensi Mahasiswa"><i class="fa fa-user"></i></a> | 
                             '<a href="javascript:void(0)" class="text-warning" id="bt_modal_list" data-id="' +
                             full.id_kelas +
-                                '" data-original-title="List BA" data-toggle="tooltip" title="List BA"><i class="fa fa-list"></i></a> | <a href="javascript:void(0)" class="text-info" id="bt_print" data-id="' +
+                                '" data-original-title="List BA" data-toggle="tooltip" title="List BA"><i class="fa fa-list"></i></a> | <a href="javascript:void(0)" class="text-info bt_print_ba" id="bt_print" data-id="' +
                                 full.id_kelas +
                                 '" data-original-title="Print Presensi" data-toggle="tooltip" title="Print Presensi" onclick="cetakdhmd(' +
-                                full.id_kelas + ');"><i class="fa fa-print"></i></a>';
+                                full.id_kelas + ', this);"><i class="fa fa-print"></i></a>';
                         }
                     },
                     {
