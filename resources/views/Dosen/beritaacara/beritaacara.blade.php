@@ -316,6 +316,38 @@
 @endsection
 @section('script-master')
 <script type="text/javascript">
+    function cetakdhmd(id_kelas, btn) {
+        var $btn = $(btn);
+        if (!$btn.is('a')) {
+            $btn = $btn.closest('a');
+        }
+        if ($btn.hasClass('disabled')) return;
+
+        var originalHtml = $btn.html();
+
+        // Ganti ikon di tombol ini menjadi spinner loading FontAwesome
+        $btn.html('<i class="fa fa-spin fa-spinner"></i>')
+            .addClass('disabled')
+            .css('pointer-events', 'none');
+
+        $('#printff').attr('src', "{{ url('akademik/cetak/cetakberitaacara') }}/" + id_kelas);
+
+        var timer = setTimeout(function () {
+            $btn.html(originalHtml).removeClass('disabled').css('pointer-events', 'auto');
+        }, 6000);
+
+        var handleMsg = function (event) {
+            if (event.data === 'print_ready') {
+                clearTimeout(timer);
+                setTimeout(function () {
+                    $btn.html(originalHtml).removeClass('disabled').css('pointer-events', 'auto');
+                }, 500);
+                window.removeEventListener('message', handleMsg);
+            }
+        };
+        window.addEventListener('message', handleMsg);
+    }
+
     $(document).ready(function () {
         var token = "{{ Session::get('token') }}";
         var userlogin = "{{ Session::get('username') }}";
@@ -375,7 +407,8 @@
                         if (full.validated_ba == 1) {
                             btnPrint = '<a href="javascript:void(0)" class="waves-effect waves-light btn btn-xs btn-outline btn-info bt_print_ba" data-id="' +
                                 full.id_kelas +
-                                '" data-original-title="Print Presensi" data-toggle="tooltip" title="Print BA"><i class="fa fa-print"></i></a>';
+                                '" data-original-title="Print Presensi" data-toggle="tooltip" title="Print BA" onclick="cetakdhmd(' +
+                                full.id_kelas + ', this);"><i class="fa fa-print"></i></a>';
                         }
 
                         return btnAdd + ' ' + btnList + ' ' + btnPrint;
