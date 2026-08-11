@@ -316,38 +316,6 @@
 @endsection
 @section('script-master')
 <script type="text/javascript">
-
-    var currentPrintBtn = null;
-    var originalBtnHtml = '';
-
-    function cetakdhmd(id_kelas, btn) {
-        // Simpan referensi tombol yang diklik
-        currentPrintBtn = btn;
-        originalBtnHtml = $(btn).html();
-
-        // Ganti tombol jadi spinner
-        $(btn).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>')
-            .prop('disabled', true);
-
-        // Set iframe src untuk load file cetak
-        $("#printff")
-            .attr("src", "{{ url('akademik/cetak/cetakberitaacara') }}/" + id_kelas)
-            .appendTo("body");
-    }
-
-    // Tangkap pesan dari file cetak
-    window.addEventListener('message', function (event) {
-        if (event.data === 'print_ready' && currentPrintBtn) {
-            // Kembalikan tombol ke keadaan semula
-            $(currentPrintBtn).html(originalBtnHtml).prop('disabled', false);
-
-            // Reset variabel
-            currentPrintBtn = null;
-            originalBtnHtml = '';
-        }
-    });
-
-
     $(document).ready(function () {
         var token = "{{ Session::get('token') }}";
         var userlogin = "{{ Session::get('username') }}";
@@ -405,14 +373,9 @@
 
                         let btnPrint = '';
                         if (full.validated_ba == 1) {
-                            // btnPrint = '<a href="javascript:void(0)" class="waves-effect waves-light btn btn-xs btn-outline btn-info" id="bt_print" data-id="' +
-                            //     full.id_kelas +
-                            //     '" data-original-title="Print Presensi" data-toggle="tooltip" title="Print BA" onclick="cetakdhmd(' +
-                            //     full.id_kelas + ');"><i class="fa fa-print"></i></a>';
-                            btnPrint = '<a href="javascript:void(0)" class="waves-effect waves-light btn btn-xs btn-outline btn-info" id="bt_print" data-id="' +
+                            btnPrint = '<a href="javascript:void(0)" class="waves-effect waves-light btn btn-xs btn-outline btn-info bt_print_ba" data-id="' +
                                 full.id_kelas +
-                                '" data-original-title="Print Presensi" data-toggle="tooltip" title="Print BA" onclick="cetakdhmd(' +
-                                full.id_kelas + ', this);"><i class="fa fa-print"></i></a>';
+                                '" data-original-title="Print Presensi" data-toggle="tooltip" title="Print BA"><i class="fa fa-print"></i></a>';
                         }
 
                         return btnAdd + ' ' + btnList + ' ' + btnPrint;
@@ -553,6 +516,37 @@
             $('#l_nama_mk_ba').html(nama);
             tabelba(id_kelas);
             $('#modal_list').modal('show');
+        });
+
+        table.on('click', '.bt_print_ba', function (e) {
+            e.preventDefault();
+            var $btn = $(this);
+            if ($btn.hasClass('disabled')) return;
+
+            var id_kelas = $btn.data('id');
+            var originalHtml = $btn.html();
+
+            // Ganti ikon tombol cetak ini menjadi spinner loading
+            $btn.html('<i class="fa fa-spin fa-spinner"></i>')
+                .addClass('disabled')
+                .css('pointer-events', 'none');
+
+            $('#printff').attr('src', "{{ url('akademik/cetak/cetakberitaacara') }}/" + id_kelas);
+
+            var timer = setTimeout(function () {
+                $btn.html(originalHtml).removeClass('disabled').css('pointer-events', 'auto');
+            }, 6000);
+
+            var handleMsg = function (event) {
+                if (event.data === 'print_ready') {
+                    clearTimeout(timer);
+                    setTimeout(function () {
+                        $btn.html(originalHtml).removeClass('disabled').css('pointer-events', 'auto');
+                    }, 500);
+                    window.removeEventListener('message', handleMsg);
+                }
+            };
+            window.addEventListener('message', handleMsg);
         });
 
         var tdetail;
