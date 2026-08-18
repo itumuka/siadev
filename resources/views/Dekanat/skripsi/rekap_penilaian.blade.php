@@ -124,14 +124,21 @@
                         <h4 class="box-title font-weight-bold text-dark"><i class="fa fa-list-alt text-primary mr-10"></i> Rekapitulasi Penilaian Akhir Ujian Skripsi</h4>
                         <h6 class="box-subtitle mb-0">Monitoring transparansi penginputan nilai dosen penguji (P1, P2, P3) dan penetapan Kaprodi per Fakultas.</h6>
                     </div>
-                    <div class="mt-10 mt-md-0 d-flex align-items-center">
-                        <div class="mr-10">
-                            <select id="filter_prodi" class="form-control form-control-sm" style="min-width: 200px;">
+                    <div class="mt-10 mt-md-0 d-flex align-items-center flex-wrap" style="gap: 10px;">
+                        <div>
+                            <select id="filter_prodi" class="form-control form-control-sm" style="min-width: 190px;">
                                 <option value="">-- Semua Program Studi --</option>
                             </select>
                         </div>
+                        <div>
+                            <select id="filter_status_final" class="form-control form-control-sm" style="min-width: 170px;">
+                                <option value="">-- Semua Status Final --</option>
+                                <option value="final">Final Penilaian 🟢</option>
+                                <option value="belum_final">Belum Final 🟡</option>
+                            </select>
+                        </div>
                         <button id="btn_export_excel" class="btn btn-success btn-sm font-weight-bold">
-                            <i class="fa fa-file-excel-o mr-5"></i> Ekspor Excel
+                            <i class="fa fa-file-excel-o mr-5"></i> Ekspor Excel (.xlsx)
                         </button>
                     </div>
                 </div>
@@ -238,6 +245,17 @@
                 }
             });
 
+            // Register DataTables Custom Search Filter for Status Final
+            $.fn.dataTable.ext.search.push(
+                function(settings, data, dataIndex, rowData) {
+                    var selectedStatus = $('#filter_status_final').val();
+                    if (!selectedStatus) return true;
+                    if (selectedStatus === 'final' && rowData.is_final) return true;
+                    if (selectedStatus === 'belum_final' && !rowData.is_final) return true;
+                    return false;
+                }
+            );
+
             // Initialize DataTables
             var table = $('#tb_rekap_penilaian').DataTable({
                 destroy: true,
@@ -319,9 +337,13 @@
                 }
             });
 
-            // Filter prodi change event
+            // Filter prodi & status final change events
             $('#filter_prodi').change(function() {
                 table.ajax.reload();
+            });
+
+            $('#filter_status_final').change(function() {
+                table.draw();
             });
 
             // Update Summary Widgets
@@ -411,16 +433,18 @@
                 });
             });
 
-            // Export Excel Custom Handler
+            // Export Excel (.xlsx) Custom Handler (Filtered Data, No Status Evaluasi & No Status Final)
             $('#btn_export_excel').click(function() {
-                if (!rawDataList || rawDataList.length === 0) {
-                    Swal.fire('Informasi', 'Tidak ada data untuk diekspor', 'info');
+                var filteredData = table.rows({ search: 'applied' }).data().toArray();
+
+                if (!filteredData || filteredData.length === 0) {
+                    Swal.fire('Informasi', 'Tidak ada data yang sesuai dengan filter untuk diekspor', 'info');
                     return;
                 }
 
                 var excelContent = '<table border="1">';
                 excelContent += '<thead>';
-                excelContent += '<tr style="background-color: #2c3e50; color: #ffffff; font-weight: bold;">';
+                excelContent += '<tr style="background-color: #1b4332; color: #ffffff; font-weight: bold;">';
                 excelContent += '<th>No</th>';
                 excelContent += '<th>NIM</th>';
                 excelContent += '<th>Nama Mahasiswa</th>';
@@ -430,49 +454,39 @@
                 excelContent += '<th>Penguji 1</th>';
                 excelContent += '<th>Penguji 2</th>';
                 excelContent += '<th>Penguji 3</th>';
-                excelContent += '<th>Status Evaluasi (P1 / P2 / P3 / Kaprodi)</th>';
                 excelContent += '<th>Nilai Angka</th>';
                 excelContent += '<th>Nilai Huruf</th>';
-                excelContent += '<th>Status Final</th>';
                 excelContent += '</tr>';
                 excelContent += '</thead>';
                 excelContent += '<tbody>';
 
-                rawDataList.forEach(function(row, index) {
+                filteredData.forEach(function(row, index) {
                     var p1 = row.penguji.p1;
                     var p2 = row.penguji.p2;
                     var p3 = row.penguji.p3;
-                    var kap = row.penguji.kaprodi;
-
-                    var status_text = 'P1: ' + (p1.evaluated ? 'Sudah' : 'Belum (' + p1.nama + ')') + ' | ' +
-                                      'P2: ' + (p2.id ? (p2.evaluated ? 'Sudah' : 'Belum (' + p2.nama + ')') : '-') + ' | ' +
-                                      'P3: ' + (p3.id ? (p3.evaluated ? 'Sudah' : 'Belum (' + p3.nama + ')') : '-') + ' | ' +
-                                      'Kaprodi: ' + (kap.validated ? 'Sudah' : 'Belum');
 
                     excelContent += '<tr>';
-                    excelContent += '<td>' + (index + 1) + '</td>';
-                    excelContent += '<td>' + row.nim + '</td>';
+                    excelContent += '<td style="text-align: center;">' + (index + 1) + '</td>';
+                    excelContent += '<td style="text-align: center;">' + row.nim + '</td>';
                     excelContent += '<td>' + row.nama_mahasiswa + '</td>';
                     excelContent += '<td>' + row.nama_program_studi + '</td>';
                     excelContent += '<td>' + row.judul + '</td>';
                     excelContent += '<td>' + row.target_luaran + '</td>';
-                    excelContent += '<td>' + p1.nama + '</td>';
-                    excelContent += '<td>' + p2.nama + '</td>';
-                    excelContent += '<td>' + p3.nama + '</td>';
-                    excelContent += '<td>' + status_text + '</td>';
-                    excelContent += '<td>' + row.nilai_angka + '</td>';
-                    excelContent += '<td>' + row.nilai_huruf + '</td>';
-                    excelContent += '<td>' + row.status_badge + '</td>';
+                    excelContent += '<td>' + (p1.nama || '-') + '</td>';
+                    excelContent += '<td>' + (p2.nama || '-') + '</td>';
+                    excelContent += '<td>' + (p3.nama || '-') + '</td>';
+                    excelContent += '<td style="text-align: center;">' + row.nilai_angka + '</td>';
+                    excelContent += '<td style="text-align: center;">' + row.nilai_huruf + '</td>';
                     excelContent += '</tr>';
                 });
 
                 excelContent += '</tbody></table>';
 
-                var blob = new Blob(['\ufeff' + excelContent], { type: 'application/vnd.ms-excel;charset=utf-8' });
+                var blob = new Blob(['\ufeff' + excelContent], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
                 var url = URL.createObjectURL(blob);
                 var a = document.createElement('a');
                 a.href = url;
-                a.download = 'Rekap_Penilaian_Akhir_Skripsi_Fakultas_' + kode_fakultas + '.xls';
+                a.download = 'Rekap_Penilaian_Akhir_Skripsi_Fakultas_' + kode_fakultas + '.xlsx';
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
