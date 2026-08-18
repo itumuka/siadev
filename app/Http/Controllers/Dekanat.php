@@ -265,5 +265,24 @@ class Dekanat extends Controller
             'title', 'parent_breadcrumb', 'child_breadcrumb', 'session_username', 'api_token', 'api_url', 'session_tahun', 'session_semester', 'session_kode_fakultas'
         ));
     }
+
+    public function skripsi_rekap_penilaian()
+    {
+        $session_username = Session::has('username') ? Session::get('username') : '';
+        $api_token = Session::has('token') ? Session::get('token') : '';
+        $api_url = config('setting.second_url');
+
+        $title = "Rekap Penilaian Akhir Skripsi";
+        $parent_breadcrumb = "Manajemen Skripsi";
+        $child_breadcrumb = "Rekap Penilaian Akhir";
+
+        $session_tahun = Session::has('session_tahun') ? Session::get('session_tahun') : '';
+        $session_semester = Session::has('session_semester') ? Session::get('session_semester') : '';
+        $session_kode_fakultas = Session::has('kode_fakultas') ? Session::get('kode_fakultas') : '';
+
+        return view('Dekanat/skripsi/rekap_penilaian', compact(
+            'title', 'parent_breadcrumb', 'child_breadcrumb', 'session_username', 'api_token', 'api_url', 'session_tahun', 'session_semester', 'session_kode_fakultas'
+        ));
+    }
 }
 

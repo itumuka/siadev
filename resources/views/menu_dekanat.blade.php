@@ -117,6 +117,9 @@
                             <li class="{{ request()->is('dekanat/skripsi/penetapan-skripsi') ? 'active' : '' }}">
                                 <a href="{{ url('dekanat/skripsi/penetapan-skripsi') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Nomor BA & Penetapan</a>
                             </li>
+                            <li class="{{ request()->is('dekanat/skripsi/rekap-penilaian') ? 'active' : '' }}">
+                                <a href="{{ url('dekanat/skripsi/rekap-penilaian') }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Rekap Penilaian Akhir</a>
+                            </li>
                         </ul>
                     </li>
 
