@@ -221,6 +221,7 @@
 
 @section('script-master')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             var token = "{{ $api_token }}";
@@ -433,7 +434,7 @@
                 });
             });
 
-            // Export Excel (.xlsx) Custom Handler (Filtered Data, No Status Evaluasi & No Status Final)
+            // Native Binary OpenXML Excel (.xlsx) Export Handler using SheetJS
             $('#btn_export_excel').click(function() {
                 var filteredData = table.rows({ search: 'applied' }).data().toArray();
 
@@ -442,54 +443,52 @@
                     return;
                 }
 
-                var excelContent = '<table border="1">';
-                excelContent += '<thead>';
-                excelContent += '<tr style="background-color: #1b4332; color: #ffffff; font-weight: bold;">';
-                excelContent += '<th>No</th>';
-                excelContent += '<th>NIM</th>';
-                excelContent += '<th>Nama Mahasiswa</th>';
-                excelContent += '<th>Program Studi</th>';
-                excelContent += '<th>Judul Skripsi / Tugas Akhir</th>';
-                excelContent += '<th>Luaran</th>';
-                excelContent += '<th>Penguji 1</th>';
-                excelContent += '<th>Penguji 2</th>';
-                excelContent += '<th>Penguji 3</th>';
-                excelContent += '<th>Nilai Angka</th>';
-                excelContent += '<th>Nilai Huruf</th>';
-                excelContent += '</tr>';
-                excelContent += '</thead>';
-                excelContent += '<tbody>';
+                if (typeof XLSX === 'undefined') {
+                    Swal.fire('Error', 'Library SheetJS (XLSX) belum dimuat. Silakan muat ulang halaman.', 'error');
+                    return;
+                }
 
+                var exportRows = [];
                 filteredData.forEach(function(row, index) {
                     var p1 = row.penguji.p1;
                     var p2 = row.penguji.p2;
                     var p3 = row.penguji.p3;
 
-                    excelContent += '<tr>';
-                    excelContent += '<td style="text-align: center;">' + (index + 1) + '</td>';
-                    excelContent += '<td style="text-align: center;">' + row.nim + '</td>';
-                    excelContent += '<td>' + row.nama_mahasiswa + '</td>';
-                    excelContent += '<td>' + row.nama_program_studi + '</td>';
-                    excelContent += '<td>' + row.judul + '</td>';
-                    excelContent += '<td>' + row.target_luaran + '</td>';
-                    excelContent += '<td>' + (p1.nama || '-') + '</td>';
-                    excelContent += '<td>' + (p2.nama || '-') + '</td>';
-                    excelContent += '<td>' + (p3.nama || '-') + '</td>';
-                    excelContent += '<td style="text-align: center;">' + row.nilai_angka + '</td>';
-                    excelContent += '<td style="text-align: center;">' + row.nilai_huruf + '</td>';
-                    excelContent += '</tr>';
+                    exportRows.push({
+                        "No": index + 1,
+                        "NIM": row.nim,
+                        "Nama Mahasiswa": row.nama_mahasiswa,
+                        "Program Studi": row.nama_program_studi,
+                        "Judul Skripsi / Tugas Akhir": row.judul,
+                        "Luaran": row.target_luaran || 'Non-OBE',
+                        "Penguji 1": (p1 && p1.nama) ? p1.nama : '-',
+                        "Penguji 2": (p2 && p2.nama) ? p2.nama : '-',
+                        "Penguji 3": (p3 && p3.nama) ? p3.nama : '-',
+                        "Nilai Angka": row.nilai_angka || '-',
+                        "Nilai Huruf": row.nilai_huruf || '-'
+                    });
                 });
 
-                excelContent += '</tbody></table>';
+                var worksheet = XLSX.utils.json_to_sheet(exportRows);
 
-                var blob = new Blob(['\ufeff' + excelContent], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-                var url = URL.createObjectURL(blob);
-                var a = document.createElement('a');
-                a.href = url;
-                a.download = 'Rekap_Penilaian_Akhir_Skripsi_Fakultas_' + kode_fakultas + '.xlsx';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
+                // Set column widths
+                worksheet['!cols'] = [
+                    { wch: 6 },   // No
+                    { wch: 16 },  // NIM
+                    { wch: 30 },  // Nama Mahasiswa
+                    { wch: 25 },  // Program Studi
+                    { wch: 60 },  // Judul Skripsi / Tugas Akhir
+                    { wch: 15 },  // Luaran
+                    { wch: 30 },  // Penguji 1
+                    { wch: 30 },  // Penguji 2
+                    { wch: 30 },  // Penguji 3
+                    { wch: 12 },  // Nilai Angka
+                    { wch: 12 }   // Nilai Huruf
+                ];
+
+                var workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Rekap Penilaian Akhir");
+                XLSX.writeFile(workbook, 'Rekap_Penilaian_Akhir_Skripsi_Fakultas_' + kode_fakultas + '.xlsx');
             });
         });
     </script>
