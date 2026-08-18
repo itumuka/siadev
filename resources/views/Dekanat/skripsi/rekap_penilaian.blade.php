@@ -471,13 +471,15 @@
                     var p2 = row.penguji.p2;
                     var p3 = row.penguji.p3;
 
+                    var luaranText = (row.target_luaran && row.target_luaran !== 'buku_skripsi') ? 'OBE' : 'Non-OBE';
+
                     exportRows.push({
                         "No": index + 1,
                         "NIM": row.nim,
                         "Nama Mahasiswa": row.nama_mahasiswa,
                         "Program Studi": row.nama_program_studi,
                         "Judul Skripsi / Tugas Akhir": row.judul,
-                        "Luaran": row.target_luaran || 'Non-OBE',
+                        "Luaran": luaranText,
                         "Penguji 1": (p1 && p1.nama) ? p1.nama : '-',
                         "Penguji 2": (p2 && p2.nama) ? p2.nama : '-',
                         "Penguji 3": (p3 && p3.nama) ? p3.nama : '-',
