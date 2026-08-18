@@ -5,12 +5,12 @@
         th, td {
             white-space: nowrap;
         }
-        #tb_rekap_penilaian td:nth-child(4) {
+        #tb_rekap_penilaian td:nth-child(1) {
             white-space: normal !important;
             word-break: break-word !important;
             word-wrap: break-word !important;
-            min-width: 240px;
-            max-width: 320px;
+            min-width: 300px;
+            max-width: 450px;
         }
         .glass-card {
             background: rgba(255, 255, 255, 0.92);
@@ -148,10 +148,7 @@
                         <table id="tb_rekap_penilaian" class="table table-hover table-bordered table-sm" width="100%">
                             <thead class="bg-dark text-white">
                                 <tr>
-                                    <th class="text-center">NIM</th>
-                                    <th>Nama Mahasiswa</th>
-                                    <th>Program Studi</th>
-                                    <th>Judul Skripsi / TA</th>
+                                    <th>Mahasiswa & Judul</th>
                                     <th class="text-center">Luaran</th>
                                     <th class="text-center">Matriks Penilai (P1 / P2 / P3 / Kaprodi)</th>
                                     <th class="text-center">Nilai Akhir</th>
@@ -277,10 +274,22 @@
                     }
                 },
                 columns: [
-                    { data: 'nim', className: 'text-center font-weight-bold' },
-                    { data: 'nama_mahasiswa', className: 'font-weight-bold' },
-                    { data: 'nama_program_studi' },
-                    { data: 'judul' },
+                    { 
+                        data: null, 
+                        render: function(data, type, row) {
+                            var html = '<div>';
+                            html += '  <div class="font-weight-bold text-dark mb-1" style="font-size: 0.95rem;">' + row.nama_mahasiswa + '</div>';
+                            html += '  <div class="mb-1">';
+                            html += '    <span class="badge badge-primary font-weight-bold" style="font-size: 0.75rem;">' + row.nim + '</span>';
+                            html += '    <span class="text-secondary font-weight-bold small ml-1">' + row.nama_program_studi + '</span>';
+                            html += '  </div>';
+                            html += '  <div class="text-muted small font-italic" style="white-space: normal; word-break: break-word; line-height: 1.3;">';
+                            html += '    <i class="fa fa-book text-secondary mr-1"></i>' + row.judul;
+                            html += '  </div>';
+                            html += '</div>';
+                            return html;
+                        }
+                    },
                     { 
                         data: 'target_luaran', 
                         className: 'text-center',
