@@ -5,7 +5,7 @@
         th, td {
             white-space: nowrap;
         }
-        #tb_rekap_penilaian td:nth-child(1) {
+        #tb_rekap_penilaian td:nth-child(2) {
             white-space: normal !important;
             word-break: break-word !important;
             word-wrap: break-word !important;
@@ -148,6 +148,7 @@
                         <table id="tb_rekap_penilaian" class="table table-hover table-bordered table-sm" width="100%">
                             <thead class="bg-dark text-white">
                                 <tr>
+                                    <th class="text-center" width="4%">No</th>
                                     <th>Mahasiswa & Judul</th>
                                     <th class="text-center">Luaran</th>
                                     <th class="text-center">Matriks Penilai (P1 / P2 / P3 / Kaprodi)</th>
@@ -274,6 +275,13 @@
                     }
                 },
                 columns: [
+                    {
+                        data: null,
+                        className: 'text-center font-weight-bold',
+                        render: function(data, type, row, meta) {
+                            return meta.row + 1;
+                        }
+                    },
                     { 
                         data: null, 
                         render: function(data, type, row) {
