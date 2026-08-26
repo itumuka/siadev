@@ -227,7 +227,8 @@
 
                 if (statusUjian) {
                     if (statusUjian === 'pending' || statusUjian === 'diajukan') {
-                        btn.addClass('btn-success')
+                        btn.addClass('btn-success disabled')
+                           .prop('disabled', true)
                            .html('<i class="fa fa-check-circle mr-5"></i> Sudah ACC Ujian (Disetujui)')
                            .show();
                     } else if (['dijadwalkan', 'dinilai', 'menunggu_penetapan', 'ditetapkan', 'lulus'].includes(statusUjian)) {
@@ -242,7 +243,8 @@
                     }
                 } else if (statusSempro) {
                     if (statusSempro === 'diajukan') {
-                        btn.addClass('btn-success')
+                        btn.addClass('btn-success disabled')
+                           .prop('disabled', true)
                            .html('<i class="fa fa-check-circle mr-5"></i> Sudah ACC Sempro (Disetujui)')
                            .show();
                     } else if (['dijadwalkan', 'lulus'].includes(statusSempro)) {
