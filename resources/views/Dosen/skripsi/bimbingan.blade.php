@@ -210,6 +210,58 @@
             var id_dosen = $('#id_dosen').val();
             var id_skripsi = $('#id_skripsi').val();
 
+            function renderAccButton(mhs) {
+                var minBimbingan = mhs.ta_minimal_bimbingan || 8;
+                var btn = $('#btn_acc_ujian');
+
+                if (parseInt(mhs.total_bimbingan_acc) < minBimbingan) {
+                    btn.hide();
+                    return;
+                }
+
+                var statusUjian = mhs.status_ujian;
+                var statusSempro = mhs.status_sempro;
+
+                // Reset state
+                btn.prop('disabled', false).removeClass('disabled btn-success btn-info btn-secondary btn-outline-success');
+
+                if (statusUjian) {
+                    if (statusUjian === 'pending' || statusUjian === 'diajukan') {
+                        btn.addClass('btn-success')
+                           .html('<i class="fa fa-check-circle mr-5"></i> Sudah ACC Ujian (Disetujui)')
+                           .show();
+                    } else if (['dijadwalkan', 'dinilai', 'menunggu_penetapan', 'ditetapkan', 'lulus'].includes(statusUjian)) {
+                        btn.addClass('btn-secondary disabled')
+                           .prop('disabled', true)
+                           .html('<i class="fa fa-lock mr-5"></i> Ujian Terjadwal / Selesai')
+                           .show();
+                    } else {
+                        btn.addClass('btn-success')
+                           .html('<i class="fa fa-check-circle mr-5"></i> Berikan ACC Ujian')
+                           .show();
+                    }
+                } else if (statusSempro) {
+                    if (statusSempro === 'diajukan') {
+                        btn.addClass('btn-success')
+                           .html('<i class="fa fa-check-circle mr-5"></i> Sudah ACC Sempro (Disetujui)')
+                           .show();
+                    } else if (['dijadwalkan', 'lulus'].includes(statusSempro)) {
+                        btn.addClass('btn-secondary disabled')
+                           .prop('disabled', true)
+                           .html('<i class="fa fa-lock mr-5"></i> Sempro Terjadwal / Selesai')
+                           .show();
+                    } else {
+                        btn.addClass('btn-success')
+                           .html('<i class="fa fa-check-circle mr-5"></i> Berikan ACC Ujian')
+                           .show();
+                    }
+                } else {
+                    btn.addClass('btn-success')
+                       .html('<i class="fa fa-check-circle mr-5"></i> Berikan ACC Ujian')
+                       .show();
+                }
+            }
+
             // 1. Fetch data mahasiswa (using dashboard endpoint and filtering)
             function loadStudentDashboard() {
                 $.ajax({
@@ -231,13 +283,8 @@
                                 $('#mhs_info_placeholder').hide();
                                 $('#mhs_info_content').fadeIn();
 
-                                // Gunakan nilai minimal bimbingan dari backend jika tersedia
-                                var minBimbingan = mhs.ta_minimal_bimbingan || 8;
-                                if(mhs.total_bimbingan_acc >= minBimbingan) {
-                                    $('#btn_acc_ujian').show();
-                                } else {
-                                    $('#btn_acc_ujian').hide();
-                                }
+                                // Render tombol ACC Ujian berdasarkan status bimbingan & status ujian mahasiswa
+                                renderAccButton(mhs);
                                 $('#btn_cetak_bimbingan').data('nim', mhs.nim).show();
 
                                 // Update opsi fase ujian berdasarkan konfigurasi prodi
@@ -419,12 +466,7 @@
                                         var mhs = res.data.find(m => m.id_skripsi == id_skripsi);
                                         if(mhs) {
                                              // Refresh tombol ACC berdasarkan status baru
-                                             var minBimbingan = mhs.ta_minimal_bimbingan || 8;
-                                             if(mhs.total_bimbingan_acc >= minBimbingan) {
-                                                 $('#btn_acc_ujian').show();
-                                             } else {
-                                                 $('#btn_acc_ujian').hide();
-                                             }
+                                             renderAccButton(mhs);
 
                                              // Update opsi fase ujian berdasarkan konfigurasi prodi
                                              var selectFase = $('#acc_fase');
