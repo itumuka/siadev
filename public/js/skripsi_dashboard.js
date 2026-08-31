@@ -55,6 +55,18 @@ function renderDashboard(data) {
         return;
     }
 
+    // 0. Handle Expired State
+    if (data.is_expired) {
+        if (data.tgl_batas_kalender) {
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDeadline = new Date(data.tgl_batas_kalender).toLocaleDateString('id-ID', dateOptions);
+            $('#expired_deadline_text').text(formattedDeadline);
+        }
+        $('#expired_warning_banner').show();
+    } else {
+        $('#expired_warning_banner').hide();
+    }
+
     // 1. Header & Profile
     $('#mhs_nama').text(data.mhs.nama || 'Mahasiswa');
     $('#ta_name_header').text(data.config?.nama_ta || 'Tugas Akhir');
@@ -301,6 +313,23 @@ function renderCTA(cta) {
         $('#exam_schedule_container').hide().empty();
     }
 
+    if (cta.is_expired) {
+        $('#cta_label').html('<span class="text-danger font-weight-bold"><i class="fa fa-ban mr-5"></i>Masa Skripsi Semester Ini Berakhir</span>');
+        $('#cta_status_only')
+            .removeClass('alert-secondary alert-success alert-danger alert-warning alert-info bg-gray-100')
+            .addClass('alert-danger')
+            .show()
+            .html(`
+                <div class="mb-10 text-left font-size-13 text-dark">
+                    <i class="fa fa-exclamation-triangle text-danger mr-5"></i> Batas waktu pelaksanaan ujian semester ini telah berakhir. Pendaftaran ujian baru ditangguhkan sementara.
+                </div>
+                <button class="btn btn-secondary btn-block disabled font-weight-bold py-10" disabled style="cursor: not-allowed; opacity: 0.85; white-space: normal;">
+                    <i class="fa fa-lock mr-5"></i> Pengajuan Perpanjangan Masa Studi (Menunggu Informasi SOP Keuangan/Akademik)
+                </button>
+            `);
+        return;
+    }
+
     if (cta.disabled) {
         // Status only phase - apply dynamic warna
         const warna = cta.warna || 'secondary';
@@ -318,10 +347,7 @@ function renderCTA(cta) {
             .removeClass('alert-secondary alert-success alert-danger alert-warning alert-info bg-gray-100')
             .addClass(`alert-${warna}`)
             .show()
-            .find('.status-text').text(cta.label);
-        
-        // Update icon inside status box
-        $('#cta_status_only').find('i').attr('class', `fa ${icon} mr-5`);
+            .html(`<i class="fa ${icon} mr-5"></i> <span class="status-text">${cta.label}</span>`);
 
         // Update the label above the button area
         if (warna === 'success') {

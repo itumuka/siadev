@@ -79,15 +79,20 @@ $(document).ready(function () {
                     }
                 },
                 {
-                    data: 'status',
+                    data: null,
                     className: 'text-center',
-                    render: function (status) {
+                    render: function (row) {
+                        const status = row.status || 'draft';
                         const badges = {
                             'pengajuan': '<span class="badge badge-warning">Pengajuan</span>',
                             'aktif': '<span class="badge badge-primary">Bimbingan</span>',
                             'lulus': '<span class="badge badge-success">Lulus</span>'
                         };
-                        return badges[status] || `<span class="badge badge-secondary">${status}</span>`;
+                        let html = badges[status] || `<span class="badge badge-secondary">${status}</span>`;
+                        if (row.is_expired) {
+                            html += `<br><span class="badge badge-danger mt-1" title="Mahasiswa melewati batas waktu semester tanpa menyelesaikan ujian"><i class="fa fa-exclamation-triangle mr-5"></i> Perlu Perpanjangan Studi</span>`;
+                        }
+                        return html;
                     }
                 },
                 {

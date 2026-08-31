@@ -28,6 +28,28 @@
             <div class="col-12"><div class="box box-body"><div class="p-30 text-center"><i class="fa fa-spinner fa-spin fa-3x text-primary"></i><p class="mt-10">Memuat data riset Anda...</p></div></div></div>
         </div>
 
+        <!-- Expired Warning Banner (Hidden by default) -->
+        <div id="expired_warning_banner" class="row" style="display: none;">
+            <div class="col-12">
+                <div class="alert alert-danger shadow-sm border-danger p-20 mb-20" style="border-radius: 12px; border-left: 5px solid #d9534f; background-color: #fff5f5;">
+                    <div class="d-flex align-items-center">
+                        <div class="mr-20">
+                            <span class="w-50 h-50 rounded-circle bg-danger text-white d-flex align-items-center justify-content-center font-size-24" style="width: 50px; height: 50px; min-width: 50px;">
+                                <i class="fa fa-exclamation-triangle"></i>
+                            </span>
+                        </div>
+                        <div>
+                            <h4 class="font-weight-bold text-danger mb-5">Masa Berlaku Skripsi Semester Ini Telah Berakhir</h4>
+                            <p class="mb-5 text-dark font-size-14">
+                                Batas waktu pelaksanaan ujian skripsi semester ini telah berakhir pada tanggal <strong id="expired_deadline_text">-</strong>. Aktivitas pendaftaran ujian dan bimbingan baru ditangguhkan sementara.
+                            </p>
+                            <small class="text-muted"><i class="fa fa-info-circle mr-5"></i> Untuk melanjutkan riset dan ujian pada semester berikutnya, silakan berkoordinasi dengan Program Studi & Bagian Keuangan mengenai prosedur perpanjangan masa studi.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Main Dashboard Content (Hidden until loaded) -->
         <div id="skripsi_content" class="row" style="display: none;">
             <!-- Left: Progress & Logic -->

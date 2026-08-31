@@ -499,7 +499,17 @@
                     
                     let canGoToStep2 = otherFailures.length === 0;
 
-                    if (canGoToStep2) {
+                    if (res.data.is_expired) {
+                        $('#btn-next-to-2').attr('disabled', true).html('<i class="fa fa-lock mr-5"></i> Pendaftaran Ujian Ditutup');
+                        let formattedDeadline = res.data.tgl_batas_kalender ? new Date(res.data.tgl_batas_kalender).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : 'Batas Semester';
+                        $('#syarat-container').prepend(`
+                            <div class="alert alert-danger mb-20 p-15" style="border-radius: 8px; border-left: 5px solid #d9534f; background-color: #fff5f5;">
+                                <h5 class="font-weight-bold text-danger mb-5"><i class="fa fa-ban mr-5"></i> Pendaftaran Ujian Ditutup: Masa Berlaku Skripsi Telah Berakhir</h5>
+                                <p class="mb-5 text-dark font-size-14">Batas waktu pendaftaran dan pelaksanaan ujian skripsi semester ini telah berakhir pada tanggal <strong>${formattedDeadline}</strong> sesuai Kalender Akademik.</p>
+                                <small class="text-muted"><i class="fa fa-info-circle mr-5"></i> Silakan menghubungi Program Studi & Bagian Keuangan mengenai prosedur perpanjangan masa studi.</small>
+                            </div>
+                        `);
+                    } else if (canGoToStep2) {
                         $('#btn-next-to-2').removeAttr('disabled');
                         if (!isBayarUjianLunas) {
                             if (taIsObe) {
