@@ -317,6 +317,10 @@ $(document).ready(function () {
             success: function (res) {
                 if (res.status === 'success' && res.data) {
                     const u = res.data;
+                    $('#alert_belum_daftar_ujian').hide();
+                    $('#wrapper_form_fields_ujian :input').prop('disabled', false);
+                    $('#btn_submit_plot_ujian').prop('disabled', false);
+
                     $('#form_plot_ujian input[name="tgl_ujian"]').val(u.tanggal_ujian);
                     $('#form_plot_ujian input[name="jam_ujian"]').val(u.jam_mulai ? u.jam_mulai.substring(0,5) : '');
                     $('#form_plot_ujian input[name="ruang_ujian"]').val(u.ruang);
@@ -324,11 +328,18 @@ $(document).ready(function () {
                     if (u.id_penguji1) setSelect2Value('#ujian_penguji1', u.id_penguji1, u.nama_penguji1);
                     if (u.id_penguji2) setSelect2Value('#ujian_penguji2', u.id_penguji2, u.nama_penguji2);
                     if (u.id_penguji3) setSelect2Value('#ujian_penguji3', u.id_penguji3, u.nama_penguji3);
+                } else {
+                    // Mahasiswa belum mendaftar ujian
+                    $('#alert_belum_daftar_ujian').show();
+                    $('#wrapper_form_fields_ujian :input').prop('disabled', true);
+                    $('#btn_submit_plot_ujian').prop('disabled', true);
                 }
                 $('#modal-plot-ujian').modal('show');
             },
             error: function () {
-                // Show modal anyway, just with empty fields
+                $('#alert_belum_daftar_ujian').show();
+                $('#wrapper_form_fields_ujian :input').prop('disabled', true);
+                $('#btn_submit_plot_ujian').prop('disabled', true);
                 $('#modal-plot-ujian').modal('show');
             }
         });

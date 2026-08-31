@@ -175,50 +175,63 @@
             <form id="form_plot_ujian">
                 <div class="modal-body">
                     <input type="hidden" name="id_skripsi" id="ujian_id_skripsi">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Tanggal Ujian / Verifikasi Luaran</label>
-                                <input type="date" name="tgl_ujian" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Jam</label>
-                                <input type="time" name="jam_ujian" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Ruang</label>
-                                <input type="text" name="ruang_ujian" class="form-control" placeholder="Ex: R.301">
+                    
+                    <div id="alert_belum_daftar_ujian" class="alert alert-warning mb-20 p-15" style="display: none; border-radius: 8px; border-left: 5px solid #f39c12; background-color: #fcf8e3;">
+                        <div class="d-flex align-items-center">
+                            <i class="fa fa-exclamation-triangle fa-2x text-warning mr-15"></i>
+                            <div>
+                                <h5 class="font-weight-bold text-dark mb-5">Mahasiswa Belum Mengajukan Ujian</h5>
+                                <p class="mb-0 text-dark font-size-13">Mahasiswa ini belum mendaftar / mengajukan ujian tugas akhir di portal sistem. Penjadwalan ujian dan pemilihan dosen penguji baru dapat disimpan setelah mahasiswa melengkapi pengajuan ujian.</p>
                             </div>
                         </div>
                     </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label id="label_penguji1">Dosen Penguji 1</label>
-                                <select class="form-control select2-dosen" name="id_penguji1" id="ujian_penguji1" style="width: 100%;" required></select>
+
+                    <div id="wrapper_form_fields_ujian">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Tanggal Ujian / Verifikasi Luaran</label>
+                                    <input type="date" name="tgl_ujian" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Jam</label>
+                                    <input type="time" name="jam_ujian" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Ruang</label>
+                                    <input type="text" name="ruang_ujian" class="form-control" placeholder="Ex: R.301">
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label id="label_penguji2">Dosen Penguji 2</label>
-                                <select class="form-control select2-dosen" name="id_penguji2" id="ujian_penguji2" style="width: 100%;" required></select>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label id="label_penguji1">Dosen Penguji 1</label>
+                                    <select class="form-control select2-dosen" name="id_penguji1" id="ujian_penguji1" style="width: 100%;" required></select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label id="label_penguji3">Dosen Penguji 3 (Optional)</label>
-                                <select class="form-control select2-dosen" name="id_penguji3" id="ujian_penguji3" style="width: 100%;"></select>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label id="label_penguji2">Dosen Penguji 2</label>
+                                    <select class="form-control select2-dosen" name="id_penguji2" id="ujian_penguji2" style="width: 100%;" required></select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label id="label_penguji3">Dosen Penguji 3 (Optional)</label>
+                                    <select class="form-control select2-dosen" name="id_penguji3" id="ujian_penguji3" style="width: 100%;"></select>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer text-right">
-                    <button type="submit" class="btn btn-warning text-white">Simpan & Umumkan Jadwal</button>
+                    <button type="submit" id="btn_submit_plot_ujian" class="btn btn-warning text-white font-weight-bold">Simpan & Umumkan Jadwal</button>
                 </div>
             </form>
         </div>
