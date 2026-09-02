@@ -315,18 +315,34 @@ function renderCTA(cta) {
 
     if (cta.is_expired) {
         $('#cta_label').html('<span class="text-danger font-weight-bold"><i class="fa fa-ban mr-5"></i>Masa Skripsi Semester Ini Berakhir</span>');
-        $('#cta_status_only')
-            .removeClass('alert-secondary alert-success alert-danger alert-warning alert-info bg-gray-100')
-            .addClass('alert-danger')
-            .show()
-            .html(`
-                <div class="mb-10 text-left font-size-13 text-dark">
-                    <i class="fa fa-exclamation-triangle text-danger mr-5"></i> Batas waktu pelaksanaan ujian semester ini telah berakhir. Pendaftaran ujian baru ditangguhkan sementara.
-                </div>
-                <button class="btn btn-secondary btn-block disabled font-weight-bold py-10" disabled style="cursor: not-allowed; opacity: 0.85; white-space: normal;">
-                    <i class="fa fa-lock mr-5"></i> Pengajuan Perpanjangan Masa Studi (Menunggu Informasi SOP Keuangan/Akademik)
-                </button>
-            `);
+        
+        if (cta.perpanjangan_status === 'diajukan') {
+            $('#cta_status_only')
+                .removeClass('alert-secondary alert-success alert-danger alert-warning alert-info bg-gray-100')
+                .addClass('alert-warning')
+                .show()
+                .html(`
+                    <div class="mb-10 text-left font-size-13 text-dark">
+                        <i class="fa fa-clock-o text-warning mr-5"></i> Pengajuan perpanjangan masa studi Anda sedang diproses dan menunggu konfirmasi kelunasan keuangan.
+                    </div>
+                    <button class="btn btn-warning btn-block font-weight-bold py-10 shadow-sm" onclick="openModalStatusPerpanjangan()">
+                        <i class="fa fa-hourglass-half mr-5"></i> Cek Status Pengajuan Perpanjangan
+                    </button>
+                `);
+        } else {
+            $('#cta_status_only')
+                .removeClass('alert-secondary alert-success alert-danger alert-warning alert-info bg-gray-100')
+                .addClass('alert-danger')
+                .show()
+                .html(`
+                    <div class="mb-10 text-left font-size-13 text-dark">
+                        <i class="fa fa-exclamation-triangle text-danger mr-5"></i> Batas waktu pelaksanaan ujian semester ini telah berakhir.
+                    </div>
+                    <button class="btn btn-danger btn-block font-weight-bold py-10 shadow animate-up" onclick="openModalAjukanPerpanjangan()">
+                        <i class="fa fa-calendar-plus-o mr-5"></i> Ajukan Perpanjangan Masa Studi
+                    </button>
+                `);
+        }
         return;
     }
 
@@ -575,4 +591,151 @@ function renderRevisionCard(data) {
     `;
 
     container.html(html).fadeIn();
+}
+
+/**
+ * ============================================================================
+ * MODUL PERPANJANGAN MASA STUDI (TUGAS AKHIR / SKRIPSI)
+ * ============================================================================
+ */
+
+function openModalAjukanPerpanjangan() {
+    $('#clearance_tbody').html('<tr><td colspan="3" class="text-center py-15 text-muted"><i class="fa fa-spin fa-spinner mr-5"></i> Memeriksa data tagihan keuangan perpanjangan...</td></tr>');
+    $('#modal-ajukan-perpanjangan').modal('show');
+
+    $.ajax({
+        url: CONFIG.api_url + '/mahasiswa/skripsi/cek-syarat-perpanjangan',
+        type: 'GET',
+        data: { nim: CONFIG.nim },
+        headers: { 'Authorization': 'Bearer ' + CONFIG.token },
+        success: function(res) {
+            if (res.status === 'success' && res.data) {
+                renderClearanceTable(res.data.clearance);
+            }
+        },
+        error: function(err) {
+            $('#clearance_tbody').html('<tr><td colspan="3" class="text-center text-danger py-10">Gagal memuat status prasyarat keuangan. Silakan coba lagi.</td></tr>');
+        }
+    });
+}
+
+function renderClearanceTable(clearance) {
+    if (!clearance || !clearance.rincian || clearance.rincian.length === 0) {
+        $('#clearance_tbody').html('<tr><td colspan="3" class="text-center text-muted py-10">Tidak ada komponen tagihan khusus yang disyaratkan.</td></tr>');
+        return;
+    }
+
+    let rows = '';
+    clearance.rincian.forEach(function(item) {
+        const isLunas = item.status === 'lunas' || item.is_lunas;
+        const badgeClass = isLunas ? 'badge-success' : 'badge-danger';
+        const iconClass = isLunas ? 'fa-check' : 'fa-times';
+        const statusText = isLunas ? 'Lunas' : 'Belum Lunas';
+
+        rows += `
+            <tr>
+                <td class="font-weight-600 text-dark">${item.label}</td>
+                <td class="font-size-12 ${isLunas ? 'text-success' : 'text-danger font-weight-500'}">
+                    ${item.keterangan || (isLunas ? 'Sudah Lunas' : 'Menunggak')}
+                </td>
+                <td class="text-center">
+                    <span class="badge ${badgeClass} font-size-11 px-10 py-5">
+                        <i class="fa ${iconClass} mr-5"></i> ${statusText}
+                    </span>
+                </td>
+            </tr>
+        `;
+    });
+
+    $('#clearance_tbody').html(rows);
+}
+
+// Submit Form Pengajuan Perpanjangan
+$('#form_ajukan_perpanjangan').on('submit', function(e) {
+    e.preventDefault();
+
+    const submitBtn = $('#btn_submit_perpanjangan');
+    submitBtn.prop('disabled', true).html('<i class="fa fa-spin fa-spinner mr-5"></i> Menyimpan...');
+
+    const payload = {
+        nim: CONFIG.nim,
+        alasan_perpanjangan: $('#perp_alasan').val(),
+        progress_terakhir: $('#perp_progress').val(),
+        target_selesai: $('#perp_target').val()
+    };
+
+    $.ajax({
+        url: CONFIG.api_url + '/mahasiswa/skripsi/ajukan-perpanjangan',
+        type: 'POST',
+        data: payload,
+        headers: { 'Authorization': 'Bearer ' + CONFIG.token },
+        success: function(res) {
+            submitBtn.prop('disabled', false).html('<i class="fa fa-paper-plane mr-5"></i> Kirim Pengajuan Perpanjangan');
+            $('#modal-ajukan-perpanjangan').modal('hide');
+
+            if (res.status === 'success') {
+                swal({
+                    title: "Pengajuan Terkirim!",
+                    text: res.message,
+                    type: res.data.status_final === 'disetujui' ? "success" : "info",
+                    confirmButtonClass: "btn-primary"
+                }, function() {
+                    loadDashboard();
+                });
+            }
+        },
+        error: function(err) {
+            submitBtn.prop('disabled', false).html('<i class="fa fa-paper-plane mr-5"></i> Kirim Pengajuan Perpanjangan');
+            let msg = 'Terjadi kesalahan saat menyimpan pengajuan perpanjangan.';
+            if (err.responseJSON && err.responseJSON.error) {
+                if (typeof err.responseJSON.error === 'object') {
+                    msg = Object.values(err.responseJSON.error).flat().join('<br>');
+                } else {
+                    msg = err.responseJSON.error;
+                }
+            }
+            swal("Gagal", msg, "error");
+        }
+    });
+});
+
+function openModalStatusPerpanjangan() {
+    $.ajax({
+        url: CONFIG.api_url + '/mahasiswa/skripsi/cek-syarat-perpanjangan',
+        type: 'GET',
+        data: { nim: CONFIG.nim },
+        headers: { 'Authorization': 'Bearer ' + CONFIG.token },
+        success: function(res) {
+            if (res.status === 'success' && res.data && res.data.pengajuan_aktif) {
+                const p = res.data.pengajuan_aktif;
+                const statusKeuangan = p.status_keuangan || 'pending';
+                const statusFinal = p.status_final || 'diajukan';
+
+                if (statusKeuangan === 'lunas') {
+                    $('#status_perp_keuangan').removeClass('badge-warning badge-danger').addClass('badge-success').text('Lunas Terverifikasi');
+                } else if (statusKeuangan === 'ditolak') {
+                    $('#status_perp_keuangan').removeClass('badge-warning badge-success').addClass('badge-danger').text('Ditolak');
+                } else {
+                    $('#status_perp_keuangan').removeClass('badge-success badge-danger').addClass('badge-warning').text('Pending / Menunggu Pembayaran');
+                }
+
+                if (statusFinal === 'disetujui') {
+                    $('#status_perp_final').removeClass('badge-secondary badge-warning').addClass('badge-success').text('Aktif / Disetujui');
+                } else {
+                    $('#status_perp_final').removeClass('badge-success').addClass('badge-warning').text('Dalam Proses');
+                }
+
+                const createdDate = p.created_at ? new Date(p.created_at).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : '-';
+                $('#status_perp_tgl').text(createdDate);
+                $('#status_perp_catatan').text(p.catatan_keuangan || 'Belum ada catatan dari bagian keuangan.');
+
+                $('#modal-status-perpanjangan').modal('show');
+            } else {
+                openModalAjukanPerpanjangan();
+            }
+        },
+        error: function(err) {
+            swal("Error", "Gagal memuat status pengajuan perpanjangan.", "error");
+        }
+    });
 }

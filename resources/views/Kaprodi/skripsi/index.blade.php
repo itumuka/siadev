@@ -36,8 +36,11 @@
                     <button class="btn btn-sm btn-info mr-10 mb-5" onclick="openConfigModal()">
                         <i class="fa fa-cog mr-5"></i> Konfigurasi Sempro
                     </button>
-                    <button class="btn btn-sm btn-success mb-5" onclick="openConfigGradingModal()">
+                    <button class="btn btn-sm btn-success mr-10 mb-5" onclick="openConfigGradingModal()">
                         <i class="fa fa-check-square mr-5"></i> Metode Penilaian
+                    </button>
+                    <button class="btn btn-sm btn-danger mb-5" onclick="openModalPerpanjanganKaprodi()">
+                        <i class="fa fa-calendar-plus-o mr-5"></i> Monitoring Perpanjangan Studi
                     </button>
                 </div>
             </div>
@@ -304,6 +307,48 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Monitoring Perpanjangan Studi Kaprodi -->
+<div class="modal fade" id="modal-perpanjangan-kaprodi" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+            <div class="modal-header bg-danger text-white" style="border-top-left-radius: 12px; border-top-right-radius: 12px;">
+                <h5 class="modal-title font-weight-bold">
+                    <i class="fa fa-calendar-plus-o mr-10"></i> Monitoring Mahasiswa Perpanjangan Masa Studi
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-20">
+                <div class="alert alert-info border-info mb-15 font-size-13" style="background-color: #f0f7ff;">
+                    <i class="fa fa-info-circle mr-5"></i> Daftar mahasiswa bimbingan Program Studi Anda yang masa berlakunya telah diperpanjang untuk semester baru setelah memenuhi kewajiban administrasi keuangan.
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover font-size-13" id="table_kaprodi_perpanjangan" style="width: 100%;">
+                        <thead class="bg-dark text-white">
+                            <tr>
+                                <th width="4%" class="text-center">No</th>
+                                <th width="20%">Mahasiswa</th>
+                                <th>Judul / Topik & Pembimbing</th>
+                                <th width="15%">Progres & Target</th>
+                                <th width="12%" class="text-center">Status Keuangan</th>
+                                <th width="10%" class="text-center">Aktivasi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody_perpanjangan_kaprodi">
+                            <!-- Dynamic -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer bg-gray-50" style="border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
             </div>
         </div>

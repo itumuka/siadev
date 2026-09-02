@@ -540,4 +540,78 @@ $(document).ready(function () {
             }
         });
     });
+
+    // ============================================================================
+    // MONITORING MAHASISWA PERPANJANGAN STUDI (KAPRODI)
+    // ============================================================================
+    window.openModalPerpanjanganKaprodi = function () {
+        $('#tbody_perpanjangan_kaprodi').html('<tr><td colspan="6" class="text-center py-20 text-muted"><i class="fa fa-spin fa-spinner mr-5"></i> Memuat daftar mahasiswa perpanjangan studi...</td></tr>');
+        $('#modal-perpanjangan-kaprodi').modal('show');
+
+        $.ajax({
+            url: CONFIG.api_url + "kaprodi/skripsi/perpanjangan/list",
+            type: "GET",
+            headers: {
+                "Authorization": "Bearer " + CONFIG.token,
+                "username": CONFIG.username
+            },
+            data: {
+                kode_prodi: CONFIG.kode_prodi
+            },
+            success: function (res) {
+                if (res.status === 'success' && res.data && res.data.length > 0) {
+                    let rows = '';
+                    res.data.forEach(function (item, idx) {
+                        const isLunas = item.status_keuangan === 'lunas';
+                        const badgeKeu = isLunas 
+                            ? '<span class="badge badge-success px-10 py-5"><i class="fa fa-check mr-5"></i>Lunas</span>' 
+                            : '<span class="badge badge-warning px-10 py-5"><i class="fa fa-clock-o mr-5"></i>Pending</span>';
+                        
+                        const isAktif = item.status_final === 'disetujui';
+                        const badgeFinal = isAktif
+                            ? '<span class="badge badge-success px-10 py-5 font-weight-bold">Aktif</span>'
+                            : '<span class="badge badge-secondary px-10 py-5">Diajukan</span>';
+
+                        const targetDate = item.target_selesai ? new Date(item.target_selesai).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' }) : '-';
+                        const p1 = item.nama_pembimbing1 || '-';
+                        const p2 = item.nama_pembimbing2 ? `<br><small class="text-muted">P2: ${item.nama_pembimbing2}</small>` : '';
+
+                        rows += `
+                            <tr>
+                                <td class="text-center font-weight-bold">${idx + 1}</td>
+                                <td>
+                                    <span class="badge badge-secondary font-weight-bold mr-5">${escapeAttr(item.nim)}</span>
+                                    <strong class="text-dark d-block mt-1">${escapeAttr(item.nama_mahasiswa)}</strong>
+                                    <small class="text-muted font-size-11">Angkatan ${escapeAttr(item.tahun_angkatan)} - Semester ${escapeAttr(item.tahun)}/${escapeAttr(item.semester)}</small>
+                                </td>
+                                <td>
+                                    <strong class="text-dark font-size-13">${escapeAttr(item.judul_skripsi || '-')}</strong>
+                                    <div class="mt-5 font-size-12 text-info">
+                                        <i class="fa fa-user mr-5"></i><strong>Pembimbing:</strong> ${escapeAttr(p1)}${p2}
+                                    </div>
+                                    <div class="mt-5 p-5 bg-gray-50 rounded font-size-11 text-muted">
+                                        <em>"Alasan: ${escapeAttr(item.alasan_perpanjangan || '-')}"</em>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge badge-info mb-5">${escapeAttr(item.progress_terakhir || 'Bimbingan')}</span>
+                                    <div class="font-size-11 text-muted">
+                                        <i class="fa fa-calendar mr-5"></i>Target: <strong>${targetDate}</strong>
+                                    </div>
+                                </td>
+                                <td class="text-center">${badgeKeu}</td>
+                                <td class="text-center">${badgeFinal}</td>
+                            </tr>
+                        `;
+                    });
+                    $('#tbody_perpanjangan_kaprodi').html(rows);
+                } else {
+                    $('#tbody_perpanjangan_kaprodi').html('<tr><td colspan="6" class="text-center py-20 text-muted"><i class="fa fa-info-circle mr-5"></i> Belum ada mahasiswa di Program Studi Anda yang mengajukan perpanjangan masa studi.</td></tr>');
+                }
+            },
+            error: function () {
+                $('#tbody_perpanjangan_kaprodi').html('<tr><td colspan="6" class="text-center text-danger py-20">Gagal memuat daftar perpanjangan studi.</td></tr>');
+            }
+        });
+    };
 });

@@ -196,6 +196,7 @@
 <div id="modal_skripsi_container">
     @include('Mahasiswa.skripsi.partials.proposal_form')
     @include('Mahasiswa.skripsi.partials.upload_naskah_modal')
+    @include('Mahasiswa.skripsi.partials.modal_perpanjangan')
 </div>
 
 @endsection
