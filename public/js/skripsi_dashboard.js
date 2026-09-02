@@ -599,12 +599,18 @@ function renderRevisionCard(data) {
  * ============================================================================
  */
 
+function getApiUrl(endpoint) {
+    const base = CONFIG.api_url ? (CONFIG.api_url.endsWith('/') ? CONFIG.api_url : CONFIG.api_url + '/') : '';
+    const cleanEndpoint = endpoint.startsWith('/') ? endpoint.substring(1) : endpoint;
+    return base + cleanEndpoint;
+}
+
 function openModalAjukanPerpanjangan() {
     $('#clearance_tbody').html('<tr><td colspan="3" class="text-center py-15 text-muted"><i class="fa fa-spin fa-spinner mr-5"></i> Memeriksa data tagihan keuangan perpanjangan...</td></tr>');
     $('#modal-ajukan-perpanjangan').modal('show');
 
     $.ajax({
-        url: CONFIG.api_url + '/mahasiswa/skripsi/cek-syarat-perpanjangan',
+        url: getApiUrl('mahasiswa/skripsi/cek-syarat-perpanjangan'),
         type: 'GET',
         data: { nim: CONFIG.nim },
         headers: { 'Authorization': 'Bearer ' + CONFIG.token },
@@ -665,7 +671,7 @@ $('#form_ajukan_perpanjangan').on('submit', function(e) {
     };
 
     $.ajax({
-        url: CONFIG.api_url + '/mahasiswa/skripsi/ajukan-perpanjangan',
+        url: getApiUrl('mahasiswa/skripsi/ajukan-perpanjangan'),
         type: 'POST',
         data: payload,
         headers: { 'Authorization': 'Bearer ' + CONFIG.token },
@@ -680,7 +686,7 @@ $('#form_ajukan_perpanjangan').on('submit', function(e) {
                     type: res.data.status_final === 'disetujui' ? "success" : "info",
                     confirmButtonClass: "btn-primary"
                 }, function() {
-                    loadDashboard();
+                    initDashboard();
                 });
             }
         },
@@ -701,7 +707,7 @@ $('#form_ajukan_perpanjangan').on('submit', function(e) {
 
 function openModalStatusPerpanjangan() {
     $.ajax({
-        url: CONFIG.api_url + '/mahasiswa/skripsi/cek-syarat-perpanjangan',
+        url: getApiUrl('mahasiswa/skripsi/cek-syarat-perpanjangan'),
         type: 'GET',
         data: { nim: CONFIG.nim },
         headers: { 'Authorization': 'Bearer ' + CONFIG.token },
