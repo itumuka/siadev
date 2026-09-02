@@ -613,7 +613,10 @@ function openModalAjukanPerpanjangan() {
         url: getApiUrl('mahasiswa/skripsi/cek-syarat-perpanjangan'),
         type: 'GET',
         data: { nim: CONFIG.nim },
-        headers: { 'Authorization': 'Bearer ' + CONFIG.token },
+        headers: { 
+            'Authorization': 'Bearer ' + CONFIG.token,
+            'username': CONFIG.username || CONFIG.nim
+        },
         success: function(res) {
             if (res.status === 'success' && res.data) {
                 renderClearanceTable(res.data.clearance);
@@ -674,7 +677,10 @@ $('#form_ajukan_perpanjangan').on('submit', function(e) {
         url: getApiUrl('mahasiswa/skripsi/ajukan-perpanjangan'),
         type: 'POST',
         data: payload,
-        headers: { 'Authorization': 'Bearer ' + CONFIG.token },
+        headers: { 
+            'Authorization': 'Bearer ' + CONFIG.token,
+            'username': CONFIG.username || CONFIG.nim
+        },
         success: function(res) {
             submitBtn.prop('disabled', false).html('<i class="fa fa-paper-plane mr-5"></i> Kirim Pengajuan Perpanjangan');
             $('#modal-ajukan-perpanjangan').modal('hide');
@@ -710,7 +716,10 @@ function openModalStatusPerpanjangan() {
         url: getApiUrl('mahasiswa/skripsi/cek-syarat-perpanjangan'),
         type: 'GET',
         data: { nim: CONFIG.nim },
-        headers: { 'Authorization': 'Bearer ' + CONFIG.token },
+        headers: { 
+            'Authorization': 'Bearer ' + CONFIG.token,
+            'username': CONFIG.username || CONFIG.nim
+        },
         success: function(res) {
             if (res.status === 'success' && res.data && res.data.pengajuan_aktif) {
                 const p = res.data.pengajuan_aktif;
