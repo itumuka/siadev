@@ -190,68 +190,10 @@
                         </div>
 
                         <label class="font-weight-bold mb-2 text-dark font-size-14">Pilih Bank Pembayaran:</label>
-                        <div class="row">
-                            <!-- BNI -->
-                            <div class="col-md-4 mb-2">
-                                <div class="card bank-choice-card border p-3 cursor-pointer" id="card_bank_bni" onclick="pilihBankOption('bni');" style="cursor: pointer; border-radius: 8px; border-width: 2px !important; border-color: #007bff !important; background-color: #f0f7ff;">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <div class="d-flex align-items-center">
-                                            <div class="mr-3">
-                                                <span class="badge badge-primary px-2 py-1 font-weight-bold font-size-14">BNI</span>
-                                            </div>
-                                            <div>
-                                                <h5 class="font-weight-bold mb-0 text-dark">Bank BNI</h5>
-                                                <small class="text-muted d-block">VA 16 Digit &bull; eCollection</small>
-                                            </div>
-                                        </div>
-                                        <input type="radio" name="bank_option" value="bni" id="radio_bank_bni" checked style="transform: scale(1.3);">
-                                    </div>
-                                    <div class="mt-2 pt-2 border-top font-size-11 text-muted">
-                                        <i class="fa fa-check-circle text-success mr-1"></i> ATM Bersama, Prima, Link &amp; Semua m-Banking
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Bank Mega Syariah -->
-                            <div class="col-md-4 mb-2">
-                                <div class="card bank-choice-card border p-3 cursor-pointer" id="card_bank_bms" onclick="pilihBankOption('bms');" style="cursor: pointer; border-radius: 8px; border-width: 2px !important; border-color: #dee2e6;">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <div class="d-flex align-items-center">
-                                            <div class="mr-3">
-                                                <span class="badge badge-success px-2 py-1 font-weight-bold font-size-14">BMS</span>
-                                            </div>
-                                            <div>
-                                                <h5 class="font-weight-bold mb-0 text-dark">Bank Mega Syariah</h5>
-                                                <small class="text-muted d-block">VA Berbasis NIM</small>
-                                            </div>
-                                        </div>
-                                        <input type="radio" name="bank_option" value="bms" id="radio_bank_bms" style="transform: scale(1.3);">
-                                    </div>
-                                    <div class="mt-2 pt-2 border-top font-size-11 text-muted">
-                                        <i class="fa fa-check-circle text-success mr-1"></i> M-Syariah &amp; Jaringan ATM Mega Syariah
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Bank Jateng Syariah -->
-                            <div class="col-md-4 mb-2">
-                                <div class="card bank-choice-card border p-3 cursor-pointer" id="card_bank_bjt" onclick="pilihBankOption('bjt');" style="cursor: pointer; border-radius: 8px; border-width: 2px !important; border-color: #dee2e6;">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <div class="d-flex align-items-center">
-                                            <div class="mr-3">
-                                                <span class="badge badge-info px-2 py-1 font-weight-bold font-size-14">BJS</span>
-                                            </div>
-                                            <div>
-                                                <h5 class="font-weight-bold mb-0 text-dark">Bank Jateng Syariah</h5>
-                                                <small class="text-muted d-block">VA 7 Digit NIM</small>
-                                            </div>
-                                        </div>
-                                        <input type="radio" name="bank_option" value="bjt" id="radio_bank_bjt" style="transform: scale(1.3);">
-                                    </div>
-                                    <div class="mt-2 pt-2 border-top font-size-11 text-muted">
-                                        <i class="fa fa-check-circle text-success mr-1"></i> Bima Mobile &amp; ATM Bank Jateng
-                                    </div>
-                                </div>
+                        <div class="row" id="containerBankChoices">
+                            <!-- Dynamic Bank Options Rendered from Master keu_bank_h2h -->
+                            <div class="col-12 text-center py-3 text-muted">
+                                <i class="fa fa-spinner fa-spin mr-1"></i> Memuat pilihan bank mitra...
                             </div>
                         </div>
 
@@ -914,10 +856,79 @@
                 }
             });
 
+            // Load dynamic active banks from master
+            loadMetodePembayaranAktif();
+
         });
 
-        // Global variable for selected bank
+        // Global variables for active banks
+        var activeBanksList = [];
         var selectedBank = 'bni';
+
+        function loadMetodePembayaranAktif() {
+            $.ajax({
+                type: 'GET',
+                url: "{{ config('setting.second_url') }}mahasiswa/metode-pembayaran-aktif",
+                headers: {
+                    "Authorization": 'Bearer ' + token,
+                    "username": userlogin
+                },
+                success: function(response) {
+                    if (response.success && response.data && response.data.length > 0) {
+                        activeBanksList = response.data;
+                        renderBankChoices(activeBanksList);
+                    } else {
+                        $('#containerBankChoices').html(
+                            '<div class="col-12"><div class="alert alert-warning mb-0"><i class="fa fa-exclamation-triangle mr-1"></i> Tidak ada kanal pembayaran bank yang aktif saat ini. Silakan hubungi bagian keuangan.</div></div>'
+                        );
+                    }
+                },
+                error: function() {
+                    $('#containerBankChoices').html(
+                        '<div class="col-12"><div class="alert alert-danger mb-0">Gagal memuat metode pembayaran bank.</div></div>'
+                    );
+                }
+            });
+        }
+
+        function renderBankChoices(banks) {
+            var html = '';
+            selectedBank = banks[0].kode_bank.toLowerCase();
+
+            banks.forEach(function(bank, idx) {
+                var isSelected = (idx === 0);
+                var borderColor = isSelected ? '#007bff !important' : '#dee2e6';
+                var bgColor = isSelected ? '#f0f7ff' : '#ffffff';
+                var checked = isSelected ? 'checked' : '';
+                var badgeClass = 'badge-' + (bank.badge_color || 'primary');
+                var codeLower = bank.kode_bank.toLowerCase();
+                var subText = bank.sub_keterangan || (bank.prefix_va ? 'Prefix: ' + bank.prefix_va : '');
+
+                html += `
+                    <div class="col-md-4 mb-2">
+                        <div class="card bank-choice-card border p-3 cursor-pointer" id="card_bank_${codeLower}" onclick="pilihBankOption('${codeLower}');" style="cursor: pointer; border-radius: 8px; border-width: 2px !important; border-color: ${borderColor}; background-color: ${bgColor};">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <div class="mr-3">
+                                        <span class="badge ${badgeClass} px-2 py-1 font-weight-bold font-size-14">${bank.badge_text || bank.kode_bank}</span>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-weight-bold mb-0 text-dark">${bank.nama_bank}</h5>
+                                        <small class="text-muted d-block">${subText}</small>
+                                    </div>
+                                </div>
+                                <input type="radio" name="bank_option" value="${codeLower}" id="radio_bank_${codeLower}" ${checked} style="transform: scale(1.3);">
+                            </div>
+                            <div class="mt-2 pt-2 border-top font-size-11 text-muted">
+                                <i class="fa fa-check-circle text-success mr-1"></i> ${bank.tipe_integrasi === 'PUSH' ? 'Registrasi Resmi Bank via API' : 'Didukung ATM & Semua m-Banking'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            $('#containerBankChoices').html(html);
+        }
 
         function pilihBankOption(bank) {
             selectedBank = bank;
@@ -970,8 +981,14 @@
                         $('#modal_va_total').text(formatRupiah(data.total_nominal.toString()));
                         $('#modal_va_tagihan').text(data.nama_tagihan);
 
-                        // Update petunjuk text per bank
-                        updatePetunjukBank(data.bank, data.nomor_va);
+                        // Update petunjuk text dari konfigurasi dinamis bank
+                        if (data.panduan) {
+                            $('#panduan_mbanking_content').html(data.panduan.mbanking || '-');
+                            $('#panduan_atm_content').html(data.panduan.atm || '-');
+                            $('#panduan_antarbank_content').html(data.panduan.antarbank || '-');
+                        } else {
+                            updatePetunjukBank(data.bank, data.nomor_va);
+                        }
 
                         $('#modalSuksesVA').modal('show');
 
