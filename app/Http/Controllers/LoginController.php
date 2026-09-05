@@ -104,6 +104,50 @@ class LoginController extends Controller
         $targetKode = $request->kode_prodi;
         $kaprodiList = Session::get('kaprodi_list', []);
 
+        if (empty($kaprodiList) || count($kaprodiList) <= 1) {
+            $idDosen = Session::get('id_dosen') ?: Session::get('id_pegawai');
+            if (!$idDosen && Session::get('username')) {
+                try {
+                    $uD = DB::table('user_dosen')->where('email_login', Session::get('username'))->first();
+                    if ($uD) {
+                        $idDosen = $uD->id_pegawai;
+                        Session::put('id_dosen', $idDosen);
+                    }
+                } catch (\Exception $e) {}
+            }
+            if ($idDosen) {
+                try {
+                    $dbRoles = DB::table('akd_pegawai_role')
+                        ->where('id_pegawai', $idDosen)
+                        ->where('role_code', 'kaprodi')
+                        ->where('is_active', 1)
+                        ->where(function ($q) {
+                            $q->whereNull('tgl_selesai')->orWhere('tgl_selesai', '>=', date('Y-m-d'));
+                        })
+                        ->get();
+                    if ($dbRoles->isNotEmpty()) {
+                        $prodiMap = DB::table('akd_program_studi')
+                            ->whereIn('kode_program_studi', $dbRoles->pluck('unit_id')->toArray())
+                            ->get()
+                            ->keyBy('kode_program_studi');
+                        $kaprodiList = [];
+                        foreach ($dbRoles as $dr) {
+                            $pObj = $prodiMap->get($dr->unit_id);
+                            $kaprodiList[] = [
+                                'kode_program_studi' => $dr->unit_id,
+                                'nama_program_studi' => $pObj ? $pObj->nama_program_studi : $dr->unit_id,
+                                'role_code'          => 'kaprodi',
+                                'status_jabatan'     => $dr->status_jabatan,
+                                'is_primary'         => (int)$dr->is_primary
+                            ];
+                        }
+                        Session::put('kaprodi_list', $kaprodiList);
+                        Session::put('is_kaprodi', 1);
+                    }
+                } catch (\Exception $e) {}
+            }
+        }
+
         if (empty($kaprodiList)) {
             return response()->json([
                 'status'  => false,

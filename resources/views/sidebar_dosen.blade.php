@@ -37,18 +37,89 @@
                     }
                 </style>
 
-                @if (is_array(Session::get('kaprodi_list')) && count(Session::get('kaprodi_list')) > 1)
+                @php
+                    $kaprodiList = Session::get('kaprodi_list');
+                    $idDosen = Session::get('id_dosen') ?: Session::get('id_pegawai');
+
+                    // Jika id_dosen belum ada di session, coba deteksi dari username dosen
+                    if (!$idDosen && Session::get('username')) {
+                        try {
+                            $userDosen = \Illuminate\Support\Facades\DB::table('user_dosen')
+                                ->where('email_login', Session::get('username'))
+                                ->first();
+                            if ($userDosen) {
+                                $idDosen = $userDosen->id_pegawai;
+                                \Illuminate\Support\Facades\Session::put('id_dosen', $idDosen);
+                            }
+                        } catch (\Exception $e) {}
+                    }
+
+                    // Auto-sync kaprodi_list langsung dari akd_pegawai_role jika session kosong atau hanya berisi 1 prodi
+                    // agar dosen yang baru ditugaskan multi-prodi langsung mendapatkan dropdown tanpa perlu logout-login ulang
+                    if ($idDosen && (!is_array($kaprodiList) || count($kaprodiList) <= 1)) {
+                        try {
+                            $dbRoles = \Illuminate\Support\Facades\DB::table('akd_pegawai_role')
+                                ->where('id_pegawai', $idDosen)
+                                ->where('role_code', 'kaprodi')
+                                ->where('is_active', 1)
+                                ->where(function ($q) {
+                                    $q->whereNull('tgl_selesai')->orWhere('tgl_selesai', '>=', date('Y-m-d'));
+                                })
+                                ->get();
+
+                            if ($dbRoles->isNotEmpty()) {
+                                $prodiMap = \Illuminate\Support\Facades\DB::table('akd_program_studi')
+                                    ->whereIn('kode_program_studi', $dbRoles->pluck('unit_id')->toArray())
+                                    ->get()
+                                    ->keyBy('kode_program_studi');
+
+                                $syncedList = [];
+                                foreach ($dbRoles as $dr) {
+                                    $pObj = $prodiMap->get($dr->unit_id);
+                                    $syncedList[] = [
+                                        'kode_program_studi' => $dr->unit_id,
+                                        'nama_program_studi' => $pObj ? $pObj->nama_program_studi : $dr->unit_id,
+                                        'role_code'          => 'kaprodi',
+                                        'status_jabatan'     => $dr->status_jabatan,
+                                        'is_primary'         => (int)$dr->is_primary
+                                    ];
+                                }
+                                if (count($syncedList) > 0) {
+                                    $kaprodiList = $syncedList;
+                                    \Illuminate\Support\Facades\Session::put('kaprodi_list', $kaprodiList);
+                                    \Illuminate\Support\Facades\Session::put('is_kaprodi', 1);
+                                }
+                            }
+                        } catch (\Exception $e) {
+                            // Fallback jika database belum dapat diakses
+                        }
+                    }
+
+                    if (!empty($kaprodiList) && is_array($kaprodiList)) {
+                        $curr = collect($kaprodiList)->firstWhere('kode_program_studi', Session::get('kode_program_studi')) ?: $kaprodiList[0];
+                        if ($curr && (!Session::has('nama_program_studi') || empty(Session::get('nama_program_studi')))) {
+                            \Illuminate\Support\Facades\Session::put('nama_program_studi', is_array($curr) ? $curr['nama_program_studi'] : $curr->nama_program_studi);
+                        }
+                    }
+                @endphp
+
+                @if (is_array($kaprodiList) && count($kaprodiList) > 1)
                     <div class="sidebar-prodi-panel px-15 py-10 mb-10" style="background: rgba(255,255,255,0.06); margin: 0 15px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.12);">
                         <div class="d-flex justify-content-between align-items-center mb-5">
                             <span class="text-uppercase font-size-11" style="color: #ffc107; letter-spacing: 0.5px; font-weight: 600;">
                                 <i class="fa fa-exchange mr-5"></i> Unit / Prodi Aktif
                             </span>
-                            <span class="badge badge-warning font-size-10">{{ count(Session::get('kaprodi_list')) }} Prodi</span>
+                            <span class="badge badge-warning font-size-10">{{ count($kaprodiList) }} Prodi</span>
                         </div>
                         <select class="form-control form-control-sm text-dark font-weight-bold" id="select_switch_prodi_sidebar" onchange="doSwitchProdi(this.value)" style="border-radius: 6px; font-size: 12px; cursor: pointer; height: 32px; background-color: #ffffff;">
-                            @foreach (Session::get('kaprodi_list') as $kp)
-                                <option value="{{ $kp['kode_program_studi'] }}" {{ Session::get('kode_program_studi') == $kp['kode_program_studi'] ? 'selected' : '' }}>
-                                    {{ $kp['kode_program_studi'] }} - {{ $kp['nama_program_studi'] }} {{ $kp['status_jabatan'] != 'definitif' ? '('.strtoupper($kp['status_jabatan']).')' : '' }}
+                            @foreach ($kaprodiList as $kp)
+                                @php
+                                    $kpKode = is_array($kp) ? $kp['kode_program_studi'] : $kp->kode_program_studi;
+                                    $kpNama = is_array($kp) ? $kp['nama_program_studi'] : $kp->nama_program_studi;
+                                    $kpStatus = is_array($kp) ? ($kp['status_jabatan'] ?? 'definitif') : ($kp->status_jabatan ?? 'definitif');
+                                @endphp
+                                <option value="{{ $kpKode }}" {{ Session::get('kode_program_studi') == $kpKode ? 'selected' : '' }}>
+                                    {{ $kpKode }} - {{ $kpNama }} {{ $kpStatus != 'definitif' ? '('.strtoupper($kpStatus).')' : '' }}
                                 </option>
                             @endforeach
                         </select>
