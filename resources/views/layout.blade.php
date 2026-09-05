@@ -193,7 +193,7 @@
             <!-- Header Navbar -->
             <nav class="navbar navbar-static-top">
                 <!-- Sidebar toggle button-->
-                <div class="app-menu d-flex align-items-center">
+                <div class="app-menu">
                     <ul class="header-megamenu nav">
                         <li class="btn-group nav-item d-md-none">
                             <a href="#" class="waves-effect waves-light nav-link push-btn" data-toggle="push-menu"
@@ -203,98 +203,74 @@
                             </a>
                         </li>
                     </ul>
-
-                    @php
-                        $navKaprodiList = Session::get('kaprodi_list');
-                        $navIdDosen = Session::get('id_dosen') ?: Session::get('id_pegawai');
-
-                        if (!$navIdDosen && Session::get('username')) {
-                            try {
-                                $uDosenNav = \Illuminate\Support\Facades\DB::table('user_dosen')
-                                    ->where('email_login', Session::get('username'))
-                                    ->first();
-                                if ($uDosenNav) {
-                                    $navIdDosen = $uDosenNav->id_pegawai;
-                                    \Illuminate\Support\Facades\Session::put('id_dosen', $navIdDosen);
-                                }
-                            } catch (\Exception $e) {}
-                        }
-
-                        if ($navIdDosen && (!is_array($navKaprodiList) || count($navKaprodiList) <= 1)) {
-                            try {
-                                $dbRolesNav = \Illuminate\Support\Facades\DB::table('akd_pegawai_role')
-                                    ->where('id_pegawai', $navIdDosen)
-                                    ->where('role_code', 'kaprodi')
-                                    ->where('is_active', 1)
-                                    ->where(function ($q) {
-                                        $q->whereNull('tgl_selesai')->orWhere('tgl_selesai', '>=', date('Y-m-d'));
-                                    })
-                                    ->get();
-
-                                if ($dbRolesNav->isNotEmpty()) {
-                                    $prodiMapNav = \Illuminate\Support\Facades\DB::table('akd_program_studi')
-                                        ->whereIn('kode_program_studi', $dbRolesNav->pluck('unit_id')->toArray())
-                                        ->get()
-                                        ->keyBy('kode_program_studi');
-
-                                    $syncedListNav = [];
-                                    foreach ($dbRolesNav as $dr) {
-                                        $pObj = $prodiMapNav->get($dr->unit_id);
-                                        $syncedListNav[] = [
-                                            'kode_program_studi' => $dr->unit_id,
-                                            'nama_program_studi' => $pObj ? $pObj->nama_program_studi : $dr->unit_id,
-                                            'role_code'          => 'kaprodi',
-                                            'status_jabatan'     => $dr->status_jabatan,
-                                            'is_primary'         => (int)$dr->is_primary
-                                        ];
-                                    }
-                                    if (count($syncedListNav) > 0) {
-                                        $navKaprodiList = $syncedListNav;
-                                        \Illuminate\Support\Facades\Session::put('kaprodi_list', $navKaprodiList);
-                                        \Illuminate\Support\Facades\Session::put('is_kaprodi', 1);
-                                    }
-                                }
-                            } catch (\Exception $e) {}
-                        }
-                    @endphp
-
-                    @if (Session::get('tipe') == 'Dosen' && is_array($navKaprodiList) && count($navKaprodiList) > 1)
-                        <div class="navbar-prodi-container d-flex align-items-center ml-10 my-auto" style="z-index: 10;">
-                            <div class="d-flex align-items-center px-12 py-3" style="background: #ffffff; border: 1.5px solid #0052cc; border-radius: 20px; box-shadow: 0 2px 8px rgba(0, 82, 204, 0.12);">
-                                <span class="d-none d-md-inline-block text-uppercase font-weight-700 font-size-11 mr-5" style="color: #0052cc; letter-spacing: 0.5px;">
-                                    <i class="fa fa-exchange mr-3"></i> Prodi Aktif:
-                                </span>
-                                <select class="form-control form-control-sm text-dark font-weight-bold" 
-                                        id="select_switch_prodi_navbar" 
-                                        onchange="doSwitchProdi(this.value)"
-                                        style="border: none; background: transparent; font-size: 12.5px; font-weight: 700; color: #1e293b; cursor: pointer; height: 28px; padding: 2px 4px; outline: none; box-shadow: none; max-width: 250px;">
-                                    @foreach ($navKaprodiList as $kp)
-                                        @php
-                                            $kpKode = is_array($kp) ? $kp['kode_program_studi'] : $kp->kode_program_studi;
-                                            $kpNama = is_array($kp) ? $kp['nama_program_studi'] : $kp->nama_program_studi;
-                                            $kpStatus = is_array($kp) ? ($kp['status_jabatan'] ?? 'definitif') : ($kp->status_jabatan ?? 'definitif');
-                                        @endphp
-                                        <option value="{{ $kpKode }}" {{ Session::get('kode_program_studi') == $kpKode ? 'selected' : '' }}>
-                                            {{ $kpKode }} - {{ $kpNama }} {{ $kpStatus != 'definitif' ? '('.strtoupper($kpStatus).')' : '' }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <span class="badge badge-warning font-size-10 ml-5 font-weight-bold px-6 py-2" style="border-radius: 10px;">
-                                    {{ count($navKaprodiList) }} Prodi
-                                </span>
-                            </div>
-                        </div>
-                    @elseif (Session::get('tipe') == 'Dosen' && Session::has('nama_program_studi') && Session::get('nama_program_studi') != '')
-                        <div class="navbar-prodi-container d-none d-md-flex align-items-center ml-10 my-auto">
-                            <span class="badge badge-primary-light font-size-12 px-12 py-6 font-weight-600" style="border-radius: 20px; border: 1px solid rgba(0, 82, 204, 0.2);">
-                                <i class="fa fa-graduation-cap text-primary mr-5"></i> {{ Session::get('kode_program_studi') }} - {{ Session::get('nama_program_studi') }}
-                            </span>
-                        </div>
-                    @endif
                 </div>
+
+                @php
+                    $navKaprodiList = Session::get('kaprodi_list');
+                    $navIdDosen = Session::get('id_dosen') ?: Session::get('id_pegawai');
+
+                    if (!$navIdDosen && Session::get('username')) {
+                        try {
+                            $uDosenNav = \Illuminate\Support\Facades\DB::table('user_dosen')
+                                ->where('email_login', Session::get('username'))
+                                ->first();
+                            if ($uDosenNav) {
+                                $navIdDosen = $uDosenNav->id_pegawai;
+                                \Illuminate\Support\Facades\Session::put('id_dosen', $navIdDosen);
+                            }
+                        } catch (\Exception $e) {}
+                    }
+
+                    if ($navIdDosen && (!is_array($navKaprodiList) || count($navKaprodiList) <= 1)) {
+                        try {
+                            $dbRolesNav = \Illuminate\Support\Facades\DB::table('akd_pegawai_role')
+                                ->where('id_pegawai', $navIdDosen)
+                                ->where('role_code', 'kaprodi')
+                                ->where('is_active', 1)
+                                ->where(function ($q) {
+                                    $q->whereNull('tgl_selesai')->orWhere('tgl_selesai', '>=', date('Y-m-d'));
+                                })
+                                ->get();
+
+                            if ($dbRolesNav->isNotEmpty()) {
+                                $prodiMapNav = \Illuminate\Support\Facades\DB::table('akd_program_studi')
+                                    ->whereIn('kode_program_studi', $dbRolesNav->pluck('unit_id')->toArray())
+                                    ->get()
+                                    ->keyBy('kode_program_studi');
+
+                                $syncedListNav = [];
+                                foreach ($dbRolesNav as $dr) {
+                                    $pObj = $prodiMapNav->get($dr->unit_id);
+                                    $syncedListNav[] = [
+                                        'kode_program_studi' => $dr->unit_id,
+                                        'nama_program_studi' => $pObj ? $pObj->nama_program_studi : $dr->unit_id,
+                                        'role_code'          => 'kaprodi',
+                                        'status_jabatan'     => $dr->status_jabatan,
+                                        'is_primary'         => (int)$dr->is_primary
+                                    ];
+                                }
+                                if (count($syncedListNav) > 0) {
+                                    $navKaprodiList = $syncedListNav;
+                                    \Illuminate\Support\Facades\Session::put('kaprodi_list', $navKaprodiList);
+                                    \Illuminate\Support\Facades\Session::put('is_kaprodi', 1);
+                                }
+                            }
+                        } catch (\Exception $e) {}
+                    }
+                @endphp
 
                 <div class="navbar-custom-menu r-side">
                     <ul class="nav navbar-nav">
+
+                        @if (Session::get('tipe') == 'Dosen' && is_array($navKaprodiList) && count($navKaprodiList) > 1)
+                            <li>
+                                <a href="#" data-toggle="modal" data-target="#modal-right-prodi" title="Pilih Program Studi"
+                                    class="waves-effect waves-light dropdown-toggle position-relative">
+                                    <i class="fa fa-graduation-cap font-size-18"></i>
+                                    <span class="label label-warning" style="position: absolute; top: 6px; right: 4px; font-size: 9px; padding: 2px 4px; border-radius: 50%;">{{ count($navKaprodiList) }}</span>
+                                </a>
+                            </li>
+                        @endif
 
                         @if (Session::get('tipe') == 'Pegawai' || Session::get('tipe') == 'Dosen')
                             <li>
@@ -360,6 +336,53 @@
                 </div>
             </nav>
         </header>
+
+        <div class="modal modal-right fade" id="modal-right-prodi" tabindex="-1">
+            <div class="modal-dialog">
+                <form id="form_switch_prodi" onsubmit="event.preventDefault(); doSwitchProdi($('#select_switch_prodi_modal').val());">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Program Studi Aktif</h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <p class="text-dark my-10 font-size-16">
+                            <div class="px-25 py-10 w-100">
+                                <span class="badge badge-primary font-size-12 px-10 py-5" id="current_active_prodi_badge">
+                                    <i class="fa fa-graduation-cap mr-5"></i> {{ Session::get('kode_program_studi') }} - {{ Session::get('nama_program_studi') }}
+                                </span>
+                            </div>
+                            Sesuaikan <strong class="text-primary">Program Studi</strong> pilihanmu!
+                            </p>
+                            <p class="mb-2 text-dark my-10 font-size-16">
+                                <select class="form-control font-weight-bold text-dark" style="width: 100%; height: 40px; font-size: 13.5px;"
+                                    name="kode_prodi" id="select_switch_prodi_modal">
+                                    @if (is_array($navKaprodiList))
+                                        @foreach ($navKaprodiList as $kp)
+                                            @php
+                                                $kpKode = is_array($kp) ? $kp['kode_program_studi'] : $kp->kode_program_studi;
+                                                $kpNama = is_array($kp) ? $kp['nama_program_studi'] : $kp->nama_program_studi;
+                                                $kpStatus = is_array($kp) ? ($kp['status_jabatan'] ?? 'definitif') : ($kp->status_jabatan ?? 'definitif');
+                                            @endphp
+                                            <option value="{{ $kpKode }}" {{ Session::get('kode_program_studi') == $kpKode ? 'selected' : '' }}>
+                                                {{ $kpKode }} - {{ $kpNama }} {{ $kpStatus != 'definitif' ? '('.strtoupper($kpStatus).')' : '' }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </p>
+                        </div>
+                        <div class="modal-footer modal-footer-uniform">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary float-right">Save changes</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
 
         <div class="modal modal-right fade" id="modal-right" tabindex="-1">
             <div class="modal-dialog">
