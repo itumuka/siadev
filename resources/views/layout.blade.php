@@ -156,6 +156,10 @@
         .sidebar-collapse .sidebar-user-info {
             display: none !important;
         }
+
+        .sidebar-collapse .sidebar-prodi-panel {
+            display: none !important;
+        }
     </style>
 
     @yield('css')

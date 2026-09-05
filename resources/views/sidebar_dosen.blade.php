@@ -31,8 +31,14 @@
                     </div>
                 </div>
 
+                <style>
+                    .sidebar-collapse .sidebar-prodi-panel {
+                        display: none !important;
+                    }
+                </style>
+
                 @if (is_array(Session::get('kaprodi_list')) && count(Session::get('kaprodi_list')) > 1)
-                    <div class="px-15 py-10 mb-10" style="background: rgba(255,255,255,0.06); margin: 0 15px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.12);">
+                    <div class="sidebar-prodi-panel px-15 py-10 mb-10" style="background: rgba(255,255,255,0.06); margin: 0 15px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.12);">
                         <div class="d-flex justify-content-between align-items-center mb-5">
                             <span class="text-uppercase font-size-11" style="color: #ffc107; letter-spacing: 0.5px; font-weight: 600;">
                                 <i class="fa fa-exchange mr-5"></i> Unit / Prodi Aktif
@@ -48,7 +54,7 @@
                         </select>
                     </div>
                 @elseif (Session::has('nama_program_studi') && Session::get('nama_program_studi') != '')
-                    <div class="px-15 py-5 mb-10" style="margin: 0 15px;">
+                    <div class="sidebar-prodi-panel px-15 py-5 mb-10" style="margin: 0 15px;">
                         <span class="badge badge-primary-light font-size-11" style="width: 100%; text-align: left; padding: 6px 10px; border-radius: 6px; white-space: normal; display: block;">
                             <i class="fa fa-graduation-cap mr-5"></i> {{ Session::get('kode_program_studi') }} - {{ Session::get('nama_program_studi') }}
                         </span>
