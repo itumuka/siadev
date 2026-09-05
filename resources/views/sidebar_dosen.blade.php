@@ -20,14 +20,40 @@
                         <span class="sidebar-user-email"
                             title="{{ Session::get('username') }}">{{ strtolower(Session::get('username')) }}</span>
                         <span class="sidebar-user-role">
-                            @if (Session::get('kaprodi') == 1)
-                                Kaprodi
+                            @if (Session::get('is_dekan') == 1)
+                                <span class="badge badge-danger">Dekan</span>
+                            @elseif (Session::get('is_kaprodi') == 1 || Session::get('kaprodi') != null)
+                                <span class="badge badge-success">Kaprodi</span>
                             @else
-                                Dosen
+                                <span class="badge badge-info">Dosen</span>
                             @endif
                         </span>
                     </div>
                 </div>
+
+                @if (is_array(Session::get('kaprodi_list')) && count(Session::get('kaprodi_list')) > 1)
+                    <div class="px-15 py-10 mb-10" style="background: rgba(255,255,255,0.06); margin: 0 15px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.12);">
+                        <div class="d-flex justify-content-between align-items-center mb-5">
+                            <span class="text-uppercase font-size-11" style="color: #ffc107; letter-spacing: 0.5px; font-weight: 600;">
+                                <i class="fa fa-exchange mr-5"></i> Unit / Prodi Aktif
+                            </span>
+                            <span class="badge badge-warning font-size-10">{{ count(Session::get('kaprodi_list')) }} Prodi</span>
+                        </div>
+                        <select class="form-control form-control-sm text-dark font-weight-bold" id="select_switch_prodi_sidebar" onchange="doSwitchProdi(this.value)" style="border-radius: 6px; font-size: 12px; cursor: pointer; height: 32px; background-color: #ffffff;">
+                            @foreach (Session::get('kaprodi_list') as $kp)
+                                <option value="{{ $kp['kode_program_studi'] }}" {{ Session::get('kode_program_studi') == $kp['kode_program_studi'] ? 'selected' : '' }}>
+                                    {{ $kp['kode_program_studi'] }} - {{ $kp['nama_program_studi'] }} {{ $kp['status_jabatan'] != 'definitif' ? '('.strtoupper($kp['status_jabatan']).')' : '' }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                @elseif (Session::has('nama_program_studi') && Session::get('nama_program_studi') != '')
+                    <div class="px-15 py-5 mb-10" style="margin: 0 15px;">
+                        <span class="badge badge-primary-light font-size-11" style="width: 100%; text-align: left; padding: 6px 10px; border-radius: 6px; white-space: normal; display: block;">
+                            <i class="fa fa-graduation-cap mr-5"></i> {{ Session::get('kode_program_studi') }} - {{ Session::get('nama_program_studi') }}
+                        </span>
+                    </div>
+                @endif
 
                 <!-- sidebar menu-->
                 <ul class="sidebar-menu" data-widget="tree">
@@ -40,7 +66,7 @@
                             <span>Beranda</span>
                         </a>
                     </li>
-                    @if (Session::get('kaprodi') != NULL || Session::get('kaprodi') != '')
+                    @if (Session::get('is_kaprodi') == 1 || Session::get('kaprodi') != NULL || Session::get('kaprodi') != '')
                         <li class="treeview">
                             <a href="#">
                                 <i class="fa fa-user-circle-o"><span class="path1"></span><span class="path2"></span></i>
@@ -327,5 +353,46 @@
                 });
             });
         });
+
+        function doSwitchProdi(kodeProdi) {
+            if (!kodeProdi) return;
+            
+            if (typeof showToastr === 'function') {
+                showToastr('info', 'Memproses', 'Beralih program studi aktif...');
+            }
+
+            $.ajax({
+                url: "{{ route('switch_prodi') }}",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    kode_prodi: kodeProdi
+                },
+                success: function(res) {
+                    if (res.status) {
+                        if (typeof showToastr === 'function') {
+                            showToastr('success', 'Berhasil', res.message);
+                        }
+                        setTimeout(function() {
+                            window.location.reload();
+                        }, 500);
+                    } else {
+                        if (typeof showToastr === 'function') {
+                            showToastr('error', 'Gagal', res.message);
+                        } else {
+                            alert(res.message);
+                        }
+                    }
+                },
+                error: function(xhr) {
+                    var msg = xhr.responseJSON ? xhr.responseJSON.message : 'Terjadi kesalahan saat beralih program studi!';
+                    if (typeof showToastr === 'function') {
+                        showToastr('error', 'Error', msg);
+                    } else {
+                        alert(msg);
+                    }
+                }
+            });
+        }
     </script>
 @endsection

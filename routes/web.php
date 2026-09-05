@@ -29,6 +29,7 @@ Route::middleware(['ceklogin'])->group(function () {
     Route::get("/check-session", "Mahasiswa@check_session")->name('check_session');
     Route::get("/home", "Akademik@index")->name('home');
     Route::get("/akademik/make-session", "Akademik@make_session")->name('make_session');
+    Route::post("/switch-prodi", "LoginController@switch_prodi")->name('switch_prodi');
 
     // Route::group(['middleware' => ['cekmahasiswa', 'cekdosen', 'cekpegawai']], function () {
     // });

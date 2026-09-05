@@ -71,13 +71,63 @@ class LoginController extends Controller
         Session::put('username', $request->username);
         Session::put('nama', $request->nama);
         Session::put('kode_program_studi', $request->kode_program_studi);
+        Session::put('nama_program_studi', $request->nama_program_studi ?: '');
+        Session::put('homebase_prodi', $request->homebase_prodi ?: $request->kode_program_studi);
         Session::put('dosen_wali', $request->dosen_wali);
         Session::put('kaprodi', $request->kaprodi);
         Session::put('id_dosen', $request->id_dosen);
         Session::put('nidn', $request->nidn);
         Session::put('token', $request->token);
 
+        // RBAC Context
+        $kaprodiList = is_string($request->kaprodi_list) ? json_decode($request->kaprodi_list, true) : ($request->kaprodi_list ?: []);
+        $dekanList = is_string($request->dekan_list) ? json_decode($request->dekan_list, true) : ($request->dekan_list ?: []);
+        
+        Session::put('is_kaprodi', (int)$request->is_kaprodi);
+        Session::put('kaprodi_list', $kaprodiList ?: []);
+        Session::put('is_dekan', (int)$request->is_dekan);
+        Session::put('dekan_list', $dekanList ?: []);
+
+        // Jika nama_program_studi belum terisi dan kaprodi_list ada, ambil nama dari kaprodi_list
+        if (empty(Session::get('nama_program_studi')) && !empty($kaprodiList)) {
+            $curr = collect($kaprodiList)->firstWhere('kode_program_studi', $request->kode_program_studi);
+            if ($curr && !empty($curr['nama_program_studi'])) {
+                Session::put('nama_program_studi', $curr['nama_program_studi']);
+            }
+        }
+
         return true;
+    }
+
+    public function switch_prodi(Request $request)
+    {
+        $targetKode = $request->kode_prodi;
+        $kaprodiList = Session::get('kaprodi_list', []);
+
+        if (empty($kaprodiList)) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Anda tidak terdaftar sebagai Kaprodi pada program studi manapun!'
+            ], 403);
+        }
+
+        $found = collect($kaprodiList)->firstWhere('kode_program_studi', $targetKode);
+        if ($found) {
+            Session::put('kode_program_studi', $found['kode_program_studi']);
+            Session::put('nama_program_studi', $found['nama_program_studi']);
+            Session::put('status_jabatan_prodi', $found['status_jabatan'] ?? 'definitif');
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Berhasil beralih ke Program Studi ' . $found['nama_program_studi'] . ' (' . $found['kode_program_studi'] . ')',
+                'data'    => $found
+            ]);
+        }
+
+        return response()->json([
+            'status'  => false,
+            'message' => 'Program studi tidak valid atau Anda tidak memiliki akses ke program studi ini!'
+        ], 403);
     }
 
     public function logout()
