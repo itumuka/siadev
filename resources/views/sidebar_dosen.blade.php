@@ -103,28 +103,7 @@
                     }
                 @endphp
 
-                @if (is_array($kaprodiList) && count($kaprodiList) > 1)
-                    <div class="sidebar-prodi-panel px-15 py-10 mb-10" style="background: rgba(255,255,255,0.06); margin: 0 15px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.12);">
-                        <div class="d-flex justify-content-between align-items-center mb-5">
-                            <span class="text-uppercase font-size-11" style="color: #ffc107; letter-spacing: 0.5px; font-weight: 600;">
-                                <i class="fa fa-exchange mr-5"></i> Unit / Prodi Aktif
-                            </span>
-                            <span class="badge badge-warning font-size-10">{{ count($kaprodiList) }} Prodi</span>
-                        </div>
-                        <select class="form-control form-control-sm text-dark font-weight-bold" id="select_switch_prodi_sidebar" onchange="doSwitchProdi(this.value)" style="border-radius: 6px; font-size: 12px; cursor: pointer; height: 32px; background-color: #ffffff;">
-                            @foreach ($kaprodiList as $kp)
-                                @php
-                                    $kpKode = is_array($kp) ? $kp['kode_program_studi'] : $kp->kode_program_studi;
-                                    $kpNama = is_array($kp) ? $kp['nama_program_studi'] : $kp->nama_program_studi;
-                                    $kpStatus = is_array($kp) ? ($kp['status_jabatan'] ?? 'definitif') : ($kp->status_jabatan ?? 'definitif');
-                                @endphp
-                                <option value="{{ $kpKode }}" {{ Session::get('kode_program_studi') == $kpKode ? 'selected' : '' }}>
-                                    {{ $kpKode }} - {{ $kpNama }} {{ $kpStatus != 'definitif' ? '('.strtoupper($kpStatus).')' : '' }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                @elseif (Session::has('nama_program_studi') && Session::get('nama_program_studi') != '')
+                @if (Session::has('nama_program_studi') && Session::get('nama_program_studi') != '')
                     <div class="sidebar-prodi-panel px-15 py-5 mb-10" style="margin: 0 15px;">
                         <span class="badge badge-primary-light font-size-11" style="width: 100%; text-align: left; padding: 6px 10px; border-radius: 6px; white-space: normal; display: block;">
                             <i class="fa fa-graduation-cap mr-5"></i> {{ Session::get('kode_program_studi') }} - {{ Session::get('nama_program_studi') }}
