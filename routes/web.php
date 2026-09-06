@@ -205,6 +205,7 @@ Route::middleware(['ceklogin'])->group(function () {
         Route::get("/akademik/krsmahasiswa", "Akademik@krsmahasiswa")->name('akkrsmahasiswa');
         Route::get("/akademik/cetak/cetakkrsmahasiswa/{nim}/{tahun}/{semester}", "Akademik@cetakkrsmahasiswa")->name('cetakkrsmahasiswa');
         Route::get("/akademik/setting-dosenwali", "Akademik@data_dosenwali")->name('akddosenwali');
+        Route::get("/akademik/rbac", "Akademik@rbac")->name('akrbac');
     });
     Route::get("/akademik/cetak/cetakdaftarhadirujiandosen/{id_tawar}", "Akademik@cetakdaftarhadirujian")->name('cetakdaftarhadirujiandosen');
     Route::get("/akademik/cetak/cetaktranskipakademik/{a}", "Akademik@cetaktranskipakademik")->name('cetaktranskipakademik');

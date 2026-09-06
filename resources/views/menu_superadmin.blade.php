@@ -78,6 +78,10 @@
                                                 class="path1"></span><span class="path2"></span></i>Dosen
                                         Wali</a>
                                 </li>
+                                <li class="{{ Route::is('akrbac') ? 'active' : '' }}">
+                                    <a href="{{ route('akrbac') }}"><i class="icon-Commit"><span
+                                                class="path1"></span><span class="path2"></span></i>Penugasan Jabatan (RBAC)</a>
+                                </li>
                                 <li class="{{ Route::is('akqrcode') ? 'active' : '' }}">
                                     <a href="{{ route('akqrcode') }}"><i class="icon-Commit"><span
                                                 class="path1"></span><span class="path2"></span></i>QR Code</a>

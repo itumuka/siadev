@@ -1259,4 +1259,11 @@ class Akademik extends Controller
             'error' => 'File tidak ditemukan atau gagal diunggah!'
         ], 400);
     }
+
+    public function rbac()
+    {
+        $title = "Penugasan Jabatan (RBAC)";
+        return view('Akademik/master/rbac', compact('title'));
+    }
 }
+
