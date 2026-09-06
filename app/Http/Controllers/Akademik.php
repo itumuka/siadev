@@ -1262,7 +1262,7 @@ class Akademik extends Controller
 
     public function rbac()
     {
-        $title = "Penugasan Jabatan (RBAC)";
+        $title = "Akses Kontrol";
         return view('Akademik/master/rbac', compact('title'));
     }
 }

@@ -80,7 +80,7 @@
                                 </li>
                                 <li class="{{ Route::is('akrbac') ? 'active' : '' }}">
                                     <a href="{{ route('akrbac') }}"><i class="icon-Commit"><span
-                                                class="path1"></span><span class="path2"></span></i>Penugasan Jabatan (RBAC)</a>
+                                                class="path1"></span><span class="path2"></span></i>Akses Kontrol</a>
                                 </li>
                                 <li class="{{ Route::is('akqrcode') ? 'active' : '' }}">
                                     <a href="{{ route('akqrcode') }}"><i class="icon-Commit"><span

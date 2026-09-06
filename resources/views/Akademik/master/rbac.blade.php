@@ -62,13 +62,13 @@
     <div class="content-header">
         <div class="d-flex align-items-center justify-content-between">
             <div class="mr-auto">
-                <h3 class="page-title"><i class="fa fa-shield text-primary mr-2"></i> Penugasan Jabatan & Peran (RBAC)</h3>
+                <h3 class="page-title"><i class="fa fa-shield text-primary mr-2"></i> Akses Kontrol</h3>
                 <div class="d-inline-block align-items-center">
                     <nav>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ route('home') }}"><i class="mdi mdi-home-outline"></i></a></li>
                             <li class="breadcrumb-item" aria-current="page">Master</li>
-                            <li class="breadcrumb-item active" aria-current="page">Penugasan Jabatan (RBAC)</li>
+                            <li class="breadcrumb-item active" aria-current="page">Akses Kontrol</li>
                         </ol>
                     </nav>
                 </div>
@@ -203,7 +203,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content" style="border-radius: 8px;">
             <div class="modal-header bg-primary text-white">
-                <h4 class="modal-title font-weight-600 text-white"><i class="fa fa-user-plus mr-2"></i> Tambah Penugasan Jabatan (RBAC)</h4>
+                <h4 class="modal-title font-weight-600 text-white"><i class="fa fa-user-plus mr-2"></i> Tambah Akses Kontrol</h4>
                 <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -305,7 +305,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content" style="border-radius: 8px;">
             <div class="modal-header bg-info text-white">
-                <h4 class="modal-title font-weight-600 text-white"><i class="fa fa-edit mr-2"></i> Edit Penugasan Jabatan (RBAC)</h4>
+                <h4 class="modal-title font-weight-600 text-white"><i class="fa fa-edit mr-2"></i> Edit Akses Kontrol</h4>
                 <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
