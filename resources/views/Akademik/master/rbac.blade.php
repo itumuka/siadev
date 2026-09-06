@@ -74,10 +74,10 @@
                 </div>
             </div>
             <div>
-                <button type="button" class="btn btn-primary btn-sm btn-rounded shadow-sm" id="btn_open_add_modal">
+                <button type="button" class="btn btn-primary btn-rounded shadow-sm px-3 py-2 font-weight-600" id="btn_open_add_modal">
                     <i class="fa fa-plus-circle mr-1"></i> Tambah Penugasan
                 </button>
-                <button type="button" class="btn btn-secondary btn-sm btn-rounded shadow-sm ml-1" id="btn_refresh_table">
+                <button type="button" class="btn btn-secondary btn-rounded shadow-sm px-3 py-2 font-weight-600 ml-2" id="btn_refresh_table">
                     <i class="fa fa-refresh mr-1"></i> Refresh
                 </button>
             </div>
@@ -692,9 +692,9 @@
                         var toggleIcon = row.is_active == 1 ? 'fa-toggle-on text-success' : 'fa-toggle-off text-muted';
                         var toggleTitle = row.is_active == 1 ? 'Nonaktifkan' : 'Aktifkan';
 
-                        return '<button type="button" class="btn btn-xs btn-outline-info btn-edit-rbac mr-1" data-id="' + row.id + '" title="Edit Penugasan"><i class="fa fa-pencil"></i></button>' +
-                               '<button type="button" class="btn btn-xs btn-outline-secondary btn-toggle-rbac mr-1" data-id="' + row.id + '" title="' + toggleTitle + '"><i class="fa ' + toggleIcon + '"></i></button>' +
-                               '<button type="button" class="btn btn-xs btn-outline-danger btn-delete-rbac" data-id="' + row.id + '" data-nama="' + (row.nama_pegawai || '') + '" title="Hapus Penugasan"><i class="fa fa-trash"></i></button>';
+                        return '<button type="button" class="btn btn-sm btn-outline-info btn-edit-rbac mr-1" data-id="' + row.id + '" title="Edit Penugasan"><i class="fa fa-pencil"></i></button>' +
+                               '<button type="button" class="btn btn-sm btn-outline-secondary btn-toggle-rbac mr-1" data-id="' + row.id + '" title="' + toggleTitle + '"><i class="fa ' + toggleIcon + '"></i></button>' +
+                               '<button type="button" class="btn btn-sm btn-outline-danger btn-delete-rbac" data-id="' + row.id + '" data-nama="' + (row.nama_pegawai || '') + '" title="Hapus Penugasan"><i class="fa fa-trash"></i></button>';
                     }
                 }
             ],
