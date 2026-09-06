@@ -419,14 +419,21 @@
                         let isUjianPayment = item.kode_syarat === 'BAYAR_UJIAN' || 
                                              (item.jenis === 'pembayaran' && item.syarat && 
                                               (item.syarat.toLowerCase().includes('ujian') || item.syarat.toLowerCase().includes('skripsi') || item.syarat.toLowerCase().includes('tugas akhir')));
+                        let isBebasKeuangan = item.kode_syarat === 'BEBAS_KEUANGAN_BAK';
                         
                         let liClass = isOk ? 'badge-success' : 'badge-danger';
                         let iClass = isOk ? 'fa-check' : 'fa-times';
                         let label = item.syarat;
                         
-                        // Detail info for failed requirements
+                        // Detail info for requirements
                         let detail = '';
-                        if (!isOk) {
+                        if (isBebasKeuangan) {
+                            if (isOk) {
+                                detail = ` <br><small class="text-success"><i class="fa fa-check-circle"></i> ${item.isi}</small>`;
+                            } else {
+                                detail = ` <br><small class="text-danger"><i class="fa fa-warning"></i> Wajib disahkan oleh Bendahara di Bagian Administrasi Keuangan (BAK) hingga SPP H+1 bulan ujian.</small>`;
+                            }
+                        } else if (!isOk) {
                             if (isUjianPayment && taIsObe) {
                                 liClass = 'badge-info';
                                 iClass = 'fa-info-circle';
